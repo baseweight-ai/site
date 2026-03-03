@@ -648,6 +648,93 @@ nav.scrolled {
 }
 
 /* ========================================
+   STANDALONE DIAGNOSTIC
+   ======================================== */
+.diagnostic-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.diagnostic-inner {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 64px;
+  align-items: start;
+}
+
+.diagnostic-price {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 28px;
+  margin-top: 8px;
+}
+
+.diagnostic-left p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin-bottom: 20px;
+}
+
+.diagnostic-deliverables {
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+}
+
+.diagnostic-deliverables-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.diagnostic-deliverables-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.diagnostic-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.diagnostic-list li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  padding-left: 22px;
+  position: relative;
+}
+
+.diagnostic-list li::before {
+  content: '\2014';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 860px) {
+  .diagnostic-inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* ========================================
    FAQ
    ======================================== */
 .faq-section .faq-header {
@@ -1540,6 +1627,7 @@ footer { border-top: none; }
       <li><a href="#how">How We Work</a></li>
       <li><a href="#cases">Cases</a></li>
       <li><a href="#pricing">Pricing</a></li>
+      <li><a href="/diagnostic">Diagnostic</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book an Intro Call</a></li>
@@ -1894,6 +1982,36 @@ footer { border-top: none; }
       </table>
     </div>
     <p class="pricing-note reveal reveal-delay-2">Execution scope and pricing are defined in the diagnostic report. You'll know the exact cost before you commit to execution.</p>
+  </div>
+</section>
+
+<!-- ======== STANDALONE DIAGNOSTIC ======== -->
+<section class="diagnostic-section" id="diagnostic">
+  <div class="container">
+    <div class="diagnostic-inner">
+      <div class="diagnostic-left reveal">
+        <div class="section-label">Standalone Diagnostic</div>
+        <h2>Not ready to commit to a full build? <span style="color: var(--accent);">Start here.</span></h2>
+        <p class="diagnostic-price">$5&ndash;8k &nbsp;&middot;&nbsp; fixed scope &nbsp;&middot;&nbsp; 2 weeks</p>
+        <p>In two weeks, we&rsquo;ll analyze your pipeline, data, and failure modes across the full adaptation stack&mdash;retrieval, fine-tuning, preference optimization, compression&mdash;and deliver a written technique recommendation you own outright.</p>
+        <p>You can take the report to your internal team, another vendor, or engage Baseweight for the build. No obligation either way. Execution scope and pricing are defined in the report&mdash;so you&rsquo;ll know the full cost before committing to a build.</p>
+        <a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Start with an Intro Call &rarr;</a>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">We work under NDA. Your pipeline details stay confidential.</p>
+        <p style="font-size: 13px; margin-top: 20px;"><a href="/diagnostic">Full details, process, and FAQ &rarr;</a></p>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="diagnostic-deliverables">
+          <div class="diagnostic-deliverables-label">What you get</div>
+          <p class="diagnostic-deliverables-sub">After two weeks, you&rsquo;ll know exactly what to build&mdash;and what it will cost&mdash;before committing.</p>
+          <ul class="diagnostic-list">
+            <li>Technique selection with supporting rationale (RAG, LoRA, DPO, compression, or combination)</li>
+            <li>Root cause analysis of current failure modes</li>
+            <li>Evaluation plan with acceptance criteria and benchmark approach</li>
+            <li>Compute cost and timeline projections for execution</li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
