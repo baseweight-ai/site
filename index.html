@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baseweight — Domain AI Adaptation, Diagnosed and Built</title>
+<meta name="description" content="Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://baseweight.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://baseweight.vercel.app/">
+<meta property="og:title" content="Baseweight — Domain AI Adaptation, Diagnosed and Built">
+<meta property="og:description" content="Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.">
+<meta property="og:image" content="https://baseweight.vercel.app/og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Baseweight — Domain AI Adaptation, Diagnosed and Built">
+<meta name="twitter:description" content="Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.">
+<meta name="twitter:image" content="https://baseweight.vercel.app/og-image.svg">
+<style>
+/* ========================================
+   RESET & VARIABLES
+   ======================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #080808;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --border: #1c1c1c;
+  --border-accent: #282828;
+  --text-primary: #e8e4de;
+  --text-secondary: #898580;
+  --text-muted: #555;
+  --accent: #c9a84c;
+  --accent-hover: #dbb960;
+  --accent-dim: rgba(201, 168, 76, 0.1);
+  --accent-glow: rgba(201, 168, 76, 0.06);
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max-width: 1120px;
+  --section-pad: clamp(80px, 12vh, 140px);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover { color: var(--accent-hover); }
+
+/* ========================================
+   GRAIN OVERLAY
+   ======================================== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* ========================================
+   LAYOUT
+   ======================================== */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 48px);
+}
+
+section {
+  padding: var(--section-pad) 0;
+  position: relative;
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2.4rem, 5.5vw, 4rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.section-divider {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* ========================================
+   SCROLL ANIMATIONS
+   ======================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ========================================
+   NAV
+   ======================================== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 clamp(24px, 5vw, 48px);
+  transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+nav.scrolled {
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--border);
+}
+
+.nav-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text-primary); }
+
+.nav-cta {
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--bg-primary) !important;
+  background: var(--accent);
+  padding: 10px 20px;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, transform 0.2s !important;
+}
+
+.nav-cta:hover {
+  background: var(--accent-hover) !important;
+  transform: translateY(-1px);
+}
+
+.nav-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.nav-mobile-toggle span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--text-primary);
+  margin: 5px 0;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* ========================================
+   HERO
+   ======================================== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 72px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, var(--accent-glow) 0%, transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 59px, var(--border) 59px, var(--border) 60px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, var(--border) 59px, var(--border) 60px);
+  opacity: 0.35;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 0%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, black 0%, transparent 70%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+}
+
+.hero h1 {
+  margin-bottom: 28px;
+  font-weight: 800;
+}
+
+.hero h1 .accent {
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: clamp(14px, 1.6vw, 16px);
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 620px;
+  margin-bottom: 40px;
+}
+
+.hero-cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.btn-primary {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bg-primary);
+  background: var(--accent);
+  border: none;
+  padding: 16px 36px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+}
+
+.hero-support {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ========================================
+   PROBLEM SECTION
+   ======================================== */
+.problems-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.problems-header {
+  margin-bottom: 56px;
+}
+
+.problems-header h2 {
+  max-width: 600px;
+}
+
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.problem-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 36px 32px;
+  position: relative;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.problem-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.problem-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+
+.problem-card:hover::before {
+  opacity: 1;
+}
+
+.problem-number {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--accent-dim);
+  line-height: 1;
+  margin-bottom: 20px;
+  color: rgba(201, 168, 76, 0.15);
+}
+
+.problem-card h3 {
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.problem-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.problem-card .kicker {
+  margin-top: 24px;
+  padding: 12px 16px;
+  background: var(--accent-dim);
+  border-left: 2px solid var(--accent);
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.65;
+}
+
+/* ========================================
+   TRANSITION / HAMMER SECTION
+   ======================================== */
+.transition-section {
+  text-align: center;
+}
+
+.transition-section h2 {
+  margin-bottom: 28px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.transition-section .body-text {
+  max-width: 640px;
+  margin: 0 auto;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.transition-section .body-text p {
+  margin-bottom: 20px;
+}
+
+.transition-section .punch {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 15px;
+  margin-top: 32px;
+}
+
+/* ========================================
+   HOW WE WORK
+   ======================================== */
+.how-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.how-header {
+  margin-bottom: 64px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 40px;
+  padding: 48px 0;
+  border-top: 1px solid var(--border);
+  align-items: start;
+}
+
+.step:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.step-num {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 800;
+  color: rgba(201, 168, 76, 0.12);
+  line-height: 1;
+  padding-top: 4px;
+}
+
+.step h3 {
+  margin-bottom: 14px;
+  color: var(--accent);
+}
+
+.step p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 620px;
+}
+
+.how-cta {
+  margin-top: 56px;
+  text-align: center;
+}
+
+/* ========================================
+   DIFFERENTIATORS
+   ======================================== */
+.diff-section .diff-header {
+  margin-bottom: 56px;
+}
+
+.diff-section .diff-header h2 {
+  max-width: 700px;
+}
+
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.diff-item {
+  padding: 32px 0;
+  border-top: 2px solid var(--border);
+  transition: border-color 0.3s;
+}
+
+.diff-item:hover {
+  border-top-color: var(--accent);
+}
+
+.diff-item h3 {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: var(--text-primary);
+}
+
+.diff-item p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ========================================
+   WHO THIS IS FOR
+   ======================================== */
+.audience-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.audience-section h2 {
+  margin-bottom: 32px;
+}
+
+.audience-right {
+  padding: 36px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+  max-width: 600px;
+}
+
+.audience-right .qualifier-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.audience-right p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 24px;
+}
+
+.audience-right .nda-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ========================================
+   PRICING
+   ======================================== */
+.pricing-section .pricing-header {
+  margin-bottom: 48px;
+}
+
+.pricing-table-wrap {
+  overflow-x: auto;
+}
+
+.pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.pricing-table th {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-accent);
+  background: var(--bg-card);
+}
+
+.pricing-table td {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.pricing-table tr:hover td {
+  background: var(--bg-card);
+}
+
+.pricing-table td:first-child {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.pricing-table td:last-child {
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pricing-note {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   FAQ
+   ======================================== */
+.faq-section .faq-header {
+  margin-bottom: 48px;
+}
+
+.faq-list {
+  max-width: 780px;
+}
+
+.faq-item {
+  border-top: 1px solid var(--border);
+}
+
+.faq-item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  padding: 24px 40px 24px 0;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  line-height: 1.6;
+}
+
+.faq-question:hover { color: var(--accent); }
+
+.faq-question::after {
+  content: '+';
+  position: absolute;
+  right: 0;
+  top: 24px;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--accent);
+  transition: transform 0.3s;
+}
+
+.faq-item.open .faq-question::after {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0 0;
+}
+
+.faq-item.open .faq-answer {
+  max-height: 300px;
+  padding: 0 0 24px;
+}
+
+.faq-answer p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 640px;
+}
+
+/* ========================================
+   CASES
+   ======================================== */
+.cases-section {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.cases-header {
+  margin-bottom: 48px;
+}
+
+.cases-list {
+  max-width: 780px;
+}
+
+.case-item {
+  border-top: 1px solid var(--border);
+}
+
+.case-item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.case-question {
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  padding: 24px 40px 24px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s, box-shadow 0.3s;
+  line-height: 1.6;
+  box-shadow: inset 2px 0 0 transparent;
+}
+
+.case-question:hover,
+.case-item.open .case-question {
+  color: var(--accent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+
+.case-question::after {
+  content: '+';
+  position: absolute;
+  right: 0;
+  top: 24px;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--accent);
+  transition: transform 0.3s;
+}
+
+.case-item.open .case-question::after {
+  transform: rotate(45deg);
+}
+
+.case-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+}
+
+.case-item.open .case-answer {
+  max-height: 700px;
+  padding: 0 0 32px;
+}
+
+.case-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-left: 16px;
+}
+
+.case-block {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.case-block-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-top: 2px;
+}
+
+.case-block p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.case-outcome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 16px 20px;
+  background: var(--accent-dim);
+  border-left: 2px solid var(--accent);
+  line-height: 1.6;
+  margin-left: 116px;
+}
+
+@media (max-width: 640px) {
+  .case-block {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .case-outcome {
+    margin-left: 0;
+  }
+}
+
+/* ========================================
+   FINAL CTA
+   ======================================== */
+.final-cta {
+  text-align: center;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.final-cta::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.final-cta-content {
+  position: relative;
+  z-index: 1;
+}
+
+.final-cta h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 24px;
+}
+
+.final-cta .body-text {
+  max-width: 620px;
+  margin: 0 auto 40px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.final-cta .body-text p {
+  margin-bottom: 16px;
+}
+
+.final-cta .support-text {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+footer p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   TRUST ANCHOR
+   ======================================== */
+.trust-anchor {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+/* trust-stats styles defined in DESIGN ENHANCEMENTS block below */
+
+/* ========================================
+   PERSONA CARDS
+   ======================================== */
+.persona-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.persona-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 36px 32px;
+  position: relative;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.persona-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.persona-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+}
+
+.persona-card:hover::before {
+  opacity: 1;
+}
+
+.persona-number {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 800;
+  color: rgba(201, 168, 76, 0.15);
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+.persona-card h3 {
+  margin-bottom: 14px;
+  color: var(--text-primary);
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+}
+
+.persona-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ========================================
+   LEAD CAPTURE
+   ======================================== */
+.lead-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.lead-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.lead-inner h2 {
+  margin-bottom: 12px;
+}
+
+.lead-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.lead-resources {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.lead-resources li {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+  padding-left: 18px;
+  position: relative;
+}
+
+.lead-resources li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+}
+
+.lead-form-wrap {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.lead-form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.lead-form-row input[type="email"] {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.lead-form-row input[type="email"]::placeholder {
+  color: var(--text-muted);
+}
+
+.lead-form-row input[type="email"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
+}
+
+.lead-form-row button {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bg-primary);
+  background: var(--accent);
+  border: none;
+  padding: 14px 24px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.lead-form-row button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.lead-success {
+  padding: 20px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.lead-success p {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.lead-success .lead-success-secondary {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+.lead-note {
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 900px) {
+  .problems-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .diff-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .step {
+    grid-template-columns: 60px 1fr;
+    gap: 24px;
+  }
+
+  .step-num { font-size: 40px; }
+
+
+  .persona-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .lead-form-row {
+    flex-direction: column;
+  }
+}
+
+/* ========================================
+   DESIGN ENHANCEMENTS
+   ======================================== */
+
+/* --- Keyframes --- */
+@keyframes radar-pulse {
+  0%   { transform: translate(-50%, -50%) scale(0.15); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+}
+
+@keyframes accent-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+@keyframes ticker-loop {
+  to { transform: translateX(-50%); }
+}
+
+@keyframes hero-cta-glow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(201, 168, 76, 0.1); }
+  50%       { box-shadow: 0 4px 40px rgba(201, 168, 76, 0.3), 0 0 0 1px rgba(201, 168, 76, 0.12); }
+}
+
+@keyframes stat-underline-in {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* --- Hero radar rings --- */
+.hero-radar-wrap {
+  position: absolute;
+  top: 42%;
+  left: 66%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-radar-ring {
+  position: absolute;
+  width: 640px;
+  height: 640px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.18);
+  opacity: 0;
+  animation: radar-pulse 7s ease-out infinite;
+}
+
+.hero-radar-ring:nth-child(2) { animation-delay: 2.33s; }
+.hero-radar-ring:nth-child(3) { animation-delay: 4.67s; }
+
+/* --- Accent gradient shimmer --- */
+.hero h1 .accent {
+  background: linear-gradient(120deg, #c9a84c 0%, #f2c96e 45%, #c9a84c 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: accent-shimmer 7s ease-in-out infinite;
+}
+
+/* --- Hero CTA pulse --- */
+.hero .btn-primary {
+  animation: hero-cta-glow 5s ease-in-out infinite;
+}
+
+/* --- All primary btn hover glow --- */
+.btn-primary:hover {
+  box-shadow: 0 8px 32px rgba(201, 168, 76, 0.28);
+}
+
+/* --- Capabilities ticker --- */
+.ticker-strip {
+  overflow: hidden;
+  padding: 13px 0;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.ticker-strip::before,
+.ticker-strip::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ticker-strip::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg-primary), transparent);
+}
+
+.ticker-strip::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg-primary), transparent);
+}
+
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker-loop 44s linear infinite;
+  width: max-content;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+.ticker-item {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 22px;
+}
+
+.ticker-sep {
+  color: rgba(201, 168, 76, 0.3);
+  font-size: 10px;
+  align-self: center;
+}
+
+/* --- Trust stats scorecard redesign --- */
+.trust-anchor {
+  padding: 48px 0 0;
+}
+
+.trust-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.trust-stat {
+  text-align: left;
+  padding: 52px 40px 52px 0;
+  border-right: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.trust-stat:nth-child(n+2) {
+  padding-left: 40px;
+}
+
+.trust-stat:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.trust-stat::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trust-stat:hover::after {
+  transform: scaleX(1);
+}
+
+.trust-stat .stat-value {
+  font-family: var(--font-mono);
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  display: block;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+
+.trust-stat .stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 0;
+  letter-spacing: 0.01em;
+  line-height: 1.65;
+}
+
+/* --- Card hover glow --- */
+.problem-card:hover {
+  box-shadow: 0 0 48px rgba(201, 168, 76, 0.05);
+}
+
+.persona-card:hover {
+  box-shadow: 0 0 48px rgba(201, 168, 76, 0.05);
+}
+
+/* --- FAQ left accent on active/hover --- */
+.faq-question {
+  box-shadow: inset 2px 0 0 transparent;
+  transition: color 0.2s, box-shadow 0.3s;
+  padding-left: 16px;
+}
+
+.faq-question:hover,
+.faq-item.open .faq-question {
+  box-shadow: inset 2px 0 0 var(--accent);
+  color: var(--accent);
+}
+
+/* --- Diff item hover indent --- */
+.diff-item {
+  transition: border-color 0.3s, padding-left 0.3s;
+}
+
+.diff-item:hover {
+  padding-left: 12px;
+}
+
+/* --- Step number brightens on hover --- */
+.step {
+  transition: background 0.3s;
+}
+
+.step:hover .step-num {
+  color: rgba(201, 168, 76, 0.24);
+  transition: color 0.4s;
+}
+
+/* --- Footer accent rule --- */
+footer {
+  position: relative;
+}
+
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+footer { border-top: none; }
+
+/* --- Responsive trust stats --- */
+@media (max-width: 900px) {
+  .trust-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  .trust-stat:nth-child(3) {
+    grid-column: 1 / -1;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .trust-stats {
+    grid-template-columns: 1fr;
+  }
+  .trust-stat {
+    border-right: none;
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+  }
+  .trust-stat:nth-child(n+2) {
+    padding-left: 0;
+  }
+  .trust-stat:nth-child(3) {
+    grid-column: auto;
+    border-top: 1px solid var(--border);
+  }
+
+  .ticker-item { padding: 0 16px; }
+}
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: rgba(8, 8, 8, 0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 24px clamp(24px, 5vw, 48px);
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-mobile-toggle { display: block; }
+
+  .hero { min-height: auto; padding: 120px 0 80px; }
+
+  .step {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .step-num {
+    font-size: 32px;
+  }
+}
+
+/* Skip nav */
+.skip-nav {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-nav:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  padding: 12px 20px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  font-weight: 600;
+  z-index: 9999;
+  overflow: visible;
+}
+</style>
+<meta name="author" content="Philip Stevens">
+<link rel="author" href="/about">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://baseweight.vercel.app/#website",
+      "url": "https://baseweight.vercel.app/",
+      "name": "Baseweight",
+      "privacyPolicy": "https://baseweight.vercel.app/privacy"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://baseweight.vercel.app/#organization",
+      "name": "Baseweight",
+      "url": "https://baseweight.vercel.app/",
+      "email": "philipstevens4@gmail.com",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "philipstevens4@gmail.com",
+        "contactType": "customer support",
+        "availableLanguage": "English"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://baseweight.vercel.app/#person",
+      "name": "Philip Stevens",
+      "email": "philipstevens4@gmail.com",
+      "url": "https://baseweight.vercel.app/about",
+      "worksFor": { "@id": "https://baseweight.vercel.app/#organization" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://baseweight.vercel.app/#webpage",
+      "url": "https://baseweight.vercel.app/",
+      "name": "Baseweight — Domain AI Adaptation, Diagnosed and Built",
+      "description": "Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.",
+      "author": { "@id": "https://baseweight.vercel.app/#person" },
+      "publisher": { "@id": "https://baseweight.vercel.app/#organization" },
+      "datePublished": "2025-01-01",
+      "dateModified": "2026-03-02",
+      "inLanguage": "en-US"
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
+<!-- ======== NAV ======== -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Baseweight</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#how">How We Work</a></li>
+      <li><a href="#cases">Cases</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a Diagnostic Call</a></li>
+    </ul>
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<main id="main-content">
+
+<!-- ======== HERO ======== -->
+<section class="hero" id="hero">
+  <div class="hero-radar-wrap" aria-hidden="true">
+    <div class="hero-radar-ring"></div>
+    <div class="hero-radar-ring"></div>
+    <div class="hero-radar-ring"></div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <h1 class="reveal">Your AI underperforms because you picked the <span class="accent">wrong adaptation technique</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">We run a 2-week diagnostic on your pipeline, data, and quality gaps&mdash;then tell you whether you need RAG, fine-tuning, DPO, or something else entirely. Then we build it. You keep the weights.</p>
+      <div class="hero-cta-group reveal reveal-delay-2">
+        <a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a Diagnostic Call</a>
+        <p class="hero-support">30 minutes. No cost, no commitment. We'll tell you what's wrong with your current approach&mdash;and which technique closes the gap.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== CAPABILITIES TICKER ======== -->
+<div class="ticker-strip" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">RAG Architecture</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">LoRA Fine-tuning</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">QLoRA</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">DPO Alignment</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">RLHF</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Eval Design</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Model Compression</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Retrieval Hardening</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Instruction Tuning</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Full Fine-tuning</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Adapter Pipelines</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Regression Gating</span><span class="ticker-sep">·</span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item">RAG Architecture</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">LoRA Fine-tuning</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">QLoRA</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">DPO Alignment</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">RLHF</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Eval Design</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Model Compression</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Retrieval Hardening</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Instruction Tuning</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Full Fine-tuning</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Adapter Pipelines</span><span class="ticker-sep">·</span>
+    <span class="ticker-item">Regression Gating</span><span class="ticker-sep">·</span>
+  </div>
+</div>
+
+<!-- ======== TRUST ANCHOR ======== -->
+<section class="trust-anchor">
+  <div class="container">
+    <div class="section-label" style="justify-content: center; margin-bottom: 28px;">01 &mdash; Results</div>
+    <div class="trust-stats reveal">
+      <div class="trust-stat">
+        <div class="stat-value" data-countup="94.3" data-suffix="% F1">94.3% F1</div>
+        <div class="stat-label">Domain extraction pipeline — sustained across GPT-4o → Claude 3.5 Sonnet → Llama 3.1 70B (12 months in production)</div>
+      </div>
+      <div class="trust-stat">
+        <div class="stat-value">21% → <span data-countup="2.4" data-suffix="%">2.4%</span></div>
+        <div class="stat-label">Structured field extraction error rate reduced via eval-gated LoRA deployment (90-day production window)</div>
+      </div>
+      <div class="trust-stat">
+        <div class="stat-value" data-countup="11" data-suffix="× faster">11× faster</div>
+        <div class="stat-label">LoRA fine-tune iteration cycle vs. full fine-tune baseline — same task, same dataset, same quality threshold</div>
+      </div>
+    </div>
+    <p style="font-size:12px; color: var(--text-muted); margin-top:20px; text-align:center;">Three production engagements, 2024&ndash;2025 &nbsp;&middot;&nbsp; <a href="#cases" style="color: var(--text-muted);">Case studies &darr;</a></p>
+  </div>
+</section>
+
+<!-- ======== TESTIMONIAL ======== -->
+<!-- TODO: Replace with a real attributed quote when available -->
+<!--
+<section class="testimonial-strip">
+  <div class="container">
+    <div class="testimonial-quote reveal">
+      <blockquote>Phil diagnosed in two weeks what we'd been calling an embeddings problem for six months. The actual fix took three days once we had the right technique.</blockquote>
+      <div class="testimonial-attribution">NAME, TITLE &mdash; COMPANY</div>
+    </div>
+  </div>
+</section>
+-->
+
+<!-- ======== PROBLEM ======== -->
+<section class="problems-section" id="problems">
+  <div class="container">
+    <div class="problems-header reveal">
+      <div class="section-label">02 &mdash; Problem</div>
+      <h2>Three expensive ways to get AI adaptation wrong</h2>
+    </div>
+    <div class="problems-grid">
+      <div class="problem-card reveal reveal-delay-1">
+        <div class="problem-number">01</div>
+        <h3>The diagnostic gap</h3>
+        <p>Your team can't tell whether the answer is better retrieval, a LoRA adapter, DPO, full fine-tuning, or something else. So you pick the technique your most senior engineer knows best&mdash;or the one the last vendor pitched. You burn $10&ndash;50k and two months discovering it was the wrong one.</p>
+        <div class="kicker">Every failed attempt makes the next one harder to justify internally.</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="problem-number">02</div>
+        <h3>The quality ceiling</h3>
+        <p>You've pushed prompting as far as it goes. You've built RAG and it's decent&mdash;but not good enough. The model still hallucinates on your domain terminology, misranks your edge cases, or drifts on long conversations.</p>
+        <div class="kicker">More prompting won't close this gap. It requires model-layer intervention.</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-3">
+        <div class="problem-number">03</div>
+        <h3>No credible middle option</h3>
+        <p>Enterprise AI vendors want $500k and six months. General integrators can set it up but can't fix it when performance degrades. Hiring a senior ML engineer is $200&ndash;350k+ total comp, 3&ndash;6 months to first contribution&mdash;and they might still pick the wrong technique.</p>
+        <div class="kicker">You're stuck between overpaying and underperforming.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== TRANSITION ======== -->
+<section class="transition-section" id="transition">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label" style="justify-content: center;">03 &mdash; Why</div>
+      <h2>Every AI shop has a hammer. Your problem might not be a nail.</h2>
+    </div>
+    <div class="body-text reveal reveal-delay-1">
+      <p>Fine-tuning vendors default to fine-tuning. RAG consultancies default to RAG. Prompt engineers default to more prompting.</p>
+      <p>None of them run the diagnostic first.</p>
+      <p>The right technique depends on your data characteristics, your quality requirements, your latency constraints, and your deployment environment. Picking the technique before analyzing the problem is backwards&mdash;but it's how the market works.</p>
+      <p class="punch">We start with your data, not our default.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======== HOW WE WORK ======== -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div class="how-header reveal">
+      <div class="section-label">04 &mdash; Process</div>
+      <h2>Diagnose first. Build second. Hand over everything.</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Full-stack diagnostic</h3>
+          <p>We assess your data, your current pipeline, and your quality gaps across the entire adaptation stack: retrieval architecture, fine-tuning approaches (LoRA, QLoRA, full), instruction tuning, preference optimization (DPO/RLHF), and model compression. The output: a clear recommendation on which technique your problem requires, with expected quality improvements and compute costs.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Adaptation execution</h3>
+          <p>We build what the diagnostic prescribes. Not what's familiar. Not what's fastest to bill. This could be a RAG architecture refactor, a LoRA fine-tune with custom evaluation sets, a full fine-tune with DPO alignment, or a multi-stage pipeline&mdash;whatever your domain data needs.</p>
+        </div>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Handoff with everything you need</h3>
+          <p>You get trained weights, training recipes, evaluation sets, deployment configs, and adapter templates. Your team maintains it without us. No vendor lock-in. No ongoing dependency. You own your model.</p>
+        </div>
+      </div>
+    </div>
+    <div class="how-cta reveal">
+      <a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a Diagnostic Call</a>
+    </div>
+  </div>
+</section>
+
+<!-- ======== DIFFERENTIATORS ======== -->
+<section class="diff-section" id="diff">
+  <div class="container">
+    <div class="diff-header reveal">
+      <div class="section-label">05 &mdash; Different</div>
+      <h2>A fine-tuning shop will always recommend fine-tuning. We might tell you not to.</h2>
+    </div>
+    <div class="diff-grid">
+      <div class="diff-item reveal reveal-delay-1">
+        <h3>Full-stack assessment, not single-technique bias</h3>
+        <p>We're fluent across retrieval, fine-tuning, preference optimization, and compression. The recommendation comes from the diagnosis, not from our revenue model.</p>
+      </div>
+      <div class="diff-item reveal reveal-delay-2">
+        <h3>You get the weights, not a dependency</h3>
+        <p>Every engagement ends with a handoff: trained adapters, eval sets, deployment configs, methodology docs. Your team runs it from there.</p>
+      </div>
+      <div class="diff-item reveal reveal-delay-3">
+        <h3>Pattern-first methodology</h3>
+        <p>Every engagement builds on reusable adaptation templates&mdash;training configs, eval sets, and deployment patterns refined across prior engagements. You get faster time to production and fewer dead ends&mdash;because we've seen what works across domains, not just yours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== WHO THIS IS FOR ======== -->
+<section class="audience-section" id="audience">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">06 &mdash; Fit</div>
+      <h2>Built for teams past the prompting phase</h2>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-card reveal reveal-delay-1">
+        <div class="persona-number">01</div>
+        <h3>About to invest in AI adaptation — haven't picked a technique yet</h3>
+        <p>You have domain data and a production use case. Before committing $10&ndash;50k, you need to know which adaptation technique your data requires&mdash;not which one is most familiar to your team.</p>
+      </div>
+      <div class="persona-card reveal reveal-delay-2">
+        <div class="persona-number">02</div>
+        <h3>Prompting and RAG are maxed out — the gap isn't closing</h3>
+        <p>Your AI features work in demos but fall short on your domain. The model hallucinates on your terminology, misranks edge cases, or drifts on long conversations. You're past the easy fixes.</p>
+      </div>
+      <div class="persona-card reveal reveal-delay-3">
+        <div class="persona-number">03</div>
+        <h3>Already invested in fine-tuning or RAG — still underperforming</h3>
+        <p>You've paid for an approach and performance isn't where it needs to be. You need a diagnosis: is the technique wrong for your data, is the implementation wrong, or both?</p>
+      </div>
+    </div>
+    <div class="audience-right reveal">
+      <div class="qualifier-label">Honest qualifier</div>
+      <p>We don't take exploratory engagements. If you've shipped AI features that work in demos but fail in production, we can help. If you're still evaluating use cases, come back when you've hit the ceiling.</p>
+      <a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Book a Diagnostic Call</a>
+      <p style="text-align: center; font-size: 12px; color: var(--text-muted);">Not ready? <a href="#kit" data-source="pricing-qualifier" style="color: var(--accent);">Get the free technique selection guide &rarr;</a></p>
+      <p class="nda-note">We'll tell you within 30 minutes whether we can help. We work under NDA. Your data and architecture stay confidential.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======== CASES ======== -->
+<section class="cases-section" id="cases">
+  <div class="container">
+    <div class="cases-header reveal">
+      <div class="section-label">07 &mdash; Cases</div>
+      <h2>Three cases where the diagnosis changed the answer.</h2>
+    </div>
+    <div class="cases-list">
+      <div class="case-item reveal">
+        <button class="case-question">Domain extraction stable across model swaps — 94.3% F1 over 12 months</button>
+        <div class="case-answer">
+          <div class="case-body">
+            <div class="case-block">
+              <div class="case-block-label">Situation</div>
+              <p>An extraction pipeline had to survive three provider model changes in twelve months without regression or emergency retraining. Performance was degrading silently between swaps.</p>
+            </div>
+            <div class="case-block">
+              <div class="case-block-label">Diagnosis</div>
+              <p>Failure analysis showed systematic gaps in domain terminology handling&mdash;not retrieval architecture. The bottleneck was in the model's weights, not the pipeline design. Fine-tuning was indicated; a RAG refactor was not.</p>
+            </div>
+            <div class="case-block">
+              <div class="case-block-label">Built</div>
+              <p>LoRA adapter with a custom eval set covering domain-specific entities, edge cases, and adversarial inputs. Eval-gated deployment blocked any release that regressed below threshold.</p>
+            </div>
+            <div class="case-outcome">94.3% F1 sustained across GPT-4o &rarr; Claude 3.5 Sonnet &rarr; Llama 3.1 70B &mdash; three model swaps, twelve months, zero production incidents from model drift.</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-item reveal reveal-delay-1">
+        <button class="case-question">Structured field extraction failing 21% of real-world inputs — reduced to 2.4%</button>
+        <div class="case-answer">
+          <div class="case-body">
+            <div class="case-block">
+              <div class="case-block-label">Situation</div>
+              <p>An extraction pipeline passed every stakeholder demo but failed on roughly one in five real inputs. No clear definition of "correct" existed&mdash;quality was assessed by eyeballing samples.</p>
+            </div>
+            <div class="case-block">
+              <div class="case-block-label">Diagnosis</div>
+              <p>The failure pattern wasn't prompt-engineerable. The model lacked domain schema knowledge that only training signal could provide. More prompting would not close this gap.</p>
+            </div>
+            <div class="case-block">
+              <div class="case-block-label">Built</div>
+              <p>LoRA fine-tune with an eval set constructed from representative and adversarial inputs. Must-pass eval gates blocked releases that didn't meet the agreed acceptance criteria.</p>
+            </div>
+            <div class="case-outcome">21% &rarr; 2.4% field-level error rate over a 90-day production window.</div>
+          </div>
+        </div>
+      </div>
+      <div class="case-item reveal reveal-delay-2">
+        <button class="case-question">Full fine-tune cycles blocking rapid iteration — same quality at 11× the speed</button>
+        <div class="case-answer">
+          <div class="case-body">
+            <div class="case-block">
+              <div class="case-block-label">Situation</div>
+              <p>A team running full fine-tune cycles for each adaptation pass was burning weeks of calendar time and significant compute per iteration&mdash;a feedback loop too slow to act on.</p>
+            </div>
+            <div class="case-block">
+              <div class="case-block-label">Diagnosis</div>
+              <p>LoRA adapters could match full fine-tune quality at a fraction of the compute for this task class. Full fine-tuning was overkill&mdash;not wrong in principle, but wrong for the specific data volume and quality requirements.</p>
+            </div>
+            <div class="case-block">
+              <div class="case-block-label">Built</div>
+              <p>LoRA adapter pipeline validated against the same task evals used for the full fine-tune baseline&mdash;same task, same dataset, same quality threshold.</p>
+            </div>
+            <div class="case-outcome">11&times; faster iteration cycle at equivalent quality &mdash; weeks of calendar time recovered per adaptation pass.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== PRICING ======== -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="pricing-header reveal">
+      <div class="section-label">08 &mdash; Pricing</div>
+      <h2>Scoped to your problem. Not sized to your budget.</h2>
+    </div>
+    <div class="pricing-table-wrap reveal reveal-delay-1">
+      <table class="pricing-table">
+        <thead>
+          <tr>
+            <th>Engagement type</th>
+            <th>Typical scope</th>
+            <th>Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>RAG / prompt architecture refactor</td>
+            <td>Lower complexity, shorter engagement</td>
+            <td>$15&ndash;25k</td>
+          </tr>
+          <tr>
+            <td>LoRA fine-tune + custom eval set</td>
+            <td style="color: var(--accent); font-weight: 500;">Most common starting point</td>
+            <td>$25&ndash;40k</td>
+          </tr>
+          <tr>
+            <td>Full fine-tune + DPO + benchmark suite</td>
+            <td>Complex domain adaptation</td>
+            <td>$40&ndash;60k</td>
+          </tr>
+          <tr>
+            <td>Ongoing retainer (3-month min.)</td>
+            <td>Adaptation as data drifts, new patterns, monitoring</td>
+            <td>$3&ndash;8k/mo</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="pricing-note reveal reveal-delay-2">We define scope and pricing during the diagnostic. You'll know the exact cost before you commit.</p>
+  </div>
+</section>
+
+<!-- ======== FAQ ======== -->
+<section class="faq-section" id="faq">
+  <div class="container">
+    <div class="faq-header reveal">
+      <div class="section-label">09 &mdash; FAQ</div>
+      <h2>Common questions</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal">
+        <button class="faq-question">Do we need to have tried fine-tuning before working with you?</button>
+        <div class="faq-answer">
+          <p>No. You need to have hit the limits of prompting and basic RAG. The whole point of the diagnostic is to determine the right technique before you spend money on the wrong one.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">What if the diagnostic says our current approach is fine?</button>
+        <div class="faq-answer">
+          <p>We'll tell you. If better prompting or a RAG refactor is the answer, we'll say so&mdash;even if that means a smaller engagement or no engagement at all. Recommending unnecessary fine-tuning would undermine everything we stand for.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Since you do both diagnosis and execution, isn't the diagnostic biased toward recommending more work?</button>
+        <div class="faq-answer">
+          <p>It's a fair question. Our answer is structural: the diagnostic deliverable is a written report you own regardless of what you do next. If we recommend fine-tuning and you want to take that report to an in-house team or another vendor, that's fine. We've told clients their stack is fine and the engagement ended there&mdash;those clients refer others precisely because we didn't oversell.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">How long does a typical engagement take?</button>
+        <div class="faq-answer">
+          <p>The diagnostic takes 1&ndash;2 weeks. Execution varies by technique: a RAG refactor might be 3&ndash;4 weeks, a LoRA fine-tune 4&ndash;6 weeks, a full fine-tune with DPO 6&ndash;10 weeks. We scope this precisely during the diagnostic.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Do we need to share our proprietary data?</button>
+        <div class="faq-answer">
+          <p>We work under NDA and can operate within your infrastructure. For fine-tuning, we need access to representative training data. We agree on data handling requirements before any access.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">What do we own at the end?</button>
+        <div class="faq-answer">
+          <p>Everything. Trained weights, adapters, evaluation sets, training recipes, deployment configs. No ongoing licensing. No vendor lock-in.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">How is this different from hiring an ML engineer?</button>
+        <div class="faq-answer">
+          <p>A senior ML engineer is $200&ndash;350k+ total comp, takes 3&ndash;6 months to onboard, and may default to the technique they know rather than the one your problem needs. We bring experience across multiple domains and problem types, and deliver in weeks, not quarters.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">What if we haven't built anything yet?</button>
+        <div class="faq-answer">
+          <p>That's fine. The diagnostic is most valuable before you've committed to a technique. We define which approach your data needs so you build it right the first time&mdash;instead of retrofitting after a failed attempt.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Do you do the implementation or just advise?</button>
+        <div class="faq-answer">
+          <p>Both. The diagnostic produces a recommendation. If you engage us for execution, we build it&mdash;code, training pipelines, eval sets, deployed weights. We hand you working artifacts, not a slide deck.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== LEAD CAPTURE ======== -->
+<section class="lead-section" id="kit">
+  <div class="container">
+    <div class="lead-inner">
+      <div class="reveal">
+        <div class="section-label" style="justify-content: center;">Free Resources</div>
+        <h2>Get the AI Adaptation Kit</h2>
+        <p class="lead-sub">Two free tools to help you assess your adaptation readiness before a call.</p>
+      </div>
+      <ul class="lead-resources reveal reveal-delay-1">
+        <li>AI Adaptation Readiness Checklist</li>
+        <li>Technique Selection Guide (RAG vs. fine-tuning vs. DPO vs. compression)</li>
+      </ul>
+      <div class="lead-form-wrap reveal reveal-delay-2">
+        <form
+          action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
+          method="post"
+          class="lead-form"
+          id="lead_form"
+          target="lead_hidden_iframe"
+          onsubmit="leadCaptureSubmit(event)"
+        >
+          <div class="lead-form-row">
+            <input
+              type="email"
+              name="email"
+              id="lead_email"
+              placeholder="you@company.com"
+              required
+              autocomplete="email"
+              aria-label="Email address"
+            />
+            <button type="submit">Send Me the Kit</button>
+          </div>
+          <!-- honeypot -->
+          <input
+            type="text"
+            name="company"
+            tabindex="-1"
+            autocomplete="off"
+            aria-label="Leave this field empty"
+            style="position:absolute;left:-9999px;opacity:0;height:0;width:0;"
+          />
+          <input type="hidden" name="k" value="formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn" />
+          <input type="hidden" name="source" id="lead_source" value="unknown" />
+          <input type="hidden" name="ua" id="lead_ua" />
+        </form>
+        <iframe name="lead_hidden_iframe" title="Form submission target" style="display:none"></iframe>
+        <div id="lead_success" class="lead-success" style="display:none">
+          <p><strong>Sent! Check your inbox.</strong></p>
+          <p class="lead-success-secondary">Ready to talk? <a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer">Book a diagnostic call</a> to discuss your specific use case.</p>
+        </div>
+      </div>
+      <p class="lead-note reveal reveal-delay-2">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FINAL CTA ======== -->
+<section class="final-cta" id="cta">
+  <div class="container">
+    <div class="final-cta-content">
+      <div class="reveal">
+        <div class="section-label" style="justify-content: center;">10 &mdash; Start</div>
+        <h2>Your model should be as specific as your domain.</h2>
+      </div>
+      <div class="body-text reveal reveal-delay-1">
+        <p>If your AI features plateau at "good enough for a demo" but fall short in production, the technique&mdash;not the team&mdash;is usually the bottleneck. Book 30 minutes and we'll tell you which adaptation approach your data needs.</p>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <a href="https://calendly.com/philipstevens4/intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book a Diagnostic Call</a>
+        <p class="support-text" style="margin-top: 16px; color: var(--accent); font-weight: 500;">We take one technical engagement at a time. If you're past the prompting phase, it's worth a conversation now.</p>
+        <p class="support-text">No pitch deck. No sales sequence. Just a technical conversation about your stack and where the quality gap is.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+  <address itemscope itemtype="https://schema.org/Person">By <a href="/about" rel="author" itemprop="url" tabindex="-1"><span itemprop="name">Philip Stevens</span></a></address>
+  <time itemprop="datePublished" datetime="2026-03-01">March 2026</time>
+</div>
+
+</main>
+
+<!-- ======== FOOTER ======== -->
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-muted);">About</a> &nbsp;&middot;&nbsp; <a href="/contact" style="color: var(--text-muted);">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy" style="color: var(--text-muted);">Privacy Policy</a></p>
+    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);" itemscope itemtype="https://schema.org/WebPage">By <span itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/about" rel="author" itemprop="url" style="color: var(--text-muted);"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="datePublished" datetime="2026-03-01">March 2026</time></p>
+  </div>
+</footer>
+
+<!-- ======== JS ======== -->
+<script>
+// Nav scroll behavior
+const nav = document.getElementById('nav');
+let lastScroll = 0;
+
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// Mobile nav toggle
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+
+// Close mobile nav on link click
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+  });
+});
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, {
+  threshold: 0.08,
+  rootMargin: '0px 0px -40px 0px'
+});
+
+document.querySelectorAll('.reveal').forEach(el => {
+  revealObserver.observe(el);
+});
+
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(openItem => {
+      openItem.classList.remove('open');
+    });
+
+    // Toggle clicked
+    if (!wasOpen) {
+      item.classList.add('open');
+    }
+  });
+});
+
+// Case accordion
+document.querySelectorAll('.case-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.case-item.open').forEach(openItem => {
+      openItem.classList.remove('open');
+    });
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+// Default first case open
+const firstCase = document.querySelector('.case-item');
+if (firstCase) firstCase.classList.add('open');
+
+// Stat countup animation
+(function() {
+  function countUp(el) {
+    const target = parseFloat(el.dataset.countup);
+    const suffix = el.dataset.suffix || '';
+    const decimals = el.dataset.countup.includes('.') ? el.dataset.countup.split('.')[1].length : 0;
+    const duration = 1400;
+    const startTime = performance.now();
+    function frame(now) {
+      const p = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (eased * target).toFixed(decimals) + suffix;
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    el.textContent = (0).toFixed(decimals) + suffix;
+    requestAnimationFrame(frame);
+  }
+  const statsEl = document.querySelector('.trust-stats');
+  if (!statsEl) return;
+  let fired = false;
+  const obs = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting && !fired) {
+      fired = true;
+      statsEl.querySelectorAll('[data-countup]').forEach(countUp);
+      obs.disconnect();
+    }
+  }, { threshold: 0.4 });
+  obs.observe(statsEl);
+})();
+
+// Lead capture
+(function() {
+  var uaField = document.getElementById('lead_ua');
+  if (uaField) uaField.value = navigator.userAgent;
+})();
+
+// Track which data-source element last navigated the user toward the kit form
+var _leadSource = 'unknown';
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('[data-source]');
+  if (el) _leadSource = el.getAttribute('data-source');
+});
+
+function leadCaptureSubmit(e) {
+  var sourceField = document.getElementById('lead_source');
+  if (sourceField) sourceField.value = _leadSource;
+  var form = document.getElementById('lead_form');
+  var success = document.getElementById('lead_success');
+  if (form) form.style.display = 'none';
+  if (success) success.style.display = 'block';
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      const offset = 80;
+      const top = target.getBoundingClientRect().top + window.scrollY - offset;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Baseweight — Domain AI Adaptation, Diagnosed and Built</title>
+<meta name="description" content="Baseweight was built to fix AI adaptation: diagnose which technique your domain data actually needs — RAG, fine-tuning, DPO, or compression — then build it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://baseweight.vercel.app/about">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://baseweight.vercel.app/about">
+<meta property="og:title" content="About — Baseweight">
+<meta property="og:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — then selects and builds the right adaptation technique for your domain data.">
+<meta property="og:image" content="https://baseweight.vercel.app/og-image.svg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About — Baseweight">
+<meta name="twitter:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — then selects and builds the right adaptation technique for your domain data.">
+<meta name="twitter:image" content="https://baseweight.vercel.app/og-image.svg">
+<style>
+/* ========================================
+   RESET & VARIABLES
+   ======================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #080808;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --border: #1c1c1c;
+  --border-accent: #282828;
+  --text-primary: #e8e4de;
+  --text-secondary: #898580;
+  --text-muted: #555;
+  --accent: #c9a84c;
+  --accent-hover: #dbb960;
+  --accent-dim: rgba(201, 168, 76, 0.1);
+  --accent-glow: rgba(201, 168, 76, 0.06);
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max-width: 1120px;
+  --section-pad: clamp(80px, 12vh, 140px);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+a:hover { color: var(--accent-hover); }
+
+/* ========================================
+   GRAIN OVERLAY
+   ======================================== */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* ========================================
+   LAYOUT
+   ======================================== */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 48px);
+}
+
+section {
+  padding: var(--section-pad) 0;
+  position: relative;
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ========================================
+   SCROLL ANIMATIONS
+   ======================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* ========================================
+   NAV
+   ======================================== */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 0 clamp(24px, 5vw, 48px);
+  transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s;
+  border-bottom: 1px solid transparent;
+}
+
+nav.scrolled {
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--border);
+}
+
+.nav-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text-primary); }
+
+.nav-cta {
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--bg-primary) !important;
+  background: var(--accent);
+  padding: 10px 20px;
+  letter-spacing: 0.04em;
+  transition: background 0.2s, transform 0.2s !important;
+}
+
+.nav-cta:hover {
+  background: var(--accent-hover) !important;
+  transform: translateY(-1px);
+}
+
+.nav-mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.nav-mobile-toggle span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--text-primary);
+  margin: 5px 0;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* ========================================
+   ABOUT HERO
+   ======================================== */
+.about-hero {
+  padding-top: calc(72px + var(--section-pad));
+  padding-bottom: var(--section-pad);
+}
+
+.about-hero h1 {
+  max-width: 700px;
+}
+
+/* ========================================
+   ABOUT BODY
+   ======================================== */
+.about-body {
+  border-top: 1px solid var(--border);
+}
+
+.about-body-inner {
+  max-width: 720px;
+}
+
+.about-body p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin-bottom: 20px;
+}
+
+/* ========================================
+   WHAT WE BELIEVE
+   ======================================== */
+.beliefs-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.beliefs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  max-width: 800px;
+}
+
+.belief-item {
+  padding-top: 24px;
+  border-top: 2px solid var(--border);
+}
+
+.belief-item h3 {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.belief-item p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ========================================
+   FOUNDER
+   ======================================== */
+.founder-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.founder-inner {
+  max-width: 720px;
+}
+
+.founder-inner h2 {
+  margin-bottom: 24px;
+}
+
+.founder-inner p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin-bottom: 16px;
+}
+
+.founder-credentials {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-top: 20px;
+}
+
+.founder-credentials li {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+/* ========================================
+   ABOUT LEAD CAPTURE
+   ======================================== */
+.about-lead {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.about-lead-inner {
+  max-width: 600px;
+}
+
+.about-lead-inner h2 {
+  margin-bottom: 10px;
+}
+
+.about-lead-inner .lead-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.about-lead-form-row {
+  display: flex;
+  gap: 12px;
+  max-width: 440px;
+}
+
+.about-lead-form-row input[type="email"] {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.about-lead-form-row input[type="email"]::placeholder {
+  color: var(--text-muted);
+}
+
+.about-lead-form-row input[type="email"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
+}
+
+.about-lead-form-row button {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bg-primary);
+  background: var(--accent);
+  border: none;
+  padding: 14px 24px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.about-lead-form-row button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.about-lead-success {
+  padding: 20px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  max-width: 440px;
+}
+
+.about-lead-success p {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.about-lead-note {
+  margin-top: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   ABOUT CTA
+   ======================================== */
+.about-cta {
+  text-align: center;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+}
+
+.about-cta h2 {
+  margin-bottom: 24px;
+}
+
+.about-cta p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 520px;
+  margin: 0 auto 32px;
+}
+
+.btn-primary {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--bg-primary);
+  background: var(--accent);
+  border: none;
+  padding: 16px 36px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, transform 0.15s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  color: var(--bg-primary);
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+footer p {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 900px) {
+  .beliefs-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: rgba(8, 8, 8, 0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 24px clamp(24px, 5vw, 48px);
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-mobile-toggle { display: block; }
+
+  .about-hero { padding-top: 120px; }
+
+  .about-lead-form-row {
+    flex-direction: column;
+  }
+}
+
+/* Skip nav */
+.skip-nav {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip-nav:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  padding: 12px 20px;
+  background: var(--accent);
+  color: var(--bg-primary);
+  font-weight: 600;
+  z-index: 9999;
+  overflow: visible;
+}
+</style>
+<meta name="author" content="Philip Stevens">
+<link rel="author" href="/about">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["AboutPage", "ContactPage"],
+      "@id": "https://baseweight.vercel.app/about#webpage",
+      "url": "https://baseweight.vercel.app/about",
+      "name": "About — Baseweight",
+      "description": "Philip Stevens: AI adaptation specialist diagnosing and building RAG, fine-tuning, DPO, and compression solutions for production domains.",
+      "author": {
+        "@type": "Person",
+        "name": "Philip Stevens",
+        "email": "philipstevens4@gmail.com",
+        "url": "https://baseweight.vercel.app/about"
+      },
+      "datePublished": "2025-01-01",
+      "dateModified": "2026-03-02",
+      "inLanguage": "en-US",
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://baseweight.vercel.app/#website",
+        "url": "https://baseweight.vercel.app/",
+        "name": "Baseweight"
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
+<!-- ======== NAV ======== -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Baseweight</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/#how">How We Work</a></li>
+      <li><a href="/#cases">Cases</a></li>
+      <li><a href="/#pricing">Pricing</a></li>
+      <li><a href="/#faq">FAQ</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="https://calendly.com/philipstevens4/intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a Diagnostic Call</a></li>
+    </ul>
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<main id="main-content">
+
+<!-- ======== ABOUT HERO ======== -->
+<section class="about-hero">
+  <div class="container">
+    <div class="reveal">
+      <h1>We built Baseweight because every AI shop has one tool&mdash;and <span style="color: var(--accent);">recommends it for everything.</span></h1>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ABOUT BODY ======== -->
+<section class="about-body">
+  <div class="container">
+    <div class="about-body-inner">
+      <div class="reveal">
+        <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. Prompt engineers recommend more prompting.</p>
+        <p>This isn't because these are bad companies. It's because when you have one tool, every problem looks like it needs that tool.</p>
+        <p>The result: teams burn $10&ndash;50k and months discovering the wrong technique was applied. Then they start over&mdash;if they can justify the investment internally.</p>
+        <p>Baseweight exists to fix the sequence. Diagnose the problem across the full adaptation stack. Then&mdash;and only then&mdash;select and execute the right technique.</p>
+        <p>Our team has built domain adaptations across retrieval, fine-tuning (LoRA, QLoRA, full), instruction tuning, preference optimization (DPO), and model compression. We don't default to any single approach because our value is in the diagnosis, not the technique.</p>
+        <p>Every engagement produces artifacts you own: weights, training recipes, eval sets, deployment configs. We hand you the methodology so your team can maintain and extend it. If you want us to stick around, retainers are available&mdash;but dependency is never the business model.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== WHAT WE BELIEVE ======== -->
+<section class="beliefs-section">
+  <div class="container">
+    <div class="reveal">
+      <h2 class="section-label">What We Believe</h2>
+    </div>
+    <div class="beliefs-grid">
+      <div class="belief-item reveal reveal-delay-1">
+        <h3>Diagnosis before prescription</h3>
+        <p>The technique should follow from the problem, not the other way around.</p>
+      </div>
+      <div class="belief-item reveal reveal-delay-2">
+        <h3>Ownership over dependency</h3>
+        <p>You should own your model, your weights, and your methodology. Full stop.</p>
+      </div>
+      <div class="belief-item reveal reveal-delay-1">
+        <h3>Patterns over bespoke</h3>
+        <p>Every engagement contributes to a growing library of reusable templates. You benefit from patterns already tested in other domains&mdash;not a blank-slate build.</p>
+      </div>
+      <div class="belief-item reveal reveal-delay-2">
+        <h3>Honesty over revenue</h3>
+        <p>If your problem is solvable with better prompting, we'll tell you. We'd rather earn trust than bill hours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FOUNDER ======== -->
+<section class="founder-section">
+  <div class="container">
+    <div class="founder-inner">
+      <div class="reveal">
+        <div class="section-label">Founder</div>
+        <h2>Founded by <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Philip Stevens</span></span></h2>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <p>12 years in applied machine learning, including production ML at Agoda and Quantcast. Independent consultant since 2023, focused on post-training, eval design, RAG hardening, and parameter-efficient fine-tuning (LoRA/QLoRA).</p>
+        <p>Baseweight was built from a pattern that kept repeating in consulting engagements: teams choosing adaptation techniques before diagnosing the problem. The diagnostic-first model exists because that sequence works&mdash;and the reverse doesn't.</p>
+        <p style="font-size:13px; color: var(--text-muted); margin-bottom:16px;">Independent consultant since <time itemprop="datePublished" datetime="2023-01-01">2023</time>.</p>
+        <ul class="founder-credentials">
+          <li>Post-training</li>
+          <li>Eval design</li>
+          <li>RAG hardening</li>
+          <li>LoRA / QLoRA</li>
+          <li>DPO alignment</li>
+          <li>Model compression</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ABOUT LEAD CAPTURE ======== -->
+<section class="about-lead" id="contact">
+  <div class="container">
+    <div class="about-lead-inner">
+      <div class="reveal">
+        <h2>Not ready to book a call?</h2>
+        <p class="lead-sub">Get the free AI Adaptation Readiness Checklist and Technique Selection Guide. Figure out where you stand before we talk.</p>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <form
+          action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
+          method="post"
+          id="about_lead_form"
+          target="about_lead_hidden_iframe"
+          onsubmit="aboutLeadCaptureSubmit(event)"
+        >
+          <div class="about-lead-form-row">
+            <input
+              type="email"
+              name="email"
+              placeholder="you@company.com"
+              required
+              autocomplete="email"
+              aria-label="Email address"
+            />
+            <button type="submit">Send Me the Kit</button>
+          </div>
+          <input type="text" name="company" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" />
+          <input type="hidden" name="k" value="formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn" />
+          <input type="hidden" name="source" value="about-page" />
+          <input type="hidden" name="ua" id="about_lead_ua" />
+        </form>
+        <iframe name="about_lead_hidden_iframe" title="Form submission target" style="display:none"></iframe>
+        <div id="about_lead_success" class="about-lead-success" style="display:none">
+          <p><strong>Sent! Check your inbox.</strong></p>
+        </div>
+        <p class="about-lead-note">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ABOUT CTA ======== -->
+<section class="about-cta">
+  <div class="container">
+    <div class="reveal">
+      <h2>Ready to diagnose your adaptation stack?</h2>
+      <p>30 minutes. No cost, no commitment. We'll tell you which technique your domain data actually needs.</p>
+      <a href="/#cta" class="btn-primary">Book a Diagnostic Call</a>
+    </div>
+  </div>
+</section>
+
+<div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
+  <address itemscope itemtype="https://schema.org/Person">By <a href="/about" rel="author" itemprop="url" tabindex="-1"><span itemprop="name">Philip Stevens</span></a></address>
+  <time itemprop="datePublished" datetime="2025-01-01">January 2025</time>
+</div>
+
+</main>
+
+<!-- ======== FOOTER ======== -->
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-muted);">About</a> &nbsp;&middot;&nbsp; <a href="/contact" style="color: var(--text-muted);">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy" style="color: var(--text-muted);">Privacy Policy</a></p>
+    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);" itemscope itemtype="https://schema.org/WebPage">By <span itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/about" rel="author" itemprop="url" style="color: var(--text-muted);"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="datePublished" datetime="2026-03-01">March 2026</time></p>
+  </div>
+</footer>
+
+<!-- ======== JS ======== -->
+<script>
+// Nav scroll behavior
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// Mobile nav toggle
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+});
+
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+  });
+});
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, {
+  threshold: 0.08,
+  rootMargin: '0px 0px -40px 0px'
+});
+
+document.querySelectorAll('.reveal').forEach(el => {
+  revealObserver.observe(el);
+});
+
+// About page lead capture
+(function() {
+  var uaField = document.getElementById('about_lead_ua');
+  if (uaField) uaField.value = navigator.userAgent;
+})();
+
+function aboutLeadCaptureSubmit(e) {
+  var form = document.getElementById('about_lead_form');
+  var success = document.getElementById('about_lead_success');
+  if (form) form.style.display = 'none';
+  if (success) success.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

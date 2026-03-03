@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://baseweight.vercel.app/sitemap.xml
