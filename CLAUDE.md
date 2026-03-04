@@ -20,7 +20,7 @@ python3 -m http.server 8080
 
 All CSS and JavaScript is **inline within each HTML file** — there are no shared stylesheets or script files. The design system CSS variables are duplicated in every page's `<style>` block.
 
-**Pages:** `index.html`, `about.html`, `contact.html`, `privacy.html`
+**Pages:** `index.html`, `about.html`, `contact.html`, `privacy.html`, `diagnostic.html`
 
 **Design tokens** (defined in `:root` in each file):
 - `--accent: #c9a84c` — gold accent color
@@ -41,7 +41,8 @@ All CSS and JavaScript is **inline within each HTML file** — there are no shar
 
 - `sitemap.xml` and `robots.txt` are manually maintained
 - Each page has full OG and Twitter card meta tags
-- `og-image.svg` is the shared social preview image
+- `images/featured.png` (1200×627) is the shared social preview image; `images/icon.png` (300×300) is used as apple-touch-icon
+- `images/banner.png` (1584×396) is the LinkedIn profile banner
 - Canonical URLs point to `https://baseweight.vercel.app/`
 
 ## Site Audit

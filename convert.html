@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Image Converter</title>
+<style>
+  body { font-family: monospace; background: #111; color: #e8e4de; padding: 40px; }
+  h2 { color: #c9a84c; }
+  .card { margin: 24px 0; padding: 24px; border: 1px solid #282828; }
+  img { max-width: 100%; display: block; margin-bottom: 16px; border: 1px solid #282828; }
+  a.dl { display: inline-block; padding: 10px 24px; background: #c9a84c; color: #080808;
+         font-weight: 600; text-decoration: none; margin-top: 8px; }
+  a.dl:hover { background: #dbb960; }
+  p { color: #898580; font-size: 13px; margin: 4px 0; }
+</style>
+</head>
+<body>
+<h2>Baseweight — LinkedIn Image Downloads</h2>
+<p style="color:#c9a84c;margin-bottom:32px">Images are re-encoded through Chrome's native JPEG encoder. Click a button to download.</p>
+
+<div id="cards"></div>
+
+<canvas id="c" style="display:none"></canvas>
+
+<script>
+const images = [
+  { src: 'images/banner.jpg',   label: 'LinkedIn Banner',   filename: 'baseweight-banner.jpg',   w: 1584, h: 396  },
+  { src: 'images/featured.jpg', label: 'LinkedIn Featured', filename: 'baseweight-featured.jpg', w: 1200, h: 627  },
+  { src: 'images/icon.jpg',     label: 'LinkedIn Icon',     filename: 'baseweight-icon.jpg',     w: 300,  h: 300  },
+];
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const container = document.getElementById('cards');
+
+images.forEach(({src, label, filename, w, h}) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  const preview = document.createElement('img');
+  preview.src = src;
+  preview.alt = label;
+
+  const info = document.createElement('p');
+  info.textContent = `${w} × ${h}px · JPEG`;
+
+  const btn = document.createElement('a');
+  btn.className = 'dl';
+  btn.textContent = `Download ${label}`;
+  btn.href = '#';
+
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = w;
+      canvas.height = h;
+      ctx.fillStyle = '#080808';
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      a.click();
+    };
+    img.src = src;
+  });
+
+  card.append(preview, info, btn);
+  container.appendChild(card);
+});
+</script>
+</body>
+</html>
