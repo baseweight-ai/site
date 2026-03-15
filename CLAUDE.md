@@ -43,7 +43,7 @@ All CSS and JavaScript is **inline within each HTML file** — there are no shar
 - Each page has full OG and Twitter card meta tags
 - `images/featured.png` (1200×627) is the shared social preview image; `images/icon.png` (300×300) is used as apple-touch-icon
 - `images/banner.png` (1584×396) is the LinkedIn profile banner
-- Canonical URLs point to `https://baseweight.vercel.app/`
+- Canonical URLs point to `https://baseweight.co/`
 
 ## Site Audit
 

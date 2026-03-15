@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://baseweight.vercel.app/sitemap.xml
+Sitemap: https://baseweight.co/sitemap.xml
