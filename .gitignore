@@ -13,3 +13,6 @@ Thumbs.db
 
 # Vercel local config
 .vercel/
+
+# Node
+node_modules/
