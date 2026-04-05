@@ -1083,130 +1083,6 @@ footer p {
   line-height: 1.75;
 }
 
-/* ========================================
-   LEAD CAPTURE
-   ======================================== */
-.lead-section {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.lead-inner {
-  max-width: 680px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.lead-inner h2 {
-  margin-bottom: 12px;
-}
-
-.lead-sub {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
-}
-
-.lead-resources {
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-}
-
-.lead-resources li {
-  font-size: 13px;
-  color: var(--text-primary);
-  font-weight: 500;
-  padding-left: 18px;
-  position: relative;
-}
-
-.lead-resources li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 8px;
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
-}
-
-.lead-form-wrap {
-  max-width: 440px;
-  margin: 0 auto;
-}
-
-.lead-form-row {
-  display: flex;
-  gap: 12px;
-}
-
-.lead-form-row input[type="email"] {
-  flex: 1;
-  min-width: 0;
-  padding: 14px 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--text-primary);
-}
-
-.lead-form-row input[type="email"]::placeholder {
-  color: var(--text-muted);
-}
-
-.lead-form-row input[type="email"]:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
-}
-
-.lead-form-row button {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--bg-primary);
-  background: var(--accent);
-  border: none;
-  padding: 14px 24px;
-  cursor: pointer;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  transition: background 0.2s, transform 0.15s;
-}
-
-.lead-form-row button:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-.lead-success {
-  padding: 20px;
-  background: rgba(201, 168, 76, 0.08);
-  border: 1px solid rgba(201, 168, 76, 0.2);
-}
-
-.lead-success p {
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.lead-success .lead-success-secondary {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-top: 8px;
-}
-
-.lead-note {
-  margin-top: 16px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
 
 /* ========================================
    RESPONSIVE
@@ -1235,9 +1111,6 @@ footer p {
     gap: 16px;
   }
 
-  .lead-form-row {
-    flex-direction: column;
-  }
 }
 
 /* ========================================
@@ -1308,36 +1181,6 @@ footer p {
   box-shadow: 0 8px 32px rgba(201, 168, 76, 0.28);
 }
 
-/* --- Capabilities grid --- */
-.capabilities-strip {
-  padding: 18px 0;
-  background: var(--bg-primary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.capabilities-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 4px 0;
-}
-
-.capability-tag {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  padding: 4px 18px;
-}
-
-.capability-sep {
-  color: rgba(201, 168, 76, 0.3);
-  font-size: 10px;
-}
 
 /* --- Trust stats scorecard redesign --- */
 .trust-anchor {
@@ -1640,36 +1483,17 @@ footer { border-top: none; }
   </div>
   <div class="container">
     <div class="hero-content">
-      <h1 class="reveal">Your AI underperforms because you picked the <span class="accent">wrong adaptation technique</span></h1>
-      <p class="hero-sub reveal reveal-delay-1">We diagnose why. Then build the fix. You keep the weights.</p>
+      <h1 class="reveal">Your model passes tests and <span class="accent">fails in production</span>. The root cause is in the adaptation stack.</h1>
+      <p class="hero-sub reveal reveal-delay-1">Know why your model is failing. Fix it. Prove it worked.</p>
       <div class="hero-cta-group reveal reveal-delay-2">
         <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
         <p class="hero-support">30 minutes. No cost, no commitment.</p>
+        <p class="hero-support" style="margin-top: 0;"><a href="#how" style="color: var(--text-muted); font-size: 12px;">See how it works &darr;</a></p>
         <p class="hero-credential">12 years in applied ML &nbsp;&middot;&nbsp; Previously at Agoda &amp; Quantcast</p>
       </div>
     </div>
   </div>
 </section>
-
-<!-- ======== CAPABILITIES TICKER ======== -->
-<div class="capabilities-strip" aria-hidden="true">
-  <div class="container">
-    <div class="capabilities-grid">
-      <span class="capability-tag">RAG Architecture</span><span class="capability-sep">·</span>
-      <span class="capability-tag">LoRA Fine-tuning</span><span class="capability-sep">·</span>
-      <span class="capability-tag">QLoRA</span><span class="capability-sep">·</span>
-      <span class="capability-tag">DPO Alignment</span><span class="capability-sep">·</span>
-      <span class="capability-tag">RLHF</span><span class="capability-sep">·</span>
-      <span class="capability-tag">Eval Design</span><span class="capability-sep">·</span>
-      <span class="capability-tag">Model Compression</span><span class="capability-sep">·</span>
-      <span class="capability-tag">Retrieval Hardening</span><span class="capability-sep">·</span>
-      <span class="capability-tag">Instruction Tuning</span><span class="capability-sep">·</span>
-      <span class="capability-tag">Full Fine-tuning</span><span class="capability-sep">·</span>
-      <span class="capability-tag">Adapter Pipelines</span><span class="capability-sep">·</span>
-      <span class="capability-tag">Regression Gating</span>
-    </div>
-  </div>
-</div>
 
 
 <!-- ======== TESTIMONIAL ======== -->
@@ -1701,15 +1525,15 @@ footer { border-top: none; }
       </div>
       <div class="problem-card reveal reveal-delay-2">
         <div class="problem-number">02</div>
-        <h3>The quality ceiling</h3>
-        <p>You've pushed prompting as far as it goes. You've built RAG and it's decent&mdash;but not good enough. The model still hallucinates on your domain terminology, misranks your edge cases, or drifts on long conversations.</p>
-        <div class="kicker">More prompting won't close this gap. It requires model-layer intervention.</div>
+        <h3>Pilot purgatory</h3>
+        <p>Your demo works. Your pilot passed stakeholder review. In production, the model hallucinates on your domain terminology, misranks your edge cases, or drifts on long conversations. Prompting and RAG got you this far &mdash; but the gap isn&rsquo;t closing.</p>
+        <div class="kicker">Stakeholder patience has a shelf life. Post-training is the next lever &mdash; but only if you pick the right technique and can prove it moved the needle.</div>
       </div>
       <div class="problem-card reveal reveal-delay-3">
         <div class="problem-number">03</div>
-        <h3>No credible middle option</h3>
-        <p>Your model provider&rsquo;s fine-tuning API is fast but black-box&mdash;you don&rsquo;t own the weights, can&rsquo;t customise the eval, and it doesn&rsquo;t help when the problem is retrieval. General integrators can configure a pipeline but can&rsquo;t diagnose why performance degrades. Hiring a senior ML engineer is $200&ndash;350k+ total comp, 3&ndash;6 months to first contribution&mdash;and they might still default to the technique they know best.</p>
-        <div class="kicker">You're stuck between fast-but-limited and slow-but-uncertain.</div>
+        <h3>No way to prove the fix worked</h3>
+        <p>Your team ran a fine-tune or rebuilt the RAG pipeline. Performance feels better. But &ldquo;feels better&rdquo; isn&rsquo;t a number&mdash;and without a domain-calibrated eval set, there&rsquo;s no defensible way to know whether quality improved, or whether the next model update will silently break it.</p>
+        <div class="kicker">Progress by opinion is indistinguishable from no progress at all.</div>
       </div>
     </div>
   </div>
@@ -1725,7 +1549,7 @@ footer { border-top: none; }
     <div class="body-text reveal reveal-delay-1">
       <p>Fine-tuning vendors default to fine-tuning. RAG consultancies default to RAG. Prompt engineers default to more prompting.</p>
       <p>None of them run the diagnostic first.</p>
-      <p>The right technique depends on your data characteristics, your quality requirements, your latency constraints, and your deployment environment. Picking the technique before analyzing the problem is backwards&mdash;but it's how the market works.</p>
+      <p>The right technique depends on your problem, not your vendor&rsquo;s default. Picking technique before analyzing the problem is backwards&mdash;but it&rsquo;s how the market works.</p>
       <p class="punch">We start with your data, not our default.</p>
     </div>
   </div>
@@ -1743,7 +1567,7 @@ footer { border-top: none; }
         <div class="step-num">01</div>
         <div>
           <h3>Full-stack diagnostic</h3>
-          <p>We assess your data, your current pipeline, and your quality gaps across the entire adaptation stack: retrieval architecture, fine-tuning approaches (LoRA, QLoRA, full fine-tuning, and instruction tuning variants), preference optimization (DPO/RLHF), and compression where constraints require it. The output: a written recommendation on which technique your problem requires&mdash;with projected accuracy gains, compute cost estimates, and a build timeline.</p>
+          <p>We assess your data, your current pipeline, and your quality gaps&mdash;across retrieval, fine-tuning, preference optimization, and compression. The output: a written recommendation on which technique your problem requires, with projected accuracy gains, compute cost estimates, and a build timeline.</p>
         </div>
       </div>
       <div class="step reveal reveal-delay-1">
@@ -1756,8 +1580,8 @@ footer { border-top: none; }
       <div class="step reveal reveal-delay-2">
         <div class="step-num">03</div>
         <div>
-          <h3>Complete handoff — you own it from here</h3>
-          <p>You get trained weights, training recipes, evaluation sets, deployment configs, and adapter templates. Your team maintains it without us. No vendor lock-in. No ongoing dependency. You own your model.</p>
+          <h3>Complete handoff &mdash; including the benchmark</h3>
+          <p>You get trained weights, training recipes, deployment configs, and adapter templates. The eval set ships as a domain benchmark calibrated to your production use cases&mdash;it catches regressions on future model updates and compounds in value as you add new failure patterns. Your team runs it without us.</p>
         </div>
       </div>
     </div>
@@ -1777,16 +1601,16 @@ footer { border-top: none; }
     </div>
     <div class="diff-grid">
       <div class="diff-item reveal reveal-delay-1">
-        <h3>Full-stack assessment, not single-technique bias</h3>
-        <p>We're fluent across retrieval, fine-tuning, preference optimization, and compression. The recommendation comes from the diagnosis, not from our revenue model.</p>
+        <h3>Built-in proof &mdash; not "it feels better"</h3>
+        <p>Every engagement produces a domain benchmark calibrated to your production use cases. It measures whether the fix worked, catches regressions before they reach production, and compounds in value as you add new patterns. You know exactly when you&rsquo;re done&mdash;and so does anyone who reviews the work.</p>
       </div>
       <div class="diff-item reveal reveal-delay-2">
-        <h3>You get the weights, not a dependency</h3>
-        <p>Every engagement ends with a handoff: trained adapters, eval sets, deployment configs, methodology docs. Your team runs it from there.</p>
+        <h3>Full-stack assessment, not single-technique bias</h3>
+        <p>We&rsquo;re fluent across retrieval, fine-tuning, preference optimization, and compression. The recommendation comes from the diagnosis, not from our revenue model. Across engagements, we build a failure pattern library&mdash;diagnosis accuracy improves with each client in a vertical.</p>
       </div>
       <div class="diff-item reveal reveal-delay-3">
-        <h3>A structured failure taxonomy, not a single-technique default</h3>
-        <p>The diagnostic assesses failure patterns across retrieval, model weights, evaluation design, and deployment constraints&mdash;in sequence, before any technique is committed to. The right questions get asked first. The technique follows from the answers.</p>
+        <h3>You get the weights, not a dependency</h3>
+        <p>Every engagement ends with a handoff: trained adapters, eval sets, deployment configs, methodology docs. Your team runs it from there.</p>
       </div>
     </div>
   </div>
@@ -1810,12 +1634,16 @@ footer { border-top: none; }
         <h3>Already invested in fine-tuning or RAG — still underperforming</h3>
         <p>You've paid for an approach and performance isn't where it needs to be. You need a diagnosis: is the technique wrong for your data, is the implementation wrong, or both?</p>
       </div>
+      <div class="persona-card reveal reveal-delay-3">
+        <div class="persona-number">03</div>
+        <h3>Series A CTO who owns the ML decision and needs a defensible answer</h3>
+        <p>You have a team of 15&ndash;50 engineers and a quality gap you can&rsquo;t close internally. A failed attempt doesn&rsquo;t just cost compute&mdash;it costs credibility. You need the diagnosis before you commit budget, not after you&rsquo;ve spent it.</p>
+      </div>
     </div>
     <div class="audience-right reveal">
       <div class="qualifier-label">Honest qualifier</div>
       <p>If you're still evaluating whether AI is right for your workflow, we're not the right call yet. Come back when you've hit the ceiling.</p>
       <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Book an Intro Call</a>
-      <p style="text-align: center; font-size: 12px; color: var(--text-muted);">Not ready? <a href="#kit" data-source="pricing-qualifier" style="color: var(--accent);">Get the free technique selection guide &rarr;</a></p>
       <p class="nda-note">We'll tell you within 30 minutes whether we can help. We work under NDA. Your data and architecture stay confidential.</p>
     </div>
   </div>
@@ -1825,7 +1653,7 @@ footer { border-top: none; }
 <section class="cases-section" id="cases">
   <div class="container">
     <div class="cases-header reveal">
-      <div class="section-label">07 &mdash; Diagnostic</div>
+      <div class="section-label">07 &mdash; Failure Patterns</div>
       <h2>Three failure patterns the diagnostic is built to catch.</h2>
     </div>
     <div class="cases-list">
@@ -1914,7 +1742,7 @@ footer { border-top: none; }
         </thead>
         <tbody>
           <tr>
-            <td><a href="/diagnostic" style="color: inherit;">Standalone diagnostic </a></td>
+            <td><a href="/diagnostic" style="color: var(--accent);">Standalone diagnostic &rarr;</a></td>
             <td>2-week pipeline &amp; data analysis; written technique recommendation</td>
             <td>$5&ndash;8k</td>
           </tr>
@@ -1935,13 +1763,13 @@ footer { border-top: none; }
           </tr>
           <tr>
             <td>Ongoing retainer (3-month min.)</td>
-            <td>Adaptation as data drifts, new patterns, monitoring</td>
+            <td>Continuous improvement loop &mdash; benchmark maintenance, new failure patterns, regression monitoring as data drifts</td>
             <td>$3&ndash;8k/mo</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="pricing-note reveal reveal-delay-2">Execution scope and pricing are defined in the diagnostic report. You&rsquo;ll know the exact cost before you commit to execution. A failed internal attempt typically costs $10&ndash;50k in engineering time and two months of runway&mdash;the diagnostic exists to avoid that.</p>
+    <p class="pricing-note reveal reveal-delay-2">Execution scope and pricing are defined in the diagnostic report. You&rsquo;ll know the exact cost before you commit to execution. A failed internal attempt typically costs $10&ndash;50k in engineering time and two months of runway&mdash;the diagnostic exists to avoid that. The diagnostic is designed to lead to a retainer: the retainer maintains benchmark accuracy, closes new failure patterns as data drifts, and catches regressions before each model update.</p>
   </div>
 </section>
 
@@ -1957,13 +1785,13 @@ footer { border-top: none; }
       <div class="faq-item reveal">
         <button class="faq-question">What if the diagnostic says our current approach is fine?</button>
         <div class="faq-answer">
-          <p>We'll tell you. If better prompting or a RAG refactor is the answer, we'll say so&mdash;even if that means a smaller engagement or no engagement at all. Recommending unnecessary fine-tuning would undermine everything we stand for.</p>
+          <p>We&rsquo;ll tell you. If better prompting or a RAG refactor is the answer, we&rsquo;ll say so&mdash;even if that means a smaller engagement or no engagement at all. The recommendation follows the data, not the business case for more work.</p>
         </div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-question">Since you do both diagnosis and execution, isn't the diagnostic biased toward recommending more work?</button>
         <div class="faq-answer">
-          <p>It's a fair question. Our answer is structural: the diagnostic deliverable is a written report you own regardless of what you do next. If we recommend fine-tuning and you want to take that report to an in-house team or another vendor, that's fine. If your current approach is adequate, that's what the report says&mdash;even if it means no further engagement. Recommending unnecessary work would undermine the independence the diagnostic is designed to provide.</p>
+          <p>Our answer is structural: the diagnostic deliverable is a written report you own regardless of what you do next. If we recommend fine-tuning and you want to take it to an in-house team or another vendor, that&rsquo;s fine. If your current approach is adequate, that&rsquo;s what the report says&mdash;even if it means no further engagement.</p>
         </div>
       </div>
       <div class="faq-item reveal">
@@ -1988,63 +1816,6 @@ footer { border-top: none; }
   </div>
 </section>
 
-<!-- ======== LEAD CAPTURE ======== -->
-<section class="lead-section" id="kit">
-  <div class="container">
-    <div class="lead-inner">
-      <div class="reveal">
-        <div class="section-label" style="justify-content: center;">Free Resources</div>
-        <h2>Get the AI Adaptation Kit</h2>
-        <p class="lead-sub">Two free tools to help you assess your adaptation readiness before a call.</p>
-      </div>
-      <ul class="lead-resources reveal reveal-delay-1">
-        <li>AI Adaptation Readiness Checklist</li>
-        <li>Technique Selection Guide (RAG vs. fine-tuning vs. DPO vs. compression)</li>
-      </ul>
-      <div class="lead-form-wrap reveal reveal-delay-2">
-        <form
-          action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
-          method="post"
-          class="lead-form"
-          id="lead_form"
-          target="lead_hidden_iframe"
-          onsubmit="leadCaptureSubmit(event)"
-        >
-          <div class="lead-form-row">
-            <input
-              type="email"
-              name="email"
-              id="lead_email"
-              placeholder="you@company.com"
-              required
-              autocomplete="email"
-              aria-label="Email address"
-            />
-            <button type="submit">Send Me the Kit</button>
-          </div>
-          <!-- honeypot -->
-          <input
-            type="text"
-            name="company"
-            tabindex="-1"
-            autocomplete="off"
-            aria-label="Leave this field empty"
-            style="position:absolute;left:-9999px;opacity:0;height:0;width:0;"
-          />
-          <input type="hidden" name="k" value="formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn" />
-          <input type="hidden" name="source" id="lead_source" value="unknown" />
-          <input type="hidden" name="ua" id="lead_ua" />
-        </form>
-        <iframe name="lead_hidden_iframe" title="Form submission target" style="display:none"></iframe>
-        <div id="lead_success" class="lead-success" style="display:none">
-          <p><strong>Sent! Check your inbox.</strong></p>
-          <p class="lead-success-secondary">Ready to talk? <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer">Book an intro call</a> to discuss your specific use case.</p>
-        </div>
-      </div>
-      <p class="lead-note reveal reveal-delay-2">No spam. Unsubscribe anytime.</p>
-    </div>
-  </div>
-</section>
 
 <!-- ======== FINAL CTA ======== -->
 <section class="final-cta" id="cta">
@@ -2052,10 +1823,10 @@ footer { border-top: none; }
     <div class="final-cta-content">
       <div class="reveal">
         <div class="section-label" style="justify-content: center;">10 &mdash; Start</div>
-        <h2>Your model should be as specific as your domain.</h2>
+        <h2>One conversation. We&rsquo;ll tell you whether we can help.</h2>
       </div>
       <div class="body-text reveal reveal-delay-1">
-        <p>If your AI features plateau at "good enough for a demo" but fall short in production, the technique&mdash;not the team&mdash;is usually the bottleneck. Book 30 minutes and we'll tell you which adaptation approach your data needs.</p>
+        <p>If your AI features plateau at &ldquo;good enough for a demo&rdquo; but fall short in production, the technique&mdash;not the team&mdash;is usually the bottleneck. Thirty minutes. We&rsquo;ll walk through your stack and tell you exactly what the diagnostic would cover.</p>
       </div>
       <div class="reveal reveal-delay-2">
         <a href="https://cal.com/philip-stevens/baseweight-intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book an Intro Call</a>
@@ -2185,27 +1956,6 @@ if (firstCase) firstCase.classList.add('open');
   obs.observe(statsEl);
 })();
 
-// Lead capture
-(function() {
-  var uaField = document.getElementById('lead_ua');
-  if (uaField) uaField.value = navigator.userAgent;
-})();
-
-// Track which data-source element last navigated the user toward the kit form
-var _leadSource = 'unknown';
-document.addEventListener('click', function(e) {
-  var el = e.target.closest('[data-source]');
-  if (el) _leadSource = el.getAttribute('data-source');
-});
-
-function leadCaptureSubmit(e) {
-  var sourceField = document.getElementById('lead_source');
-  if (sourceField) sourceField.value = _leadSource;
-  var form = document.getElementById('lead_form');
-  var success = document.getElementById('lead_success');
-  if (form) form.style.display = 'none';
-  if (success) success.style.display = 'block';
-}
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
