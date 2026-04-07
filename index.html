@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseweight — Domain AI Adaptation, Diagnosed and Built</title>
-<meta name="description" content="Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.">
+<title>Baseweight — AI Model Quality, Diagnosed and Fixed</title>
+<meta name="description" content="Know why your AI model is failing in production. Structured failure diagnosis. Targeted intervention. Measurable quality improvement. The AI quality layer for Series A companies.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -13,14 +13,14 @@
 <link rel="canonical" href="https://baseweight.co/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/">
-<meta property="og:title" content="Baseweight — Domain AI Adaptation, Diagnosed and Built">
-<meta property="og:description" content="Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.">
+<meta property="og:title" content="Baseweight — AI Model Quality, Diagnosed and Fixed">
+<meta property="og:description" content="Know why your AI model is failing in production. Structured failure diagnosis. Targeted intervention. Measurable quality improvement. The AI quality layer for Series A companies.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Baseweight — Domain AI Adaptation, Diagnosed and Built">
-<meta name="twitter:description" content="Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.">
+<meta name="twitter:title" content="Baseweight — AI Model Quality, Diagnosed and Fixed">
+<meta name="twitter:description" content="Know why your AI model is failing in production. Structured failure diagnosis. Targeted intervention. Measurable quality improvement. The AI quality layer for Series A companies.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -1433,8 +1433,8 @@ footer { border-top: none; }
       "@type": "WebPage",
       "@id": "https://baseweight.co/#webpage",
       "url": "https://baseweight.co/",
-      "name": "Baseweight — Domain AI Adaptation, Diagnosed and Built",
-      "description": "Diagnose which AI adaptation technique your domain needs — RAG, fine-tuning, DPO, or compression — then build it. You keep the weights.",
+      "name": "Baseweight — AI Model Quality, Diagnosed and Fixed",
+      "description": "Know why your AI model is failing in production. Structured failure diagnosis, targeted intervention, measurable quality improvement. The AI quality layer for Series A companies.",
       "author": { "@id": "https://baseweight.co/#person" },
       "publisher": { "@id": "https://baseweight.co/#organization" },
       "datePublished": "2025-01-01",
@@ -1465,6 +1465,7 @@ footer { border-top: none; }
       <li><a href="/diagnostic">Diagnostic</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
       <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book an Intro Call</a></li>
     </ul>
     <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
@@ -1483,12 +1484,13 @@ footer { border-top: none; }
   </div>
   <div class="container">
     <div class="hero-content">
-      <h1 class="reveal">Your model passes tests and <span class="accent">fails in production</span>. The root cause is in the adaptation stack.</h1>
-      <p class="hero-sub reveal reveal-delay-1">Know why your model is failing. Fix it. Prove it worked.</p>
+      <div class="section-label reveal">01 &mdash; The Gap</div>
+      <h1 class="reveal">Your model passes evals. It fails in production. <span class="accent">The gap isn&rsquo;t random.</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">Eval/prod gaps follow failure patterns &mdash; they&rsquo;re diagnosable. We analyze your production failures, build evals calibrated to your actual distribution, and execute the intervention that closes the specific gap you have.</p>
       <div class="hero-cta-group reveal reveal-delay-2">
         <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
         <p class="hero-support">30 minutes. No cost, no commitment.</p>
-        <p class="hero-support" style="margin-top: 0;"><a href="#how" style="color: var(--text-muted); font-size: 12px;">See how it works &darr;</a></p>
+        <p class="hero-support" style="margin-top: 0;"><a href="#how" style="color: var(--text-secondary); font-size: 13px;">See how it works &darr;</a></p>
         <p class="hero-credential">12 years in applied ML &nbsp;&middot;&nbsp; Previously at Agoda &amp; Quantcast</p>
       </div>
     </div>
@@ -1514,43 +1516,49 @@ footer { border-top: none; }
   <div class="container">
     <div class="problems-header reveal">
       <div class="section-label">02 &mdash; Problem</div>
-      <h2>Three expensive ways to get AI adaptation wrong</h2>
+      <h2>Three failure modes that look like model problems. They&rsquo;re not.</h2>
     </div>
     <div class="problems-grid">
       <div class="problem-card reveal reveal-delay-1">
         <div class="problem-number">01</div>
-        <h3>The diagnostic gap</h3>
-        <p>Your team can't tell whether the answer is better retrieval, a LoRA adapter, DPO, full fine-tuning, or something else. So you pick the technique your most senior engineer knows best&mdash;or the one the last vendor pitched. You burn $10&ndash;50k and two months discovering it was the wrong one.</p>
-        <div class="kicker">Every failed attempt makes the next one harder to justify internally.</div>
+        <h3>You fine-tuned. You don&rsquo;t know if it helped.</h3>
+        <p>The provider returned a training loss curve. Looks like it converged. But did it fix the failure modes that were breaking production? Did it regress on cases you didn&rsquo;t include in training? Did it overfit to your examples instead of learning the underlying pattern? There&rsquo;s no way to know without evals calibrated to your actual production distribution &mdash; and building those requires the same expertise you were trying to avoid hiring.</p>
+        <div class="kicker">A green loss curve is not a green light.</div>
       </div>
       <div class="problem-card reveal reveal-delay-2">
         <div class="problem-number">02</div>
-        <h3>Pilot purgatory</h3>
-        <p>Your demo works. Your pilot passed stakeholder review. In production, the model hallucinates on your domain terminology, misranks your edge cases, or drifts on long conversations. Prompting and RAG got you this far &mdash; but the gap isn&rsquo;t closing.</p>
-        <div class="kicker">Stakeholder patience has a shelf life. Post-training is the next lever &mdash; but only if you pick the right technique and can prove it moved the needle.</div>
+        <h3>Performance looked solid in testing. It&rsquo;s degrading in production.</h3>
+        <p>Your evals passed. In production, the model fails on input types that weren&rsquo;t well-represented in your test set &mdash; distribution shift, adversarial inputs, edge cases real users send but testers don&rsquo;t. The model was optimized for the eval, not the problem. And there&rsquo;s no eval baseline covering the specific cases that are actually failing.</p>
+        <div class="kicker">The model was ready for your eval. It wasn&rsquo;t ready for your users.</div>
       </div>
       <div class="problem-card reveal reveal-delay-3">
         <div class="problem-number">03</div>
         <h3>No way to prove the fix worked</h3>
-        <p>Your team ran a fine-tune or rebuilt the RAG pipeline. Performance feels better. But &ldquo;feels better&rdquo; isn&rsquo;t a number&mdash;and without a domain-calibrated eval set, there&rsquo;s no defensible way to know whether quality improved, or whether the next model update will silently break it.</p>
+        <p>Your team ran a fine-tune or rebuilt the RAG pipeline. Performance feels better. But &ldquo;feels better&rdquo; isn&rsquo;t a number &mdash; and without evals calibrated to your production failure cases, there&rsquo;s no defensible way to know whether quality improved or whether the next model update will silently regress it.</p>
         <div class="kicker">Progress by opinion is indistinguishable from no progress at all.</div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ======== INLINE CTA ======== -->
+<div style="text-align: center; padding: 0 clamp(24px, 5vw, 48px) clamp(60px, 8vh, 100px);">
+  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;">Recognized your situation? 30 minutes. No commitment.</p>
+  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
+</div>
+
 <!-- ======== TRANSITION ======== -->
 <section class="transition-section" id="transition">
   <div class="container">
     <div class="reveal">
       <div class="section-label" style="justify-content: center;">03 &mdash; Why</div>
-      <h2>Every AI shop has a hammer. Your problem might not be a nail.</h2>
+      <h2>Every alternative covers part of this. None cover all three at once.</h2>
     </div>
     <div class="body-text reveal reveal-delay-1">
-      <p>Fine-tuning vendors default to fine-tuning. RAG consultancies default to RAG. Prompt engineers default to more prompting.</p>
-      <p>None of them run the diagnostic first.</p>
-      <p>The right technique depends on your problem, not your vendor&rsquo;s default. Picking technique before analyzing the problem is backwards&mdash;but it&rsquo;s how the market works.</p>
-      <p class="punch">We start with your data, not our default.</p>
+      <p><strong>Fine-tuning providers give you training infrastructure and a loss curve.</strong> What they don&rsquo;t give you: a diagnosis of which failure modes are actually present, or evals calibrated to your production distribution. You could run ten training jobs and still not know whether any of them fixed the cases that were breaking in production.</p>
+      <p><strong>Eval platforms measure whatever you configure them to measure &mdash; accurately.</strong> The gap: they require you to already know which failure modes matter and how to detect them. If your evals don&rsquo;t cover your actual production failures, you get green dashboards on a broken model.</p>
+      <p><strong>A good ML consultant can diagnose, fine-tune, and write evals.</strong> The problem is the day after the final invoice. The benchmark they built lives in a repo nobody runs. The institutional memory of what was tried and what worked is in their notes, not yours. Six months later there&rsquo;s a regression and you start from zero.</p>
+      <p class="punch">The technique follows the failure mode. Not the vendor&rsquo;s preference.</p>
     </div>
   </div>
 </section>
@@ -1566,22 +1574,22 @@ footer { border-top: none; }
       <div class="step reveal">
         <div class="step-num">01</div>
         <div>
-          <h3>Full-stack diagnostic</h3>
-          <p>We assess your data, your current pipeline, and your quality gaps&mdash;across retrieval, fine-tuning, preference optimization, and compression. The output: a written recommendation on which technique your problem requires, with projected accuracy gains, compute cost estimates, and a build timeline.</p>
+          <h3>Failure diagnosis</h3>
+          <p>We go through your production failure logs and separate systematic failures from noise &mdash; only systematic failures respond to training intervention. Each failure mode gets mapped to the fix most likely to close it, with decision rationale. The output is a written report: what&rsquo;s failing, why it&rsquo;s systematic, and what fixing it will cost. You see it before we touch anything.</p>
         </div>
       </div>
       <div class="step reveal reveal-delay-1">
         <div class="step-num">02</div>
         <div>
-          <h3>Adaptation execution</h3>
-          <p>We build what the diagnostic prescribes. Not what's familiar. Not what's fastest to bill. This could be a RAG architecture refactor, a LoRA fine-tune with custom evaluation sets, a full fine-tune with DPO alignment, or a multi-stage pipeline&mdash;whatever your domain data needs.</p>
+          <h3>Intervention execution</h3>
+          <p>You approve the work before it starts. Target metric, cost, and timeline &mdash; all defined before a line of training code runs. We build what the diagnostic prescribed. Not what&rsquo;s easiest to bill, not what we know best.</p>
         </div>
       </div>
       <div class="step reveal reveal-delay-2">
         <div class="step-num">03</div>
         <div>
           <h3>Complete handoff &mdash; including the benchmark</h3>
-          <p>You get trained weights, training recipes, deployment configs, and adapter templates. The eval set ships as a domain benchmark calibrated to your production use cases&mdash;it catches regressions on future model updates and compounds in value as you add new failure patterns. Your team runs it without us.</p>
+          <p>Trained weights, training recipes, deployment configs, adapter templates &mdash; all yours. The evals ship built from your production failure cases &mdash; not the clean examples you had when you started. They make the test/prod gap measurable, catch regressions before deployment, and expand as production surfaces new failure modes. Your team runs them. We&rsquo;re not in the loop unless you want us to be.</p>
         </div>
       </div>
     </div>
@@ -1597,20 +1605,20 @@ footer { border-top: none; }
   <div class="container">
     <div class="diff-header reveal">
       <div class="section-label">05 &mdash; Different</div>
-      <h2>A fine-tuning shop will always recommend fine-tuning. We might tell you not to.</h2>
+      <h2>The diagnostic outputs are yours. Most engagements leave you with a dependency.</h2>
     </div>
     <div class="diff-grid">
       <div class="diff-item reveal reveal-delay-1">
-        <h3>Built-in proof &mdash; not "it feels better"</h3>
-        <p>Every engagement produces a domain benchmark calibrated to your production use cases. It measures whether the fix worked, catches regressions before they reach production, and compounds in value as you add new patterns. You know exactly when you&rsquo;re done&mdash;and so does anyone who reviews the work.</p>
+        <h3>Evals calibrated to production &mdash; not test set artifacts</h3>
+        <p>Every engagement ships evals built from your actual production failures. They tell you whether the intervention worked. They catch regressions before deployment. They&rsquo;re not calibrated to the clean examples you assembled before you knew what was failing &mdash; they&rsquo;re calibrated to what&rsquo;s actually failing now. You know when you&rsquo;re done. You can prove it.</p>
       </div>
       <div class="diff-item reveal reveal-delay-2">
-        <h3>Full-stack assessment, not single-technique bias</h3>
-        <p>We&rsquo;re fluent across retrieval, fine-tuning, preference optimization, and compression. The recommendation comes from the diagnosis, not from our revenue model. Across engagements, we build a failure pattern library&mdash;diagnosis accuracy improves with each client in a vertical.</p>
+        <h3>Cross-engagement pattern library, not a blank-slate diagnosis</h3>
+        <p>Each engagement extends a structured failure taxonomy: failure mode &times; intervention &times; vertical &times; outcome. The second time we see the same failure pattern in a vertical, the diagnosis is faster and the recommendation is more grounded &mdash; because we&rsquo;ve seen what that intervention actually produced. Fine-tuning providers start from your loss curve every time. We don&rsquo;t.</p>
       </div>
       <div class="diff-item reveal reveal-delay-3">
-        <h3>You get the weights, not a dependency</h3>
-        <p>Every engagement ends with a handoff: trained adapters, eval sets, deployment configs, methodology docs. Your team runs it from there.</p>
+        <h3>No ongoing license, no hosted dependency</h3>
+        <p>Trained weights, evals, training recipes, deployment configs. Yours outright &mdash; no inference contract, no hosted eval dependency, no call back to us before you can ship a model update. Your team runs it independently.</p>
       </div>
     </div>
   </div>
@@ -1621,28 +1629,28 @@ footer { border-top: none; }
   <div class="container">
     <div class="reveal">
       <div class="section-label">06 &mdash; Fit</div>
-      <h2>Built for teams past the prompting phase</h2>
+      <h2>Built for teams past the prompt-tuning phase</h2>
     </div>
     <div class="persona-grid">
       <div class="persona-card reveal reveal-delay-1">
         <div class="persona-number">01</div>
-        <h3>Prompting and RAG are maxed out — the gap isn't closing</h3>
-        <p>Your AI features work in demos but fall short on your domain. The model hallucinates on your terminology, misranks edge cases, or drifts on long conversations. You're past the easy fixes.</p>
+        <h3>You fine-tuned. You&rsquo;re not sure it helped.</h3>
+        <p>Training converged. Production performance is maybe better. There&rsquo;s no eval coverage of the specific failure modes that were breaking production, so there&rsquo;s no way to tell whether the training signal hit the right cases or whether you&rsquo;re looking at variance. You need a verdict, not a feeling.</p>
       </div>
       <div class="persona-card reveal reveal-delay-2">
         <div class="persona-number">02</div>
-        <h3>Already invested in fine-tuning or RAG — still underperforming</h3>
-        <p>You've paid for an approach and performance isn't where it needs to be. You need a diagnosis: is the technique wrong for your data, is the implementation wrong, or both?</p>
+        <h3>Evals pass. Production is failing. You&rsquo;ve tried fixing it.</h3>
+        <p>You had eval coverage before launch. In production, the model fails on specific input types that weren&rsquo;t well-represented in your test set. Model switching didn&rsquo;t help. Prompt changes didn&rsquo;t help. The failure mode hasn&rsquo;t been classified &mdash; so there&rsquo;s nothing concrete to fix.</p>
       </div>
       <div class="persona-card reveal reveal-delay-3">
         <div class="persona-number">03</div>
-        <h3>Series A CTO who owns the ML decision and needs a defensible answer</h3>
-        <p>You have a team of 15&ndash;50 engineers and a quality gap you can&rsquo;t close internally. A failed attempt doesn&rsquo;t just cost compute&mdash;it costs credibility. You need the diagnosis before you commit budget, not after you&rsquo;ve spent it.</p>
+        <h3>Series A. You own the ML decision and the budget.</h3>
+        <p>A failed build costs more than compute. It costs credibility with your board, your team, and the engineers who spent two months on it. You need a defensible answer before committing &mdash; not a post-mortem after.</p>
       </div>
     </div>
     <div class="audience-right reveal">
       <div class="qualifier-label">Honest qualifier</div>
-      <p>If you're still evaluating whether AI is right for your workflow, we're not the right call yet. Come back when you've hit the ceiling.</p>
+      <p>If you haven&rsquo;t shipped an LLM feature to production yet, we&rsquo;re probably not the right next call. Come back when you&rsquo;ve hit the ceiling on prompt tuning.</p>
       <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Book an Intro Call</a>
       <p class="nda-note">We'll tell you within 30 minutes whether we can help. We work under NDA. Your data and architecture stay confidential.</p>
     </div>
@@ -1653,8 +1661,8 @@ footer { border-top: none; }
 <section class="cases-section" id="cases">
   <div class="container">
     <div class="cases-header reveal">
-      <div class="section-label">07 &mdash; Failure Patterns</div>
-      <h2>Three failure patterns the diagnostic is built to catch.</h2>
+      <div class="section-label">07 &mdash; Failure Modes</div>
+      <h2>Three cases where teams got the wrong answer without it.</h2>
     </div>
     <div class="cases-list">
       <div class="case-item reveal">
@@ -1729,7 +1737,7 @@ footer { border-top: none; }
   <div class="container">
     <div class="pricing-header reveal">
       <div class="section-label">08 &mdash; Pricing</div>
-      <h2>Scoped to your problem. Not sized to your budget.</h2>
+      <h2>One fixed-scope entry point. Then a continuous improvement loop.</h2>
     </div>
     <div class="pricing-table-wrap reveal reveal-delay-1">
       <table class="pricing-table">
@@ -1742,34 +1750,24 @@ footer { border-top: none; }
         </thead>
         <tbody>
           <tr>
-            <td><a href="/diagnostic" style="color: var(--accent);">Standalone diagnostic &rarr;</a></td>
-            <td>2-week pipeline &amp; data analysis; written technique recommendation</td>
+            <td><a href="/diagnostic" style="color: var(--accent);">Diagnostic &rarr;</a></td>
+            <td style="color: var(--accent); font-weight: 500;">Entry point &mdash; converts to retainer on success</td>
             <td>$5&ndash;8k</td>
           </tr>
           <tr>
-            <td>RAG / prompt architecture refactor</td>
-            <td>Lower complexity, shorter engagement</td>
-            <td>$25&ndash;30k</td>
+            <td>Core retainer</td>
+            <td>Continuous improvement loop: intervention execution, benchmark maintenance, new failure patterns, regression monitoring</td>
+            <td>$8&ndash;15k/mo</td>
           </tr>
           <tr>
-            <td>LoRA fine-tune + custom eval set</td>
-            <td style="color: var(--accent); font-weight: 500;">Most common starting point</td>
-            <td>$25&ndash;40k</td>
-          </tr>
-          <tr>
-            <td>Full fine-tune + DPO + benchmark suite</td>
-            <td>Complex domain adaptation</td>
-            <td>$40&ndash;60k</td>
-          </tr>
-          <tr>
-            <td>Ongoing retainer (3-month min.)</td>
-            <td>Continuous improvement loop &mdash; benchmark maintenance, new failure patterns, regression monitoring as data drifts</td>
-            <td>$3&ndash;8k/mo</td>
+            <td>Scale retainer</td>
+            <td>Multiple models or product lines; buyer typically Series B+ or multi-product</td>
+            <td>$20&ndash;40k/mo</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="pricing-note reveal reveal-delay-2">Execution scope and pricing are defined in the diagnostic report. You&rsquo;ll know the exact cost before you commit to execution. A failed internal attempt typically costs $10&ndash;50k in engineering time and two months of runway&mdash;the diagnostic exists to avoid that. The diagnostic is designed to lead to a retainer: the retainer maintains benchmark accuracy, closes new failure patterns as data drifts, and catches regressions before each model update.</p>
+    <p class="pricing-note reveal reveal-delay-2">The diagnostic is $5&ndash;8k, fixed scope. What comes next &mdash; if anything &mdash; is defined in the report. Target metric, cost, and timeline are agreed before any build work begins. The diagnostic is designed to lead to a retainer: benchmark maintenance, new failure patterns closed as your data evolves, regressions caught before each model update.</p>
   </div>
 </section>
 
@@ -1791,7 +1789,7 @@ footer { border-top: none; }
       <div class="faq-item reveal">
         <button class="faq-question">Since you do both diagnosis and execution, isn't the diagnostic biased toward recommending more work?</button>
         <div class="faq-answer">
-          <p>Our answer is structural: the diagnostic deliverable is a written report you own regardless of what you do next. If we recommend fine-tuning and you want to take it to an in-house team or another vendor, that&rsquo;s fine. If your current approach is adequate, that&rsquo;s what the report says&mdash;even if it means no further engagement.</p>
+          <p>The diagnostic deliverable is a written report you own regardless of what you do next. If we recommend fine-tuning and you want to take it to an in-house team or another vendor, that&rsquo;s fine. If your current approach is adequate, that&rsquo;s what the report says&mdash;even if it means no further engagement.</p>
         </div>
       </div>
       <div class="faq-item reveal">
@@ -1809,7 +1807,31 @@ footer { border-top: none; }
       <div class="faq-item reveal">
         <button class="faq-question">How is this different from hiring an ML engineer?</button>
         <div class="faq-answer">
-          <p>A senior ML engineer is $200&ndash;350k+ total comp, takes 3&ndash;6 months to onboard, and may default to the technique they know rather than the one your problem needs. We bring experience across multiple domains and problem types, and deliver in weeks, not quarters.</p>
+          <p>A senior ML hire is right if you need someone in-house long-term. The trade-off: 3&ndash;6 months to ramp, $200&ndash;300k fully loaded, and they&rsquo;ll approach the problem through the techniques they know best &mdash; which may or may not match your failure modes. We bring cross-vertical diagnosis experience and deliver a written recommendation in two weeks. If you need permanent in-house ML capability, that&rsquo;s the right long-term call. Come back to us to scope the problem first.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Why not use an eval platform for this?</button>
+        <div class="faq-answer">
+          <p>Eval platforms measure whatever you configure them to measure &mdash; accurately and well. The gap is that they require you to already know which failure modes are in your production data and how to detect them. If your eval coverage doesn&rsquo;t match your production failure distribution, the platform faithfully tells you nothing is wrong. The diagnostic comes before the eval platform &mdash; not instead of it.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">Why not run fine-tuning directly through a provider API?</button>
+        <div class="faq-answer">
+          <p>The API call is easy. What you get back is a training loss curve. The curve doesn&rsquo;t tell you whether you fixed the specific failure modes that were breaking production, whether you regressed on cases you didn&rsquo;t include in training, or whether you overfit to your training examples rather than learning the underlying pattern. You need evals calibrated to your production distribution to answer any of those questions &mdash; and building those is the diagnostic.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">How is this different from an ML consulting engagement?</button>
+        <div class="faq-answer">
+          <p>A consultant can diagnose, fine-tune, and write evals. The problem is the day after the final invoice: the benchmark they built lives in a repo nobody runs, and the institutional memory of what was tried is in their notes, not yours. The retainer model exists specifically to avoid this &mdash; benchmark maintenance, new failure modes closed as production evolves, regressions caught before each model update.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question">We already tried fine-tuning. It didn&rsquo;t fix the problem. Why would this be different?</button>
+        <div class="faq-answer">
+          <p>Because the failure mode you were targeting was never defined. You ran a training job &mdash; the provider returned a loss curve, you deployed, the problem was still there. The diagnostic starts a step earlier: classifying which failure modes are actually in your production data before any training code runs. Fine-tuning without that step is common. It&rsquo;s also how teams spend months on the wrong fix.</p>
         </div>
       </div>
     </div>
@@ -1823,15 +1845,14 @@ footer { border-top: none; }
     <div class="final-cta-content">
       <div class="reveal">
         <div class="section-label" style="justify-content: center;">10 &mdash; Start</div>
-        <h2>One conversation. We&rsquo;ll tell you whether we can help.</h2>
+        <h2>30 minutes. We&rsquo;ll map your failure modes &mdash; or tell you it&rsquo;s not a fine-tuning problem.</h2>
       </div>
       <div class="body-text reveal reveal-delay-1">
-        <p>If your AI features plateau at &ldquo;good enough for a demo&rdquo; but fall short in production, the technique&mdash;not the team&mdash;is usually the bottleneck. Thirty minutes. We&rsquo;ll walk through your stack and tell you exactly what the diagnostic would cover.</p>
+        <p>If your evals are passing while production is failing, or if you&rsquo;ve fine-tuned and aren&rsquo;t sure whether it fixed the right cases, that&rsquo;s the specific problem the diagnostic is built for. Thirty minutes to walk through your failure patterns, your current setup, and whether the diagnostic makes sense.</p>
       </div>
       <div class="reveal reveal-delay-2">
+        <p class="support-text" style="margin-bottom: 20px;">No pitch deck. No sales sequence. Just a technical conversation about your stack and where the failure modes are.</p>
         <a href="https://cal.com/philip-stevens/baseweight-intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book an Intro Call</a>
-        <p class="support-text" style="margin-top: 16px; color: var(--accent); font-weight: 500;">We take one technical engagement at a time. If you're past the prompting phase, it's worth a conversation now.</p>
-        <p class="support-text">No pitch deck. No sales sequence. Just a technical conversation about your stack and where the quality gap is.</p>
       </div>
     </div>
   </div>

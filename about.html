@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Baseweight — Domain AI Adaptation, Diagnosed and Built</title>
-<meta name="description" content="Baseweight was built to fix AI adaptation: diagnose which technique your domain data actually needs — RAG, fine-tuning, DPO, or compression — then build it.">
+<title>About Baseweight — AI Model Quality, Diagnosed and Fixed</title>
+<meta name="description" content="Baseweight was built to fix the diagnostic gap in AI quality. Know why your model is failing. Fix it. Prove it worked.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -14,13 +14,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/about">
 <meta property="og:title" content="About — Baseweight">
-<meta property="og:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — then selects and builds the right adaptation technique for your domain data.">
+<meta property="og:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — classifying failures before prescribing the fix.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About — Baseweight">
-<meta name="twitter:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — then selects and builds the right adaptation technique for your domain data.">
+<meta name="twitter:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — classifying failures before prescribing the fix.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -597,7 +597,8 @@ footer p {
       <li><a href="/#pricing">Pricing</a></li>
       <li><a href="/diagnostic">Diagnostic</a></li>
       <li><a href="/#faq">FAQ</a></li>
-      <li><a href="/about">About</a></li>
+      <li><a href="/about" style="color: var(--text-primary);">About</a></li>
+      <li><a href="/contact">Contact</a></li>
       <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book an Intro Call</a></li>
     </ul>
     <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
@@ -611,7 +612,8 @@ footer p {
 <section class="about-hero">
   <div class="container">
     <div class="reveal">
-      <h1>We built Baseweight because every AI shop has one tool&mdash;and <span style="color: var(--accent);">recommends it for everything.</span></h1>
+      <div class="section-label">About Baseweight</div>
+      <h1>Every AI shop has a tool they&rsquo;re trying to sell you. <span style="color: var(--accent);">We don&rsquo;t have one.</span></h1>
     </div>
   </div>
 </section>
@@ -622,11 +624,11 @@ footer p {
     <div class="about-body-inner">
       <div class="reveal">
         <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. Prompt engineers recommend more prompting.</p>
-        <p>This isn't because these are bad companies. It's because when you have one tool, every problem looks like it needs that tool.</p>
-        <p>The result: teams burn $10&ndash;50k and months discovering the wrong technique was applied. Then they start over&mdash;if they can justify the investment internally.</p>
-        <p>Baseweight exists to fix the sequence. Diagnose the problem across the full adaptation stack. Then&mdash;and only then&mdash;select and execute the right technique.</p>
-        <p>Baseweight works across the full adaptation stack: retrieval, fine-tuning (LoRA, QLoRA, full fine-tuning, and instruction tuning variants), preference optimization (DPO), and compression where constraints require it. The value is in the diagnosis, not the technique&mdash;so there&rsquo;s no default.</p>
-        <p>Every engagement produces artifacts you own: weights, training recipes, eval sets, deployment configs. We hand you the methodology so your team can maintain and extend it. If you want us to stick around, retainers are available&mdash;but dependency is never the business model.</p>
+        <p>This isn&rsquo;t because these are bad companies. It&rsquo;s because when you have one tool, every problem looks like it needs that tool.</p>
+        <p>The result: teams commit significant budget and months to the wrong approach. Then they start over &mdash; if they can justify the investment internally.</p>
+        <p>Baseweight exists to fix the sequence. Classify the failure first. Then &mdash; and only then &mdash; prescribe and execute the right intervention.</p>
+        <p>We work across the full stack: retrieval hardening, fine-tuning (LoRA, QLoRA, full fine-tune), DPO alignment, and compression where constraints require it. The value is in the diagnosis &mdash; so there&rsquo;s no default technique.</p>
+        <p>Every engagement produces artifacts you own outright: trained weights, training recipes, eval sets, deployment configs. The benchmark ships with you. Retainers are available, but dependency is never the model.</p>
       </div>
     </div>
   </div>
@@ -649,11 +651,11 @@ footer p {
       </div>
       <div class="belief-item reveal reveal-delay-1">
         <h3>Patterns over bespoke</h3>
-        <p>The diagnostic process draws on a structured failure taxonomy built from production ML experience&mdash;not a blank-slate assessment for every new problem.</p>
+        <p>Each engagement extends a failure taxonomy built across clients and verticals. The second time we see the same failure pattern in a vertical, the diagnosis is faster and the recommendation is more grounded. We don&rsquo;t start from zero.</p>
       </div>
       <div class="belief-item reveal reveal-delay-2">
         <h3>Honesty over revenue</h3>
-        <p>If your problem is solvable with better prompting, we'll tell you. We'd rather earn trust than bill hours.</p>
+        <p>If your problem is solvable with better prompting, we'll tell you. We'd rather earn trust than manufacture scope.</p>
       </div>
     </div>
   </div>
@@ -668,13 +670,12 @@ footer p {
         <h2>Founded by <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Philip Stevens</span></span></h2>
       </div>
       <div class="reveal reveal-delay-1">
-        <p>12 years in applied machine learning, including production ML at Agoda and Quantcast. Independent consultant since 2023, focused on post-training, eval design, RAG hardening, and parameter-efficient fine-tuning (LoRA/QLoRA).</p>
-        <p>Baseweight was built from a pattern that kept repeating in consulting engagements: teams choosing adaptation techniques before diagnosing the problem. The diagnostic-first model exists because that sequence works&mdash;and the reverse doesn't.</p>
+        <p>12 years in applied ML, including production systems at Agoda and Quantcast. Independent consultant since 2023, focused on failure mode diagnosis, eval design, LoRA/QLoRA and full fine-tuning, and DPO alignment.</p>
+        <p>Baseweight was built from a pattern that kept repeating in consulting engagements: teams committing to interventions before diagnosing the failure. The diagnosis-first model exists because that sequence works &mdash; and the reverse doesn&rsquo;t.</p>
         <ul class="founder-credentials">
-          <li>Post-training</li>
+          <li>Fine-tuning (LoRA, QLoRA, full)</li>
           <li>Eval design</li>
           <li>RAG hardening</li>
-          <li>LoRA / QLoRA</li>
           <li>DPO alignment</li>
           <li>Model compression</li>
         </ul>
@@ -688,8 +689,8 @@ footer p {
   <div class="container">
     <div class="about-lead-inner">
       <div class="reveal">
-        <h2>Not ready to book a call?</h2>
-        <p class="lead-sub">Get the free AI Adaptation Readiness Checklist and Technique Selection Guide. Figure out where you stand before we talk.</p>
+        <h2>We publish benchmarks. Get notified when the next one drops.</h2>
+        <p class="lead-sub">No pitch sequence. Technical content only &mdash; benchmark methodology, failure pattern analysis, vertical-specific results.</p>
       </div>
       <div class="reveal reveal-delay-1">
         <form
@@ -708,7 +709,7 @@ footer p {
               autocomplete="email"
               aria-label="Email address"
             />
-            <button type="submit">Send Me the Kit</button>
+            <button type="submit">Notify Me</button>
           </div>
           <input type="text" name="company" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" />
           <input type="hidden" name="k" value="formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn" />
@@ -717,7 +718,7 @@ footer p {
         </form>
         <iframe name="about_lead_hidden_iframe" title="Form submission target" style="display:none"></iframe>
         <div id="about_lead_success" class="about-lead-success" style="display:none">
-          <p><strong>Sent! Check your inbox.</strong></p>
+          <p><strong>Done. We&rsquo;ll notify you when the next benchmark drops.</strong></p>
         </div>
         <p class="about-lead-note">No spam. Unsubscribe anytime.</p>
       </div>
@@ -729,9 +730,9 @@ footer p {
 <section class="about-cta">
   <div class="container">
     <div class="reveal">
-      <h2>Ready to diagnose your adaptation stack?</h2>
-      <p>30 minutes. No cost, no commitment. We'll tell you which technique your domain data actually needs.</p>
-      <a href="/#cta" class="btn-primary">Book an Intro Call</a>
+      <h2>If you&rsquo;ve exhausted the obvious fixes, it&rsquo;s worth a call.</h2>
+      <p>30 minutes. No cost, no commitment. We&rsquo;ll tell you what&rsquo;s wrong &mdash; or we&rsquo;ll tell you it isn&rsquo;t us.</p>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
     </div>
   </div>
 </section>
