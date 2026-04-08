@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy — Baseweight AI Adaptation</title>
+<title>Privacy Policy: Baseweight AI Adaptation</title>
 <meta name="description" content="Privacy policy for Baseweight. We only collect email addresses for our free resources, never sell your data, and you can unsubscribe at any time.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +14,7 @@
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/privacy">
-<meta property="og:title" content="Privacy Policy — Baseweight">
+<meta property="og:title" content="Privacy Policy: Baseweight">
 <meta property="og:description" content="Privacy policy for Baseweight. We only collect email addresses for our free resources, never sell your data.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
@@ -103,7 +103,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
   "@type": "WebPage",
   "@id": "https://baseweight.co/privacy#webpage",
   "url": "https://baseweight.co/privacy",
-  "name": "Privacy Policy — Baseweight",
+  "name": "Privacy Policy: Baseweight",
   "description": "Privacy policy for Baseweight. We only collect email addresses for our free resources, never sell your data, and you can unsubscribe at any time.",
   "datePublished": "2025-01-01",
   "dateModified": "2026-03-02",
@@ -166,7 +166,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
       <h2>How we use it</h2>
       <ul>
         <li>To send you the requested resource (the AI Adaptation Kit).</li>
-        <li>To send occasional updates about Baseweight when they are directly relevant to AI adaptation — no more than a few times per year.</li>
+        <li>To send occasional updates about Baseweight when they are directly relevant to AI adaptation, no more than a few times per year.</li>
       </ul>
       <p>We will never use your email address for any purpose beyond the above. We do not add you to unrelated mailing lists, and we do not send promotional material on behalf of third parties.</p>
 
@@ -228,10 +228,12 @@ const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 navToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open');
 });
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
   });
 });
 </script>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Baseweight — AI Model Quality, Diagnosed and Fixed</title>
+<title>About Baseweight: AI Model Quality, Diagnosed and Fixed</title>
 <meta name="description" content="Baseweight was built to fix the diagnostic gap in AI quality. Know why your model is failing in production. Fix the right thing. Prove it worked.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,14 +14,14 @@
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/about">
-<meta property="og:title" content="About — Baseweight">
-<meta property="og:description" content="Every AI shop recommends one tool. Baseweight diagnoses first — classifying which failure modes are actually present before prescribing the right intervention.">
+<meta property="og:title" content="About: Baseweight">
+<meta property="og:description" content="Every AI shop recommends one tool. Baseweight diagnoses first, classifying which failure modes are actually present before prescribing the right intervention.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="About — Baseweight">
-<meta name="twitter:description" content="Every AI shop recommends one tool. Baseweight diagnoses first — classifying which failure modes are actually present before prescribing the right intervention.">
+<meta name="twitter:title" content="About: Baseweight">
+<meta name="twitter:description" content="Every AI shop recommends one tool. Baseweight diagnoses first, classifying which failure modes are actually present before prescribing the right intervention.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -242,6 +242,10 @@ nav.scrolled {
   margin: 5px 0;
   transition: transform 0.3s, opacity 0.3s;
 }
+
+.nav-mobile-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-mobile-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-mobile-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 /* ========================================
    ABOUT HERO
@@ -556,7 +560,7 @@ footer p {
       "@type": ["AboutPage", "ContactPage"],
       "@id": "https://baseweight.co/about#webpage",
       "url": "https://baseweight.co/about",
-      "name": "About — Baseweight",
+      "name": "About: Baseweight",
       "description": "Philip Stevens: AI adaptation specialist diagnosing and building RAG, fine-tuning, DPO, and compression solutions for production domains.",
       "author": {
         "@type": "Person",
@@ -619,11 +623,9 @@ footer p {
   <div class="container">
     <div class="about-body-inner">
       <div class="reveal">
-        <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. Prompt engineers recommend more prompting.</p>
-        <p>This isn&rsquo;t because these are bad companies. It&rsquo;s because when you have one tool, every problem looks like it needs that tool.</p>
-        <p>The result: months committed to the wrong approach. Then they start over &mdash; if they can justify it internally.</p>
-        <p>Baseweight exists to fix the sequence. Classify the failure first. Then &mdash; and only then &mdash; prescribe and execute the right intervention.</p>
-        <p>We work across the full stack: retrieval hardening, fine-tuning (LoRA, QLoRA, full fine-tune), DPO alignment, and compression where constraints require it. The value is in the diagnosis &mdash; so there&rsquo;s no default technique.</p>
+        <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. Prompt engineers recommend more prompting. The recommendation follows from their default, not your production failures.</p>
+        <p>The result: months committed to the wrong approach. Then they start over, if they can justify it internally.</p>
+        <p>Baseweight exists to fix the sequence. Classify the failure first. Then, and only then, prescribe and execute the right intervention. The technique follows from what the failure analysis shows: retrieval, weights, pipeline design, or data quality. There&rsquo;s no default approach because the failure mode determines the fix.</p>
         <p>Every engagement produces artifacts you own outright: trained weights, training recipes, eval sets, deployment configs. The benchmark ships with you. Retainers are available, but the goal is never dependency.</p>
       </div>
     </div>
@@ -666,7 +668,7 @@ footer p {
         <h2>Founded by <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Philip Stevens</span></span></h2>
       </div>
       <div class="reveal reveal-delay-1">
-        <p>12 years in applied ML. Production work at Agoda building personalization and recommendation systems at scale, and at Quantcast managing end-to-end ML lifecycle for core targeting models &mdash; feature engineering, model architecture, and domain drift monitoring.</p>
+        <p>15 years in applied ML. Production work at Agoda building personalization and recommendation systems at scale, and at Quantcast managing end-to-end ML lifecycle for core targeting models: feature engineering, model architecture, and domain drift monitoring.</p>
         <p>Independent consultant since 2023. Baseweight was built around a pattern I kept encountering: teams choosing adaptation techniques before diagnosing the problem. The technique follows the firm, not the evidence.</p>
         <p>I work across the full stack and select the approach after analyzing failure modes and data characteristics. Your team owns the output outright and can extend it independently.</p>
         <ul class="founder-credentials">
@@ -691,7 +693,7 @@ footer p {
       <div class="reveal">
         <h2>We publish benchmarks. Get notified when the next one drops.</h2>
         <!-- PENDING: Benchmark publication — update this copy to reference the specific benchmark and vertical once published -->
-        <p class="lead-sub">No pitch sequence. Technical content only &mdash; benchmark methodology, failure pattern analysis, vertical-specific results.</p>
+        <p class="lead-sub">No pitch sequence. Technical content only: benchmark methodology, failure pattern analysis, vertical-specific results.</p>
       </div>
       <div class="reveal reveal-delay-1">
         <form
@@ -732,7 +734,7 @@ footer p {
   <div class="container">
     <div class="reveal">
       <h2>If you&rsquo;ve exhausted the obvious fixes, let&rsquo;s talk.</h2>
-      <p>30 minutes. Free. No commitment. We&rsquo;ll tell you what&rsquo;s wrong &mdash; or we&rsquo;ll tell you it isn&rsquo;t us.</p>
+      <p>30 minutes. Free. No commitment. We&rsquo;ll tell you what&rsquo;s wrong, or we&rsquo;ll tell you it isn&rsquo;t us.</p>
       <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic</a>
     </div>
   </div>
@@ -766,11 +768,13 @@ const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 navToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open');
 });
 
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
   });
 });
 

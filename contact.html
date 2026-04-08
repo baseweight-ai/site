@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact Baseweight — Book a Diagnostic Call</title>
+<title>Contact Baseweight: Book a Diagnostic Call</title>
 <meta name="description" content="Book a diagnostic call or email Philip Stevens directly. 30 minutes to map your failure modes and determine the right intervention.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
 <link rel="author" href="/about">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/contact">
-<meta property="og:title" content="Contact — Baseweight">
+<meta property="og:title" content="Contact: Baseweight">
 <meta property="og:description" content="Get in touch with Baseweight. Book an intro call or email Philip Stevens directly.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
@@ -65,6 +65,9 @@ nav.scrolled { background: rgba(8, 8, 8, 0.85); backdrop-filter: blur(16px); -we
 .nav-cta:hover { background: var(--accent-hover) !important; }
 .nav-mobile-toggle { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 8px; }
 .nav-mobile-toggle span { display: block; width: 20px; height: 1.5px; background: var(--text-primary); margin: 5px 0; transition: transform 0.3s, opacity 0.3s; }
+.nav-mobile-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-mobile-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-mobile-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
 h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); }
@@ -105,7 +108,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
   "@type": "ContactPage",
   "@id": "https://baseweight.co/contact#webpage",
   "url": "https://baseweight.co/contact",
-  "name": "Contact — Baseweight",
+  "name": "Contact: Baseweight",
   "description": "Get in touch with Baseweight. Book an intro call or email Philip Stevens directly.",
   "author": {
     "@type": "Person",
@@ -163,9 +166,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
   <div class="container">
     <div class="contact-inner">
 
-      <p>The fastest path is booking a diagnostic call &mdash; 30 minutes to walk through your failure patterns, current setup, and what the right intervention looks like.</p>
+      <p>The fastest path is booking a diagnostic call: 30 minutes to walk through your failure patterns, current setup, and what the right intervention looks like.</p>
 
-      <p>You&rsquo;ll leave the call with a clear view of what&rsquo;s failing and why, whether the diagnostic is the right next step, and what fixing it would require. No upsell. No vague roadmap. A concrete, actionable assessment &mdash; whether or not we work together.</p>
+      <p>You&rsquo;ll leave the call with a clear view of what&rsquo;s failing and why, whether the diagnostic is the right next step, and what fixing it would require. No upsell. No vague roadmap. A concrete, actionable assessment, whether or not we work together.</p>
 
       <p>Typical questions the intro call covers:</p>
       <ul>
@@ -190,7 +193,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
       </div>
 
       <address itemscope itemtype="https://schema.org/Person" style="font-style:normal; margin-bottom:8px;">
-        <span itemprop="name">Philip Stevens</span> &mdash; AI Adaptation Specialist<br>
+        <span itemprop="name">Philip Stevens</span>, AI Adaptation Specialist<br>
         <a href="mailto:phil@baseweight.co" itemprop="email">phil@baseweight.co</a>
       </address>
       <p style="margin-bottom:40px; font-size: 12px; color: var(--text-muted);">Currently taking new diagnostic engagements.</p>
@@ -224,10 +227,12 @@ const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 navToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open');
 });
 navLinks.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', () => {
     navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
   });
 });
 </script>
