@@ -3,14 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contact — Baseweight AI Adaptation</title>
-<meta name="description" content="Get in touch with Baseweight. Book an intro call or email Philip Stevens directly to discuss your domain AI adaptation project.">
+<title>Contact Baseweight — Book a Diagnostic Call</title>
+<meta name="description" content="Book a diagnostic call or email Philip Stevens directly. 30 minutes to map your failure modes and determine the right intervention.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
 <link rel="canonical" href="https://baseweight.co/contact">
+<link rel="preload" href="/images/logo.png" as="image" type="image/png">
+<meta name="author" content="Philip Stevens">
 <link rel="author" href="/about">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/contact">
@@ -75,6 +77,9 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.6rem); margin-bottom: 16px; margin-top: 4
 .contact-body { padding: var(--section-pad) 0; }
 .contact-inner { max-width: 640px; }
 .contact-inner p { font-size: 14px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 24px; }
+.contact-inner ul { margin-bottom: 24px; padding-left: 20px; list-style: none; }
+.contact-inner ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 10px; padding-left: 16px; position: relative; }
+.contact-inner ul li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 
 .contact-method { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; padding: 24px; border: 1px solid var(--border); background: var(--bg-card); }
 .contact-method-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
@@ -132,16 +137,12 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <!-- ======== NAV ======== -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo"><img src="/images/logo.svg" alt="Baseweight" height="36"></a>
+    <a href="/" class="nav-logo"><img src="/images/logo.png" alt="Baseweight" width="169" height="36" loading="eager"></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="/#how">How We Work</a></li>
-      <li><a href="/#cases">Cases</a></li>
-      <li><a href="/#pricing">Pricing</a></li>
       <li><a href="/diagnostic">Diagnostic</a></li>
-      <li><a href="/#faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/contact" style="color: var(--text-primary);">Contact</a></li>
-      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book an Intro Call</a></li>
+      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a diagnostic</a></li>
     </ul>
     <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -154,7 +155,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <section class="contact-hero">
   <div class="container">
     <div class="section-label">Get in touch</div>
-    <h1>Contact</h1>
+    <h1>Talk to Philip Stevens</h1>
   </div>
 </section>
 
@@ -162,11 +163,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
   <div class="container">
     <div class="contact-inner">
 
-      <p>The fastest path is booking an intro call &mdash; 30 minutes to walk through your failure patterns, current model setup, and what the right intervention looks like for your problem.</p>
+      <p>The fastest path is booking a diagnostic call &mdash; 30 minutes to walk through your failure patterns, current setup, and what the right intervention looks like.</p>
 
-      <p>Most production AI failures aren&rsquo;t random. They follow patterns that a failure mode analysis can classify. The right intervention follows from the failure mode &mdash; not from a vendor&rsquo;s default recommendation or a technique someone else used in a different domain.</p>
-
-      <p>In an intro call with <span itemprop="name" itemscope itemtype="https://schema.org/Person">Philip Stevens</span>, you&rsquo;ll leave with a clear view of what&rsquo;s failing and why, whether the diagnostic is the right next step, and what fixing it would require. No upsell. No vague roadmap. Just a concrete assessment you can act on whether or not we work together.</p>
+      <p>You&rsquo;ll leave the call with a clear view of what&rsquo;s failing and why, whether the diagnostic is the right next step, and what fixing it would require. No upsell. No vague roadmap. A concrete, actionable assessment &mdash; whether or not we work together.</p>
 
       <p>Typical questions the intro call covers:</p>
       <ul>
@@ -176,7 +175,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
         <li>Are you losing accuracy at inference time because of distribution shift or inadequate training signal?</li>
       </ul>
 
-      <p>If email is a better fit, use the address below. Response time is typically within one business day. For active project inquiries, please include a one-paragraph description of your current model setup and the core problem you are trying to solve.</p>
+      <p>If email is a better fit, use the address below. Response is typically within one business day. For project inquiries, include your current setup and the core problem in a paragraph.</p>
+
+      <p>We work with teams past the prompt-tuning ceiling. If you haven&rsquo;t shipped to production yet, come back when you have failures to diagnose.</p>
 
       <div class="contact-method">
         <span class="contact-method-label">Book a call</span>
@@ -192,9 +193,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
         <span itemprop="name">Philip Stevens</span> &mdash; AI Adaptation Specialist<br>
         <a href="mailto:phil@baseweight.co" itemprop="email">phil@baseweight.co</a>
       </address>
-      <p style="margin-bottom:40px;"><time itemprop="datePublished" datetime="2025-01-01">Available for new projects since January 2025.</time></p>
+      <p style="margin-bottom:40px; font-size: 12px; color: var(--text-muted);">Currently taking new diagnostic engagements.</p>
 
-      <a href="https://cal.com/philip-stevens/baseweight-intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book an Intro Call &rarr;</a>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book a diagnostic &rarr;</a>
 
       <p style="margin-top: 48px;"><a href="/">&larr; Back to home</a></p>
 
@@ -208,7 +209,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <footer>
   <div class="container">
     <p>&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-muted);">About</a> &nbsp;&middot;&nbsp; <a href="/contact" style="color: var(--text-muted);">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy" style="color: var(--text-muted);">Privacy Policy</a></p>
-    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);" itemscope itemtype="https://schema.org/WebPage">By <span itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/about" rel="author" itemprop="url" style="color: var(--text-muted);"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="datePublished" datetime="2026-03-01">March 2026</time></p>
+    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);" itemscope itemtype="https://schema.org/WebPage"><span itemprop="author" itemscope itemtype="https://schema.org/Person">By <a href="/about" rel="author" itemprop="url" style="color: var(--text-muted);"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="dateModified" datetime="2026-04-07">April 2026</time></p>
   </div>
 </footer>
 

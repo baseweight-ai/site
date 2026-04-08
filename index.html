@@ -3,24 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseweight — AI Model Quality, Diagnosed and Fixed</title>
-<meta name="description" content="Know why your AI model is failing in production. Structured failure diagnosis. Targeted intervention. Measurable quality improvement. The AI quality layer for Series A companies.">
+<title>Baseweight — Passes the demo. Fails in production.</title>
+<meta name="description" content="Prompting and RAG maxed out. Baseweight diagnoses failure modes in your production data, then executes the right adaptation. Entry point: $5–8k diagnostic.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
 <link rel="canonical" href="https://baseweight.co/">
+<link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/">
-<meta property="og:title" content="Baseweight — AI Model Quality, Diagnosed and Fixed">
-<meta property="og:description" content="Know why your AI model is failing in production. Structured failure diagnosis. Targeted intervention. Measurable quality improvement. The AI quality layer for Series A companies.">
+<meta property="og:title" content="Baseweight — Passes the demo. Fails in production.">
+<meta property="og:description" content="Prompting and RAG maxed out. Baseweight diagnoses failure modes in your production data, then executes the right adaptation to close the gap.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Baseweight — AI Model Quality, Diagnosed and Fixed">
-<meta name="twitter:description" content="Know why your AI model is failing in production. Structured failure diagnosis. Targeted intervention. Measurable quality improvement. The AI quality layer for Series A companies.">
+<meta name="twitter:title" content="Baseweight — Passes the demo. Fails in production.">
+<meta name="twitter:description" content="Prompting and RAG maxed out. Baseweight diagnoses failure modes in your production data, then executes the right adaptation to close the gap.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -335,7 +336,7 @@ nav.scrolled {
   color: var(--text-muted);
   letter-spacing: 0.04em;
   opacity: 0.6;
-  margin-top: 4px;
+  margin-bottom: 24px;
 }
 
 /* ========================================
@@ -803,7 +804,7 @@ nav.scrolled {
 }
 
 .faq-item.open .faq-answer {
-  max-height: 300px;
+  max-height: 600px;
   padding: 0 0 24px;
 }
 
@@ -813,6 +814,10 @@ nav.scrolled {
   line-height: 1.8;
   max-width: 640px;
 }
+
+.faq-answer ul { margin-bottom: 16px; padding-left: 20px; list-style: none; }
+.faq-answer ul li { font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 8px; padding-left: 16px; position: relative; max-width: 640px; }
+.faq-answer ul li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 
 /* ========================================
    CASES
@@ -1013,75 +1018,6 @@ footer p {
   color: var(--text-muted);
 }
 
-/* ========================================
-   TRUST ANCHOR
-   ======================================== */
-.trust-anchor {
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-}
-
-/* trust-stats styles defined in DESIGN ENHANCEMENTS block below */
-
-/* ========================================
-   PERSONA CARDS
-   ======================================== */
-.persona-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 40px;
-}
-
-.persona-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 36px 32px;
-  position: relative;
-  transition: border-color 0.3s, background 0.3s;
-}
-
-.persona-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.persona-card:hover {
-  border-color: var(--border-accent);
-  background: var(--bg-card-hover);
-}
-
-.persona-card:hover::before {
-  opacity: 1;
-}
-
-.persona-number {
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 800;
-  color: rgba(201, 168, 76, 0.15);
-  line-height: 1;
-  margin-bottom: 20px;
-}
-
-.persona-card h3 {
-  margin-bottom: 14px;
-  color: var(--text-primary);
-  font-size: clamp(1rem, 1.8vw, 1.15rem);
-}
-
-.persona-card p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.75;
-}
 
 
 /* ========================================
@@ -1104,12 +1040,6 @@ footer p {
   }
 
   .step-num { font-size: 40px; }
-
-
-  .persona-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
 
 }
 
@@ -1182,78 +1112,9 @@ footer p {
 }
 
 
-/* --- Trust stats scorecard redesign --- */
-.trust-anchor {
-  padding: 48px 0 0;
-}
-
-.trust-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  margin-top: 32px;
-  border-top: 1px solid var(--border);
-}
-
-.trust-stat {
-  text-align: left;
-  padding: 52px 40px 52px 0;
-  border-right: 1px solid var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.trust-stat:nth-child(n+2) {
-  padding-left: 40px;
-}
-
-.trust-stat:last-child {
-  border-right: none;
-  padding-right: 0;
-}
-
-.trust-stat::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.trust-stat:hover::after {
-  transform: scaleX(1);
-}
-
-.trust-stat .stat-value {
-  font-family: var(--font-mono);
-  font-size: clamp(36px, 5vw, 60px);
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.03em;
-  display: block;
-  margin-bottom: 16px;
-  line-height: 1;
-}
-
-.trust-stat .stat-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 0;
-  letter-spacing: 0.01em;
-  line-height: 1.65;
-}
 
 /* --- Card hover glow --- */
 .problem-card:hover {
-  box-shadow: 0 0 48px rgba(201, 168, 76, 0.05);
-}
-
-.persona-card:hover {
   box-shadow: 0 0 48px rgba(201, 168, 76, 0.05);
 }
 
@@ -1307,38 +1168,6 @@ footer::before {
 
 footer { border-top: none; }
 
-/* --- Responsive trust stats --- */
-@media (max-width: 900px) {
-  .trust-stats {
-    grid-template-columns: 1fr 1fr;
-  }
-  .trust-stat:nth-child(3) {
-    grid-column: 1 / -1;
-    border-right: none;
-    border-top: 1px solid var(--border);
-    padding-left: 0;
-    padding-right: 0;
-  }
-}
-
-@media (max-width: 640px) {
-  .trust-stats {
-    grid-template-columns: 1fr;
-  }
-  .trust-stat {
-    border-right: none;
-    border-top: 1px solid var(--border);
-    padding: 36px 0;
-  }
-  .trust-stat:nth-child(n+2) {
-    padding-left: 0;
-  }
-  .trust-stat:nth-child(3) {
-    grid-column: auto;
-    border-top: 1px solid var(--border);
-  }
-
-}
 
 @media (max-width: 640px) {
   .nav-links { display: none; }
@@ -1433,8 +1262,8 @@ footer { border-top: none; }
       "@type": "WebPage",
       "@id": "https://baseweight.co/#webpage",
       "url": "https://baseweight.co/",
-      "name": "Baseweight — AI Model Quality, Diagnosed and Fixed",
-      "description": "Know why your AI model is failing in production. Structured failure diagnosis, targeted intervention, measurable quality improvement. The AI quality layer for Series A companies.",
+      "name": "Baseweight — Passes the demo. Fails in production.",
+      "description": "Your prompting and RAG are maxed out. Baseweight diagnoses which failure modes are in your production data, then executes the right adaptation to close the gap.",
       "author": { "@id": "https://baseweight.co/#person" },
       "publisher": { "@id": "https://baseweight.co/#organization" },
       "datePublished": "2025-01-01",
@@ -1457,16 +1286,12 @@ footer { border-top: none; }
 <!-- ======== NAV ======== -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo"><img src="/images/logo.svg" alt="Baseweight" height="36"></a>
+    <a href="/" class="nav-logo"><img src="/images/logo.png" alt="Baseweight" width="169" height="36" loading="eager"></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#how">How We Work</a></li>
-      <li><a href="#cases">Cases</a></li>
-      <li><a href="#pricing">Pricing</a></li>
       <li><a href="/diagnostic">Diagnostic</a></li>
-      <li><a href="#faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/contact">Contact</a></li>
-      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book an Intro Call</a></li>
+      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a diagnostic</a></li>
     </ul>
     <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -1484,14 +1309,14 @@ footer { border-top: none; }
   </div>
   <div class="container">
     <div class="hero-content">
-      <div class="section-label reveal">01 &mdash; The Gap</div>
-      <h1 class="reveal">Your model passes evals. It fails in production. <span class="accent">The gap isn&rsquo;t random.</span></h1>
-      <p class="hero-sub reveal reveal-delay-1">Eval/prod gaps follow failure patterns &mdash; they&rsquo;re diagnosable. We analyze your production failures, build evals calibrated to your actual distribution, and execute the intervention that closes the specific gap you have.</p>
+      <div class="section-label reveal">Model quality</div>
+      <h1 class="reveal">Passes the demo. Fails in production. <span class="accent">We fix the model, not the prompt.</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">Your prompting and RAG are maxed out. The gap between demo and production isn&rsquo;t a configuration problem &mdash; it&rsquo;s a model quality problem. We diagnose which failure modes are present, then execute the right adaptation to close the gap.</p>
+      <p class="hero-credential reveal reveal-delay-1">By <a href="/about" rel="author" style="color: var(--text-muted);">Philip Stevens</a> &nbsp;&middot;&nbsp; 12 years in applied ML &nbsp;&middot;&nbsp; Previously at Agoda &amp; Quantcast</p>
       <div class="hero-cta-group reveal reveal-delay-2">
-        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
-        <p class="hero-support">30 minutes. No cost, no commitment.</p>
-        <p class="hero-support" style="margin-top: 0;"><a href="#how" style="color: var(--text-secondary); font-size: 13px;">See how it works &darr;</a></p>
-        <p class="hero-credential">12 years in applied ML &nbsp;&middot;&nbsp; Previously at Agoda &amp; Quantcast</p>
+        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic</a>
+        <p class="hero-support">Free 30-minute intro call. No commitment.</p>
+        <p class="hero-support" style="margin-top: 0;"><a href="#how" style="color: var(--text-secondary); font-size: 13px; display: inline-block; padding: 12px 0;">See how it works &darr;</a></p>
       </div>
     </div>
   </div>
@@ -1515,20 +1340,20 @@ footer { border-top: none; }
 <section class="problems-section" id="problems">
   <div class="container">
     <div class="problems-header reveal">
-      <div class="section-label">02 &mdash; Problem</div>
-      <h2>Three failure modes that look like model problems. They&rsquo;re not.</h2>
+      <div class="section-label">Problem</div>
+      <h2>Three ways teams end up building the wrong fix.</h2>
     </div>
     <div class="problems-grid">
       <div class="problem-card reveal reveal-delay-1">
         <div class="problem-number">01</div>
         <h3>You fine-tuned. You don&rsquo;t know if it helped.</h3>
-        <p>The provider returned a training loss curve. Looks like it converged. But did it fix the failure modes that were breaking production? Did it regress on cases you didn&rsquo;t include in training? Did it overfit to your examples instead of learning the underlying pattern? There&rsquo;s no way to know without evals calibrated to your actual production distribution &mdash; and building those requires the same expertise you were trying to avoid hiring.</p>
+        <p>The provider returned a training loss curve. Looks like it converged. But did it fix the failure modes that were breaking production? Did it regress on cases you didn&rsquo;t include in training? Did it overfit? There&rsquo;s no way to know without evals calibrated to your actual production distribution.</p>
         <div class="kicker">A green loss curve is not a green light.</div>
       </div>
       <div class="problem-card reveal reveal-delay-2">
         <div class="problem-number">02</div>
         <h3>Performance looked solid in testing. It&rsquo;s degrading in production.</h3>
-        <p>Your evals passed. In production, the model fails on input types that weren&rsquo;t well-represented in your test set &mdash; distribution shift, adversarial inputs, edge cases real users send but testers don&rsquo;t. The model was optimized for the eval, not the problem. And there&rsquo;s no eval baseline covering the specific cases that are actually failing.</p>
+        <p>Your evals passed. In production, the model fails on input types that weren&rsquo;t in your test set &mdash; distribution shift, edge cases real users send but testers don&rsquo;t. The model was optimized for the eval, not the problem.</p>
         <div class="kicker">The model was ready for your eval. It wasn&rsquo;t ready for your users.</div>
       </div>
       <div class="problem-card reveal reveal-delay-3">
@@ -1543,22 +1368,23 @@ footer { border-top: none; }
 
 <!-- ======== INLINE CTA ======== -->
 <div style="text-align: center; padding: 0 clamp(24px, 5vw, 48px) clamp(60px, 8vh, 100px);">
-  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;">Recognized your situation? 30 minutes. No commitment.</p>
-  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
+  <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;">Recognized your situation? 30 minutes to map your failure modes.</p>
+  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic</a>
 </div>
 
 <!-- ======== TRANSITION ======== -->
 <section class="transition-section" id="transition">
   <div class="container">
     <div class="reveal">
-      <div class="section-label" style="justify-content: center;">03 &mdash; Why</div>
-      <h2>Every alternative covers part of this. None cover all three at once.</h2>
+      <div class="section-label" style="justify-content: center;">What you&rsquo;ve tried</div>
+      <h2>You&rsquo;ve hit the ceiling. Here&rsquo;s what you&rsquo;ve probably already tried.</h2>
     </div>
     <div class="body-text reveal reveal-delay-1">
-      <p><strong>Fine-tuning providers give you training infrastructure and a loss curve.</strong> What they don&rsquo;t give you: a diagnosis of which failure modes are actually present, or evals calibrated to your production distribution. You could run ten training jobs and still not know whether any of them fixed the cases that were breaking in production.</p>
-      <p><strong>Eval platforms measure whatever you configure them to measure &mdash; accurately.</strong> The gap: they require you to already know which failure modes matter and how to detect them. If your evals don&rsquo;t cover your actual production failures, you get green dashboards on a broken model.</p>
-      <p><strong>A good ML consultant can diagnose, fine-tune, and write evals.</strong> The problem is the day after the final invoice. The benchmark they built lives in a repo nobody runs. The institutional memory of what was tried and what worked is in their notes, not yours. Six months later there&rsquo;s a regression and you start from zero.</p>
-      <p class="punch">The technique follows the failure mode. Not the vendor&rsquo;s preference.</p>
+      <p><strong>Model switching.</strong> Fast to test. If the ceiling follows to the new model, the failure mode is in the task, not the model family. You&rsquo;re buying time, not fixing the problem.</p>
+      <p><strong>Fine-tuning through a provider API.</strong> The API call is easy. What you get back is a training loss curve &mdash; not a verdict on whether you fixed the failure modes breaking production. You need evals calibrated to your production distribution for that, and building those is most of the work.</p>
+      <p><strong>Eval platforms.</strong> They measure whatever you configure &mdash; accurately. The gap: they require you to already know which failure modes matter and how to detect them. If your evals don&rsquo;t cover your actual production failures, you get a green dashboard on a broken model.</p>
+      <p><strong>An ML consultant.</strong> A good one can do most of what we do &mdash; diagnose failure modes, recommend the right technique, build the solution. The difference is measurement. Without a domain benchmark calibrated to your production bar, the consultant leaves and you have no way to know if the next model update holds. Six months later there&rsquo;s a regression and you start over.</p>
+      <p class="punch">We fix the ceiling. Not the symptom.</p>
     </div>
   </div>
 </section>
@@ -1567,7 +1393,7 @@ footer { border-top: none; }
 <section class="how-section" id="how">
   <div class="container">
     <div class="how-header reveal">
-      <div class="section-label">04 &mdash; Process</div>
+      <div class="section-label">How we work</div>
       <h2>Diagnose first. Build second. Hand over everything.</h2>
     </div>
     <div class="steps">
@@ -1594,8 +1420,8 @@ footer { border-top: none; }
       </div>
     </div>
     <div class="how-cta reveal">
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
-      <p style="font-size: 13px; color: var(--text-muted); margin-top: 14px; max-width: 420px; text-align: center;">30 minutes to walk through your current stack, where performance is falling short, and whether the diagnostic is the right next step.</p>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic</a>
+      <p style="font-size: 13px; color: var(--text-muted); margin-top: 14px; max-width: 420px; text-align: center;">Free 30-minute intro call to walk through your failure patterns and whether the diagnostic is the right next step.</p>
     </div>
   </div>
 </section>
@@ -1604,17 +1430,17 @@ footer { border-top: none; }
 <section class="diff-section" id="diff">
   <div class="container">
     <div class="diff-header reveal">
-      <div class="section-label">05 &mdash; Different</div>
+      <div class="section-label">What&rsquo;s different</div>
       <h2>The diagnostic outputs are yours. Most engagements leave you with a dependency.</h2>
     </div>
     <div class="diff-grid">
       <div class="diff-item reveal reveal-delay-1">
         <h3>Evals calibrated to production &mdash; not test set artifacts</h3>
-        <p>Every engagement ships evals built from your actual production failures. They tell you whether the intervention worked. They catch regressions before deployment. They&rsquo;re not calibrated to the clean examples you assembled before you knew what was failing &mdash; they&rsquo;re calibrated to what&rsquo;s actually failing now. You know when you&rsquo;re done. You can prove it.</p>
+        <p>Every engagement ships evals built from your actual production failures. They tell you whether the intervention worked. They catch regressions before deployment. You know when you&rsquo;re done. You can prove it.</p>
       </div>
       <div class="diff-item reveal reveal-delay-2">
         <h3>Cross-engagement pattern library, not a blank-slate diagnosis</h3>
-        <p>Each engagement extends a structured failure taxonomy: failure mode &times; intervention &times; vertical &times; outcome. The second time we see the same failure pattern in a vertical, the diagnosis is faster and the recommendation is more grounded &mdash; because we&rsquo;ve seen what that intervention actually produced. Fine-tuning providers start from your loss curve every time. We don&rsquo;t.</p>
+        <p>Each engagement extends a structured failure taxonomy: failure mode &times; intervention &times; vertical &times; outcome. The second time we see a failure pattern in a vertical, the diagnosis is faster and the recommendation is more grounded. Fine-tuning providers start from your loss curve every time. We don&rsquo;t.</p>
       </div>
       <div class="diff-item reveal reveal-delay-3">
         <h3>No ongoing license, no hosted dependency</h3>
@@ -1628,30 +1454,13 @@ footer { border-top: none; }
 <section class="audience-section" id="audience">
   <div class="container">
     <div class="reveal">
-      <div class="section-label">06 &mdash; Fit</div>
+      <div class="section-label">Who it&rsquo;s for</div>
       <h2>Built for teams past the prompt-tuning phase</h2>
-    </div>
-    <div class="persona-grid">
-      <div class="persona-card reveal reveal-delay-1">
-        <div class="persona-number">01</div>
-        <h3>You fine-tuned. You&rsquo;re not sure it helped.</h3>
-        <p>Training converged. Production performance is maybe better. There&rsquo;s no eval coverage of the specific failure modes that were breaking production, so there&rsquo;s no way to tell whether the training signal hit the right cases or whether you&rsquo;re looking at variance. You need a verdict, not a feeling.</p>
-      </div>
-      <div class="persona-card reveal reveal-delay-2">
-        <div class="persona-number">02</div>
-        <h3>Evals pass. Production is failing. You&rsquo;ve tried fixing it.</h3>
-        <p>You had eval coverage before launch. In production, the model fails on specific input types that weren&rsquo;t well-represented in your test set. Model switching didn&rsquo;t help. Prompt changes didn&rsquo;t help. The failure mode hasn&rsquo;t been classified &mdash; so there&rsquo;s nothing concrete to fix.</p>
-      </div>
-      <div class="persona-card reveal reveal-delay-3">
-        <div class="persona-number">03</div>
-        <h3>Series A. You own the ML decision and the budget.</h3>
-        <p>A failed build costs more than compute. It costs credibility with your board, your team, and the engineers who spent two months on it. You need a defensible answer before committing &mdash; not a post-mortem after.</p>
-      </div>
     </div>
     <div class="audience-right reveal">
       <div class="qualifier-label">Honest qualifier</div>
       <p>If you haven&rsquo;t shipped an LLM feature to production yet, we&rsquo;re probably not the right next call. Come back when you&rsquo;ve hit the ceiling on prompt tuning.</p>
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Book an Intro Call</a>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Book a diagnostic</a>
       <p class="nda-note">We'll tell you within 30 minutes whether we can help. We work under NDA. Your data and architecture stay confidential.</p>
     </div>
   </div>
@@ -1661,8 +1470,8 @@ footer { border-top: none; }
 <section class="cases-section" id="cases">
   <div class="container">
     <div class="cases-header reveal">
-      <div class="section-label">07 &mdash; Failure Modes</div>
-      <h2>Three cases where teams got the wrong answer without it.</h2>
+      <div class="section-label">Failure Modes</div>
+      <h2>Three cases. Wrong intervention each time.</h2>
     </div>
     <div class="cases-list">
       <div class="case-item reveal">
@@ -1736,7 +1545,7 @@ footer { border-top: none; }
 <section class="pricing-section" id="pricing">
   <div class="container">
     <div class="pricing-header reveal">
-      <div class="section-label">08 &mdash; Pricing</div>
+      <div class="section-label">Pricing</div>
       <h2>One fixed-scope entry point. Then a continuous improvement loop.</h2>
     </div>
     <div class="pricing-table-wrap reveal reveal-delay-1">
@@ -1767,7 +1576,11 @@ footer { border-top: none; }
         </tbody>
       </table>
     </div>
-    <p class="pricing-note reveal reveal-delay-2">The diagnostic is $5&ndash;8k, fixed scope. What comes next &mdash; if anything &mdash; is defined in the report. Target metric, cost, and timeline are agreed before any build work begins. The diagnostic is designed to lead to a retainer: benchmark maintenance, new failure patterns closed as your data evolves, regressions caught before each model update.</p>
+    <p class="pricing-note reveal reveal-delay-2">The diagnostic is $5&ndash;8k, fixed scope. What comes next &mdash; if anything &mdash; is defined in the report. Target metric, cost, and timeline are agreed before any build work begins. Retainers build on the diagnostic: benchmark maintenance, new failure patterns closed as your data evolves, regressions caught before each model update.</p>
+    <div style="margin-top: 36px;" class="reveal">
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic</a>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">30 minutes. Free. No commitment.</p>
+    </div>
   </div>
 </section>
 
@@ -1776,7 +1589,7 @@ footer { border-top: none; }
 <section class="faq-section" id="faq">
   <div class="container">
     <div class="faq-header reveal">
-      <div class="section-label">09 &mdash; FAQ</div>
+      <div class="section-label">FAQ</div>
       <h2>Common questions</h2>
     </div>
     <div class="faq-list">
@@ -1787,7 +1600,7 @@ footer { border-top: none; }
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">Since you do both diagnosis and execution, isn't the diagnostic biased toward recommending more work?</button>
+        <button class="faq-question">How do I know the diagnostic won&rsquo;t just recommend a full engagement?</button>
         <div class="faq-answer">
           <p>The diagnostic deliverable is a written report you own regardless of what you do next. If we recommend fine-tuning and you want to take it to an in-house team or another vendor, that&rsquo;s fine. If your current approach is adequate, that&rsquo;s what the report says&mdash;even if it means no further engagement.</p>
         </div>
@@ -1825,7 +1638,7 @@ footer { border-top: none; }
       <div class="faq-item reveal">
         <button class="faq-question">How is this different from an ML consulting engagement?</button>
         <div class="faq-answer">
-          <p>A consultant can diagnose, fine-tune, and write evals. The problem is the day after the final invoice: the benchmark they built lives in a repo nobody runs, and the institutional memory of what was tried is in their notes, not yours. The retainer model exists specifically to avoid this &mdash; benchmark maintenance, new failure modes closed as production evolves, regressions caught before each model update.</p>
+          <p>A good consultant can do most of what we do &mdash; diagnose failure modes, recommend the right technique, build the solution. The difference is measurement. Without a domain benchmark calibrated to your production bar, the consultant leaves and you have no way to know if the next model update holds. The benchmark they built lives in a repo nobody runs. The institutional memory of what was tried is in their notes, not yours. Six months later there&rsquo;s a regression and you start from zero. The retainer model exists specifically to prevent this: benchmark maintenance, new failure modes closed as production evolves, regressions caught before each model update.</p>
         </div>
       </div>
       <div class="faq-item reveal">
@@ -1844,15 +1657,15 @@ footer { border-top: none; }
   <div class="container">
     <div class="final-cta-content">
       <div class="reveal">
-        <div class="section-label" style="justify-content: center;">10 &mdash; Start</div>
-        <h2>30 minutes. We&rsquo;ll map your failure modes &mdash; or tell you it&rsquo;s not a fine-tuning problem.</h2>
+        <div class="section-label" style="justify-content: center;">Start</div>
+        <h2>If you&rsquo;ve been patching the same problem for two sprints and the gap still isn&rsquo;t closing &mdash; that&rsquo;s what the diagnostic is for.</h2>
       </div>
       <div class="body-text reveal reveal-delay-1">
-        <p>If your evals are passing while production is failing, or if you&rsquo;ve fine-tuned and aren&rsquo;t sure whether it fixed the right cases, that&rsquo;s the specific problem the diagnostic is built for. Thirty minutes to walk through your failure patterns, your current setup, and whether the diagnostic makes sense.</p>
+        <p>Book an intro call to walk through your failure patterns, where performance is breaking down, and whether the diagnostic is the right next step. Thirty minutes. We&rsquo;ll tell you what&rsquo;s wrong &mdash; or we&rsquo;ll tell you it isn&rsquo;t us.</p>
       </div>
       <div class="reveal reveal-delay-2">
-        <p class="support-text" style="margin-bottom: 20px;">No pitch deck. No sales sequence. Just a technical conversation about your stack and where the failure modes are.</p>
-        <a href="https://cal.com/philip-stevens/baseweight-intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book an Intro Call</a>
+        <p class="support-text" style="margin-bottom: 20px;">No pitch deck. No sales sequence. Just a technical conversation about your stack.</p>
+        <a href="https://cal.com/philip-stevens/baseweight-intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book a diagnostic</a>
       </div>
     </div>
   </div>
@@ -1947,35 +1760,6 @@ document.querySelectorAll('.case-question').forEach(btn => {
 const firstCase = document.querySelector('.case-item');
 if (firstCase) firstCase.classList.add('open');
 
-// Stat countup animation
-(function() {
-  function countUp(el) {
-    const target = parseFloat(el.dataset.countup);
-    const suffix = el.dataset.suffix || '';
-    const decimals = el.dataset.countup.includes('.') ? el.dataset.countup.split('.')[1].length : 0;
-    const duration = 1400;
-    const startTime = performance.now();
-    function frame(now) {
-      const p = Math.min((now - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = (eased * target).toFixed(decimals) + suffix;
-      if (p < 1) requestAnimationFrame(frame);
-    }
-    el.textContent = (0).toFixed(decimals) + suffix;
-    requestAnimationFrame(frame);
-  }
-  const statsEl = document.querySelector('.trust-stats');
-  if (!statsEl) return;
-  let fired = false;
-  const obs = new IntersectionObserver(function(entries) {
-    if (entries[0].isIntersecting && !fired) {
-      fired = true;
-      statsEl.querySelectorAll('[data-countup]').forEach(countUp);
-      obs.disconnect();
-    }
-  }, { threshold: 0.4 });
-  obs.observe(statsEl);
-})();
 
 
 // Smooth scroll for anchor links

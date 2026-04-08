@@ -4,23 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Baseweight — AI Model Quality, Diagnosed and Fixed</title>
-<meta name="description" content="Baseweight was built to fix the diagnostic gap in AI quality. Know why your model is failing. Fix it. Prove it worked.">
+<meta name="description" content="Baseweight was built to fix the diagnostic gap in AI quality. Know why your model is failing in production. Fix the right thing. Prove it worked.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
 <link rel="canonical" href="https://baseweight.co/about">
+<link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/about">
 <meta property="og:title" content="About — Baseweight">
-<meta property="og:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — classifying failures before prescribing the fix.">
+<meta property="og:description" content="Every AI shop recommends one tool. Baseweight diagnoses first — classifying which failure modes are actually present before prescribing the right intervention.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About — Baseweight">
-<meta name="twitter:description" content="Every AI shop has one tool and recommends it for everything. Baseweight diagnoses first — classifying failures before prescribing the fix.">
+<meta name="twitter:description" content="Every AI shop recommends one tool. Baseweight diagnoses first — classifying which failure modes are actually present before prescribing the right intervention.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -390,7 +391,7 @@ nav.scrolled {
 }
 
 .about-lead-form-row input[type="email"]:focus {
-  outline: none;
+  outline: 2px solid transparent;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
 }
@@ -438,7 +439,6 @@ nav.scrolled {
 .about-cta {
   text-align: center;
   background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
 }
 
 .about-cta h2 {
@@ -590,16 +590,12 @@ footer p {
 <!-- ======== NAV ======== -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo"><img src="/images/logo.svg" alt="Baseweight" height="36"></a>
+    <a href="/" class="nav-logo"><img src="/images/logo.png" alt="Baseweight" width="169" height="36" loading="eager"></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="/#how">How We Work</a></li>
-      <li><a href="/#cases">Cases</a></li>
-      <li><a href="/#pricing">Pricing</a></li>
       <li><a href="/diagnostic">Diagnostic</a></li>
-      <li><a href="/#faq">FAQ</a></li>
       <li><a href="/about" style="color: var(--text-primary);">About</a></li>
       <li><a href="/contact">Contact</a></li>
-      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book an Intro Call</a></li>
+      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a diagnostic</a></li>
     </ul>
     <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -625,10 +621,10 @@ footer p {
       <div class="reveal">
         <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. Prompt engineers recommend more prompting.</p>
         <p>This isn&rsquo;t because these are bad companies. It&rsquo;s because when you have one tool, every problem looks like it needs that tool.</p>
-        <p>The result: teams commit significant budget and months to the wrong approach. Then they start over &mdash; if they can justify the investment internally.</p>
+        <p>The result: months committed to the wrong approach. Then they start over &mdash; if they can justify it internally.</p>
         <p>Baseweight exists to fix the sequence. Classify the failure first. Then &mdash; and only then &mdash; prescribe and execute the right intervention.</p>
         <p>We work across the full stack: retrieval hardening, fine-tuning (LoRA, QLoRA, full fine-tune), DPO alignment, and compression where constraints require it. The value is in the diagnosis &mdash; so there&rsquo;s no default technique.</p>
-        <p>Every engagement produces artifacts you own outright: trained weights, training recipes, eval sets, deployment configs. The benchmark ships with you. Retainers are available, but dependency is never the model.</p>
+        <p>Every engagement produces artifacts you own outright: trained weights, training recipes, eval sets, deployment configs. The benchmark ships with you. Retainers are available, but the goal is never dependency.</p>
       </div>
     </div>
   </div>
@@ -670,14 +666,17 @@ footer p {
         <h2>Founded by <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Philip Stevens</span></span></h2>
       </div>
       <div class="reveal reveal-delay-1">
-        <p>12 years in applied ML, including production systems at Agoda and Quantcast. Independent consultant since 2023, focused on failure mode diagnosis, eval design, LoRA/QLoRA and full fine-tuning, and DPO alignment.</p>
-        <p>Baseweight was built from a pattern that kept repeating in consulting engagements: teams committing to interventions before diagnosing the failure. The diagnosis-first model exists because that sequence works &mdash; and the reverse doesn&rsquo;t.</p>
+        <p>12 years in applied ML. Production work at Agoda building personalization and recommendation systems at scale, and at Quantcast managing end-to-end ML lifecycle for core targeting models &mdash; feature engineering, model architecture, and domain drift monitoring.</p>
+        <p>Independent consultant since 2023. Baseweight was built around a pattern I kept encountering: teams choosing adaptation techniques before diagnosing the problem. The technique follows the firm, not the evidence.</p>
+        <p>I work across the full stack and select the approach after analyzing failure modes and data characteristics. Your team owns the output outright and can extend it independently.</p>
         <ul class="founder-credentials">
           <li>Fine-tuning (LoRA, QLoRA, full)</li>
-          <li>Eval design</li>
-          <li>RAG hardening</li>
+          <li>Eval design &amp; regression harnesses</li>
+          <li>RAG pipeline hardening</li>
           <li>DPO alignment</li>
-          <li>Model compression</li>
+          <li>Agent workflow design</li>
+          <li>Inference optimization</li>
+          <li>MSc Computer Science, Univ. of Auckland</li>
         </ul>
       </div>
     </div>
@@ -685,11 +684,13 @@ footer p {
 </section>
 
 <!-- ======== ABOUT LEAD CAPTURE ======== -->
-<section class="about-lead" id="contact">
+<!-- PENDING: First benchmark must be published before this section goes live. Once published, restore this section and link to the benchmark. Until then, consider replacing with the CTA or hiding this section entirely. -->
+<section class="about-lead" id="contact" style="display:none">
   <div class="container">
     <div class="about-lead-inner">
       <div class="reveal">
         <h2>We publish benchmarks. Get notified when the next one drops.</h2>
+        <!-- PENDING: Benchmark publication — update this copy to reference the specific benchmark and vertical once published -->
         <p class="lead-sub">No pitch sequence. Technical content only &mdash; benchmark methodology, failure pattern analysis, vertical-specific results.</p>
       </div>
       <div class="reveal reveal-delay-1">
@@ -730,9 +731,9 @@ footer p {
 <section class="about-cta">
   <div class="container">
     <div class="reveal">
-      <h2>If you&rsquo;ve exhausted the obvious fixes, it&rsquo;s worth a call.</h2>
-      <p>30 minutes. No cost, no commitment. We&rsquo;ll tell you what&rsquo;s wrong &mdash; or we&rsquo;ll tell you it isn&rsquo;t us.</p>
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book an Intro Call</a>
+      <h2>If you&rsquo;ve exhausted the obvious fixes, let&rsquo;s talk.</h2>
+      <p>30 minutes. Free. No commitment. We&rsquo;ll tell you what&rsquo;s wrong &mdash; or we&rsquo;ll tell you it isn&rsquo;t us.</p>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic</a>
     </div>
   </div>
 </section>

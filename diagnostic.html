@@ -4,24 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Model Failure Diagnostic — Baseweight</title>
-<meta name="description" content="A 2-week structured failure analysis: classify what's breaking, why, and which intervention closes the gap. Written report you own outright. $5–8k, no build commitment required.">
+<meta name="description" content="2-week failure analysis. Classify what's breaking and which intervention closes the gap. Written report you own. $5–8k fixed scope, no build commitment.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
 <link rel="canonical" href="https://baseweight.co/diagnostic">
+<link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <link rel="author" href="/about">
+<meta name="author" content="Philip Stevens">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/diagnostic">
 <meta property="og:title" content="Model Failure Diagnostic — Baseweight">
-<meta property="og:description" content="2-week failure mode analysis. Written report you own outright: failure mode classification, prioritized interventions, eval design, and build specification. $5–8k fixed scope, no build commitment required.">
+<meta property="og:description" content="2-week failure mode analysis. Failure mode classification, prioritized interventions, eval design, and build specification. $5–8k fixed scope, no build commitment.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Model Failure Diagnostic — Baseweight">
-<meta name="twitter:description" content="2-week failure mode analysis. Written report you own outright: failure mode classification, prioritized interventions, eval design, and build specification. $5–8k fixed scope, no build commitment required.">
+<meta name="twitter:description" content="2-week failure mode analysis. Failure mode classification, prioritized interventions, eval design, and build specification. $5–8k fixed scope, no build commitment.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -311,7 +313,7 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 }
 
 .diag-faq-item.open .diag-faq-a {
-  max-height: 400px;
+  max-height: 600px;
   padding-bottom: 24px;
 }
 
@@ -320,6 +322,10 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
   color: var(--text-secondary);
   line-height: 1.85;
 }
+
+.diag-faq-a ul { margin-bottom: 16px; padding-left: 20px; list-style: none; }
+.diag-faq-a ul li { font-size: 14px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 8px; padding-left: 16px; position: relative; }
+.diag-faq-a ul li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 
 /* ======== CLOSING CTA ======== */
 .diag-cta {
@@ -425,16 +431,12 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <!-- ======== NAV ======== -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo"><img src="/images/logo.svg" alt="Baseweight" height="36"></a>
+    <a href="/" class="nav-logo"><img src="/images/logo.png" alt="Baseweight" width="169" height="36" loading="eager"></a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="/#how">How We Work</a></li>
-      <li><a href="/#cases">Cases</a></li>
-      <li><a href="/#pricing">Pricing</a></li>
       <li><a href="/diagnostic" style="color: var(--text-primary);">Diagnostic</a></li>
-      <li><a href="/#faq">FAQ</a></li>
       <li><a href="/about">About</a></li>
       <li><a href="/contact">Contact</a></li>
-      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book an Intro Call</a></li>
+      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a diagnostic</a></li>
     </ul>
     <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -449,13 +451,13 @@ footer p { font-size: 12px; color: var(--text-muted); }
   <div class="container">
     <div class="diag-hero">
       <div class="section-label">Model Failure Diagnostic</div>
-      <h1>Know which failure modes are in your production data before you decide what to build.</h1>
+      <h1>Most teams commit to an intervention before they know what&rsquo;s failing. The diagnostic starts one step earlier.</h1>
       <p class="diag-price">$5&ndash;8k &nbsp;&middot;&nbsp; fixed scope &nbsp;&middot;&nbsp; 2 weeks</p>
       <p>Most teams pick an intervention &mdash; fine-tuning, RAG refactor, DPO alignment &mdash; and then build evals to measure it. That&rsquo;s backwards. The failure modes in your production data determine which intervention has a chance of closing the gap. The diagnostic maps that sequence before you commit.</p>
       <p>In two weeks, we analyze your production failures across the full stack &mdash; retrieval, weights, eval coverage &mdash; and classify which failure modes are systematic. The output is a written report you own outright: failure mode analysis, prioritized interventions, eval design, and build specification &mdash; whether you build with us, another team, or in-house.</p>
       <div class="diag-hero-cta">
-        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Start with an Intro Call &rarr;</a>
-        <p class="diag-nda">30 minutes. No cost, no commitment. We work under NDA.</p>
+        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic &rarr;</a>
+        <p class="diag-nda">Free 30-minute intro call. No commitment. We work under NDA.</p>
         <p class="diag-nda" style="margin-top: 20px;">By <a href="/about" style="color: var(--text-muted);">Philip Stevens</a> &mdash; production ML specialist, previously at Agoda and Quantcast.</p>
       </div>
     </div>
@@ -470,8 +472,8 @@ footer p { font-size: 12px; color: var(--text-muted); }
       <h2>The intervention decision is easy to get wrong without a diagnosis.</h2>
     </div>
     <div class="diag-body-text">
-      <p>Most teams pick a technique based on what they&rsquo;ve tried before or what a vendor recommended, then build evals to measure it. The failure modes in your production data should determine the intervention &mdash; not the other way around. A RAG refactor on a problem that was in the model weights, or a LoRA adapter for a task that needed better retrieval: both are failures of sequence, not execution.</p>
-      <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. Prompt engineers recommend more prompting. None of them run the diagnostic first. The recommendation follows from their default, not from your production failures.</p>
+      <p>The failure modes in your production data should determine the intervention &mdash; not what you&rsquo;ve tried before or what a vendor recommended. A RAG refactor on a problem in the model weights, or a LoRA adapter for a task that needed better retrieval: both are failures of sequence, not execution.</p>
+      <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. The recommendation follows from their default, not your production failures.</p>
       <p>At $5&ndash;8k, the diagnostic classifies which failure modes are actually present, maps each one to the right intervention, and defines what it will cost &mdash; before any build commitment. You go into the execution decision with a written analysis, not a guess made before anyone&rsquo;s seen your data.</p>
       <div class="diag-why-callout">
         <p>The first mistake is usually the technique. The second is the evals built around it.</p>
@@ -491,28 +493,28 @@ footer p { font-size: 12px; color: var(--text-muted); }
     <div class="diag-deliverables-grid">
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">01</div>
-        <h3>Production failure mode analysis</h3>
+        <h3>A verdict on what&rsquo;s failing and why</h3>
         <p>Your production failures classified by failure mode and linked to the interventions most likely to close each one. Prioritized by expected impact. Why the top recommendation fits your specific failure pattern &mdash; and why the alternatives were ruled out. A document your team can read, challenge, and act on without us in the room.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">02</div>
-        <h3>Root cause analysis of current failure modes</h3>
-        <p>A systematic breakdown of where and why your current approach is failing &mdash; whether the bottleneck is in retrieval, model weights, pipeline design, or data quality. The diagnosis distinguishes a retrieval problem solvable with chunking or embedding changes from a model-layer problem that requires training signal. These are not the same fix, and treating one as the other is how teams spend months on the wrong approach.</p>
+        <h3>Where in the stack the problem lives</h3>
+        <p>A systematic breakdown of where and why your current approach is failing &mdash; whether the bottleneck is in retrieval, model weights, pipeline design, or data quality. The diagnosis distinguishes a retrieval problem solvable with chunking or embedding changes from a model-layer problem that requires training signal.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">03</div>
-        <h3>Eval plan with acceptance criteria</h3>
+        <h3>A way to know when you&rsquo;re done</h3>
         <p>No eval plan means no way to know if you&rsquo;re done. This deliverable defines it: eval set structure, benchmark approach, acceptance thresholds &mdash; agreed before execution starts. You verify the build against it, not against how it feels.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">04</div>
-        <h3>Build specification and cost</h3>
+        <h3>Full cost and timeline before you commit</h3>
         <p>Cost ranges for your problem type and data volume: training compute, infrastructure requirements, and calendar time per intervention. What it will cost, how long it will take, and what the intervention is designed to address &mdash; agreed before any build commitment.</p>
       </div>
     </div>
     <div style="margin-top: 48px;">
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Start with an Intro Call &rarr;</a>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">30 minutes to assess whether the diagnostic is the right fit for your problem.</p>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic &rarr;</a>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">Free 30-minute intro call. No commitment.</p>
     </div>
   </div>
 </section>
@@ -536,7 +538,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
         <div class="diag-step-num">02</div>
         <div>
           <h3>Failure classification and intervention mapping</h3>
-          <p>We map each failure mode to the intervention most likely to close it &mdash; retrieval hardening, LoRA/QLoRA, full fine-tune, DPO alignment, compression &mdash; and determine where in the stack the fix lives. We document what alternatives were considered, why they were ruled out, and what the cost and trade-offs look like for each recommendation.</p>
+          <p>We map each failure mode to the intervention most likely to close it &mdash; retrieval hardening, LoRA/QLoRA, full fine-tune, DPO alignment, compression &mdash; and determine where in the stack the fix lives. We document alternatives considered, why they were ruled out, and cost and trade-offs for each recommendation.</p>
         </div>
       </div>
       <div class="diag-step">
@@ -614,9 +616,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <section class="diag-cta">
   <div class="container">
     <div class="section-label" style="justify-content: center;">Get started</div>
-    <h2>If you&rsquo;ve been patching the same problem for two sprints and the gap still isn&rsquo;t closing, that&rsquo;s what the diagnostic is for.</h2>
-    <p>Book an intro call to walk through your failure patterns, where performance is breaking down, and whether the diagnostic is the right next step. 30 minutes. No cost, no commitment.</p>
-    <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Start with an Intro Call &rarr;</a>
+    <h2>If you&rsquo;ve been patching the same problem for two sprints and the gap still isn&rsquo;t closing &mdash; that&rsquo;s what the diagnostic is for.</h2>
+    <p>Book an intro call to walk through your failure patterns, where performance is breaking down, and whether the diagnostic is the right next step. 30 minutes. Free. No commitment.</p>
+    <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a diagnostic &rarr;</a>
     <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">After you book, we&rsquo;ll send 3 questions so we can focus the 30 minutes on your specific situation.</p>
     <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Prefer email? <a href="mailto:phil@baseweight.co" style="color: var(--text-muted);">phil@baseweight.co</a> &nbsp;&middot;&nbsp; We work under NDA.</p>
     <p style="margin-top: 48px; font-size: 13px;"><a href="/">&larr; Back to home</a></p>
@@ -629,7 +631,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <footer>
   <div class="container">
     <p>&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-muted);">About</a> &nbsp;&middot;&nbsp; <a href="/contact" style="color: var(--text-muted);">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy" style="color: var(--text-muted);">Privacy Policy</a></p>
-    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);">By <a href="/about" rel="author" style="color: var(--text-muted);">Philip Stevens</a> &nbsp;&middot;&nbsp; Updated <time datetime="2026-03-03">March 2026</time></p>
+    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);" itemscope itemtype="https://schema.org/WebPage"><span itemprop="author" itemscope itemtype="https://schema.org/Person">By <a href="/about" rel="author" itemprop="url" style="color: var(--text-muted);"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="datePublished" datetime="2026-03-03">March 2026</time></p>
   </div>
 </footer>
 
