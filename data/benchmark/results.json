@@ -1,0 +1,2968 @@
+{
+  "meta": {
+    "generated_at": "2026-04-16T19:48:46.478497Z",
+    "commit_sha": "placeholder",
+    "gpu": "NVIDIA A100 80GB",
+    "provider": "RunPod",
+    "total_cost": 0
+  },
+  "tasks": {
+    "ledgar": {
+      "name": "Legal Document Classification",
+      "dataset": "LEDGAR (LexGLUE)",
+      "metric_id": "weighted_f1",
+      "metric_label": "Weighted F1",
+      "test_size": "1,000",
+      "results": [
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "model_label": "GPT-4.1 mini (SFT)",
+          "condition": "api-sft-500",
+          "condition_label": "API SFT (500)",
+          "model_family": "api-finetuned",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        }
+      ],
+      "errors": [
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "condition": "api-sft-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        }
+      ],
+      "efficiency": [
+        {
+          "n_train": 50,
+          "metric_value": null
+        },
+        {
+          "n_train": 200,
+          "metric_value": null
+        },
+        {
+          "n_train": 500,
+          "metric_value": null
+        },
+        {
+          "n_train": 1000,
+          "metric_value": null
+        },
+        {
+          "n_train": 5000,
+          "metric_value": null
+        }
+      ]
+    },
+    "cuad": {
+      "name": "Contract Clause Extraction",
+      "dataset": "CUAD",
+      "metric_id": "token_f1",
+      "metric_label": "Token F1",
+      "test_size": "4,182",
+      "results": [
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "model_label": "GPT-4.1 mini (SFT)",
+          "condition": "api-sft-500",
+          "condition_label": "API SFT (500)",
+          "model_family": "api-finetuned",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        }
+      ],
+      "errors": [
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "condition": "api-sft-500",
+          "categories": {
+            "correct": 0,
+            "partial": 0,
+            "missed": 0,
+            "hallucinated": 0,
+            "format_violation": 0,
+            "not_applicable": 0
+          }
+        }
+      ],
+      "efficiency": [
+        {
+          "n_train": 50,
+          "metric_value": null
+        },
+        {
+          "n_train": 200,
+          "metric_value": null
+        },
+        {
+          "n_train": 500,
+          "metric_value": null
+        },
+        {
+          "n_train": 1000,
+          "metric_value": null
+        },
+        {
+          "n_train": 2000,
+          "metric_value": null
+        }
+      ]
+    },
+    "banking77": {
+      "name": "Customer Support Routing",
+      "dataset": "BANKING77",
+      "metric_id": "weighted_f1",
+      "metric_label": "Weighted F1",
+      "test_size": "3,080",
+      "results": [
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "model_label": "GPT-4.1 mini (SFT)",
+          "condition": "api-sft-500",
+          "condition_label": "API SFT (500)",
+          "model_family": "api-finetuned",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        }
+      ],
+      "errors": [
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "condition": "api-sft-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        }
+      ],
+      "efficiency": [
+        {
+          "n_train": 50,
+          "metric_value": null
+        },
+        {
+          "n_train": 200,
+          "metric_value": null
+        },
+        {
+          "n_train": 500,
+          "metric_value": null
+        },
+        {
+          "n_train": 1000,
+          "metric_value": null
+        },
+        {
+          "n_train": 5000,
+          "metric_value": null
+        }
+      ]
+    },
+    "fpb": {
+      "name": "Financial Sentiment",
+      "dataset": "FinancialPhraseBank",
+      "metric_id": "weighted_f1",
+      "metric_label": "Weighted F1",
+      "test_size": "339",
+      "results": [
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "model_label": "GPT-4.1 mini (SFT)",
+          "condition": "api-sft-500",
+          "condition_label": "API SFT (500)",
+          "model_family": "api-finetuned",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        }
+      ],
+      "errors": [
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "condition": "api-sft-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        }
+      ],
+      "efficiency": [
+        {
+          "n_train": 50,
+          "metric_value": null
+        },
+        {
+          "n_train": 200,
+          "metric_value": null
+        },
+        {
+          "n_train": 500,
+          "metric_value": null
+        },
+        {
+          "n_train": 1000,
+          "metric_value": null
+        }
+      ]
+    },
+    "medmcqa": {
+      "name": "Medical Question Answering",
+      "dataset": "MedMCQA",
+      "metric_id": "accuracy",
+      "metric_label": "Accuracy",
+      "test_size": "1,000",
+      "results": [
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "model_label": "GPT-4.1 mini (SFT)",
+          "condition": "api-sft-500",
+          "condition_label": "API SFT (500)",
+          "model_family": "api-finetuned",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        }
+      ],
+      "errors": [
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-full",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "zero-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "5-shot",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "condition": "api-sft-500",
+          "categories": {
+            "correct": 0,
+            "wrong_class": 0,
+            "format_violation": 0,
+            "refusal": 0,
+            "empty": 0
+          }
+        }
+      ],
+      "efficiency": [
+        {
+          "n_train": 50,
+          "metric_value": null
+        },
+        {
+          "n_train": 200,
+          "metric_value": null
+        },
+        {
+          "n_train": 500,
+          "metric_value": null
+        },
+        {
+          "n_train": 1000,
+          "metric_value": null
+        },
+        {
+          "n_train": 5000,
+          "metric_value": null
+        }
+      ]
+    },
+    "mbpp": {
+      "name": "Code Generation",
+      "dataset": "MBPP",
+      "metric_id": "pass_at_1",
+      "metric_label": "Pass@1",
+      "test_size": "500",
+      "results": [
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "qwen3-8b",
+          "model_label": "Qwen3-8B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemma3-4b",
+          "model_label": "Gemma 3-4B",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-500",
+          "condition_label": "LoRA (500)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "phi4-mini",
+          "model_label": "Phi-4-mini",
+          "condition": "lora-full",
+          "condition_label": "LoRA (full)",
+          "model_family": "open-source",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1",
+          "model_label": "GPT-4.1",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "model_label": "GPT-4.1 mini",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "model_label": "GPT-4.1 nano",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "claude-sonnet",
+          "model_label": "Claude Sonnet 4.6",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "zero-shot",
+          "condition_label": "Zero-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gemini-flash",
+          "model_label": "Gemini 2.5 Flash",
+          "condition": "5-shot",
+          "condition_label": "5-shot",
+          "model_family": "frontier",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "model_label": "GPT-4.1 mini (SFT)",
+          "condition": "api-sft-500",
+          "condition_label": "API SFT (500)",
+          "model_family": "api-finetuned",
+          "metric_value": null,
+          "cost_per_1k_correct": null,
+          "ttft_p50_ms": null,
+          "ttft_p95_ms": null,
+          "training_cost": 0,
+          "training_time_min": 0,
+          "n_train": 0,
+          "tco_12mo_10k": null,
+          "cost_per_query": null
+        }
+      ],
+      "errors": [
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-500",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "qwen3-8b",
+          "condition": "lora-full",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-500",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gemma3-4b",
+          "condition": "lora-full",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-500",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "phi4-mini",
+          "condition": "lora-full",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "zero-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1",
+          "condition": "5-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "zero-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini",
+          "condition": "5-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "zero-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-nano",
+          "condition": "5-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "zero-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "claude-sonnet",
+          "condition": "5-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "zero-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gemini-flash",
+          "condition": "5-shot",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        },
+        {
+          "model_id": "gpt-4.1-mini-sft",
+          "condition": "api-sft-500",
+          "categories": {
+            "pass": 0,
+            "logic_error": 0,
+            "runtime_error": 0,
+            "syntax_error": 0,
+            "incomplete": 0
+          }
+        }
+      ],
+      "efficiency": [
+        {
+          "n_train": 50,
+          "metric_value": null
+        },
+        {
+          "n_train": 100,
+          "metric_value": null
+        },
+        {
+          "n_train": 200,
+          "metric_value": null
+        }
+      ]
+    }
+  }
+}

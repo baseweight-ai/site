@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology | Baseweight Benchmark</title>
+<meta name="description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/icon.jpg">
+<link rel="canonical" href="https://baseweight.co/methodology">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://baseweight.co/methodology">
+<meta property="og:title" content="Methodology | Baseweight Benchmark">
+<meta property="og:description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
+<meta property="og:image" content="https://baseweight.co/images/featured.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Methodology | Baseweight Benchmark">
+<meta name="twitter:description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
+<meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #080808;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --border: #1c1c1c;
+  --border-accent: #282828;
+  --text-primary: #e8e4de;
+  --text-secondary: #898580;
+  --text-muted: #555;
+  --accent: #dcb875;
+  --accent-hover: #dbb960;
+  --accent-dim: rgba(201, 168, 76, 0.1);
+  --accent-glow: rgba(201, 168, 76, 0.06);
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max-width: 1120px;
+  --section-pad: clamp(60px, 8vh, 100px);
+}
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  overflow-x: hidden;
+}
+
+::selection { background: var(--accent); color: var(--bg-primary); }
+
+a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--accent-hover); }
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 clamp(24px, 5vw, 48px);
+  transition: background 0.3s, border-color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(8, 8, 8, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom-color: var(--border);
+}
+.nav-inner {
+  max-width: var(--max-width); margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between; height: 72px;
+}
+.nav-logo { display: flex; align-items: center; }
+.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+.nav-links a { font-size: 13px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text-primary); }
+.nav-cta { font-family: var(--font-mono) !important; font-size: 12px !important; font-weight: 600 !important; color: var(--bg-primary) !important; background: var(--accent); padding: 10px 20px; letter-spacing: 0.04em; transition: background 0.2s, transform 0.2s !important; }
+.nav-cta:hover { background: var(--accent-hover) !important; transform: translateY(-1px); }
+.nav-mobile-toggle { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 8px; }
+.nav-mobile-toggle span { display: block; width: 20px; height: 1.5px; background: var(--text-primary); margin: 5px 0; transition: transform 0.3s, opacity 0.3s; }
+.nav-mobile-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-mobile-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-mobile-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* SKIP NAV */
+.skip-nav { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.skip-nav:focus { position: fixed; top: 0; left: 0; width: auto; height: auto; padding: 12px 20px; background: var(--accent); color: var(--bg-primary); font-weight: 600; z-index: 9999; }
+
+/* PAGE HERO */
+.page-hero {
+  padding-top: calc(72px + var(--section-pad));
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+}
+.page-hero .section-label {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.page-hero .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+.page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 16px; }
+.page-hero .subtitle { font-size: 14px; color: var(--text-secondary); }
+
+/* TWO COLUMN LAYOUT */
+.methodology-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 64px;
+  padding: var(--section-pad) 0;
+  align-items: start;
+}
+
+/* SIDEBAR TOC */
+.toc-sidebar {
+  position: sticky;
+  top: 96px;
+}
+.toc-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px;
+}
+.toc-list { list-style: none; border-left: 1px solid var(--border); }
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block;
+  padding: 6px 0 6px 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  border-left: 2px solid transparent;
+  margin-left: -1px;
+  transition: color 0.2s, border-color 0.2s;
+  line-height: 1.5;
+}
+.toc-list a:hover, .toc-list a.active { color: var(--accent); border-left-color: var(--accent); }
+.toc-list .toc-h3 a { padding-left: 28px; font-size: 11px; }
+
+/* MAIN CONTENT */
+.methodology-content h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+  color: var(--text-primary);
+  margin-top: 56px; margin-bottom: 20px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.methodology-content h2:first-child { margin-top: 0; border-top: none; }
+
+.methodology-content h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  font-weight: 700; letter-spacing: -0.01em;
+  margin-top: 32px; margin-bottom: 12px;
+}
+
+.methodology-content p {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.85;
+  margin-bottom: 16px;
+}
+
+.methodology-content strong { color: var(--text-primary); font-weight: 600; }
+
+.methodology-content ul {
+  list-style: none; margin: 0 0 16px 0; padding: 0;
+}
+.methodology-content ul li {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.85;
+  padding-left: 20px; position: relative; margin-bottom: 4px;
+}
+.methodology-content ul li::before {
+  content: '–'; position: absolute; left: 0; color: var(--accent);
+}
+
+/* TABLES */
+.methodology-content .table-wrap { overflow-x: auto; margin-bottom: 24px; }
+.methodology-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 500px;
+}
+.methodology-content th {
+  font-weight: 600; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.methodology-content td {
+  padding: 10px 14px; color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  line-height: 1.6;
+}
+.methodology-content tr:last-child td { border-bottom: none; }
+.methodology-content tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
+
+/* FOOTER */
+footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; }
+footer p { font-size: 12px; color: var(--text-muted); }
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  .methodology-layout { grid-template-columns: 1fr; gap: 0; }
+  .toc-sidebar { display: none; }
+}
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 72px; left: 0; right: 0;
+    background: rgba(8, 8, 8, 0.97); backdrop-filter: blur(16px);
+    padding: 24px clamp(24px, 5vw, 48px); gap: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-mobile-toggle { display: block; }
+}
+</style>
+<meta name="author" content="Philip Stevens">
+<link rel="author" href="/about">
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/images/logo.png" alt="Baseweight" width="169" height="36" loading="eager"></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="/benchmark">Benchmark</a></li>
+      <li><a href="/methodology" style="color: var(--text-primary);">Methodology</a></li>
+      <li><a href="/diagnostic">Diagnostic</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a diagnostic</a></li>
+    </ul>
+    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<main id="main-content">
+
+<section class="page-hero">
+  <div class="container">
+    <div class="section-label">Benchmark</div>
+    <h1>Methodology</h1>
+    <p class="subtitle">How the benchmark was designed, run, and measured.</p>
+  </div>
+</section>
+
+<section style="padding: 0 0 var(--section-pad);">
+  <div class="container">
+    <div class="methodology-layout">
+
+      <!-- SIDEBAR TOC -->
+      <aside class="toc-sidebar" aria-label="Table of contents">
+        <div class="toc-label">Contents</div>
+        <ul class="toc-list" id="tocList"></ul>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <article class="methodology-content" id="methodologyContent">
+
+        <h2 id="what-this-measures">What this measures</h2>
+        <p>This benchmark compares fine-tuned open-source language models against commercial frontier APIs on six tasks common in production vertical SaaS products. It measures three things: accuracy on the task, cost to run the task at scale, and where each model fails.</p>
+        <p>Every result is reproducible. Training code, evaluation scripts, model weights, and prediction logs are public.</p>
+
+        <h2 id="tasks">Tasks</h2>
+        <p>Each task corresponds to a feature that vertical SaaS teams ship and then struggle to get working on production data. The datasets are public and version-pinned.</p>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th>Dataset</th><th>What it tests</th><th>Test size</th></tr></thead>
+          <tbody>
+            <tr><td>Legal document classification</td><td>LEDGAR (LexGLUE)</td><td>Classifying contract provisions into 100 categories</td><td>1,000</td></tr>
+            <tr><td>Contract clause extraction</td><td>CUAD</td><td>Extracting clause text from contracts, or correctly reporting its absence</td><td>4,182</td></tr>
+            <tr><td>Customer support routing</td><td>BANKING77</td><td>Routing customer messages to 77 fine-grained intent categories</td><td>3,080</td></tr>
+            <tr><td>Financial sentiment</td><td>FinancialPhraseBank</td><td>Classifying financial text as positive, negative, or neutral</td><td>339</td></tr>
+            <tr><td>Medical question answering</td><td>MedMCQA</td><td>Answering 4-option medical multiple-choice questions</td><td>1,000</td></tr>
+            <tr><td>Code generation</td><td>MBPP</td><td>Writing Python functions from natural language descriptions, verified by test execution</td><td>500</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h2 id="models">Models</h2>
+        <p>Three open-source models are fine-tuned with QLoRA. Five frontier APIs are tested zero-shot and with 5-shot prompting. GPT-4.1 mini is also fine-tuned through OpenAI's API for direct comparison against open-source LoRA.</p>
+        <p><strong>Open-source (fine-tuned with QLoRA):</strong></p>
+        <ul>
+          <li>Qwen3-8B (8B parameters, Apache 2.0)</li>
+          <li>Gemma 3-4B-IT (4B parameters, Gemma Terms of Use)</li>
+          <li>Phi-4-mini-instruct (3.8B parameters, MIT)</li>
+        </ul>
+        <p><strong>Frontier APIs (prompted):</strong></p>
+        <ul>
+          <li>GPT-4.1 at $2.00 / $8.00 per million tokens</li>
+          <li>GPT-4.1 mini at $0.20 / $0.80</li>
+          <li>GPT-4.1 nano at $0.05 / $0.20</li>
+          <li>Claude Sonnet 4.6 at $3.00 / $15.00</li>
+          <li>Gemini 2.5 Flash at $0.15 / $0.60</li>
+        </ul>
+        <p><strong>API fine-tuned:</strong></p>
+        <ul>
+          <li>GPT-4.1 mini via OpenAI SFT at $0.80 per million training tokens</li>
+        </ul>
+
+        <h2 id="conditions">Conditions</h2>
+        <p>Each model is tested under conditions that match how teams actually deploy it.</p>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Condition</th><th>Applied to</th><th>What it means</th></tr></thead>
+          <tbody>
+            <tr><td>Zero-shot</td><td>Frontier APIs</td><td>Task instruction only, no examples in prompt</td></tr>
+            <tr><td>5-shot</td><td>Frontier APIs</td><td>5 labeled examples prepended to every query</td></tr>
+            <tr><td>LoRA (500)</td><td>Open-source</td><td>QLoRA fine-tuned on 500 training examples</td></tr>
+            <tr><td>LoRA (full)</td><td>Open-source</td><td>QLoRA fine-tuned on the full training set (up to 10K examples)</td></tr>
+            <tr><td>API SFT (500)</td><td>GPT-4.1 mini</td><td>Fine-tuned through OpenAI's API on the same 500 examples</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p>A data efficiency curve for Qwen3-8B is computed per task at 50, 200, 500, 1,000, 2,000, and 5,000 training examples where data permits.</p>
+
+        <h2 id="metrics">Metrics</h2>
+        <p><strong>Task accuracy.</strong> The primary quality metric: weighted F1 for classification tasks, token-level F1 for extraction, accuracy for multiple-choice, pass@1 for code generation.</p>
+        <p><strong>Cost per 1,000 correct predictions.</strong> The total cost to produce 1,000 correct outputs, combining amortized training cost (spread over 12 months at 10K daily queries) and per-query inference cost. This metric directly answers "is fine-tuning worth the investment?"</p>
+        <p><strong>Latency.</strong> Time to first token at P50 and P95. Self-hosted models report vLLM serving latency. API models report end-to-end request latency.</p>
+        <p><strong>12-month TCO at 10K daily queries.</strong> Fully loaded annual cost including compute, API fees, and one-time training.</p>
+
+        <h2 id="error-analysis">Error analysis</h2>
+        <p>Every prediction is classified into one error category. The rules are deterministic and applied by code, not by judgment.</p>
+        <p><strong>Classification tasks</strong> use five categories: correct, wrong class, format violation (output doesn't map to a valid label), refusal, and empty output.</p>
+        <p><strong>Extraction</strong> uses five categories: correct (token F1 above 0.8), partial (F1 between 0.3 and 0.8), missed (failed to find existing content), hallucinated (more than 30% of output tokens absent from source), and format violation.</p>
+        <p><strong>Code generation</strong> uses five categories: pass (all tests pass), logic error (runs but wrong output), runtime error, syntax error, and incomplete output.</p>
+
+        <h2 id="training-configuration">Training configuration</h2>
+        <p>All QLoRA fine-tuning uses Unsloth on a single NVIDIA A100 80GB.</p>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Quantization</td><td>4-bit NF4</td></tr>
+            <tr><td>LoRA rank</td><td>32</td></tr>
+            <tr><td>LoRA alpha</td><td>64</td></tr>
+            <tr><td>LoRA dropout</td><td>0.05</td></tr>
+            <tr><td>Target modules</td><td>All linear layers</td></tr>
+            <tr><td>Learning rate</td><td>2e-4 (cosine schedule, 5% warmup)</td></tr>
+            <tr><td>Optimizer</td><td>AdamW 8-bit</td></tr>
+            <tr><td>Effective batch size</td><td>16</td></tr>
+            <tr><td>Precision</td><td>BF16</td></tr>
+            <tr><td>Seed</td><td>42</td></tr>
+            <tr><td>Epoch schedule</td><td>10 epochs for N &le; 200, 5 for 201&ndash;1000, 3 for N &gt; 1000</td></tr>
+            <tr><td>Checkpoint selection</td><td>Best validation loss</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h2 id="inference-configuration">Inference configuration</h2>
+        <p>Fine-tuned models are served with vLLM. Temperature is 0 (greedy) for all models, including APIs. Maximum output tokens vary by task type: 32 for classification, 512 for extraction, 1,024 for code.</p>
+
+        <h2 id="reproduce">Reproduce</h2>
+        <p>Clone the repo, install dependencies, and follow the README. Total compute cost to reproduce is under $350.</p>
+        <p><a href="https://github.com/baseweight/baseweight-benchmark" target="_blank" rel="noopener noreferrer">github.com/baseweight/baseweight-benchmark</a></p>
+
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>Open data. Open weights. Open code.</p>
+    <p style="margin-top:8px;">&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/benchmark" style="color: var(--text-muted);">Benchmark</a> &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-muted);">About</a> &nbsp;&middot;&nbsp; <a href="/contact" style="color: var(--text-muted);">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy" style="color: var(--text-muted);">Privacy</a></p>
+  </div>
+</footer>
+
+<script>
+// NAV
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open');
+});
+
+// BUILD TOC
+function buildTOC() {
+  const content = document.getElementById('methodologyContent');
+  const tocList = document.getElementById('tocList');
+  const headings = content.querySelectorAll('h2, h3');
+  headings.forEach(h => {
+    if (!h.id) {
+      h.id = h.textContent.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+    const li = document.createElement('li');
+    li.className = h.tagName === 'H3' ? 'toc-h3' : '';
+    const a = document.createElement('a');
+    a.href = '#' + h.id;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    tocList.appendChild(li);
+  });
+}
+
+// ACTIVE TOC LINK ON SCROLL
+function initTOCScroll() {
+  const links = document.querySelectorAll('.toc-list a');
+  const ids = Array.from(links).map(l => l.getAttribute('href').slice(1));
+  const targets = ids.map(id => document.getElementById(id)).filter(Boolean);
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector('.toc-list a[href="#' + entry.target.id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-80px 0px -60% 0px' });
+  targets.forEach(t => observer.observe(t));
+}
+
+buildTOC();
+initTOCScroll();
+</script>
+</body>
+</html>
