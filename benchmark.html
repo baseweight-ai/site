@@ -202,10 +202,11 @@ footer p { font-size: 12px; color: var(--text-muted); }
   <div class="nav-inner">
     <a href="/" class="nav-logo"><img src="/images/logo.png" alt="Baseweight" width="169" height="36" loading="eager"></a>
     <ul class="nav-links" id="navLinks">
+      <li><a href="/">Home</a></li>
       <li><a href="/benchmark" style="color: var(--text-primary);">Benchmark</a></li>
-      <li><a href="/methodology">Methodology</a></li>
       <li><a href="/diagnostic">Diagnostic</a></li>
       <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
       <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a diagnostic</a></li>
     </ul>
     <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
@@ -220,7 +221,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
   <div class="container">
     <div class="section-label">Benchmark</div>
     <h1>Fine-tuned open-source models vs. frontier APIs</h1>
-    <p class="subtitle">Six vertical SaaS tasks. Three open-source models. Five APIs. Accuracy, cost, and failure analysis.</p>
+    <p class="subtitle">Six vertical SaaS tasks. Three open-source models. Five APIs. Accuracy, cost, and failure analysis. <a href="/methodology" style="color: var(--accent); text-decoration: none; white-space: nowrap;">View methodology &rarr;</a></p>
   </div>
 </section>
 
@@ -428,12 +429,6 @@ function selectTask(taskId) {
 }
 
 // ── LEADERBOARD ────────────────────────────────────────────────────────────
-function fmtNum(v, decimals) {
-  if (v === null || v === undefined) return '<span class="cell-null">—</span>';
-  if (decimals !== undefined) return Number(v).toFixed(decimals);
-  return v;
-}
-
 function renderLeaderboard(task) {
   const body = document.getElementById('leaderboardBody');
   const results = [...task.results];
@@ -450,7 +445,7 @@ function renderLeaderboard(task) {
   body.innerHTML = '';
   results.forEach(r => {
     const tr = document.createElement('tr');
-    tr.className = 'row-' + r.model_family.replace('-', '');
+    tr.className = 'row-' + r.model_family.replaceAll('-', '');
     const metricFmt = r.metric_value !== null ? r.metric_value.toFixed(3) : '<span class="cell-null">—</span>';
     const costFmt = r.cost_per_1k_correct !== null ? '$' + r.cost_per_1k_correct.toFixed(2) : '<span class="cell-null">—</span>';
     const ttftFmt = r.ttft_p50_ms !== null ? r.ttft_p50_ms + ' ms' : '<span class="cell-null">—</span>';
@@ -486,18 +481,23 @@ document.querySelectorAll('.leaderboard-table th[data-col]').forEach(th => {
   });
 });
 
+// ── CHART HELPERS ──────────────────────────────────────────────────────────
+function resetChart(id, empty) {
+  const wrap = document.getElementById(id).parentElement;
+  if (empty) {
+    wrap.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:13px;">Results pending</div>';
+    return null;
+  }
+  wrap.innerHTML = '<canvas id="' + id + '"></canvas>';
+  return document.getElementById(id).getContext('2d');
+}
+
 // ── ACCURACY CHART ─────────────────────────────────────────────────────────
 function renderAccuracyChart(task) {
   const results = task.results.filter(r => r.metric_value !== null);
   if (accuracyChartInst) { accuracyChartInst.destroy(); accuracyChartInst = null; }
-  const ctx = document.getElementById('accuracyChart');
-
-  if (!results.length) {
-    ctx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:13px;">Results pending</div>';
-    return;
-  }
-  ctx.parentElement.innerHTML = '<canvas id="accuracyChart"></canvas>';
-  const newCtx = document.getElementById('accuracyChart').getContext('2d');
+  const newCtx = resetChart('accuracyChart', !results.length);
+  if (!newCtx) return;
   const sorted = [...results].sort((a, b) => (b.metric_value || 0) - (a.metric_value || 0));
   const labels = sorted.map(r => r.model_label + ' / ' + r.condition_label);
   const values = sorted.map(r => r.metric_value);
@@ -526,17 +526,13 @@ function renderAccuracyChart(task) {
 function renderCostScatter(task) {
   const results = task.results.filter(r => r.metric_value !== null && r.cost_per_1k_correct !== null);
   if (costScatterInst) { costScatterInst.destroy(); costScatterInst = null; }
-  const ctx = document.getElementById('costScatter');
+  const newCtx = resetChart('costScatter', !results.length);
+  if (!newCtx) return;
 
-  if (!results.length) {
-    ctx.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:13px;">Results pending</div>';
-    return;
-  }
-  ctx.parentElement.innerHTML = '<canvas id="costScatter"></canvas>';
-  const newCtx = document.getElementById('costScatter').getContext('2d');
-
-  const medianMetric = median(results.map(r => r.metric_value));
-  const medianCost = median(results.map(r => r.cost_per_1k_correct));
+  const metrics = [], costs = [];
+  results.forEach(r => { metrics.push(r.metric_value); costs.push(r.cost_per_1k_correct); });
+  const medianMetric = median(metrics);
+  const medianCost = median(costs);
 
   const datasets = Object.entries(FAMILY_COLORS).map(([family, color]) => {
     const pts = results.filter(r => r.model_family === family).map(r => ({
@@ -609,8 +605,10 @@ function renderTCO(task) {
   });
 }
 
+let tcoTimer;
 document.getElementById('tcoVolume').addEventListener('input', () => {
-  if (benchData) renderTCO(benchData.tasks[currentTask]);
+  clearTimeout(tcoTimer);
+  tcoTimer = setTimeout(() => { if (benchData) renderTCO(benchData.tasks[currentTask]); }, 150);
 });
 
 // ── INIT ───────────────────────────────────────────────────────────────────
