@@ -1,0 +1,104 @@
+{
+  "generated_at": "2026-01-01T00:00:00Z",
+  "daily_volume_assumption": 10000,
+  "meta": { "total_cost": 247.50 },
+  "headline_stats": {
+    "best_oss_lora500_vs_frontier": {
+      "oss_model": "Qwen3-8B (LoRA)",
+      "oss_metric": 0.891,
+      "frontier_model": "GPT-4.1",
+      "frontier_metric": 0.873,
+      "delta": 0.018
+    },
+    "oss_lora500_cost_reduction": {
+      "oss_cost_per_query": 0.000245,
+      "frontier_cost_per_query": 0.00312,
+      "reduction_factor": 12.7
+    },
+    "sft_vs_base": {
+      "sft_model": "GPT-4.1 (SFT-500)",
+      "sft_metric": 0.904
+    }
+  },
+  "results": [
+    {
+      "model_id": "gpt-4.1", "display_name": "GPT-4.1", "family": "frontier",
+      "task_id": "fpb", "condition": "zero-shot", "metric_id": "weighted_f1",
+      "metric_value": 0.873, "cost_per_query": 0.00312, "cost_per_1k_correct": 3.574,
+      "ttft_p50_ms": 420, "ttft_p95_ms": 890, "training_cost": null,
+      "training_time_min": null, "n_train": null, "tco_12mo": 11387, "error_counts": {"correct": 87, "wrong_class": 13}
+    },
+    {
+      "model_id": "qwen3-8b", "display_name": "Qwen3-8B (LoRA)", "family": "open-source",
+      "task_id": "fpb", "condition": "lora-500", "metric_id": "weighted_f1",
+      "metric_value": 0.891, "cost_per_query": 0.000245, "cost_per_1k_correct": 0.275,
+      "ttft_p50_ms": 180, "ttft_p95_ms": 310, "training_cost": 3.12,
+      "training_time_min": 38, "n_train": 500, "tco_12mo": 10847, "error_counts": {"correct": 89, "wrong_class": 11}
+    },
+    {
+      "model_id": "gpt-4.1", "display_name": "GPT-4.1", "family": "frontier",
+      "task_id": "ledgar", "condition": "zero-shot", "metric_id": "weighted_f1",
+      "metric_value": 0.812, "cost_per_query": 0.00418, "cost_per_1k_correct": 5.147,
+      "ttft_p50_ms": 510, "ttft_p95_ms": 920, "training_cost": null,
+      "training_time_min": null, "n_train": null, "tco_12mo": 15280, "error_counts": {"correct": 81, "wrong_class": 19}
+    },
+    {
+      "model_id": "qwen3-8b", "display_name": "Qwen3-8B (LoRA)", "family": "open-source",
+      "task_id": "ledgar", "condition": "lora-500", "metric_id": "weighted_f1",
+      "metric_value": 0.845, "cost_per_query": 0.000245, "cost_per_1k_correct": 0.290,
+      "ttft_p50_ms": 195, "ttft_p95_ms": 340, "training_cost": 4.88,
+      "training_time_min": 59, "n_train": 500, "tco_12mo": 10848, "error_counts": {"correct": 84, "wrong_class": 16}
+    }
+  ],
+  "tasks": {
+    "fpb": {
+      "metric_label": "Weighted F1",
+      "results": [
+        {
+          "model_id": "gpt-4.1", "display_name": "GPT-4.1", "family": "frontier",
+          "model_label": "GPT-4.1", "condition_label": "Zero-shot", "model_family": "frontier",
+          "task_id": "fpb", "condition": "zero-shot", "metric_id": "weighted_f1",
+          "metric_value": 0.873, "cost_per_query": 0.00312, "cost_per_1k_correct": 3.574,
+          "ttft_p50_ms": 420, "ttft_p95_ms": 890, "training_cost": null,
+          "training_time_min": null, "n_train": null, "tco_12mo": 11387, "error_counts": {"correct": 87, "wrong_class": 13}
+        },
+        {
+          "model_id": "qwen3-8b", "display_name": "Qwen3-8B (LoRA)", "family": "open-source",
+          "model_label": "Qwen3-8B (LoRA)", "condition_label": "LoRA-500", "model_family": "open-source",
+          "task_id": "fpb", "condition": "lora-500", "metric_id": "weighted_f1",
+          "metric_value": 0.891, "cost_per_query": 0.000245, "cost_per_1k_correct": 0.275,
+          "ttft_p50_ms": 180, "ttft_p95_ms": 310, "training_cost": 3.12,
+          "training_time_min": 38, "n_train": 500, "tco_12mo": 10847, "error_counts": {"correct": 89, "wrong_class": 11}
+        }
+      ]
+    },
+    "ledgar": {
+      "metric_label": "Weighted F1",
+      "results": [
+        {
+          "model_id": "gpt-4.1", "display_name": "GPT-4.1", "family": "frontier",
+          "model_label": "GPT-4.1", "condition_label": "Zero-shot", "model_family": "frontier",
+          "task_id": "ledgar", "condition": "zero-shot", "metric_id": "weighted_f1",
+          "metric_value": 0.812, "cost_per_query": 0.00418, "cost_per_1k_correct": 5.147,
+          "ttft_p50_ms": 510, "ttft_p95_ms": 920, "training_cost": null,
+          "training_time_min": null, "n_train": null, "tco_12mo": 15280, "error_counts": {"correct": 81, "wrong_class": 19}
+        },
+        {
+          "model_id": "qwen3-8b", "display_name": "Qwen3-8B (LoRA)", "family": "open-source",
+          "model_label": "Qwen3-8B (LoRA)", "condition_label": "LoRA-500", "model_family": "open-source",
+          "task_id": "ledgar", "condition": "lora-500", "metric_id": "weighted_f1",
+          "metric_value": 0.845, "cost_per_query": 0.000245, "cost_per_1k_correct": 0.290,
+          "ttft_p50_ms": 195, "ttft_p95_ms": 340, "training_cost": 4.88,
+          "training_time_min": 59, "n_train": 500, "tco_12mo": 10848, "error_counts": {"correct": 84, "wrong_class": 16}
+        }
+      ]
+    },
+    "banking77": { "metric_label": "Weighted F1", "results": [] },
+    "cuad": { "metric_label": "Token F1", "results": [] },
+    "medmcqa": { "metric_label": "Accuracy", "results": [] },
+    "mbpp": { "metric_label": "Pass@1", "results": [] }
+  },
+  "efficiency_data": {
+    "fpb": [], "ledgar": [], "banking77": [], "cuad": [], "medmcqa": [], "mbpp": []
+  }
+}
