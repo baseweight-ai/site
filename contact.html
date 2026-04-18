@@ -12,6 +12,7 @@
 <link rel="apple-touch-icon" href="/images/icon.jpg">
 <link rel="canonical" href="https://baseweight.co/contact">
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
+<link rel="stylesheet" href="/components.css">
 <meta name="author" content="Philip Stevens">
 <link rel="author" href="/about">
 <meta property="og:type" content="website">
@@ -51,23 +52,6 @@ a:hover { color: var(--accent-hover); }
 
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
 
-.skip-nav { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
-.skip-nav:focus { position: fixed; top: 0; left: 0; width: auto; height: auto; padding: 12px 20px; background: var(--accent); color: var(--bg-primary); font-weight: 600; z-index: 9999; overflow: visible; }
-
-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 0 clamp(24px, 5vw, 48px); transition: background 0.3s, border-color 0.3s, backdrop-filter 0.3s; border-bottom: 1px solid transparent; }
-nav.scrolled { background: rgba(8, 8, 8, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom-color: var(--border); }
-.nav-inner { max-width: var(--max-width); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 72px; }
-.nav-logo { display: flex; align-items: center; }
-.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
-.nav-links a { font-size: 13px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; transition: color 0.2s; }
-.nav-links a:hover { color: var(--text-primary); }
-.nav-cta { font-family: var(--font-mono) !important; font-size: 12px !important; font-weight: 600 !important; color: var(--bg-primary) !important; background: var(--accent); padding: 10px 20px; letter-spacing: 0.04em; transition: background 0.2s !important; }
-.nav-cta:hover { background: var(--accent-hover) !important; }
-.nav-mobile-toggle { display: none; background: none; border: none; color: var(--text-primary); cursor: pointer; padding: 8px; }
-.nav-mobile-toggle span { display: block; width: 20px; height: 1.5px; background: var(--text-primary); margin: 5px 0; transition: transform 0.3s, opacity 0.3s; }
-.nav-mobile-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.nav-mobile-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.nav-mobile-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
 
 h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
 h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); }
@@ -91,14 +75,8 @@ h2 { font-size: clamp(1.2rem, 2.2vw, 1.6rem); margin-bottom: 16px; margin-top: 4
 .btn-primary { display: inline-block; background: var(--accent); color: var(--bg-primary); font-family: var(--font-mono); font-size: 13px; font-weight: 600; padding: 14px 28px; letter-spacing: 0.04em; transition: background 0.2s; }
 .btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); }
 
-footer { padding: 40px 0; text-align: center; position: relative; }
-footer::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 280px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
-footer p { font-size: 12px; color: var(--text-muted); }
 
 @media (max-width: 640px) {
-  .nav-links { display: none; }
-  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0; background: rgba(8, 8, 8, 0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 24px clamp(24px, 5vw, 48px); gap: 20px; border-bottom: 1px solid var(--border); }
-  .nav-mobile-toggle { display: block; }
   .contact-hero { padding-top: 120px; }
 }
 </style>
@@ -138,22 +116,7 @@ footer p { font-size: 12px; color: var(--text-muted); }
 <a href="#main-content" class="skip-nav">Skip to main content</a>
 
 <!-- ======== NAV ======== -->
-<nav id="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo"><img src="/images/logo.png" alt="Baseweight" width="169" height="36" loading="eager"></a>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="/">Home</a></li>
-      <li><a href="/benchmark">Benchmark</a></li>
-      <li><a href="/diagnostic">Diagnostic</a></li>
-      <li><a href="/about">About</a></li>
-      <li><a href="/contact" style="color: var(--text-primary);">Contact</a></li>
-      <li><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="nav-cta">Book a diagnostic</a></li>
-    </ul>
-    <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</nav>
+<nav id="nav"></nav>
 
 <main id="main-content">
 
@@ -211,33 +174,9 @@ footer p { font-size: 12px; color: var(--text-muted); }
 </main>
 
 <!-- ======== FOOTER ======== -->
-<footer>
-  <div class="container">
-    <p>&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-muted);">About</a> &nbsp;&middot;&nbsp; <a href="/contact" style="color: var(--text-muted);">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy" style="color: var(--text-muted);">Privacy Policy</a></p>
-    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);" itemscope itemtype="https://schema.org/WebPage"><span itemprop="author" itemscope itemtype="https://schema.org/Person">By <a href="/about" rel="author" itemprop="url" style="color: var(--text-muted);"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="dateModified" datetime="2026-04-07">April 2026</time></p>
-  </div>
-</footer>
+<footer></footer>
 
-<!-- ======== JS ======== -->
-<script>
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-}, { passive: true });
-
-const navToggle = document.getElementById('navToggle');
-const navLinks = document.getElementById('navLinks');
-navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
-  navToggle.classList.toggle('open');
-});
-navLinks.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    navToggle.classList.remove('open');
-  });
-});
-</script>
+<script src="/components.js"></script>
 
 </body>
 </html>

@@ -18,9 +18,13 @@ python3 -m http.server 8080
 
 ## Architecture
 
-All CSS and JavaScript is **inline within each HTML file** — there are no shared stylesheets or script files. The design system CSS variables are duplicated in every page's `<style>` block.
+**Shared components** (the only external files):
+- `components.css` — nav, footer, and skip-nav CSS; linked from every page's `<head>`
+- `components.js` — renders the nav and footer HTML into `<nav id="nav"></nav>` and `<footer></footer>` shell elements, and wires up scroll/mobile-toggle behavior; included at the bottom of every page's `<body>`
 
-**Pages:** `index.html`, `about.html`, `contact.html`, `privacy.html`, `diagnostic.html`
+All other CSS and JavaScript is **inline within each HTML file**. The design system CSS variables are duplicated in every page's `<style>` block.
+
+**Pages:** `index.html`, `about.html`, `contact.html`, `privacy.html`, `diagnostic.html`, `benchmark.html`, `methodology.html`
 
 **Design tokens** (defined in `:root` in each file):
 - `--accent: #c9a84c` — gold accent color
@@ -35,7 +39,20 @@ All CSS and JavaScript is **inline within each HTML file** — there are no shar
 - `.section-label` for small-caps section headers with a gold accent line prefix
 - `nav.scrolled` state toggled by scroll position for frosted-glass nav
 
-**When updating shared styles** (nav, footer, design tokens, fonts), the change must be applied to every HTML file manually — there is no shared CSS file.
+**When updating nav or footer styles**, edit `components.css` only — it applies everywhere automatically. When updating design tokens or fonts, the change must still be applied to every HTML file manually.
+
+**The footer is identical across every page — never vary it.** Copy this exactly:
+
+```html
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-muted);">About</a> &nbsp;&middot;&nbsp; <a href="/contact" style="color: var(--text-muted);">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy" style="color: var(--text-muted);">Privacy Policy</a></p>
+    <p style="font-size:12px; margin-top:6px; color: var(--text-muted);" itemscope itemtype="https://schema.org/WebPage">By <span itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/about" rel="author" itemprop="url" style="color: var(--text-muted);"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="datePublished" datetime="2026-03-01">March 2026</time></p>
+  </div>
+</footer>
+```
+
+**All CTA buttons** (nav and body) must say "Book a free call" and link to `https://cal.com/philip-stevens/baseweight-intro` with `target="_blank" rel="noopener noreferrer"`.
 
 ## SEO & Meta
 
