@@ -16,3 +16,8 @@ Thumbs.db
 
 # Node
 node_modules/
+
+# Benchmark data (local dev + real pipeline output; force-add before deploying: git add -f)
+data/benchmark/results.json
+
+CLAUDE.md

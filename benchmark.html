@@ -323,6 +323,18 @@ const COND_COLORS = {
   'lora-500': '#93c5fd', 'lora-full': '#3b82f6', 'api-sft-500': '#4ade80'
 };
 
+const METRIC_LABELS = {
+  weighted_f1: 'Weighted F1', pass_at_1: 'Pass@1',
+  token_f1: 'Token F1', accuracy: 'Accuracy',
+};
+
+const COND_LABELS = {
+  'zero-shot': 'Zero-shot', '5-shot': '5-shot',
+  'lora-500': 'LoRA (500)', 'lora-full': 'LoRA (full)', 'api-sft-500': 'API SFT (500)',
+};
+
+const FAMILY_CLASSES = { 'open-source': 'opensource', 'frontier': 'frontier', 'api-finetuned': 'apift' };
+
 const GPU_HOURLY = 1.19;
 const SELF_HOST_ANNUAL = GPU_HOURLY * 24 * 365; // ~10,424
 
@@ -338,10 +350,27 @@ let costScatterInst = null;
 async function loadData() {
   try {
     const res = await fetch('/data/benchmark/results.json');
-    benchData = await res.json();
-    if (benchData.meta && benchData.meta.total_cost > 0) {
-      document.getElementById('stat-total-cost').textContent = '$' + benchData.meta.total_cost.toLocaleString();
-    }
+    const raw = await res.json();
+    const hs = raw.headline_stats || {};
+    if (raw.tasks_won_by_oss != null)
+      document.getElementById('stat-tasks-won').textContent = raw.tasks_won_by_oss + ' / 6';
+    const costRed = hs.oss_cost_reduction?.reduction_factor;
+    if (costRed != null)
+      document.getElementById('stat-cost-reduction').textContent = costRed.toFixed(1) + '×';
+    if (raw.total_cost != null)
+      document.getElementById('stat-total-cost').textContent = '$' + raw.total_cost.toLocaleString();
+    const tasks = {};
+    raw.results.forEach(r => {
+      if (!tasks[r.task_id])
+        tasks[r.task_id] = { metric_label: METRIC_LABELS[r.metric_id] || r.metric_id, results: [] };
+      tasks[r.task_id].results.push({
+        ...r,
+        model_label: r.display_name,
+        model_family: r.family,
+        condition_label: COND_LABELS[r.condition] || r.condition,
+      });
+    });
+    benchData = { tasks };
     buildTabs();
     selectTask(currentTask);
   } catch(e) {
@@ -397,7 +426,7 @@ function renderLeaderboard(task) {
   body.innerHTML = '';
   results.forEach(r => {
     const tr = document.createElement('tr');
-    tr.className = 'row-' + r.model_family.replaceAll('-', '');
+    tr.className = 'row-' + (FAMILY_CLASSES[r.model_family] || r.model_family.replaceAll('-', ''));
     const metricFmt = r.metric_value !== null ? r.metric_value.toFixed(3) : '<span class="cell-null">—</span>';
     const costFmt = r.cost_per_1k_correct !== null ? '$' + r.cost_per_1k_correct.toFixed(2) : '<span class="cell-null">—</span>';
     const ttftFmt = r.ttft_p50_ms !== null ? r.ttft_p50_ms + ' ms' : '<span class="cell-null">—</span>';
