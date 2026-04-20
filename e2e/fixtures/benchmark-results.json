@@ -1,6 +1,7 @@
 {
   "generated_at": "2026-01-01T00:00:00Z",
   "daily_volume_assumption": 10000,
+  "total_cost": 247.50,
   "meta": { "total_cost": 247.50 },
   "headline_stats": {
     "best_oss_lora500_vs_frontier": {

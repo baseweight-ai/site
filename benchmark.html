@@ -401,7 +401,10 @@ function selectTask(taskId) {
   });
   if (!benchData) return;
   const task = benchData.tasks[taskId];
-  if (!task) return;
+  if (!task) {
+    document.getElementById('leaderboardBody').innerHTML = '';
+    return;
+  }
   document.getElementById('metricColLabel').textContent = task.metric_label;
   renderLeaderboard(task);
   renderAccuracyChart(task);

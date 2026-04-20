@@ -33,7 +33,7 @@ test("navigation links are visible", async ({ page }) => {
 
 // ── Headline stats ────────────────────────────────────────────────────────────
 
-test("total cost stat is populated from meta.total_cost", async ({ page }) => {
+test("total cost stat is populated from top-level total_cost", async ({ page }) => {
   await page.goto("/benchmark.html");
   await expect(page.locator("#stat-total-cost")).toHaveText(/\$247/);
 });
@@ -74,10 +74,10 @@ test.describe("Fin. Sentiment leaderboard", () => {
     await expect(body).toContainText("0.873");
   });
 
-  test("shows condition label not raw condition key", async ({ page }) => {
+  test("shows human-readable condition labels not raw keys", async ({ page }) => {
     const body = page.locator("#leaderboardBody");
     await expect(body).toContainText("Zero-shot");
-    await expect(body).toContainText("LoRA-500");
+    await expect(body).toContainText("LoRA (500)");
     await expect(body).not.toContainText("zero-shot");
     await expect(body).not.toContainText("lora-500");
   });
