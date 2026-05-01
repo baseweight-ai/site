@@ -195,19 +195,19 @@ body::after {
     <div class="headline-stats">
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">Tasks won by fine-tuned models</div>
-          <div class="stat-value" id="stat-tasks-won">— / 6</div>
-          <div class="stat-sub">Results pending</div>
+          <div class="stat-label">Fine-tuned beats 5-shot frontier</div>
+          <div class="stat-value" id="stat-tasks-won">— / 5</div>
+          <div class="stat-sub">tasks where LoRA &gt; best prompted model</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Median cost reduction</div>
-          <div class="stat-value" id="stat-cost-reduction">—×</div>
-          <div class="stat-sub">vs. best prompted API</div>
+          <div class="stat-label">Lower cost per correct answer</div>
+          <div class="stat-value" id="stat-cost-reduction" data-tooltip="Marginal inference cost only — excludes fixed GPU reservation. Self-hosting costs more at low query volumes; see $/1K Correct in the table for a fuller picture.">—×</div>
+          <div class="stat-sub">LoRA vs. 5-shot frontier, quality-adjusted</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Total benchmark cost</div>
-          <div class="stat-value" id="stat-total-cost">$—</div>
-          <div class="stat-sub">GPU + API compute</div>
+          <div class="stat-label">Accuracy improvement</div>
+          <div class="stat-value" id="stat-accuracy-gain">—</div>
+          <div class="stat-sub">avg pp gain, LoRA vs. 5-shot frontier</div>
         </div>
       </div>
     </div>
@@ -314,7 +314,6 @@ const TASKS = [
   { id: 'banking77',name: 'Support Routing' },
   { id: 'fpb',      name: 'Fin. Sentiment' },
   { id: 'medmcqa',  name: 'Medical QA' },
-  { id: 'mbpp',     name: 'Code Generation' },
 ];
 
 const FAMILY_COLORS = { 'open-source': '#60a5fa', 'frontier': '#dcb875', 'api-finetuned': '#4ade80' };
@@ -351,14 +350,14 @@ async function loadData() {
   try {
     const res = await fetch('/data/benchmark/results.json');
     const raw = await res.json();
-    const hs = raw.headline_stats || {};
     if (raw.tasks_won_by_oss != null)
-      document.getElementById('stat-tasks-won').textContent = raw.tasks_won_by_oss + ' / 6';
-    const costRed = hs.oss_cost_reduction?.reduction_factor;
-    if (costRed != null)
-      document.getElementById('stat-cost-reduction').textContent = costRed.toFixed(1) + '×';
-    if (raw.total_cost != null)
-      document.getElementById('stat-total-cost').textContent = '$' + raw.total_cost.toLocaleString();
+      document.getElementById('stat-tasks-won').textContent = raw.tasks_won_by_oss + ' / 5';
+    if (raw.cost_per_correct_ratio != null)
+      document.getElementById('stat-cost-reduction').textContent = raw.cost_per_correct_ratio.toFixed(1) + '×';
+    if (raw.avg_accuracy_gain_pp != null) {
+      const sign = raw.avg_accuracy_gain_pp >= 0 ? '+' : '';
+      document.getElementById('stat-accuracy-gain').textContent = sign + raw.avg_accuracy_gain_pp.toFixed(1) + 'pp';
+    }
     const tasks = {};
     raw.results.forEach(r => {
       if (!tasks[r.task_id])
