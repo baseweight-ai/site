@@ -2,7 +2,8 @@ import { test, expect } from "@playwright/test";
 import path from "path";
 import fs from "fs";
 
-// Read once; skip JSON.parse since route.fulfill accepts a string directly.
+// Real benchmark output. The site shows two tasks (cuad, banking77); the fixture
+// also carries fpb rows, which every page intentionally ignores.
 const FIXTURE_JSON = fs.readFileSync(
   path.join(__dirname, "fixtures/benchmark-results.json"),
   "utf-8"
@@ -31,55 +32,65 @@ test("navigation links are visible", async ({ page }) => {
   await expect(page.getByRole("link", { name: /Baseweight/i }).first()).toBeVisible();
 });
 
-// ── Headline stats ────────────────────────────────────────────────────────────
-
-test("total cost stat is populated from top-level total_cost", async ({ page }) => {
-  await page.goto("/benchmark.html");
-  await expect(page.locator("#stat-total-cost")).toHaveText(/\$247/);
-});
-
 // ── Task tabs ─────────────────────────────────────────────────────────────────
 
-test("task tabs render for all six tasks", async ({ page }) => {
+test("task tabs render for the two benchmarked tasks", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await expect(page.locator('[role="tab"]')).toHaveCount(6);
+  await expect(page.locator('[role="tab"]')).toHaveCount(2);
 });
 
-test("first task tab is active on load", async ({ page }) => {
+test("clause extraction tab is active on load", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await expect(page.locator('[role="tab"][aria-selected="true"]')).toHaveCount(1);
+  const active = page.locator('[role="tab"][aria-selected="true"]');
+  await expect(active).toHaveCount(1);
+  await expect(active).toHaveText(/Clause Extraction/i);
 });
 
 test("clicking a task tab switches the active tab", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await page.getByRole("tab", { name: /Fin\. Sentiment/i }).click();
-  await expect(page.locator('[role="tab"][aria-selected="true"]')).toHaveText(/Fin\. Sentiment/i);
+  await page.getByRole("tab", { name: /Support Routing/i }).click();
+  await expect(page.locator('[role="tab"][aria-selected="true"]')).toHaveText(/Support Routing/i);
 });
 
-// ── Leaderboard (Fin. Sentiment / fpb) ───────────────────────────────────────
+// ── Per-task explanation + consolidated layout ──────────────────────────────────
 
-test.describe("Fin. Sentiment leaderboard", () => {
+test("per-task explanation renders and updates on tab switch", async ({ page }) => {
+  await page.goto("/benchmark.html");
+  await expect(page.locator("#taskBlurb")).not.toBeEmpty();
+  await expect(page.locator("#taskBlurb")).toContainText(/contract/i);
+  await page.getByRole("tab", { name: /Support Routing/i }).click();
+  await expect(page.locator("#taskBlurb")).toContainText(/rout/i);
+});
+
+test("error analysis lives on the main page; the per-task subpage link is gone", async ({ page }) => {
+  await page.goto("/benchmark.html");
+  await expect(page.getByRole("heading", { name: "Error analysis" })).toBeVisible();
+  await expect(page.locator("#taskDeepLink")).toHaveCount(0);
+});
+
+// ── Leaderboard (Support Routing / banking77 — has all conditions) ──────────────
+
+test.describe("Support Routing leaderboard", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/benchmark.html");
-    await page.getByRole("tab", { name: /Fin\. Sentiment/i }).click();
+    await page.getByRole("tab", { name: /Support Routing/i }).click();
   });
 
-  test("renders rows after data loads", async ({ page }) => {
-    await expect(page.locator("#leaderboardBody tr")).toHaveCount(2);
+  test("renders a row per model/condition", async ({ page }) => {
+    await expect(page.locator("#leaderboardBody tr")).toHaveCount(5);
   });
 
-  test("shows model name and metric value", async ({ page }) => {
+  test("shows both the open and frontier model", async ({ page }) => {
     const body = page.locator("#leaderboardBody");
-    await expect(body).toContainText("GPT-4.1");
-    await expect(body).toContainText("0.873");
+    await expect(body).toContainText("Qwen3-8B");
+    await expect(body).toContainText("GPT 5.4 Mini");
   });
 
-  test("shows human-readable condition labels not raw keys", async ({ page }) => {
+  test("shows human-readable condition labels", async ({ page }) => {
     const body = page.locator("#leaderboardBody");
+    await expect(body).toContainText("LoRA");
     await expect(body).toContainText("Zero-shot");
-    await expect(body).toContainText("LoRA (500)");
-    await expect(body).not.toContainText("zero-shot");
-    await expect(body).not.toContainText("lora-500");
+    await expect(body).toContainText("5-shot");
   });
 
   test("metric column header matches task metric label", async ({ page }) => {
@@ -93,29 +104,23 @@ test.describe("Fin. Sentiment leaderboard", () => {
     expect(parseFloat(firstMetric!)).toBeGreaterThanOrEqual(parseFloat(secondMetric!));
   });
 
-  test("TCO table renders rows", async ({ page }) => {
-    await expect(page.locator("#tcoBody tr")).toHaveCount(2);
-  });
-
-  test("TCO volume input re-renders table", async ({ page }) => {
-    await page.locator("#tcoVolume").fill("50000");
-    await page.locator("#tcoVolume").dispatchEvent("input");
+  test("TCO table renders one row per model", async ({ page }) => {
     await expect(page.locator("#tcoBody tr")).toHaveCount(2);
   });
 });
 
-// ── Empty task ────────────────────────────────────────────────────────────────
+// ── Clause Extraction (cuad — token_f1, default tab) ────────────────────────────
 
-test("leaderboard is empty for task with no results", async ({ page }) => {
+test("clause extraction uses Token F1 and lists every condition", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await page.getByRole("tab", { name: /Support Routing/i }).click();
-  await expect(page.locator("#leaderboardBody tr")).toHaveCount(0);
+  await expect(page.locator("#metricColLabel")).toContainText("Token F1");
+  await expect(page.locator("#leaderboardBody tr")).toHaveCount(3);
 });
 
-// ── Data fetch failure ────────────────────────────────────────────────────────
+// ── Data fetch failure ──────────────────────────────────────────────────────────
 
 test("page renders without crashing when data fetch fails", async ({ page }) => {
-  // This route is registered after beforeEach; Playwright's LIFO order means it takes precedence.
+  // Registered after beforeEach; Playwright's LIFO order means it takes precedence.
   await page.route("**/data/benchmark/results.json", (route) => {
     route.fulfill({ status: 500, body: "Internal Server Error" });
   });

@@ -78,7 +78,16 @@ body::after {
   padding-top: calc(72px + var(--section-pad));
   padding-bottom: 48px;
   border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
 }
+.page-hero::before {
+  content: ''; position: absolute; top: -30%; left: -6%;
+  width: 56%; height: 160%;
+  background: radial-gradient(ellipse at center, rgba(220,184,117,0.10), transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.page-hero .container { position: relative; z-index: 1; }
 .page-hero .section-label {
   font-family: var(--font-mono);
   font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
@@ -88,6 +97,11 @@ body::after {
 .page-hero .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
 .page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 16px; }
 .page-hero .subtitle { font-size: 14px; color: var(--text-secondary); }
+
+/* ENTRY MOTION */
+@keyframes methRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.meth-anim { opacity: 0; animation: methRise 0.6s cubic-bezier(0.16,0.84,0.44,1) forwards; }
+@media (prefers-reduced-motion: reduce) { .meth-anim { opacity: 1; transform: none; animation: none; } }
 
 /* TWO COLUMN LAYOUT */
 .methodology-layout {
@@ -107,8 +121,9 @@ body::after {
   font-size: 10px; font-weight: 500; letter-spacing: 0.15em;
   text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px;
 }
-.toc-list { list-style: none; border-left: 1px solid var(--border); }
+.toc-list { list-style: none; border-left: 1px solid var(--border); counter-reset: toc-num; }
 .toc-list li { margin: 0; }
+.toc-list li:not(.toc-h3) { counter-increment: toc-num; }
 .toc-list a {
   display: block;
   padding: 6px 0 6px 16px;
@@ -119,20 +134,38 @@ body::after {
   transition: color 0.2s, border-color 0.2s;
   line-height: 1.5;
 }
+.toc-list li:not(.toc-h3) > a::before {
+  content: counter(toc-num, decimal-leading-zero);
+  display: inline-block; width: 22px;
+  color: var(--text-muted); font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s;
+}
 .toc-list a:hover, .toc-list a.active { color: var(--accent); border-left-color: var(--accent); }
+.toc-list a:hover::before, .toc-list a.active::before { color: var(--accent); }
 .toc-list .toc-h3 a { padding-left: 28px; font-size: 11px; }
 
 /* MAIN CONTENT */
+.methodology-content { counter-reset: method-section; }
 .methodology-content h2 {
   font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.5vw, 1.7rem);
   font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
   color: var(--text-primary);
   margin-top: 56px; margin-bottom: 20px;
-  padding-top: 8px;
+  padding-top: 20px;
   border-top: 1px solid var(--border);
+  counter-increment: method-section;
 }
-.methodology-content h2:first-child { margin-top: 0; border-top: none; }
+.methodology-content h2::before {
+  content: counter(method-section, decimal-leading-zero) ' /';
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.methodology-content h2:first-child { margin-top: 0; border-top: none; padding-top: 0; }
 
 .methodology-content h3 {
   font-family: var(--font-display);
@@ -145,6 +178,10 @@ body::after {
   font-size: 14px; color: var(--text-secondary); line-height: 1.85;
   margin-bottom: 16px;
 }
+.methodology-content p.lead {
+  font-size: 16px; line-height: 1.8; color: var(--text-primary);
+  margin-bottom: 18px;
+}
 
 .methodology-content strong { color: var(--text-primary); font-weight: 600; }
 
@@ -156,7 +193,8 @@ body::after {
   padding-left: 20px; position: relative; margin-bottom: 4px;
 }
 .methodology-content ul li::before {
-  content: '–'; position: absolute; left: 0; color: var(--accent);
+  content: ''; position: absolute; left: 0; top: 0.75em;
+  width: 5px; height: 5px; background: var(--accent);
 }
 
 /* TABLES */
@@ -171,15 +209,34 @@ body::after {
   font-weight: 600; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase;
   color: var(--text-muted); padding: 10px 14px; text-align: left;
   border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
 }
 .methodology-content td {
   padding: 10px 14px; color: var(--text-secondary);
   border-bottom: 1px solid var(--border);
   line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.15s;
 }
+.methodology-content td:first-child { color: var(--text-primary); }
 .methodology-content tr:last-child td { border-bottom: none; }
 .methodology-content tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
+.methodology-content tbody tr:hover td { background: rgba(255,255,255,0.04); }
 
+
+/* REPRODUCE REPO CARD */
+.repo-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  border: 1px solid var(--border); background: var(--bg-card);
+  padding: 18px 22px; margin-top: 4px;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+.repo-card:hover { border-color: var(--border-accent); background: var(--bg-card-hover); transform: translateY(-1px); }
+.repo-card-main { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.repo-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+.repo-card-url { font-family: var(--font-mono); font-size: 14px; color: var(--text-primary); word-break: break-all; }
+.repo-card-arrow { color: var(--accent); font-size: 18px; flex-shrink: 0; transition: transform 0.2s; }
+.repo-card:hover .repo-card-arrow { transform: translateX(3px); }
 
 /* RESPONSIVE */
 @media (max-width: 860px) {
@@ -203,9 +260,9 @@ body::after {
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label">Benchmark</div>
-    <h1>Methodology</h1>
-    <p class="subtitle">How the benchmark was designed, run, and measured.</p>
+    <div class="section-label meth-anim" style="animation-delay: 0s;"><a href="/benchmark" style="color: var(--accent); text-decoration: none;">Benchmark</a></div>
+    <h1 class="meth-anim" style="animation-delay: 0.07s;">Methodology</h1>
+    <p class="subtitle meth-anim" style="animation-delay: 0.14s;">How the benchmark was designed, run, and measured.</p>
   </div>
 </section>
 
@@ -223,102 +280,80 @@ body::after {
       <article class="methodology-content" id="methodologyContent">
 
         <h2 id="what-this-measures">What this measures</h2>
-        <p>This benchmark compares fine-tuned open-source language models against commercial frontier APIs on six tasks common in production vertical SaaS products. It measures three things: accuracy on the task, cost to run the task at scale, and where each model fails.</p>
-        <p>Every result is reproducible. Training code, evaluation scripts, model weights, and prediction logs are public.</p>
+        <p class="lead">The benchmark compares Qwen3-8B with a task-specific LoRA adapter against a frontier API baseline (zero-shot and 5-shot) on two tasks representative of common production AI work. It measures accuracy on the task, total cost of ownership at production volume, and error composition.</p>
+        <p>Every result is reproducible. Training code, evaluation scripts, model weights, and prediction logs are public. The benchmark is ongoing; more tasks and model families will be added.</p>
 
         <h2 id="tasks">Tasks</h2>
-        <p>Each task corresponds to a feature that vertical SaaS teams ship and then struggle to get working on production data. The datasets are public and version-pinned.</p>
+        <p>Both datasets are public and version-pinned. Test sets are held out from all fine-tuning.</p>
         <div class="table-wrap">
         <table>
-          <thead><tr><th>Task</th><th>Dataset</th><th>What it tests</th><th>Test size</th></tr></thead>
+          <thead><tr><th>Task</th><th>Dataset</th><th>What it tests</th><th>Metric</th><th>Test size</th></tr></thead>
           <tbody>
-            <tr><td>Legal document classification</td><td>LEDGAR (LexGLUE)</td><td>Classifying contract provisions into 100 categories</td><td>1,000</td></tr>
-            <tr><td>Contract clause extraction</td><td>CUAD</td><td>Extracting clause text from contracts, or correctly reporting its absence</td><td>4,182</td></tr>
-            <tr><td>Customer support routing</td><td>BANKING77</td><td>Routing customer messages to 77 fine-grained intent categories</td><td>3,080</td></tr>
-            <tr><td>Financial sentiment</td><td>FinancialPhraseBank</td><td>Classifying financial text as positive, negative, or neutral</td><td>339</td></tr>
-            <tr><td>Medical question answering</td><td>MedMCQA</td><td>Answering 4-option medical multiple-choice questions</td><td>1,000</td></tr>
-            <tr><td>Code generation</td><td>MBPP</td><td>Writing Python functions from natural language descriptions, verified by test execution</td><td>500</td></tr>
+            <tr><td>Contract clause extraction</td><td>CUAD</td><td>Given a commercial contract, identify whether a specific clause type appears and extract the relevant text, or correctly report its absence. 41 clause categories across 510 contracts.</td><td>Token F1</td><td>1,500 sampled</td></tr>
+            <tr><td>Customer support routing</td><td>Banking77</td><td>Given a short customer message, assign the correct intent label from a closed set of 77 banking-specific categories.</td><td>Weighted F1</td><td>1,500</td></tr>
           </tbody>
         </table>
         </div>
 
         <h2 id="models">Models</h2>
-        <p>Three open-source models are fine-tuned with QLoRA. Five frontier APIs are tested zero-shot and with 5-shot prompting. GPT-4.1 mini is also fine-tuned through OpenAI's API for direct comparison against open-source LoRA.</p>
-        <p><strong>Open-source (fine-tuned with QLoRA):</strong></p>
-        <ul>
-          <li>Qwen3-8B (8B parameters, Apache 2.0)</li>
-          <li>Gemma 3-4B-IT (4B parameters, Gemma Terms of Use)</li>
-          <li>Phi-4-mini-instruct (3.8B parameters, MIT)</li>
-        </ul>
-        <p><strong>Frontier APIs (prompted):</strong></p>
-        <ul>
-          <li>GPT-4.1 at $2.00 / $8.00 per million tokens</li>
-          <li>GPT-4.1 mini at $0.20 / $0.80</li>
-          <li>GPT-4.1 nano at $0.05 / $0.20</li>
-          <li>Claude Sonnet 4.6 at $3.00 / $15.00</li>
-          <li>Gemini 2.5 Flash at $0.15 / $0.60</li>
-        </ul>
-        <p><strong>API fine-tuned:</strong></p>
-        <ul>
-          <li>GPT-4.1 mini via OpenAI SFT at $0.80 per million training tokens</li>
-        </ul>
+        <p><strong>Open-source (QLoRA fine-tuned):</strong> Qwen3-8B (8B parameters, Apache 2.0 licence). Served with vLLM on a single NVIDIA RTX 3090.</p>
+        <p><strong>Frontier API (prompted):</strong> GPT 5.4 Mini, tested zero-shot and 5-shot at standard API pricing. The per-query cost in results reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
 
         <h2 id="conditions">Conditions</h2>
-        <p>Each model is tested under conditions that match how teams actually deploy it.</p>
         <div class="table-wrap">
         <table>
           <thead><tr><th>Condition</th><th>Applied to</th><th>What it means</th></tr></thead>
           <tbody>
-            <tr><td>Zero-shot</td><td>Frontier APIs</td><td>Task instruction only, no examples in prompt</td></tr>
-            <tr><td>5-shot</td><td>Frontier APIs</td><td>5 labeled examples prepended to every query</td></tr>
-            <tr><td>LoRA (500)</td><td>Open-source</td><td>QLoRA fine-tuned on 500 training examples</td></tr>
-            <tr><td>LoRA (full)</td><td>Open-source</td><td>QLoRA fine-tuned on the full training set (up to 10K examples)</td></tr>
-            <tr><td>API SFT (500)</td><td>GPT-4.1 mini</td><td>Fine-tuned through OpenAI's API on the same 500 examples</td></tr>
+            <tr><td>Zero-shot</td><td>Frontier API</td><td>Task instruction only, no examples in the prompt. The model relies on pre-training.</td></tr>
+            <tr><td>5-shot</td><td>Frontier API</td><td>Five labelled examples prepended to every query. No weights updated.</td></tr>
+            <tr><td>LoRA</td><td>Qwen3-8B</td><td>QLoRA fine-tuning on the task training set. A small adapter layer is trained; the base model weights are unchanged.</td></tr>
           </tbody>
         </table>
         </div>
-        <p>A data efficiency curve for Qwen3-8B is computed per task at 50, 200, 500, 1,000, 2,000, and 5,000 training examples where data permits.</p>
 
         <h2 id="metrics">Metrics</h2>
-        <p><strong>Task accuracy.</strong> The primary quality metric: weighted F1 for classification tasks, token-level F1 for extraction, accuracy for multiple-choice, pass@1 for code generation.</p>
-        <p><strong>Cost per 1,000 correct predictions.</strong> The total cost to produce 1,000 correct outputs, combining amortized training cost (spread over 12 months at 10K daily queries) and per-query inference cost. This metric directly answers "is fine-tuning worth the investment?"</p>
-        <p><strong>Latency.</strong> Time to first token at P50 and P95. Self-hosted models report vLLM serving latency. API models report end-to-end request latency.</p>
-        <p><strong>12-month TCO at 10K daily queries.</strong> Fully loaded annual cost including compute, API fees, and one-time training.</p>
+        <p><strong>Task accuracy.</strong> Token F1 for extraction (measures token-level overlap between predicted and expected text, giving partial credit for near-correct extractions). Weighted F1 for classification (accounts for label imbalance across all categories).</p>
+        <p><strong>Deployment cost.</strong> Presented as an interactive total-cost-of-ownership calculator on the benchmark page, since real cost depends on query volume and the hardware you deploy on. The frontier API is usage-priced from measured input and output token counts at the published per-token rate. The self-hosted model is priced as a GPU reservation at a rate you choose (on-prem, A40, A10G, or H100), scaled to the number of GPUs your volume needs, plus one-time fine-tuning. The benchmark ran on an RTX 3090; the calculator lets you model your own setup.</p>
 
         <h2 id="error-analysis">Error analysis</h2>
-        <p>Every prediction is classified into one error category. The rules are deterministic and applied by code, not by judgment.</p>
-        <p><strong>Classification tasks</strong> use five categories: correct, wrong class, format violation (output doesn't map to a valid label), refusal, and empty output.</p>
-        <p><strong>Extraction</strong> uses five categories: correct (token F1 above 0.8), partial (F1 between 0.3 and 0.8), missed (failed to find existing content), hallucinated (more than 30% of output tokens absent from source), and format violation.</p>
-        <p><strong>Code generation</strong> uses five categories: pass (all tests pass), logic error (runs but wrong output), runtime error, syntax error, and incomplete output.</p>
+        <p>Every prediction is classified into one error category by deterministic rules, not by judgment.</p>
+        <p><strong>Clause extraction (CUAD)</strong> uses: correct (token F1 &ge; 0.9, including correctly reporting "not found" when the clause is absent), partial (F1 between 0.5 and 0.9), hallucinated (extracted text that does not appear in the source contract), and format violation.</p>
+        <p><strong>Support routing (Banking77)</strong> uses: correct and wrong class. As a closed-vocabulary classification task, there are no other failure modes; every prediction maps to a valid label.</p>
 
         <h2 id="training-configuration">Training configuration</h2>
-        <p>All QLoRA fine-tuning uses Unsloth on a single NVIDIA A100 80GB.</p>
+        <p>All QLoRA fine-tuning uses Unsloth on a single NVIDIA RTX 3090 (24GB).</p>
         <div class="table-wrap">
         <table>
           <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
           <tbody>
             <tr><td>Quantization</td><td>4-bit NF4</td></tr>
-            <tr><td>LoRA rank</td><td>32</td></tr>
-            <tr><td>LoRA alpha</td><td>64</td></tr>
+            <tr><td>LoRA rank</td><td>8 (CUAD), 4 (Banking77)</td></tr>
+            <tr><td>LoRA alpha</td><td>16 (CUAD), 8 (Banking77)</td></tr>
             <tr><td>LoRA dropout</td><td>0.05</td></tr>
             <tr><td>Target modules</td><td>All linear layers</td></tr>
-            <tr><td>Learning rate</td><td>2e-4 (cosine schedule, 5% warmup)</td></tr>
+            <tr><td>Learning rate</td><td>5e-5 (constant after 5% warmup)</td></tr>
             <tr><td>Optimizer</td><td>AdamW 8-bit</td></tr>
             <tr><td>Effective batch size</td><td>16</td></tr>
             <tr><td>Precision</td><td>BF16</td></tr>
             <tr><td>Seed</td><td>42</td></tr>
-            <tr><td>Epoch schedule</td><td>10 epochs for N &le; 200, 5 for 201&ndash;1000, 3 for N &gt; 1000</td></tr>
+            <tr><td>Epoch schedule</td><td>10 epochs for &le;200 training examples, 5 for 201 to 1000, 3 for &gt;1000</td></tr>
             <tr><td>Checkpoint selection</td><td>Best validation loss</td></tr>
           </tbody>
         </table>
         </div>
 
         <h2 id="inference-configuration">Inference configuration</h2>
-        <p>Fine-tuned models are served with vLLM. Temperature is 0 (greedy) for all models, including APIs. Maximum output tokens vary by task type: 32 for classification, 512 for extraction, 1,024 for code.</p>
+        <p>Fine-tuned models are served with vLLM. Temperature is 0 (greedy) for all models, including APIs. Maximum output tokens vary by task type: 32 for classification, 768 for extraction.</p>
 
         <h2 id="reproduce">Reproduce</h2>
-        <p>Clone the repo, install dependencies, and follow the README. Total compute cost to reproduce is under $350.</p>
-        <p><a href="https://github.com/baseweight/baseweight-benchmark" target="_blank" rel="noopener noreferrer">github.com/baseweight/baseweight-benchmark</a></p>
+        <p>Clone the repo, install dependencies, and follow the README.</p>
+        <a class="repo-card" href="https://github.com/baseweight/baseweight-benchmark" target="_blank" rel="noopener noreferrer">
+          <span class="repo-card-main">
+            <span class="repo-card-label">Repository</span>
+            <span class="repo-card-url">github.com/baseweight/baseweight-benchmark</span>
+          </span>
+          <span class="repo-card-arrow" aria-hidden="true">&rarr;</span>
+        </a>
 
       </article>
     </div>

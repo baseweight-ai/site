@@ -54,7 +54,7 @@
     footer.innerHTML = `
   <div class="container">
     <p>&copy; 2026 Baseweight. &nbsp;&middot;&nbsp; <a href="/about">About</a> &nbsp;&middot;&nbsp; <a href="/contact">Contact</a> &nbsp;&middot;&nbsp; <a href="/privacy" rel="privacy-policy">Privacy Policy</a></p>
-    <p itemscope itemtype="https://schema.org/WebPage">By <span itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/about" rel="author" itemprop="url"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="datePublished" datetime="2026-03-01">March 2026</time></p>
+    <p itemscope itemtype="https://schema.org/WebPage">By <span itemprop="author" itemscope itemtype="https://schema.org/Person"><a href="/about" rel="author" itemprop="url"><span itemprop="name">Philip Stevens</span></a></span> &nbsp;&middot;&nbsp; Updated <time itemprop="datePublished" datetime="2026-05-01">May 2026</time></p>
   </div>`;
   }
 

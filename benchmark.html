@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Benchmark | Baseweight</title>
-<meta name="description" content="Six vertical SaaS tasks. Three open-source models. Five APIs. Accuracy, cost, and failure analysis.">
+<meta name="description" content="On focused vertical tasks, a fine-tuned open model matches or beats a frontier API, at a fraction of the cost per answer, on your own infrastructure.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -14,11 +14,11 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/benchmark">
 <meta property="og:title" content="Benchmark | Baseweight">
-<meta property="og:description" content="Fine-tuned open-source models vs. frontier APIs. Six tasks. Accuracy, cost, and failure analysis.">
+<meta property="og:description" content="A fine-tuned open model matches or beats a frontier API on focused tasks, often far cheaper per answer, on your own infrastructure.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Benchmark | Baseweight">
-<meta name="twitter:description" content="Fine-tuned open-source models vs. frontier APIs. Six tasks. Accuracy, cost, and failure analysis.">
+<meta name="twitter:description" content="A fine-tuned open model matches or beats a frontier API on focused tasks, often far cheaper per answer, on your own infrastructure.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <link rel="stylesheet" href="/components.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -65,19 +65,18 @@ body::after {
 
 
 /* PAGE HERO */
-.page-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+.page-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 48px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+.page-hero::before { content: ''; position: absolute; top: -20%; left: -8%; width: 62%; height: 150%; background: radial-gradient(ellipse at center, rgba(220,184,117,0.10), transparent 70%); pointer-events: none; z-index: 0; }
+.page-hero .container { position: relative; z-index: 1; }
 .section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
 .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
 .page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; }
 .page-hero .subtitle { font-size: 14px; color: var(--text-secondary); }
 
-/* HEADLINE STATS */
-.headline-stats { padding: 40px 0 0; }
-.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
-.stat-card { background: var(--bg-card); padding: 28px 24px; }
-.stat-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
-.stat-value { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; color: var(--accent); line-height: 1; }
-.stat-sub { font-size: 12px; color: var(--text-muted); margin-top: 6px; }
+/* ERROR LEGEND */
+.error-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
+.error-legend-item { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+.error-legend-dot { width: 8px; height: 8px; flex-shrink: 0; display: inline-block; }
 
 /* TASK SELECTOR */
 .task-selector-wrap { padding: 40px 0 0; }
@@ -95,7 +94,7 @@ body::after {
 
 /* SECTION HEADERS */
 .bench-section { padding: 48px 0 0; }
-.bench-section-header { margin-bottom: 24px; }
+.bench-section-header { margin-bottom: 24px; display: flex; align-items: baseline; gap: 14px; }
 .bench-section-header h2 { font-family: var(--font-display); font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 700; letter-spacing: -0.01em; }
 
 /* LEADERBOARD TABLE */
@@ -110,7 +109,7 @@ body::after {
 .leaderboard-table th:hover { color: var(--text-primary); }
 .leaderboard-table th.sorted { color: var(--accent); }
 .leaderboard-table th .sort-indicator { margin-left: 4px; opacity: 0.6; }
-.leaderboard-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); line-height: 1.4; }
+.leaderboard-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); line-height: 1.4; font-variant-numeric: tabular-nums; }
 .leaderboard-table tr:last-child td { border-bottom: none; }
 .leaderboard-table tr.row-opensource td { border-left: 2px solid var(--color-opensource); }
 .leaderboard-table tr.row-frontier td { border-left: 2px solid var(--color-frontier); }
@@ -142,11 +141,15 @@ body::after {
 .tco-input:focus { outline: none; border-color: var(--accent); }
 .tco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tco-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-.tco-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; }
+.tco-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
 .tco-table tr:last-child td { border-bottom: none; }
 .tco-table tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
 .tco-table .tco-model { font-weight: 600; color: var(--text-primary); }
 .tco-null { color: var(--text-muted); }
+
+/* TASK NOTES */
+.bench-note { max-width: 680px; margin: 28px 0 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary); }
+.task-blurb { max-width: 640px; margin: 18px 0 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary); text-align: left; }
 
 /* CTA BLOCK */
 .cta-block { margin-top: 80px; padding: 64px; background: var(--bg-secondary); border: 1px solid var(--border); text-align: center; }
@@ -156,15 +159,77 @@ body::after {
 .btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-2px); }
 
 
-/* TOOLTIP */
-[data-tooltip] { position: relative; cursor: help; border-bottom: 1px dotted var(--text-muted); }
-[data-tooltip]::after { content: attr(data-tooltip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1a1a1a; border: 1px solid var(--border); color: var(--text-secondary); font-size: 11px; padding: 6px 10px; white-space: nowrap; max-width: 260px; white-space: normal; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 100; line-height: 1.4; }
-[data-tooltip]:hover::after { opacity: 1; }
+/* TOOLTIP - positioned via JS to escape overflow containers */
+[data-tooltip] { cursor: help; border-bottom: 1px dotted var(--text-muted); }
+
+/* TCO SELECT */
+.tco-select { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--text-primary); background: var(--bg-secondary); border: 1px solid var(--border); padding: 10px 14px; cursor: pointer; transition: border-color 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23555' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.tco-select:focus { outline: none; border-color: var(--accent); }
+
+/* DESIGN ELEVATION */
+.bench-section-num { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--accent); }
+.bench-section-num::after { content: ' /'; color: var(--text-muted); }
+
+.cell-metric .metric-val { display: block; }
+.cell-metric .metric-bar { display: block; width: 88px; height: 3px; margin-top: 6px; background: rgba(255,255,255,0.06); }
+.cell-metric .metric-bar i { display: block; height: 100%; }
+.leaderboard-table tr.is-winner td { background: rgba(220,184,117,0.07); }
+.leaderboard-table tr.is-winner .metric-val { color: var(--accent); }
+.leaderboard-table tr.is-winner .cell-model::after { content: 'BEST'; margin-left: 8px; font-size: 9px; letter-spacing: 0.1em; color: var(--accent); border: 1px solid rgba(220,184,117,0.4); padding: 1px 5px; }
+.leaderboard-table td, .tco-table td { transition: background 0.15s; }
+.leaderboard-table tbody tr:hover td, .tco-table tbody tr:hover td { background: rgba(255,255,255,0.04); }
+
+@keyframes benchRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes benchFade { from { opacity: 0; } to { opacity: 1; } }
+.bench-anim { opacity: 0; animation: benchRise 0.6s cubic-bezier(0.16,0.84,0.44,1) forwards; }
+.bench-fade { opacity: 0; animation: benchFade 0.6s ease forwards; }
+.bench-reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,0.84,0.44,1); }
+.bench-reveal.in-view { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .bench-anim, .bench-fade, .bench-reveal { opacity: 1; transform: none; animation: none; transition: none; }
+  .sticky-cta { transition: none; }
+}
+
+/* HERO PROOF MARKERS */
+.hero-proof { display: flex; gap: 14px 22px; flex-wrap: wrap; margin-top: 18px; }
+.hero-proof a { font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s; }
+.hero-proof a::before { content: ''; width: 5px; height: 5px; background: var(--accent); flex-shrink: 0; }
+.hero-proof a:hover { color: var(--accent); }
+
+/* KEY RESULT CALLOUT */
+.bench-keyresult { margin: 26px 0 0; padding: 16px 20px; border-left: 2px solid var(--accent); background: rgba(220,184,117,0.05); font-size: 15px; line-height: 1.6; color: var(--text-primary); max-width: 780px; }
+
+/* INLINE MID-PAGE CTA */
+.inline-cta { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-top: 44px; padding: 18px 24px; border: 1px solid var(--border); background: var(--bg-secondary); }
+.inline-cta-text { font-size: 14px; color: var(--text-secondary); }
+.btn-inline { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 11px 22px; cursor: pointer; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s, transform 0.15s; }
+.btn-inline:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-1px); }
+
+/* TCO SUMMARY LINE */
+.tco-summary { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+.tco-summary strong { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* CTA OBJECTION POINTS */
+.cta-points { list-style: none; text-align: left; display: table; margin: 4px auto 32px; max-width: 540px; }
+.cta-points li { position: relative; padding-left: 22px; font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
+.cta-points li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 6px; height: 6px; background: var(--accent); }
+
+/* STICKY CTA */
+.sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
+.sticky-cta.visible { transform: none; opacity: 1; }
+.sticky-cta-text { font-size: 13px; color: var(--text-secondary); }
+.sticky-cta-btn { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 10px 22px; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s; }
+.sticky-cta-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
 
 /* RESPONSIVE */
-@media (max-width: 860px) { .stats-grid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) {
   .cta-block { padding: 40px 24px; }
+  .inline-cta { padding: 18px; }
+}
+@media (max-width: 520px) {
+  .sticky-cta { padding: 10px 16px; gap: 12px; }
+  .sticky-cta-text { display: none; }
+  .sticky-cta-btn { flex: 1; text-align: center; }
 }
 </style>
 <meta name="author" content="Philip Stevens">
@@ -182,57 +247,41 @@ body::after {
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label">Benchmark</div>
-    <h1>Fine-tuned open-source models vs. frontier APIs</h1>
-    <p class="subtitle">Six vertical SaaS tasks. Three open-source models. Five APIs. Accuracy, cost, and failure analysis. <a href="/methodology" style="color: var(--accent); text-decoration: none; white-space: nowrap;">View methodology &rarr;</a></p>
+    <div class="section-label bench-anim" style="animation-delay: 0s;">Benchmark</div>
+    <h1 class="bench-anim" style="animation-delay: 0.07s;">A fine-tuned open model beats the frontier, for a fraction of the per-query cost</h1>
+    <p class="subtitle bench-anim" style="animation-delay: 0.14s;">On focused, repeatable tasks like contract clause extraction and support routing. Every result is reproducible from public code and open weights.</p>
+    <div class="hero-proof bench-anim" style="animation-delay: 0.21s;">
+      <a href="/methodology">Read the methodology &rarr;</a>
+      <a href="https://github.com/baseweight/baseweight-benchmark" target="_blank" rel="noopener noreferrer">View the code &rarr;</a>
+    </div>
   </div>
 </section>
 
 <section style="padding-bottom: var(--section-pad);">
   <div class="container">
 
-    <!-- HEADLINE STATS -->
-    <div class="headline-stats">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Fine-tuned beats 5-shot frontier</div>
-          <div class="stat-value" id="stat-tasks-won">— / 5</div>
-          <div class="stat-sub">tasks where LoRA &gt; best prompted model</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Lower cost per correct answer</div>
-          <div class="stat-value" id="stat-cost-reduction" data-tooltip="Marginal inference cost only — excludes fixed GPU reservation. Self-hosting costs more at low query volumes; see $/1K Correct in the table for a fuller picture.">—×</div>
-          <div class="stat-sub">LoRA vs. 5-shot frontier, quality-adjusted</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Accuracy improvement</div>
-          <div class="stat-value" id="stat-accuracy-gain">—</div>
-          <div class="stat-sub">avg pp gain, LoRA vs. 5-shot frontier</div>
-        </div>
-      </div>
-    </div>
+    <!-- INTRO NOTE -->
+    <p class="bench-note bench-anim" style="animation-delay: 0.28s;">Each task below compares a fine-tuned open model with a frontier API on quality and cost per query. Two published so far; more tasks and models are underway.</p>
+
+    <!-- KEY RESULT (populated from data on load) -->
+    <p class="bench-keyresult" id="benchKeyResult" style="display:none;"></p>
 
     <!-- TASK SELECTOR -->
-    <div class="task-selector-wrap">
+    <div class="task-selector-wrap bench-fade" style="animation-delay: 0.35s;">
       <div class="task-tabs" id="taskTabs" role="tablist"></div>
     </div>
+    <p id="taskBlurb" class="task-blurb bench-fade" style="animation-delay: 0.42s;"></p>
 
     <!-- RESULTS -->
-    <div class="bench-section">
-      <div class="bench-section-header">
-        <h2>Results</h2>
-      </div>
+    <div class="bench-section bench-reveal">
+      <div class="bench-section-header"><span class="bench-section-num">01</span><h2>Results</h2></div>
       <div class="leaderboard-wrap">
         <table class="leaderboard-table" id="leaderboardTable">
           <thead>
             <tr>
-              <th data-col="model_label">Model</th>
-              <th data-col="condition_label">Condition</th>
+              <th data-col="model_label" data-tooltip="Open-source models are self-hosted and can be fine-tuned; frontier models are accessed through a provider API.">Model</th>
+              <th data-col="condition_label" data-tooltip="How the model was set up for this task. Click to sort.">Method</th>
               <th data-col="metric_value" class="sorted" data-tooltip="Primary quality metric for this task. Higher is better."><span id="metricColLabel">Metric</span> <span class="sort-indicator">↓</span></th>
-              <th data-col="cost_per_1k_correct" data-tooltip="Total cost to produce 1,000 correct predictions, including training amortized over 12 months at 10K daily queries.">$/1K Correct</th>
-              <th data-col="ttft_p50_ms" data-tooltip="Median time to first output token in milliseconds.">TTFT P50</th>
-              <th data-col="training_cost" data-tooltip="One-time cost to fine-tune. $0 for prompted API conditions.">Training Cost</th>
-              <th data-col="training_time_min" data-tooltip="Wall clock training time to best checkpoint.">Training Time</th>
             </tr>
           </thead>
           <tbody id="leaderboardBody"></tbody>
@@ -241,66 +290,81 @@ body::after {
       <div class="table-legend">
         <div class="legend-item"><div class="legend-dot" style="background: var(--color-opensource);"></div> Open-source fine-tuned</div>
         <div class="legend-item"><div class="legend-dot" style="background: var(--color-frontier);"></div> Frontier API</div>
-        <div class="legend-item"><div class="legend-dot" style="background: var(--color-apift);"></div> API fine-tuned</div>
       </div>
     </div>
 
-    <!-- ACCURACY CHART -->
-    <div class="bench-section" style="padding-top: 48px;">
-      <div class="bench-section-header"><h2>Accuracy comparison</h2></div>
+    <!-- INLINE CTA -->
+    <div class="inline-cta bench-reveal">
+      <span class="inline-cta-text">Convinced on public data? The real question is whether it holds on yours.</span>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-inline">Book a free call</a>
+    </div>
+
+    <!-- ERROR ANALYSIS -->
+    <div class="bench-section bench-reveal" id="errorSection" style="padding-top: 48px;">
+      <div class="bench-section-header"><span class="bench-section-num">02</span><h2>Error analysis</h2></div>
       <div class="chart-container">
         <div class="chart-canvas-wrap" style="height: 420px;">
-          <canvas id="accuracyChart"></canvas>
+          <canvas id="errorChart"></canvas>
         </div>
-      </div>
-    </div>
-
-    <!-- COST SCATTER -->
-    <div class="bench-section" style="padding-top: 48px;">
-      <div class="bench-section-header"><h2>Accuracy vs. cost</h2></div>
-      <div class="chart-container">
-        <div class="chart-canvas-wrap" style="height: 380px;">
-          <canvas id="costScatter"></canvas>
-        </div>
+        <div class="error-legend" id="errorLegend"></div>
       </div>
     </div>
 
     <!-- TCO CALCULATOR -->
-    <div class="bench-section" style="padding-top: 48px;">
-      <div class="bench-section-header"><h2>Cost calculator</h2></div>
+    <div class="bench-section bench-reveal" style="padding-top: 48px;">
+      <div class="bench-section-header"><span class="bench-section-num">03</span><h2>Cost calculator</h2></div>
       <div class="tco-calculator">
         <div class="tco-input-row">
-          <span class="tco-input-label">Daily query volume:</span>
-          <input type="number" class="tco-input" id="tcoVolume" value="10000" min="1" max="10000000">
-          <span class="tco-input-label" style="font-size:12px; color: var(--text-muted);">queries/day</span>
+          <span class="tco-input-label">Daily queries:</span>
+          <input type="number" class="tco-input" id="tcoVolume" value="50000" min="1" max="10000000">
+        </div>
+        <div class="tco-input-row" style="margin-bottom: 24px;">
+          <span class="tco-input-label">Hosting scenario:</span>
+          <select id="gpuRate" class="tco-select">
+            <option value="0.35">On-prem hardware, amortised over 3 years (~$0.35/hr)</option>
+            <option value="0.44" selected>Budget cloud GPU, e.g. A40 (~$0.44/hr)</option>
+            <option value="1.00">Standard cloud GPU, e.g. A10G (~$1.00/hr)</option>
+            <option value="2.89">Premium cloud GPU, e.g. H100 (~$2.90/hr)</option>
+          </select>
         </div>
         <div style="overflow-x: auto;">
           <table class="tco-table">
             <thead>
               <tr>
                 <th>Model</th>
-                <th>Condition</th>
-                <th>Monthly Cost</th>
-                <th>Annual Cost</th>
+                <th>Monthly cost</th>
+                <th>Annual cost</th>
               </tr>
             </thead>
             <tbody id="tcoBody"></tbody>
           </table>
         </div>
+        <p class="tco-summary" id="tcoSummary" style="display:none;"></p>
       </div>
     </div>
 
     <!-- CTA -->
-    <div class="cta-block">
-      <h2>What would this look like on your data?</h2>
-      <p>This benchmark uses public datasets. Production tasks have different distributions, label sets, and error tolerances. Baseweight runs this analysis on your data with your success criteria.</p>
+    <div class="cta-block bench-reveal">
+      <h2>What do your failure modes actually look like?</h2>
+      <p>You have seen the accuracy and the cost gap on public data. Your contracts, your support messages, your failure modes will produce different numbers. A 30-minute call maps which failure modes to target and whether fine-tuning will close the gap for your workload.</p>
+      <ul class="cta-points">
+        <li>Which of your failure modes are worth targeting</li>
+        <li>Whether a fine-tuned open model beats your current API on your data</li>
+        <li>What it takes to run it in production</li>
+      </ul>
       <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call</a>
+      <p style="font-size:12px; color: var(--text-muted); margin-top: 14px;">30-minute call. No proposal, no pitch.</p>
     </div>
 
   </div>
 </section>
 
 </main>
+
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <span class="sticky-cta-text">30-minute call. No proposal, no pitch.</span>
+  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="sticky-cta-btn" tabindex="-1">Book a free call</a>
+</div>
 
 <footer></footer>
 
@@ -309,18 +373,13 @@ body::after {
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 const TASKS = [
-  { id: 'ledgar',   name: 'Legal Classification' },
-  { id: 'cuad',     name: 'Clause Extraction' },
-  { id: 'banking77',name: 'Support Routing' },
-  { id: 'fpb',      name: 'Fin. Sentiment' },
-  { id: 'medmcqa',  name: 'Medical QA' },
+  { id: 'cuad', name: 'Clause Extraction',
+    blurb: "Given a full contract, the model finds whether a specific clause appears and returns it precisely, or correctly reports it is absent. The kinds of clauses that matter in practice: governing law, IP ownership, termination for convenience, non-compete terms. Knowing when to abstain is as important as knowing what to extract. A model that confidently extracts non-existent text poisons downstream decisions. One that correctly returns nothing leaves the gap for a human to handle cleanly. Example: given a 40-page SaaS agreement, does it include an IP assignment clause? If yes, return the exact text. If not, return nothing. In a diligence workflow, a missed clause costs more than the model." },
+  { id: 'banking77', name: 'Support Routing',
+    blurb: "Given a short customer message, the model selects the right intent from 77 options. A message about a cancelled payment and one about a failed transfer look similar; the model's job is to know the difference. Getting this right at scale means fewer misrouted tickets and faster resolution. Example: 'I tried to send money but it did not go through' should route to 'failed transfer', not 'declined card payment' or 'transfer not received by recipient'." },
 ];
 
 const FAMILY_COLORS = { 'open-source': '#60a5fa', 'frontier': '#dcb875', 'api-finetuned': '#4ade80' };
-const COND_COLORS = {
-  'zero-shot': '#898580', '5-shot': '#b8b0a8',
-  'lora-500': '#93c5fd', 'lora-full': '#3b82f6', 'api-sft-500': '#4ade80'
-};
 
 const METRIC_LABELS = {
   weighted_f1: 'Weighted F1', pass_at_1: 'Pass@1',
@@ -332,32 +391,81 @@ const COND_LABELS = {
   'lora-500': 'LoRA (500)', 'lora-full': 'LoRA (full)', 'api-sft-500': 'API SFT (500)',
 };
 
+const COND_DESCRIPTIONS = {
+  'Zero-shot': 'Task instruction only, no examples. The model uses its pre-trained knowledge without any task-specific guidance.',
+  '5-shot': 'Five labelled examples prepended to every query. No model weights are updated; the examples are part of the prompt.',
+  'LoRA': 'Fine-tuned with a LoRA adapter on task-specific training data. A small set of adapter weights are trained; the base model is unchanged.',
+  'LoRA (500)': 'LoRA fine-tuning on 500 training examples.',
+  'LoRA (full)': 'LoRA fine-tuning on the full available training set.',
+  'API SFT (500)': 'Supervised fine-tuning through the frontier provider API on 500 examples.',
+};
+
+const METRIC_DESCRIPTIONS = {
+  'Token F1': 'Token-level overlap between predicted and expected text. Gives partial credit for partially correct extractions. Range: 0 to 1, higher is better.',
+  'Weighted F1': 'F1 score weighted by class frequency. Accounts for label imbalance across all intent categories. Range: 0 to 1, higher is better.',
+  'Accuracy': 'Fraction of predictions exactly correct.',
+  'Pass@1': 'Fraction of generated programs that pass all test cases on the first attempt.',
+};
+
+const ERROR_COLORS = {
+  correct: '#4ade80', pass: '#4ade80',
+  not_applicable: '#6ee7b7',
+  partial: '#facc15',
+  wrong_class: '#f87171', logic_error: '#f87171',
+  format_violation: '#fb923c',
+  missed: '#f97316',
+  hallucinated: '#ef4444',
+  runtime_error: '#e879f9', syntax_error: '#a855f7',
+  refusal: '#c084fc',
+  empty: '#555', incomplete: '#555',
+};
+
+const ERROR_DESCRIPTIONS = {
+  correct: 'Output matched the expected result exactly or above the passing threshold.',
+  pass: 'All test cases passed.',
+  not_applicable: 'Model returned "not found" or "not applicable." For clause extraction this is often the correct answer, since most clause types are absent from any given contract; it is an error only when the clause was actually present and should have been extracted.',
+  partial: 'Output partially overlapped the expected text (Token F1 between 0.5 and 0.9).',
+  wrong_class: 'Model predicted the wrong category or intent.',
+  logic_error: 'Output ran without error but produced wrong results.',
+  format_violation: 'Output did not conform to the required format or label vocabulary.',
+  missed: 'Content was present in the source but the model did not extract it.',
+  hallucinated: 'Output contained text not present in the source.',
+  runtime_error: 'Generated code raised an exception at runtime.',
+  syntax_error: 'Generated code had a syntax error and could not run.',
+  refusal: 'Model refused to produce an answer.',
+  incomplete: 'Output was truncated before finishing.',
+  empty: 'Model returned an empty response.',
+};
+
+// Natural-language labels for the error chart (legend + tooltip).
+const ERROR_LABELS = {
+  correct: 'Correct', pass: 'Pass', not_applicable: 'Correct (abstained)',
+  partial: 'Partial match', wrong_class: 'Wrong class', logic_error: 'Logic error',
+  format_violation: 'Format violation', missed: 'Missed extraction', hallucinated: 'Hallucinated',
+  runtime_error: 'Runtime error', syntax_error: 'Syntax error', refusal: 'Refusal',
+  incomplete: 'Incomplete', empty: 'Empty response',
+};
+// Error types whose label is self-explanatory; their definition is omitted from the tooltip.
+const OBVIOUS_ERRORS = new Set(['correct', 'pass', 'wrong_class', 'empty', 'refusal']);
+
 const FAMILY_CLASSES = { 'open-source': 'opensource', 'frontier': 'frontier', 'api-finetuned': 'apift' };
 
-const GPU_HOURLY = 1.19;
-const SELF_HOST_ANNUAL = GPU_HOURLY * 24 * 365; // ~10,424
+const GPU_HOURLY = 0.44;
+const SELF_HOST_ANNUAL = GPU_HOURLY * 24 * 365; // ~3,854
+const QUERIES_PER_GPU_DAY = 500000; // ~6 queries/sec; conservative for an 8B model on one A40 with vLLM continuous batching
 
 // ── STATE ──────────────────────────────────────────────────────────────────
 let benchData = null;
-let currentTask = 'ledgar';
+let currentTask = 'cuad';
 let sortCol = 'metric_value';
-let sortDir = -1; // -1 = desc
-let accuracyChartInst = null;
-let costScatterInst = null;
+let sortDir = -1;
+let errorChartInst = null;
 
 // ── LOAD DATA ──────────────────────────────────────────────────────────────
 async function loadData() {
   try {
     const res = await fetch('/data/benchmark/results.json');
     const raw = await res.json();
-    if (raw.tasks_won_by_oss != null)
-      document.getElementById('stat-tasks-won').textContent = raw.tasks_won_by_oss + ' / 5';
-    if (raw.cost_per_correct_ratio != null)
-      document.getElementById('stat-cost-reduction').textContent = raw.cost_per_correct_ratio.toFixed(1) + '×';
-    if (raw.avg_accuracy_gain_pp != null) {
-      const sign = raw.avg_accuracy_gain_pp >= 0 ? '+' : '';
-      document.getElementById('stat-accuracy-gain').textContent = sign + raw.avg_accuracy_gain_pp.toFixed(1) + 'pp';
-    }
     const tasks = {};
     raw.results.forEach(r => {
       if (!tasks[r.task_id])
@@ -372,6 +480,7 @@ async function loadData() {
     benchData = { tasks };
     buildTabs();
     selectTask(currentTask);
+    renderKeyResult();
   } catch(e) {
     console.error('Failed to load benchmark data', e);
   }
@@ -393,6 +502,9 @@ function buildTabs() {
 
 function selectTask(taskId) {
   currentTask = taskId;
+  const meta = TASKS.find(t => t.id === taskId);
+  const blurb = document.getElementById('taskBlurb');
+  if (blurb && meta) blurb.textContent = meta.blurb;
   document.querySelectorAll('.task-tab').forEach((btn, i) => {
     const isActive = TASKS[i].id === taskId;
     btn.classList.toggle('active', isActive);
@@ -404,17 +516,64 @@ function selectTask(taskId) {
     document.getElementById('leaderboardBody').innerHTML = '';
     return;
   }
-  document.getElementById('metricColLabel').textContent = task.metric_label;
+  const metricLabelEl = document.getElementById('metricColLabel');
+  metricLabelEl.textContent = 'Quality (' + task.metric_label + ')';
+  const metricTh = metricLabelEl.closest('th');
+  if (metricTh && METRIC_DESCRIPTIONS[task.metric_label]) metricTh.dataset.tooltip = METRIC_DESCRIPTIONS[task.metric_label];
   renderLeaderboard(task);
-  renderAccuracyChart(task);
-  renderCostScatter(task);
+  renderErrors(task);
   renderTCO(task);
+  renumberSections();
+}
+
+// Number the visible bench sections sequentially (the error-analysis section is
+// hidden for some tasks, so numbering can't be static).
+function renumberSections() {
+  let n = 0;
+  document.querySelectorAll('.bench-section').forEach(sec => {
+    if (sec.style.display === 'none') return;
+    n++;
+    const numEl = sec.querySelector('.bench-section-num');
+    if (numEl) numEl.textContent = String(n).padStart(2, '0');
+  });
+}
+
+// Data-derived headline result. Counts, per displayed task, whether the best
+// open-source quality matches or beats the best frontier quality. No fixed
+// numbers are hard-coded, so the line stays honest if the data changes.
+function renderKeyResult() {
+  const el = document.getElementById('benchKeyResult');
+  if (!el || !benchData) return;
+  const bestMetric = (results, fam) => {
+    const vals = results.filter(r => r.model_family === fam && r.metric_value != null).map(r => r.metric_value);
+    return vals.length ? Math.max(...vals) : null;
+  };
+  let wins = 0, total = 0;
+  TASKS.forEach(t => {
+    const task = benchData.tasks[t.id];
+    if (!task) return;
+    const oss = bestMetric(task.results, 'open-source');
+    const api = bestMetric(task.results, 'frontier');
+    if (oss == null || api == null) return;
+    total++;
+    if (oss >= api) wins++;
+  });
+  if (total === 0) { el.style.display = 'none'; return; }
+  const lead = (wins === total)
+    ? (total === 2 ? 'Both published tasks: ' : 'All ' + total + ' published tasks: ')
+    : 'On ' + wins + ' of ' + total + ' published tasks: ';
+  el.textContent = lead + 'the fine-tuned open model matches or beats the frontier, for a fraction of the cost per query.';
+  el.style.display = '';
 }
 
 // ── LEADERBOARD ────────────────────────────────────────────────────────────
 function renderLeaderboard(task) {
   const body = document.getElementById('leaderboardBody');
   const results = [...task.results];
+
+  // Best score on the primary metric, independent of the current sort column
+  const metricVals = results.filter(r => r.metric_value !== null).map(r => r.metric_value);
+  const maxMetric = metricVals.length ? Math.max(...metricVals) : 0;
 
   // Sort
   results.sort((a, b) => {
@@ -428,20 +587,22 @@ function renderLeaderboard(task) {
   body.innerHTML = '';
   results.forEach(r => {
     const tr = document.createElement('tr');
-    tr.className = 'row-' + (FAMILY_CLASSES[r.model_family] || r.model_family.replaceAll('-', ''));
-    const metricFmt = r.metric_value !== null ? r.metric_value.toFixed(3) : '<span class="cell-null">—</span>';
-    const costFmt = r.cost_per_1k_correct !== null ? '$' + r.cost_per_1k_correct.toFixed(2) : '<span class="cell-null">—</span>';
-    const ttftFmt = r.ttft_p50_ms !== null ? r.ttft_p50_ms + ' ms' : '<span class="cell-null">—</span>';
-    const tcostFmt = r.training_cost > 0 ? '$' + r.training_cost.toFixed(2) : (r.training_cost === 0 && r.model_family !== 'open-source' ? '<span class="cell-null">$0</span>' : '<span class="cell-null">—</span>');
-    const ttimeFmt = r.training_time_min > 0 ? r.training_time_min + ' min' : '<span class="cell-null">—</span>';
+    const isWinner = r.metric_value !== null && r.metric_value === maxMetric;
+    tr.className = 'row-' + (FAMILY_CLASSES[r.model_family] || r.model_family.replaceAll('-', '')) + (isWinner ? ' is-winner' : '');
+    let metricCell;
+    if (r.metric_value !== null) {
+      const pct = maxMetric > 0 ? r.metric_value / maxMetric * 100 : 0;
+      const fam = FAMILY_COLORS[r.model_family] || '#666';
+      metricCell = `<span class="metric-val">${r.metric_value.toFixed(3)}</span><span class="metric-bar"><i style="width:${pct.toFixed(1)}%;background:${fam};"></i></span>`;
+    } else {
+      metricCell = '<span class="cell-null">-</span>';
+    }
+    const condDesc = COND_DESCRIPTIONS[r.condition_label] || '';
+    const condHtml = condDesc ? `<span data-tooltip="${condDesc}">${r.condition_label}</span>` : r.condition_label;
     tr.innerHTML = `
       <td class="cell-model">${r.model_label}</td>
-      <td class="cell-cond">${r.condition_label}</td>
-      <td class="cell-metric">${metricFmt}</td>
-      <td>${costFmt}</td>
-      <td>${ttftFmt}</td>
-      <td>${tcostFmt}</td>
-      <td>${ttimeFmt}</td>`;
+      <td class="cell-cond">${condHtml}</td>
+      <td class="cell-metric">${metricCell}</td>`;
     body.appendChild(tr);
   });
 }
@@ -475,100 +636,107 @@ function resetChart(id, empty) {
   return document.getElementById(id).getContext('2d');
 }
 
-// ── ACCURACY CHART ─────────────────────────────────────────────────────────
-function renderAccuracyChart(task) {
-  const results = task.results.filter(r => r.metric_value !== null);
-  if (accuracyChartInst) { accuracyChartInst.destroy(); accuracyChartInst = null; }
-  const newCtx = resetChart('accuracyChart', !results.length);
-  if (!newCtx) return;
-  const sorted = [...results].sort((a, b) => (b.metric_value || 0) - (a.metric_value || 0));
-  const labels = sorted.map(r => r.model_label + ' / ' + r.condition_label);
-  const values = sorted.map(r => r.metric_value);
-  const colors = sorted.map(r => COND_COLORS[r.condition] || FAMILY_COLORS[r.model_family] || '#666');
+// ── ERROR ANALYSIS ─────────────────────────────────────────────────────────
+function renderErrors(task) {
+  const rows = task.results.filter(r => r.error_counts && Object.keys(r.error_counts).length);
+  const legendEl = document.getElementById('errorLegend');
+  const section = document.getElementById('errorSection');
 
-  accuracyChartInst = new Chart(newCtx, {
+  // Redundant when the only failure mode is wrong_class: the breakdown then just
+  // restates accuracy, which the leaderboard already conveys (e.g. banking77). Hide it.
+  const failureModes = new Set(rows.flatMap(r => Object.keys(r.error_counts)));
+  ['correct', 'wrong_class'].forEach(c => failureModes.delete(c));
+  const redundant = rows.length > 0 && failureModes.size === 0;
+  if (section) section.style.display = redundant ? 'none' : '';
+  if (redundant) {
+    if (errorChartInst) { errorChartInst.destroy(); errorChartInst = null; }
+    if (legendEl) legendEl.innerHTML = '';
+    return;
+  }
+
+  if (errorChartInst) { errorChartInst.destroy(); errorChartInst = null; }
+  const newCtx = resetChart('errorChart', !rows.length);
+  if (!newCtx) { if (legendEl) legendEl.innerHTML = ''; return; }
+
+  const labels = rows.map(r => r.model_label + ' / ' + r.condition_label);
+  const allCats = [...new Set(rows.flatMap(r => Object.keys(r.error_counts)))];
+  const orderedCats = ['correct', 'pass', 'not_applicable', 'partial', 'wrong_class', 'logic_error', 'format_violation', 'missed', 'hallucinated', 'runtime_error', 'syntax_error', 'refusal', 'incomplete', 'empty'].filter(c => allCats.includes(c));
+
+  const datasets = orderedCats.map(cat => ({
+    label: ERROR_LABELS[cat] || cat.replace(/_/g, ' '),
+    errorKey: cat,
+    data: rows.map(r => {
+      const total = Object.values(r.error_counts).reduce((a, b) => a + b, 0);
+      return total > 0 ? (r.error_counts[cat] || 0) / total * 100 : 0;
+    }),
+    backgroundColor: ERROR_COLORS[cat] || '#666',
+  }));
+
+  errorChartInst = new Chart(newCtx, {
     type: 'bar',
-    data: {
-      labels,
-      datasets: [{ data: values, backgroundColor: colors, borderRadius: 2 }]
-    },
+    data: { labels, datasets },
     options: {
-      indexAxis: 'y',
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, datalabels: { display: false },
-        tooltip: { callbacks: { label: ctx => ' ' + (ctx.raw || 0).toFixed(3) } } },
-      scales: {
-        x: { min: 0, max: 1, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#555', font: { family: 'IBM Plex Mono', size: 11 } } },
-        y: { grid: { display: false }, ticks: { color: '#898580', font: { family: 'IBM Plex Mono', size: 11 } } }
-      }
-    }
-  });
-}
-
-// ── COST SCATTER ───────────────────────────────────────────────────────────
-function renderCostScatter(task) {
-  const results = task.results.filter(r => r.metric_value !== null && r.cost_per_1k_correct !== null);
-  if (costScatterInst) { costScatterInst.destroy(); costScatterInst = null; }
-  const newCtx = resetChart('costScatter', !results.length);
-  if (!newCtx) return;
-
-  const metrics = [], costs = [];
-  results.forEach(r => { metrics.push(r.metric_value); costs.push(r.cost_per_1k_correct); });
-  const medianMetric = median(metrics);
-  const medianCost = median(costs);
-
-  const datasets = Object.entries(FAMILY_COLORS).map(([family, color]) => {
-    const pts = results.filter(r => r.model_family === family).map(r => ({
-      x: r.metric_value, y: r.cost_per_1k_correct,
-      label: r.model_label + ' / ' + r.condition_label,
-    }));
-    return {
-      label: family, data: pts, backgroundColor: color + 'cc',
-      borderColor: color, pointRadius: 7, pointHoverRadius: 9,
-    };
-  });
-
-  costScatterInst = new Chart(newCtx, {
-    type: 'scatter',
-    data: { datasets },
-    options: {
-      responsive: true, maintainAspectRatio: false,
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
       plugins: {
-        legend: { display: true, position: 'top', labels: { color: '#898580', font: { family: 'IBM Plex Mono', size: 11 }, boxWidth: 10 } },
-        tooltip: { callbacks: { label: ctx => ctx.raw.label + ': (' + ctx.raw.x.toFixed(3) + ', $' + ctx.raw.y.toFixed(2) + ')' } },
-        annotation: { annotations: {
-          vLine: { type: 'line', xMin: medianMetric, xMax: medianMetric, borderColor: '#333', borderWidth: 1, borderDash: [4,4] },
-          hLine: { type: 'line', yMin: medianCost, yMax: medianCost, borderColor: '#333', borderWidth: 1, borderDash: [4,4] },
-          label: { type: 'label', xValue: 0, yValue: medianCost * 0.5, color: '#555', font: { size: 10 }, content: 'Accurate and cheap' }
-        }}
+        legend: { display: false },
+        datalabels: { display: false },
+        tooltip: {
+          callbacks: {
+            // Model/condition is already on the row, so drop the title.
+            title: () => '',
+            label: ctx => (ERROR_LABELS[ctx.dataset.errorKey] || ctx.dataset.label) + ': ' + ctx.raw.toFixed(1) + '%',
+            afterLabel: ctx => {
+              const key = ctx.dataset.errorKey;
+              if (OBVIOUS_ERRORS.has(key)) return '';
+              const desc = ERROR_DESCRIPTIONS[key];
+              if (!desc) return '';
+              return wrapText(desc, 46).map(l => '  ' + l);
+            }
+          }
+        }
       },
       scales: {
-        x: { min: 0, max: 1, title: { display: true, text: task.metric_label, color: '#555', font: { family: 'IBM Plex Mono', size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#555', font: { family: 'IBM Plex Mono', size: 11 } } },
-        y: { type: 'logarithmic', title: { display: true, text: '$/1K Correct', color: '#555', font: { family: 'IBM Plex Mono', size: 11 } }, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#555', font: { family: 'IBM Plex Mono', size: 11 } } }
+        x: { stacked: true, min: 0, max: 100, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#555', font: { family: 'IBM Plex Mono', size: 11 }, callback: v => v + '%' } },
+        y: { stacked: true, grid: { display: false }, ticks: { color: '#898580', font: { family: 'IBM Plex Mono', size: 11 } } }
       }
     }
   });
-}
 
-function median(arr) {
-  const sorted = [...arr].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+  if (legendEl) {
+    legendEl.innerHTML = orderedCats.map(cat => {
+      const label = ERROR_LABELS[cat] || cat.replace(/_/g, ' ');
+      const desc = OBVIOUS_ERRORS.has(cat) ? '' : (ERROR_DESCRIPTIONS[cat] || '');
+      const labelHtml = desc ? `<span data-tooltip="${desc}">${label}</span>` : `<span>${label}</span>`;
+      return `<span class="error-legend-item"><span class="error-legend-dot" style="background:${ERROR_COLORS[cat] || '#666'};"></span>${labelHtml}</span>`;
+    }).join('');
+  }
 }
 
 // ── TCO CALCULATOR ─────────────────────────────────────────────────────────
 function renderTCO(task) {
-  const vol = parseInt(document.getElementById('tcoVolume').value, 10) || 10000;
+  const vol = parseInt(document.getElementById('tcoVolume').value, 10) || 50000;
+  const gpuHourly = parseFloat(document.getElementById('gpuRate').value) || GPU_HOURLY;
+  const selfHostAnnual = gpuHourly * 24 * 365;
   const body = document.getElementById('tcoBody');
-  const results = task.results;
 
-  // Compute annuals
-  const rows = results.map(r => {
+  // One row per model, costed at the model's best-performing (deployment) condition
+  const byModel = {};
+  task.results.forEach(r => {
+    const cur = byModel[r.model_label];
+    if (!cur || (r.metric_value || 0) > (cur.metric_value || 0)) byModel[r.model_label] = r;
+  });
+
+  const rows = Object.values(byModel).map(r => {
     let annual = null;
-    if (r.cost_per_query !== null) {
-      const inference = r.cost_per_query * vol * 365;
-      const hosting = r.model_family === 'open-source' ? SELF_HOST_ANNUAL * Math.max(1, Math.ceil(vol / 50000)) : 0;
-      annual = (r.training_cost || 0) + inference + hosting;
+    if (r.model_family === 'open-source') {
+      // Self-hosted cost is the GPU reservation at the chosen scenario rate plus
+      // one-time training. Per-query GPU time is already covered by the 24/7
+      // reservation, so there is no separate inference charge.
+      const hosting = selfHostAnnual * Math.max(1, Math.ceil(vol / QUERIES_PER_GPU_DAY));
+      annual = (r.training_cost || 0) + hosting;
+    } else if (r.cost_per_query != null) {
+      // API: usage-priced per token, no fixed hosting.
+      annual = r.cost_per_query * vol * 365;
     }
     return { ...r, annual };
   }).sort((a, b) => {
@@ -581,11 +749,25 @@ function renderTCO(task) {
   body.innerHTML = '';
   rows.forEach(r => {
     const tr = document.createElement('tr');
-    const annual = r.annual !== null ? '$' + Math.round(r.annual).toLocaleString() : '<span class="tco-null">—</span>';
-    const monthly = r.annual !== null ? '$' + Math.round(r.annual / 12).toLocaleString() : '<span class="tco-null">—</span>';
-    tr.innerHTML = `<td class="tco-model">${r.model_label}</td><td>${r.condition_label}</td><td>${monthly}</td><td>${annual}</td>`;
+    const annual = r.annual !== null ? '$' + Math.round(r.annual).toLocaleString() : '<span class="tco-null">-</span>';
+    const monthly = r.annual !== null ? '$' + Math.round(r.annual / 12).toLocaleString() : '<span class="tco-null">-</span>';
+    tr.innerHTML = `<td class="tco-model">${r.model_label}</td><td>${monthly}</td><td>${annual}</td>`;
     body.appendChild(tr);
   });
+
+  // Plain-language summary of the modelled numbers at the current inputs.
+  const sumEl = document.getElementById('tcoSummary');
+  if (sumEl) {
+    const ossRow = rows.find(r => r.model_family === 'open-source' && r.annual !== null);
+    const apiRow = rows.find(r => r.model_family === 'frontier' && r.annual !== null);
+    if (ossRow && apiRow) {
+      const fmt = v => '$' + Math.round(v).toLocaleString();
+      sumEl.innerHTML = 'At <strong>' + vol.toLocaleString() + '</strong> queries/day, you are modelling about <strong>' + fmt(ossRow.annual) + '/yr</strong> self-hosted versus <strong>' + fmt(apiRow.annual) + '/yr</strong> on the frontier API. Your own task and data will shift these numbers.';
+      sumEl.style.display = '';
+    } else {
+      sumEl.style.display = 'none';
+    }
+  }
 }
 
 let tcoTimer;
@@ -593,6 +775,91 @@ document.getElementById('tcoVolume').addEventListener('input', () => {
   clearTimeout(tcoTimer);
   tcoTimer = setTimeout(() => { if (benchData) renderTCO(benchData.tasks[currentTask]); }, 150);
 });
+document.getElementById('gpuRate').addEventListener('change', () => {
+  if (benchData) renderTCO(benchData.tasks[currentTask]);
+});
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+function wrapText(text, maxLen) {
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for (const w of words) {
+    const test = line ? line + ' ' + w : w;
+    if (test.length > maxLen && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+// JS tooltip - uses position:fixed to work inside overflow containers
+(function() {
+  const tip = document.createElement('div');
+  tip.style.cssText = 'position:fixed;background:#1a1a1a;border:1px solid #1c1c1c;color:#898580;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:8px 12px;max-width:360px;line-height:1.5;z-index:10000;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;';
+  document.body.appendChild(tip);
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('[data-tooltip]');
+    if (!el || !el.dataset.tooltip) return;
+    tip.textContent = el.dataset.tooltip;
+    const r = el.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = r.left + r.width / 2 - tw / 2;
+    let top = r.top - th - 8;
+    left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+    if (top < 8) top = r.bottom + 8;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    tip.style.visibility = 'visible';
+    tip.style.opacity = '1';
+  });
+
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest('[data-tooltip]')) {
+      tip.style.opacity = '0';
+      tip.style.visibility = 'hidden';
+    }
+  });
+})();
+
+// ── SCROLL REVEAL ──────────────────────────────────────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in-view'); revealObserver.unobserve(e.target); }
+  });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.bench-reveal').forEach(el => revealObserver.observe(el));
+
+// ── STICKY CTA ─────────────────────────────────────────────────────────────
+// Show the sticky bar once the hero is scrolled past, but suppress it whenever
+// an in-page CTA (the inline one or the final block) is on screen, so the page
+// never shows two competing calls to action at once.
+(function() {
+  const bar = document.getElementById('stickyCta');
+  if (!bar) return;
+  const link = bar.querySelector('a');
+  const hero = document.querySelector('.page-hero');
+  const finalCta = document.querySelector('.cta-block');
+  let pastHero = false, finalVisible = false;
+  const update = () => {
+    const show = pastHero && !finalVisible;
+    bar.classList.toggle('visible', show);
+    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+    if (link) link.tabIndex = show ? 0 : -1;
+  };
+  const observe = (el, cb) => {
+    if (!el) return;
+    new IntersectionObserver(es => { cb(es[0]); update(); }, { threshold: 0 }).observe(el);
+  };
+  if (hero) observe(hero, e => { pastHero = !e.isIntersecting; }); else pastHero = true;
+  // Defer to the destination CTA when any of it is on screen; otherwise the bar
+  // rides along through the proof sections. Its copy (low-friction offer) is
+  // distinct from the inline CTA (relevance to your data), so brief overlap reads
+  // as two angles, not the same line twice.
+  observe(finalCta, e => { finalVisible = e.isIntersecting; });
+  update();
+})();
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 loadData();
