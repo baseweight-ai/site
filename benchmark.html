@@ -171,6 +171,7 @@ body::after {
 .bench-section-num::after { content: ' /'; color: var(--text-muted); }
 
 .cell-metric .metric-val { display: block; }
+.cell-metric .metric-ci { display: block; font-size: 10px; color: var(--text-muted); font-variant-numeric: tabular-nums; margin-top: 2px; letter-spacing: 0.01em; }
 .cell-metric .metric-bar { display: block; width: 88px; height: 3px; margin-top: 6px; background: rgba(255,255,255,0.06); }
 .cell-metric .metric-bar i { display: block; height: 100%; }
 .leaderboard-table tr.is-winner td { background: rgba(220,184,117,0.07); }
@@ -208,6 +209,35 @@ body::after {
 /* TCO SUMMARY LINE */
 .tco-summary { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
 .tco-summary strong { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* REPRODUCE — per-row disclosure */
+.repro-list-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin: 28px 0 10px; }
+.repro-list { display: flex; flex-direction: column; gap: 8px; }
+.repro-item { border: 1px solid var(--border); background: var(--bg-card); }
+.repro-item > summary { cursor: pointer; list-style: none; padding: 12px 16px; font-size: 13px; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
+.repro-item > summary::-webkit-details-marker { display: none; }
+.repro-item > summary::before { content: '\25B8'; color: var(--accent); font-size: 11px; transition: transform 0.2s; display: inline-block; flex-shrink: 0; }
+.repro-item[open] > summary::before { transform: rotate(90deg); }
+.repro-item > summary:hover { background: var(--bg-card-hover); }
+.repro-sum-metric { font-family: var(--font-mono); font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; margin-left: auto; }
+.repro-panel { padding: 2px 16px 14px; border-top: 1px solid var(--border); }
+.repro-row-line { display: flex; gap: 14px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; line-height: 1.65; }
+.repro-row-line:last-child { border-bottom: none; }
+.repro-k { flex: 0 0 92px; color: var(--text-muted); text-transform: uppercase; font-size: 10px; letter-spacing: 0.06em; padding-top: 2px; }
+.repro-v { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.repro-v a { color: var(--accent); }
+.repro-v code, .repro-art-t code { font-family: var(--font-mono); color: var(--text-primary); font-size: 11px; }
+.repro-pending { color: var(--text-muted); font-style: italic; }
+
+/* REPRODUCE — global block */
+.repro-block { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; }
+.repro-lead { font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 760px; margin-bottom: 20px; }
+.repro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.repro-art { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; background: var(--bg-card); transition: background 0.15s; }
+.repro-art:hover { background: var(--bg-card-hover); }
+.repro-art-t { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.repro-art-s { font-size: 11px; color: var(--text-muted); }
+.repro-prov { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; line-height: 1.7; }
 
 /* CTA OBJECTION POINTS */
 .cta-points { list-style: none; text-align: left; display: table; margin: 4px auto 32px; max-width: 540px; }
@@ -248,11 +278,11 @@ body::after {
 <section class="page-hero">
   <div class="container">
     <div class="section-label bench-anim" style="animation-delay: 0s;">Benchmark</div>
-    <h1 class="bench-anim" style="animation-delay: 0.07s;">A fine-tuned open model beats the frontier, for a fraction of the per-query cost</h1>
+    <h1 class="bench-anim" style="animation-delay: 0.07s;">A fine-tuned open model beats the frontier, at a fraction of the cost per correct answer</h1>
     <p class="subtitle bench-anim" style="animation-delay: 0.14s;">On focused, repeatable tasks like contract clause extraction and support routing. Every result is reproducible from public code and open weights.</p>
     <div class="hero-proof bench-anim" style="animation-delay: 0.21s;">
       <a href="/methodology">Read the methodology &rarr;</a>
-      <a href="https://github.com/baseweight/baseweight-benchmark" target="_blank" rel="noopener noreferrer">View the code &rarr;</a>
+      <a href="https://github.com/baseweight-ai/benchmark" target="_blank" rel="noopener noreferrer">View the code &rarr;</a>
     </div>
   </div>
 </section>
@@ -291,6 +321,8 @@ body::after {
         <div class="legend-item"><div class="legend-dot" style="background: var(--color-opensource);"></div> Open-source fine-tuned</div>
         <div class="legend-item"><div class="legend-dot" style="background: var(--color-frontier);"></div> Frontier API</div>
       </div>
+      <div class="repro-list-label">Reproduce a row — expand any model for its recipe, training health, statistics, and artifacts</div>
+      <div class="repro-list" id="reproList"></div>
     </div>
 
     <!-- INLINE CTA -->
@@ -340,6 +372,16 @@ body::after {
           </table>
         </div>
         <p class="tco-summary" id="tcoSummary" style="display:none;"></p>
+      </div>
+    </div>
+
+    <!-- REPRODUCE -->
+    <div class="bench-section bench-reveal" style="padding-top: 48px;">
+      <div class="bench-section-header"><span class="bench-section-num">04</span><h2>Reproduce this</h2></div>
+      <div class="repro-block">
+        <p class="repro-lead">Every number on this page is reproducible from published artifacts — no access to our training code required. Run the released adapter on the eval data to reproduce a result, or recompute the scores directly from the raw prediction logs.</p>
+        <div class="repro-grid" id="reproArtifacts"></div>
+        <p class="repro-prov" id="reproProvenance"></p>
       </div>
     </div>
 
@@ -407,17 +449,21 @@ const METRIC_DESCRIPTIONS = {
   'Pass@1': 'Fraction of generated programs that pass all test cases on the first attempt.',
 };
 
+// SWD declutter: the leaderboard already reports accuracy, so this chart is about
+// the *failure* composition. Non-failures are pushed to neutral grey; failures share
+// a single warm ramp, with the brightest red reserved for hallucination (the most
+// damaging mode) and a mid red for missed extractions. Replaces a 6-hue rainbow that
+// gave every category equal visual weight.
 const ERROR_COLORS = {
-  correct: '#4ade80', pass: '#4ade80',
-  not_applicable: '#6ee7b7',
-  partial: '#facc15',
-  wrong_class: '#f87171', logic_error: '#f87171',
-  format_violation: '#fb923c',
-  missed: '#f97316',
+  correct: '#3f3f46', pass: '#3f3f46',
+  not_applicable: '#52525b',
+  partial: '#6b7280',
+  wrong_class: '#7c2d12', logic_error: '#7c2d12',
+  format_violation: '#7c2d12', syntax_error: '#7c2d12',
+  runtime_error: '#7c2d12', refusal: '#7c2d12',
+  incomplete: '#7c2d12', empty: '#7c2d12',
+  missed: '#dc2626',
   hallucinated: '#ef4444',
-  runtime_error: '#e879f9', syntax_error: '#a855f7',
-  refusal: '#c084fc',
-  empty: '#555', incomplete: '#555',
 };
 
 const ERROR_DESCRIPTIONS = {
@@ -454,6 +500,24 @@ const GPU_HOURLY = 0.44;
 const SELF_HOST_ANNUAL = GPU_HOURLY * 24 * 365; // ~3,854
 const QUERIES_PER_GPU_DAY = 500000; // ~6 queries/sec; conservative for an 8B model on one A40 with vLLM continuous batching
 
+// ── REPRODUCIBILITY ARTIFACTS ────────────────────────────────────────────────
+// No-code reproduction targets. Adapter & prediction repos are published by the
+// pipeline's scripts/upload_artifacts.py with deterministic repo ids, so the links
+// can be constructed here. Flip ARTIFACTS_LIVE to true once that upload has run;
+// until then artifact links carry a "publishing" marker.
+const ARTIFACTS_LIVE = true;
+const REPRO = {
+  hfOrg:        'baseweight-ai',
+  baseModel:    { label: 'Qwen/Qwen3-8B', url: 'https://huggingface.co/Qwen/Qwen3-8B', revision: 'b968826d9c46dd6066d109eabc6255188de91218' },
+  adaptersColl: 'https://huggingface.co/collections/baseweight-ai/baseweight-benchmark-adapters-6a1613a5bee5213ab5e44936',
+  predictions:  'https://huggingface.co/datasets/baseweight-ai/baseweight-benchmark-predictions',
+  code:         'https://github.com/baseweight-ai/benchmark',
+  promptsBase:  'https://github.com/baseweight-ai/benchmark/blob/main/prompts/',
+  envLock:      'https://github.com/baseweight-ai/benchmark/blob/main/environment.lock.yml',
+};
+function adapterUrl(modelId, taskId) { return 'https://huggingface.co/' + REPRO.hfOrg + '/' + modelId + '-' + taskId + '-lora'; }
+function promptsUrl(taskId) { return REPRO.promptsBase + taskId + '.json'; }
+
 // ── STATE ──────────────────────────────────────────────────────────────────
 let benchData = null;
 let currentTask = 'cuad';
@@ -477,10 +541,11 @@ async function loadData() {
         condition_label: COND_LABELS[r.condition] || r.condition,
       });
     });
-    benchData = { tasks };
+    benchData = { tasks, meta: { generated_at: raw.generated_at, hardware: raw.hardware, pricing: raw.pricing_provenance }, baselines: raw.task_baselines || {}, manifest: raw.manifest || {} };
     buildTabs();
     selectTask(currentTask);
     renderKeyResult();
+    renderProvenance();
   } catch(e) {
     console.error('Failed to load benchmark data', e);
   }
@@ -519,10 +584,14 @@ function selectTask(taskId) {
   const metricLabelEl = document.getElementById('metricColLabel');
   metricLabelEl.textContent = 'Quality (' + task.metric_label + ')';
   const metricTh = metricLabelEl.closest('th');
-  if (metricTh && METRIC_DESCRIPTIONS[task.metric_label]) metricTh.dataset.tooltip = METRIC_DESCRIPTIONS[task.metric_label];
+  if (metricTh) {
+    const base = METRIC_DESCRIPTIONS[task.metric_label] || 'Primary quality metric for this task. Higher is better.';
+    metricTh.dataset.tooltip = base + ' Values are the mean across seeds; brackets show the 95% confidence interval.';
+  }
   renderLeaderboard(task);
   renderErrors(task);
   renderTCO(task);
+  renderRepro(task, taskId);
   renumberSections();
 }
 
@@ -538,32 +607,177 @@ function renumberSections() {
   });
 }
 
-// Data-derived headline result. Counts, per displayed task, whether the best
-// open-source quality matches or beats the best frontier quality. No fixed
-// numbers are hard-coded, so the line stays honest if the data changes.
+// Data-derived headline. For each displayed task, compares the fine-tuned (LoRA)
+// open model against the best frontier API result for that task, and reports the
+// accuracy gain and the cost-per-correct ratio against that same baseline. Every
+// figure is derived from the rows shown in the table below — nothing is hard-coded
+// or pulled from tasks the page doesn't display.
 function renderKeyResult() {
   const el = document.getElementById('benchKeyResult');
   if (!el || !benchData) return;
-  const bestMetric = (results, fam) => {
-    const vals = results.filter(r => r.model_family === fam && r.metric_value != null).map(r => r.metric_value);
-    return vals.length ? Math.max(...vals) : null;
-  };
-  let wins = 0, total = 0;
+  const fmtRatio = x => x >= 10 ? String(Math.round(x)) : x.toFixed(1);
+  const parts = [];
+  let n = 0, allWin = true;
   TASKS.forEach(t => {
     const task = benchData.tasks[t.id];
     if (!task) return;
-    const oss = bestMetric(task.results, 'open-source');
-    const api = bestMetric(task.results, 'frontier');
-    if (oss == null || api == null) return;
-    total++;
-    if (oss >= api) wins++;
+    const fine = task.results
+      .filter(r => r.model_family === 'open-source' && /^LoRA/.test(r.condition || '') && r.metric_value != null)
+      .sort((a, b) => b.metric_value - a.metric_value)[0];
+    const api = task.results
+      .filter(r => r.model_family === 'frontier' && r.metric_value != null)
+      .sort((a, b) => b.metric_value - a.metric_value)[0];
+    if (!fine || !api) return;
+    n++;
+    const gainPp = (fine.metric_value - api.metric_value) * 100;
+    if (gainPp <= 0) allWin = false;
+    let cost = '';
+    if (fine.cost_per_1k_correct > 0 && api.cost_per_1k_correct != null) {
+      cost = ' (' + fmtRatio(api.cost_per_1k_correct / fine.cost_per_1k_correct) + '× cheaper per correct answer)';
+    }
+    parts.push((gainPp >= 0 ? '+' : '') + gainPp.toFixed(1) + ' pp on ' + t.name.toLowerCase() + cost);
   });
-  if (total === 0) { el.style.display = 'none'; return; }
-  const lead = (wins === total)
-    ? (total === 2 ? 'Both published tasks: ' : 'All ' + total + ' published tasks: ')
-    : 'On ' + wins + ' of ' + total + ' published tasks: ';
-  el.textContent = lead + 'the fine-tuned open model matches or beats the frontier, for a fraction of the cost per query.';
+  if (n === 0) { el.style.display = 'none'; return; }
+  const lead = allWin
+    ? (n === 2 ? 'On both published tasks, a fine-tuned open model beats the frontier API — '
+               : 'On all ' + n + ' published tasks, a fine-tuned open model beats the frontier API — ')
+    : 'Fine-tuned open model vs the frontier API — ';
+  el.textContent = lead + parts.join('; ') + '.';
   el.style.display = '';
+}
+
+// ── REPRODUCE (per-row, no-code disclosure) ─────────────────────────────────
+function renderRepro(task, taskId) {
+  const host = document.getElementById('reproList');
+  if (!host) return;
+  const base = benchData.baselines ? benchData.baselines[taskId] : null;
+  const rows = [...task.results].sort((a, b) => (b.metric_value || 0) - (a.metric_value || 0));
+  host.innerHTML = rows.map(r => reproItem(r, taskId, task.metric_label, base)).join('');
+}
+
+function reproLine(label, html) {
+  return '<div class="repro-row-line"><span class="repro-k">' + label + '</span><span class="repro-v">' + html + '</span></div>';
+}
+
+function reproArtifactLink(url, label) {
+  const pend = ARTIFACTS_LIVE ? '' : ' <span class="repro-pending">· publishing</span>';
+  const title = ARTIFACTS_LIVE ? '' : ' title="Publishing — link goes live once artifacts are uploaded"';
+  return '<a href="' + url + '" target="_blank" rel="noopener noreferrer"' + title + '>' + label + pend + '</a>';
+}
+
+function reproItem(r, taskId, metricLabel, base) {
+  const pct = v => (v * 100).toFixed(1) + '%';
+  const isLoRA = r.model_family === 'open-source' && /^LoRA/.test(r.condition || '');
+  const hp = r.hyperparams, td = r.training_diagnostics;
+  const mf = benchData.manifest || {};
+  const mt = (mf.tasks || {})[taskId];
+  const ma = (mf.adapters || {})[r.model_id + '/' + taskId];
+  const lines = [];
+
+  let result = (r.metric_value != null ? r.metric_value.toFixed(3) : '—');
+  if (r.metric_ci_lo != null && r.metric_ci_hi != null) result += '  95% CI ' + r.metric_ci_lo.toFixed(3) + '–' + r.metric_ci_hi.toFixed(3);
+  if (r.n_seeds) result += '  (' + r.n_seeds + ' seeds × ' + (r.n_predictions != null ? r.n_predictions.toLocaleString() : '?') + ' preds)';
+  lines.push(reproLine(metricLabel, result));
+
+  if (base) lines.push(reproLine('Is it real?',
+    'random ' + pct(base.random_chance) + ' · majority ' + pct(base.majority_class_accuracy) +
+    ' · min. detectable effect ' + base.min_detectable_effect_pp + ' pp · ' + base.n_test + ' items / ' + base.n_classes + ' classes'));
+
+  if (mt && mt.dataset) lines.push(reproLine('Data', '<code>' + mt.dataset + '</code>' +
+    (mt.dataset_revision ? ' @ <code>' + mt.dataset_revision + '</code>' : ' <span class="repro-pending">(revision unpinned)</span>')));
+
+  if (r.decoding_params) {
+    const dp = r.decoding_params;
+    const decParts = [];
+    if (dp.strategy) decParts.push(dp.strategy);
+    if (dp.temperature != null) decParts.push('temperature ' + dp.temperature);
+    if (dp.max_output_tokens != null) decParts.push('max ' + dp.max_output_tokens + ' tokens');
+    lines.push(reproLine('Decoding', decParts.join(' · ')));
+  }
+
+  if (hp) {
+    const eff = (hp.per_device_train_batch_size && hp.gradient_accumulation_steps) ? ' (eff. ' + (hp.per_device_train_batch_size * hp.gradient_accumulation_steps) + ')' : '';
+    lines.push(reproLine('Recipe',
+      'LoRA r=' + hp.lora_rank + ' α=' + hp.lora_alpha + ' · lr ' + hp.learning_rate + ' · ' + hp.optim +
+      ' · ' + hp.lr_scheduler_type + '(' + hp.warmup_ratio + ') · wd ' + hp.weight_decay +
+      ' · batch ' + hp.per_device_train_batch_size + '×' + hp.gradient_accumulation_steps + eff +
+      (r.n_train != null ? ' · ' + r.n_train.toLocaleString() + ' train' : '') +
+      (r.compute_dtype ? ' · ' + r.compute_dtype : '')));
+  }
+
+  if (td) {
+    const ok = [];
+    ok.push(td.converged ? 'converged ✓' : 'not converged ✗');
+    if (td.loss_improvement_pct != null) ok.push('loss ↓ ' + td.loss_improvement_pct + '%');
+    ok.push(td.overfitting_detected ? 'overfit ⚠' : 'no overfit');
+    ok.push(td.diverged ? 'diverged ⚠' : 'no divergence');
+    if (Array.isArray(td.anomalies)) ok.push(td.anomalies.length + ' anomalies');
+    lines.push(reproLine('Training', ok.join(' · ')));
+  }
+
+  if (r.training_time_min != null || r.gpu_hours != null) {
+    const b = [];
+    if (r.training_time_min != null) b.push(r.training_time_min + ' min');
+    if (r.gpu_hours != null) b.push(r.gpu_hours.toFixed(2) + ' GPU-hr');
+    if (r.peak_gpu_mem_mb != null) b.push((r.peak_gpu_mem_mb / 1024).toFixed(1) + ' GB peak');
+    if (r.training_cost != null) b.push('$' + r.training_cost.toFixed(2));
+    if (r.gpu_model) b.push(r.gpu_model.replace('NVIDIA GeForce ', ''));
+    lines.push(reproLine('Train cost', b.join(' · ')));
+  }
+
+  const cost = [];
+  if (r.cost_per_query != null) cost.push('$' + r.cost_per_query.toPrecision(2) + '/query');
+  if (r.cost_per_1k_correct != null) cost.push('$' + r.cost_per_1k_correct.toFixed(4) + '/1k correct');
+  if (cost.length) lines.push(reproLine('Serve cost', cost.join(' · ')));
+
+  const verifyParts = [];
+  if (ma && ma.adapter_sha256) verifyParts.push('adapter sha256 <code>' + ma.adapter_sha256.slice(0, 16) + '…</code>');
+  if (r.training_input_hash) verifyParts.push('train-split hash <code>' + r.training_input_hash.slice(0, 16) + '</code>');
+  if (verifyParts.length) lines.push(reproLine('Verify', verifyParts.join(' · ') + ' · or recompute scores from the raw predictions'));
+
+  if (r.pipeline_commit) {
+    const commitUrl = REPRO.code + '/commit/' + r.pipeline_commit;
+    lines.push(reproLine('Protocol', 'pipeline locked at <a href="' + commitUrl + '" target="_blank" rel="noopener noreferrer"><code>' + r.pipeline_commit + '</code></a> before training — eval config and prompts committed prior to any training run'));
+  }
+
+  const arts = [];
+  if (isLoRA) arts.push(reproArtifactLink(adapterUrl(r.model_id, taskId), 'adapter'));
+  if (r.model_family === 'open-source') arts.push('<a href="' + REPRO.baseModel.url + '" target="_blank" rel="noopener noreferrer">base ' + REPRO.baseModel.label + '</a>@<code>' + REPRO.baseModel.revision.slice(0, 10) + '</code>');
+  else arts.push('API <code>' + r.model_id + '</code>');
+  arts.push('<a href="' + promptsUrl(taskId) + '" target="_blank" rel="noopener noreferrer">prompts</a>');
+  arts.push(reproArtifactLink(REPRO.predictions, 'raw predictions'));
+  lines.push(reproLine('Artifacts', arts.join(' &nbsp;·&nbsp; ')));
+
+  const summaryMetric = (r.metric_value != null) ? '<span class="repro-sum-metric">' + r.metric_value.toFixed(3) + '</span>' : '';
+  return '<details class="repro-item"><summary><span>' + r.model_label + ' · ' + r.condition_label + '</span>' + summaryMetric + '</summary><div class="repro-panel">' + lines.join('') + '</div></details>';
+}
+
+function renderProvenance() {
+  const m = benchData.meta || {};
+  const grid = document.getElementById('reproArtifacts');
+  if (grid) {
+    const art = (t, s, url, pendingable) => {
+      const pend = (pendingable && !ARTIFACTS_LIVE) ? ' <span class="repro-pending">· publishing</span>' : '';
+      return '<a class="repro-art" href="' + url + '" target="_blank" rel="noopener noreferrer"><span class="repro-art-t">' + t + pend + '</span><span class="repro-art-s">' + s + '</span></a>';
+    };
+    grid.innerHTML = [
+      art('Fine-tuned adapters', 'one LoRA adapter per task', REPRO.adaptersColl, true),
+      art('Base model', REPRO.baseModel.label + ' @ ' + REPRO.baseModel.revision.slice(0, 10), REPRO.baseModel.url, false),
+      art('Raw predictions', 'every generation, per seed', REPRO.predictions, true),
+      art('Prompts & few-shot', 'exact templates', REPRO.promptsBase.replace(/\/$/, ''), false),
+      art('Environment', 'conda lock file', REPRO.envLock, false),
+      art('Pipeline code', 'full source', REPRO.code, false),
+    ].join('');
+  }
+  const prov = document.getElementById('reproProvenance');
+  if (prov) {
+    const bits = [];
+    if (m.generated_at) bits.push('Snapshot ' + m.generated_at.replace('T', ' ').replace(/\..*/, ' UTC'));
+    const gpus = m.hardware && m.hardware.local_gpus_observed;
+    if (gpus && gpus.length) bits.push('Hardware ' + gpus.join(', '));
+    if (m.pricing && m.pricing.gpu_hourly_rate_used != null) bits.push('Pricing $' + m.pricing.gpu_hourly_rate_used + '/GPU-hr (' + m.pricing.gpu_hourly_rate_source + ')');
+    prov.textContent = bits.join('   ·   ');
+  }
 }
 
 // ── LEADERBOARD ────────────────────────────────────────────────────────────
@@ -593,7 +807,10 @@ function renderLeaderboard(task) {
     if (r.metric_value !== null) {
       const pct = maxMetric > 0 ? r.metric_value / maxMetric * 100 : 0;
       const fam = FAMILY_COLORS[r.model_family] || '#666';
-      metricCell = `<span class="metric-val">${r.metric_value.toFixed(3)}</span><span class="metric-bar"><i style="width:${pct.toFixed(1)}%;background:${fam};"></i></span>`;
+      const ci = (r.metric_ci_lo != null && r.metric_ci_hi != null)
+        ? `<span class="metric-ci"> 95% CI ${r.metric_ci_lo.toFixed(3)}–${r.metric_ci_hi.toFixed(3)}</span>`
+        : '';
+      metricCell = `<span class="metric-val">${r.metric_value.toFixed(3)}</span>${ci}<span class="metric-bar"><i style="width:${pct.toFixed(1)}%;background:${fam};"></i></span>`;
     } else {
       metricCell = '<span class="cell-null">-</span>';
     }
