@@ -47,10 +47,39 @@
   --color-opensource: #60a5fa;
   --color-frontier: #dcb875;
   --color-apift: #4ade80;
+  /* evolved "instrument" tokens — gold = frontier, blue = open source */
+  --accent-cool: #6aa6ea;
+  --accent-cool-hover: #8fbef0;
+  --grid-line: rgba(232,228,222,0.022);
+  --grid-major: rgba(232,228,222,0.05);
+  --glow-gold: rgba(220,184,117,0.11);
+  --glow-cool: rgba(106,166,234,0.10);
 }
 
 html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-body { font-family: var(--font-mono); font-size: 15px; line-height: 1.75; color: var(--text-primary); background: var(--bg-primary); overflow-x: hidden; }
+body {
+  font-family: var(--font-mono); font-size: 15px; line-height: 1.75;
+  color: var(--text-primary); overflow-x: hidden; position: relative;
+  background:
+    radial-gradient(120% 60% at 82% -10%, var(--glow-cool), transparent 58%),
+    radial-gradient(120% 55% at -8% -4%, var(--glow-gold), transparent 54%),
+    var(--bg-primary);
+  background-attachment: fixed;
+}
+/* engineering grid — the page reads as a measurement surface, fading downward */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(var(--grid-major) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-major) 1px, transparent 1px);
+  background-size: 38px 38px, 38px 38px, 190px 190px, 190px 190px;
+  -webkit-mask-image: radial-gradient(135% 92% at 50% -8%, #000 28%, rgba(0,0,0,0.32) 60%, transparent 86%);
+  mask-image: radial-gradient(135% 92% at 50% -8%, #000 28%, rgba(0,0,0,0.32) 60%, transparent 86%);
+}
+main { position: relative; z-index: 1; }
+footer { position: relative; z-index: 1; }
 ::selection { background: var(--accent); color: var(--bg-primary); }
 a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--accent-hover); }
@@ -65,18 +94,21 @@ body::after {
 
 
 /* PAGE HERO */
-.page-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 48px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-.page-hero::before { content: ''; position: absolute; top: -20%; left: -8%; width: 62%; height: 150%; background: radial-gradient(ellipse at center, rgba(220,184,117,0.10), transparent 70%); pointer-events: none; z-index: 0; }
+.page-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 56px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+.page-hero::before { content: ''; position: absolute; top: -32%; left: -10%; width: 60%; height: 175%; background: radial-gradient(ellipse at center, var(--glow-gold), transparent 66%); pointer-events: none; z-index: 0; }
+.page-hero::after { content: ''; position: absolute; top: -22%; right: -14%; width: 54%; height: 155%; background: radial-gradient(ellipse at center, var(--glow-cool), transparent 70%); pointer-events: none; z-index: 0; }
 .page-hero .container { position: relative; z-index: 1; }
+
 .section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
 .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
 .page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; }
-.page-hero .subtitle { font-size: 14px; color: var(--text-secondary); }
+.page-hero .subtitle { font-size: 15px; color: var(--text-secondary); max-width: 58ch; line-height: 1.8; }
 
 /* ERROR LEGEND */
-.error-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
-.error-legend-item { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
-.error-legend-dot { width: 8px; height: 8px; flex-shrink: 0; display: inline-block; }
+.error-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 9px 24px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+.error-legend-item { display: flex; align-items: flex-start; gap: 9px; font-size: 11.5px; line-height: 1.5; color: var(--text-secondary); }
+.error-legend-dot { width: 9px; height: 9px; flex-shrink: 0; display: inline-block; margin-top: 4px; }
+.error-legend-text b { color: var(--text-primary); font-weight: 600; }
 
 /* TASK SELECTOR */
 .task-selector-wrap { padding: 40px 0 0; }
@@ -93,9 +125,11 @@ body::after {
 .task-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* SECTION HEADERS */
-.bench-section { padding: 48px 0 0; }
-.bench-section-header { margin-bottom: 24px; display: flex; align-items: baseline; gap: 14px; }
-.bench-section-header h2 { font-family: var(--font-display); font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 700; letter-spacing: -0.01em; }
+.bench-section { padding: 56px 0 0; }
+.bench-section-header { margin-bottom: 26px; display: flex; align-items: baseline; gap: 16px; position: relative; }
+.bench-section-header h2 { font-family: var(--font-display); font-size: clamp(1.25rem, 2.4vw, 1.7rem); font-weight: 700; letter-spacing: -0.015em; }
+.bench-section-header .hdr-rule { flex: 1; align-self: center; height: 1px; background: linear-gradient(90deg, var(--border-accent), transparent); transform: scaleX(0); transform-origin: left; transition: transform 0.8s cubic-bezier(0.16,0.84,0.44,1) 0.12s; }
+.bench-section.in-view .bench-section-header .hdr-rule { transform: scaleX(1); }
 
 /* LEADERBOARD TABLE */
 .leaderboard-wrap { overflow-x: auto; }
@@ -170,8 +204,7 @@ body::after {
 .bench-section-num { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--accent); }
 .bench-section-num::after { content: ' /'; color: var(--text-muted); }
 
-.cell-metric .metric-val { display: block; }
-.cell-metric .metric-ci { display: block; font-size: 10px; color: var(--text-muted); font-variant-numeric: tabular-nums; margin-top: 2px; letter-spacing: 0.01em; }
+.cell-metric .metric-val { display: inline-block; }
 .cell-metric .metric-bar { display: block; width: 88px; height: 3px; margin-top: 6px; background: rgba(255,255,255,0.06); }
 .cell-metric .metric-bar i { display: block; height: 100%; }
 .leaderboard-table tr.is-winner td { background: rgba(220,184,117,0.07); }
@@ -192,34 +225,24 @@ body::after {
 }
 
 /* HERO PROOF MARKERS */
-.hero-proof { display: flex; gap: 14px 22px; flex-wrap: wrap; margin-top: 18px; }
-.hero-proof a { font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s; }
-.hero-proof a::before { content: ''; width: 5px; height: 5px; background: var(--accent); flex-shrink: 0; }
-.hero-proof a:hover { color: var(--accent); }
+.hero-proof { display: flex; gap: 14px 28px; flex-wrap: wrap; margin-top: 32px; padding-top: 22px; border-top: 1px solid var(--border); position: relative; }
+.hero-proof::before { content: ''; position: absolute; top: -1px; left: 0; width: 64px; height: 1px; background: var(--accent); }
+.hero-proof a { font-size: 12px; font-weight: 500; letter-spacing: 0.03em; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 9px; transition: color 0.2s, gap 0.2s; }
+.hero-proof a::before { content: ''; width: 6px; height: 6px; background: var(--accent); flex-shrink: 0; transition: transform 0.2s; }
+.hero-proof a:hover { color: var(--text-primary); gap: 13px; }
+.hero-proof a:hover::before { transform: scale(1.5); }
 
 /* KEY RESULT CALLOUT */
-.bench-keyresult { margin: 26px 0 0; padding: 16px 20px; border-left: 2px solid var(--accent); background: rgba(220,184,117,0.05); font-size: 15px; line-height: 1.6; color: var(--text-primary); max-width: 780px; }
+.bench-keyresult { position: relative; margin: 30px 0 0; padding: 20px 22px 20px 26px; background: linear-gradient(90deg, rgba(220,184,117,0.08), rgba(220,184,117,0.015) 58%, transparent); font-size: 15px; line-height: 1.65; color: var(--text-primary); max-width: 840px; overflow: hidden; }
+.bench-keyresult::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--accent-cool), var(--accent)); }
 
 /* INLINE MID-PAGE CTA */
-.inline-cta { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; margin-top: 44px; padding: 18px 24px; border: 1px solid var(--border); background: var(--bg-secondary); }
-.inline-cta-text { font-size: 14px; color: var(--text-secondary); }
-.btn-inline { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 11px 22px; cursor: pointer; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s, transform 0.15s; }
-.btn-inline:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-1px); }
 
 /* TCO SUMMARY LINE */
 .tco-summary { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
 .tco-summary strong { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 
-/* REPRODUCE — per-row disclosure */
-.repro-list-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin: 28px 0 10px; }
-.repro-list { display: flex; flex-direction: column; gap: 8px; }
-.repro-item { border: 1px solid var(--border); background: var(--bg-card); }
-.repro-item > summary { cursor: pointer; list-style: none; padding: 12px 16px; font-size: 13px; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
-.repro-item > summary::-webkit-details-marker { display: none; }
-.repro-item > summary::before { content: '\25B8'; color: var(--accent); font-size: 11px; transition: transform 0.2s; display: inline-block; flex-shrink: 0; }
-.repro-item[open] > summary::before { transform: rotate(90deg); }
-.repro-item > summary:hover { background: var(--bg-card-hover); }
-.repro-sum-metric { font-family: var(--font-mono); font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; margin-left: auto; }
+/* REPRODUCE — per-row panel (expanded inline from a leaderboard row) */
 .repro-panel { padding: 2px 16px 14px; border-top: 1px solid var(--border); }
 .repro-row-line { display: flex; gap: 14px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; line-height: 1.65; }
 .repro-row-line:last-child { border-bottom: none; }
@@ -254,12 +277,89 @@ body::after {
 /* RESPONSIVE */
 @media (max-width: 640px) {
   .cta-block { padding: 40px 24px; }
-  .inline-cta { padding: 18px; }
 }
 @media (max-width: 520px) {
   .sticky-cta { padding: 10px 16px; gap: 12px; }
   .sticky-cta-text { display: none; }
   .sticky-cta-btn { flex: 1; text-align: center; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   INSTRUMENT EVOLUTION — measurement motifs + dual accent
+   (gold = frontier · blue = open source). Layered after the base
+   rules so the visual evolution is easy to read and revert.
+   ════════════════════════════════════════════════════════════════ */
+@keyframes barSweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* INTRO NOTE — a measurement tick down its edge */
+.bench-note { position: relative; padding-left: 18px; }
+.bench-note::before { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 2px; background: linear-gradient(180deg, var(--accent-cool), transparent); }
+
+/* TASK TABS — bolder, with a status dot per tab */
+.task-selector-wrap { padding: 44px 0 0; }
+.task-tab { font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 13px 22px; }
+.task-tab::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 9px; background: var(--text-muted); vertical-align: middle; transition: background 0.2s, transform 0.2s; }
+.task-tab.active::before { background: var(--accent); }
+.task-tab:hover::before { transform: scale(1.5); }
+
+/* SECTION INDEX — larger instrument numeral */
+.bench-section-num { font-size: 13px; font-weight: 700; letter-spacing: 0.2em; }
+
+/* LEADERBOARD — a readout surface with one bold family edge per row */
+.leaderboard-wrap { border: 1px solid var(--border-accent); background: linear-gradient(180deg, rgba(255,255,255,0.014), transparent 38%); }
+.leaderboard-table th { background: rgba(11,11,11,0.72); padding: 12px 16px; }
+.leaderboard-table td { padding: 13px 16px; }
+.leaderboard-table tr.row-opensource td, .leaderboard-table tr.row-frontier td, .leaderboard-table tr.row-apift td { border-left: none; }
+.leaderboard-table tr.row-opensource td:first-child { border-left: 3px solid var(--color-opensource); }
+.leaderboard-table tr.row-frontier td:first-child { border-left: 3px solid var(--color-frontier); }
+.leaderboard-table tr.row-apift td:first-child { border-left: 3px solid var(--color-apift); }
+.leaderboard-table tr.is-winner td { background: linear-gradient(90deg, rgba(220,184,117,0.13), rgba(220,184,117,0.02) 72%); }
+.leaderboard-table tr.is-winner .cell-model { color: var(--accent); }
+.leaderboard-table tr.is-winner .cell-model::after { background: var(--accent); color: var(--bg-primary); border: none; font-weight: 700; padding: 2px 6px; }
+.cell-metric .metric-val { font-size: 14px; }
+.cell-metric .metric-bar { width: 104px; height: 4px; background: rgba(255,255,255,0.05); }
+.cell-metric .metric-bar i { transform-origin: left center; animation: barSweep 0.8s cubic-bezier(0.16,0.84,0.44,1) both; box-shadow: 0 0 9px -1px currentColor; }
+
+/* LEADERBOARD ROWS — every row carries an explicit "Reproduce" expander */
+.lb-row { cursor: pointer; }
+.lb-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.cell-metric .metric-val[data-tooltip] { border-bottom: 1px dotted rgba(232,228,222,0.32); cursor: help; }
+.th-expand { width: 1%; }
+.cell-expand { text-align: right; white-space: nowrap; }
+.lb-expand { display: inline-flex; align-items: center; gap: 7px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-secondary); border: 1px solid var(--border-accent); padding: 5px 11px; transition: color 0.2s, border-color 0.2s, background 0.2s; }
+.lb-chevron { display: inline-block; color: var(--accent); font-size: 9px; transition: transform 0.25s; }
+.lb-row:hover .lb-expand, .lb-row:focus-visible .lb-expand, .lb-row.expanded .lb-expand { color: var(--accent); border-color: rgba(220,184,117,0.55); background: rgba(220,184,117,0.07); }
+.lb-row.expanded .lb-chevron { transform: rotate(180deg); }
+.lb-detail { display: none; }
+.lb-detail.open { display: table-row; }
+.lb-detail > td { padding: 0; border-bottom: 1px solid var(--border-accent); }
+.lb-detail .repro-panel { border-top: none; background: rgba(0,0,0,0.22); padding: 8px 18px 16px; }
+.lb-hint { font-size: 12px; letter-spacing: 0.02em; color: var(--text-secondary); margin: 2px 0 18px; max-width: 760px; line-height: 1.6; }
+.lb-hint b { color: var(--accent); font-weight: 600; }
+
+/* CARDS — chart / calculator / reproduce share an instrument frame + label tab */
+.chart-container, .tco-calculator, .repro-block { position: relative; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border-color: var(--border-accent); }
+.chart-container::before, .tco-calculator::before, .repro-block::before { content: ''; position: absolute; top: -1px; left: 22px; width: 42px; height: 2px; background: var(--accent); }
+
+/* COST CALCULATOR — focus glow + cheapest marker (rows sort ascending) */
+.tco-input:focus, .tco-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.tco-table tbody tr:first-child td { color: var(--text-primary); }
+.tco-table tbody tr:first-child .tco-model::after { content: 'CHEAPEST'; margin-left: 8px; font-size: 9px; letter-spacing: 0.1em; color: var(--accent-cool); border: 1px solid rgba(106,166,234,0.45); padding: 1px 5px; }
+
+/* REPRODUCE — provenance artifact cards */
+.repro-art:hover .repro-art-t { color: var(--accent); }
+
+/* CTAs — sharper, with a lift glow */
+.btn-primary:hover, .sticky-cta-btn:hover { box-shadow: 0 8px 24px -10px var(--accent); }
+.cta-block { position: relative; overflow: hidden; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border-color: var(--border-accent); }
+.cta-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 92% at 50% 0%, var(--glow-gold), transparent 58%); pointer-events: none; }
+.cta-block > * { position: relative; z-index: 1; }
+.cta-block h2 { font-size: clamp(1.55rem, 3.2vw, 2.25rem); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cell-metric .metric-bar i { animation: none; }
+  .bench-section-header .hdr-rule { transition: none; transform: none; }
+  .task-tab::before, .hero-proof a::before, .lb-row .lb-chevron { transition: none; }
 }
 </style>
 <meta name="author" content="Philip Stevens">
@@ -304,7 +404,8 @@ body::after {
 
     <!-- RESULTS -->
     <div class="bench-section bench-reveal">
-      <div class="bench-section-header"><span class="bench-section-num">01</span><h2>Results</h2></div>
+      <div class="bench-section-header"><span class="bench-section-num">01</span><h2>Results</h2><span class="hdr-rule"></span></div>
+      <p class="lb-hint">Every score is fully reproducible — open any row's <b>Reproduce</b> panel for its exact data, hyperparameters, training health, cost, and verification hashes.</p>
       <div class="leaderboard-wrap">
         <table class="leaderboard-table" id="leaderboardTable">
           <thead>
@@ -312,6 +413,7 @@ body::after {
               <th data-col="model_label" data-tooltip="Open-source models are self-hosted and can be fine-tuned; frontier models are accessed through a provider API.">Model</th>
               <th data-col="condition_label" data-tooltip="How the model was set up for this task. Click to sort.">Method</th>
               <th data-col="metric_value" class="sorted" data-tooltip="Primary quality metric for this task. Higher is better."><span id="metricColLabel">Metric</span> <span class="sort-indicator">↓</span></th>
+              <th class="th-expand" aria-label="Reproduction details"></th>
             </tr>
           </thead>
           <tbody id="leaderboardBody"></tbody>
@@ -321,19 +423,11 @@ body::after {
         <div class="legend-item"><div class="legend-dot" style="background: var(--color-opensource);"></div> Open-source fine-tuned</div>
         <div class="legend-item"><div class="legend-dot" style="background: var(--color-frontier);"></div> Frontier API</div>
       </div>
-      <div class="repro-list-label">Reproduce a row — expand any model for its recipe, training health, statistics, and artifacts</div>
-      <div class="repro-list" id="reproList"></div>
-    </div>
-
-    <!-- INLINE CTA -->
-    <div class="inline-cta bench-reveal">
-      <span class="inline-cta-text">Convinced on public data? The real question is whether it holds on yours.</span>
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-inline">Book a free call</a>
     </div>
 
     <!-- ERROR ANALYSIS -->
     <div class="bench-section bench-reveal" id="errorSection" style="padding-top: 48px;">
-      <div class="bench-section-header"><span class="bench-section-num">02</span><h2>Error analysis</h2></div>
+      <div class="bench-section-header"><span class="bench-section-num">02</span><h2>Error analysis</h2><span class="hdr-rule"></span></div>
       <div class="chart-container">
         <div class="chart-canvas-wrap" style="height: 420px;">
           <canvas id="errorChart"></canvas>
@@ -344,7 +438,7 @@ body::after {
 
     <!-- TCO CALCULATOR -->
     <div class="bench-section bench-reveal" style="padding-top: 48px;">
-      <div class="bench-section-header"><span class="bench-section-num">03</span><h2>Cost calculator</h2></div>
+      <div class="bench-section-header"><span class="bench-section-num">03</span><h2>Cost calculator</h2><span class="hdr-rule"></span></div>
       <div class="tco-calculator">
         <div class="tco-input-row">
           <span class="tco-input-label">Daily queries:</span>
@@ -377,7 +471,7 @@ body::after {
 
     <!-- REPRODUCE -->
     <div class="bench-section bench-reveal" style="padding-top: 48px;">
-      <div class="bench-section-header"><span class="bench-section-num">04</span><h2>Reproduce this</h2></div>
+      <div class="bench-section-header"><span class="bench-section-num">04</span><h2>Reproduce this</h2><span class="hdr-rule"></span></div>
       <div class="repro-block">
         <p class="repro-lead">Every number on this page is reproducible from published artifacts — no access to our training code required. Run the released adapter on the eval data to reproduce a result, or recompute the scores directly from the raw prediction logs.</p>
         <div class="repro-grid" id="reproArtifacts"></div>
@@ -388,7 +482,7 @@ body::after {
     <!-- CTA -->
     <div class="cta-block bench-reveal">
       <h2>What do your failure modes actually look like?</h2>
-      <p>You have seen the accuracy and the cost gap on public data. Your contracts, your support messages, your failure modes will produce different numbers. A 30-minute call maps which failure modes to target and whether fine-tuning will close the gap for your workload.</p>
+      <p>You've seen the accuracy and the cost gap on public data. Your contracts, your support messages, your failure modes will produce different numbers. A 30-minute call identifies which failure modes to target and whether fine-tuning will close the gap for your workload.</p>
       <ul class="cta-points">
         <li>Which of your failure modes are worth targeting</li>
         <li>Whether a fine-tuned open model beats your current API on your data</li>
@@ -491,8 +585,6 @@ const ERROR_LABELS = {
   runtime_error: 'Runtime error', syntax_error: 'Syntax error', refusal: 'Refusal',
   incomplete: 'Incomplete', empty: 'Empty response',
 };
-// Error types whose label is self-explanatory; their definition is omitted from the tooltip.
-const OBVIOUS_ERRORS = new Set(['correct', 'pass', 'wrong_class', 'empty', 'refusal']);
 
 const FAMILY_CLASSES = { 'open-source': 'opensource', 'frontier': 'frontier', 'api-finetuned': 'apift' };
 
@@ -588,10 +680,9 @@ function selectTask(taskId) {
     const base = METRIC_DESCRIPTIONS[task.metric_label] || 'Primary quality metric for this task. Higher is better.';
     metricTh.dataset.tooltip = base + ' Values are the mean across seeds; brackets show the 95% confidence interval.';
   }
-  renderLeaderboard(task);
+  renderLeaderboard(task, taskId);
   renderErrors(task);
   renderTCO(task);
-  renderRepro(task, taskId);
   renumberSections();
 }
 
@@ -646,15 +737,7 @@ function renderKeyResult() {
   el.style.display = '';
 }
 
-// ── REPRODUCE (per-row, no-code disclosure) ─────────────────────────────────
-function renderRepro(task, taskId) {
-  const host = document.getElementById('reproList');
-  if (!host) return;
-  const base = benchData.baselines ? benchData.baselines[taskId] : null;
-  const rows = [...task.results].sort((a, b) => (b.metric_value || 0) - (a.metric_value || 0));
-  host.innerHTML = rows.map(r => reproItem(r, taskId, task.metric_label, base)).join('');
-}
-
+// ── REPRODUCE (per-row panel, expanded inline from a leaderboard row) ────────
 function reproLine(label, html) {
   return '<div class="repro-row-line"><span class="repro-k">' + label + '</span><span class="repro-v">' + html + '</span></div>';
 }
@@ -665,7 +748,7 @@ function reproArtifactLink(url, label) {
   return '<a href="' + url + '" target="_blank" rel="noopener noreferrer"' + title + '>' + label + pend + '</a>';
 }
 
-function reproItem(r, taskId, metricLabel, base) {
+function reproPanel(r, taskId, metricLabel, base) {
   const pct = v => (v * 100).toFixed(1) + '%';
   const isLoRA = r.model_family === 'open-source' && /^LoRA/.test(r.condition || '');
   const hp = r.hyperparams, td = r.training_diagnostics;
@@ -674,8 +757,8 @@ function reproItem(r, taskId, metricLabel, base) {
   const ma = (mf.adapters || {})[r.model_id + '/' + taskId];
   const lines = [];
 
-  let result = (r.metric_value != null ? r.metric_value.toFixed(3) : '—');
-  if (r.metric_ci_lo != null && r.metric_ci_hi != null) result += '  95% CI ' + r.metric_ci_lo.toFixed(3) + '–' + r.metric_ci_hi.toFixed(3);
+  let result = (r.metric_value != null ? pct(r.metric_value) : '—');
+  if (r.metric_ci_lo != null && r.metric_ci_hi != null) result += '  95% CI ' + pct(r.metric_ci_lo) + '–' + pct(r.metric_ci_hi);
   if (r.n_seeds) result += '  (' + r.n_seeds + ' seeds × ' + (r.n_predictions != null ? r.n_predictions.toLocaleString() : '?') + ' preds)';
   lines.push(reproLine(metricLabel, result));
 
@@ -748,8 +831,7 @@ function reproItem(r, taskId, metricLabel, base) {
   arts.push(reproArtifactLink(REPRO.predictions, 'raw predictions'));
   lines.push(reproLine('Artifacts', arts.join(' &nbsp;·&nbsp; ')));
 
-  const summaryMetric = (r.metric_value != null) ? '<span class="repro-sum-metric">' + r.metric_value.toFixed(3) + '</span>' : '';
-  return '<details class="repro-item"><summary><span>' + r.model_label + ' · ' + r.condition_label + '</span>' + summaryMetric + '</summary><div class="repro-panel">' + lines.join('') + '</div></details>';
+  return '<div class="repro-panel">' + lines.join('') + '</div>';
 }
 
 function renderProvenance() {
@@ -781,8 +863,9 @@ function renderProvenance() {
 }
 
 // ── LEADERBOARD ────────────────────────────────────────────────────────────
-function renderLeaderboard(task) {
+function renderLeaderboard(task, taskId) {
   const body = document.getElementById('leaderboardBody');
+  const base = benchData.baselines ? benchData.baselines[taskId] : null;
   const results = [...task.results];
 
   // Best score on the primary metric, independent of the current sort column
@@ -798,19 +881,26 @@ function renderLeaderboard(task) {
     return sortDir * (av > bv ? 1 : av < bv ? -1 : 0);
   });
 
+  const fmtPct = v => (v * 100).toFixed(1) + '%';
   body.innerHTML = '';
   results.forEach(r => {
     const tr = document.createElement('tr');
     const isWinner = r.metric_value !== null && r.metric_value === maxMetric;
-    tr.className = 'row-' + (FAMILY_CLASSES[r.model_family] || r.model_family.replaceAll('-', '')) + (isWinner ? ' is-winner' : '');
+    tr.className = 'lb-row row-' + (FAMILY_CLASSES[r.model_family] || r.model_family.replaceAll('-', '')) + (isWinner ? ' is-winner' : '');
+    tr.tabIndex = 0;
+    tr.setAttribute('role', 'button');
+    tr.setAttribute('aria-expanded', 'false');
     let metricCell;
     if (r.metric_value !== null) {
-      const pct = maxMetric > 0 ? r.metric_value / maxMetric * 100 : 0;
+      const barPct = maxMetric > 0 ? r.metric_value / maxMetric * 100 : 0;
       const fam = FAMILY_COLORS[r.model_family] || '#666';
-      const ci = (r.metric_ci_lo != null && r.metric_ci_hi != null)
-        ? `<span class="metric-ci"> 95% CI ${r.metric_ci_lo.toFixed(3)}–${r.metric_ci_hi.toFixed(3)}</span>`
-        : '';
-      metricCell = `<span class="metric-val">${r.metric_value.toFixed(3)}</span>${ci}<span class="metric-bar"><i style="width:${pct.toFixed(1)}%;background:${fam};"></i></span>`;
+      let tip = '';
+      if (r.metric_ci_lo != null && r.metric_ci_hi != null) {
+        tip = '95% CI ' + fmtPct(r.metric_ci_lo) + '–' + fmtPct(r.metric_ci_hi);
+        if (r.n_seeds) tip += ' · ' + r.n_seeds + ' seeds × ' + (r.n_predictions != null ? r.n_predictions.toLocaleString() : '?') + ' preds';
+      }
+      const tipAttr = tip ? ` data-tooltip="${tip}"` : '';
+      metricCell = `<span class="metric-val"${tipAttr}>${fmtPct(r.metric_value)}</span><span class="metric-bar"><i style="width:${barPct.toFixed(1)}%;background:${fam};"></i></span>`;
     } else {
       metricCell = '<span class="cell-null">-</span>';
     }
@@ -819,8 +909,14 @@ function renderLeaderboard(task) {
     tr.innerHTML = `
       <td class="cell-model">${r.model_label}</td>
       <td class="cell-cond">${condHtml}</td>
-      <td class="cell-metric">${metricCell}</td>`;
+      <td class="cell-metric">${metricCell}</td>
+      <td class="cell-expand"><span class="lb-expand">Reproduce <span class="lb-chevron" aria-hidden="true">▾</span></span></td>`;
     body.appendChild(tr);
+
+    const detail = document.createElement('tr');
+    detail.className = 'lb-detail';
+    detail.innerHTML = `<td colspan="4">${reproPanel(r, taskId, task.metric_label, base)}</td>`;
+    body.appendChild(detail);
   });
 }
 
@@ -838,9 +934,32 @@ document.querySelectorAll('.leaderboard-table th[data-col]').forEach(th => {
     th.classList.add('sorted');
     const si = th.querySelector('.sort-indicator');
     if (si) si.textContent = sortDir === -1 ? '↓' : '↑';
-    if (benchData) renderLeaderboard(benchData.tasks[currentTask]);
+    if (benchData) renderLeaderboard(benchData.tasks[currentTask], currentTask);
   });
 });
+
+// Expand a leaderboard row to reveal its reproduction panel (the detail row
+// immediately after it). Delegated so it survives re-renders and re-sorts.
+function toggleReproRow(row) {
+  const detail = row.nextElementSibling;
+  if (!detail || !detail.classList.contains('lb-detail')) return;
+  const open = detail.classList.toggle('open');
+  row.classList.toggle('expanded', open);
+  row.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+(function () {
+  const body = document.getElementById('leaderboardBody');
+  if (!body) return;
+  body.addEventListener('click', e => {
+    const row = e.target.closest('tr.lb-row');
+    if (row) toggleReproRow(row);
+  });
+  body.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const row = e.target.closest('tr.lb-row');
+    if (row) { e.preventDefault(); toggleReproRow(row); }
+  });
+})();
 
 // ── CHART HELPERS ──────────────────────────────────────────────────────────
 function resetChart(id, empty) {
@@ -901,20 +1020,13 @@ function renderErrors(task) {
           callbacks: {
             // Model/condition is already on the row, so drop the title.
             title: () => '',
-            label: ctx => (ERROR_LABELS[ctx.dataset.errorKey] || ctx.dataset.label) + ': ' + ctx.raw.toFixed(1) + '%',
-            afterLabel: ctx => {
-              const key = ctx.dataset.errorKey;
-              if (OBVIOUS_ERRORS.has(key)) return '';
-              const desc = ERROR_DESCRIPTIONS[key];
-              if (!desc) return '';
-              return wrapText(desc, 46).map(l => '  ' + l);
-            }
+            label: ctx => (ERROR_LABELS[ctx.dataset.errorKey] || ctx.dataset.label) + ': ' + ctx.raw.toFixed(1) + '%'
           }
         }
       },
       scales: {
-        x: { stacked: true, min: 0, max: 100, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#555', font: { family: 'IBM Plex Mono', size: 11 }, callback: v => v + '%' } },
-        y: { stacked: true, grid: { display: false }, ticks: { color: '#898580', font: { family: 'IBM Plex Mono', size: 11 } } }
+        x: { stacked: true, min: 0, max: 100, grid: { color: 'rgba(220,184,117,0.055)' }, border: { color: 'rgba(220,184,117,0.18)' }, ticks: { color: '#6f6a64', font: { family: 'IBM Plex Mono', size: 11 }, callback: v => v + '%' } },
+        y: { stacked: true, grid: { display: false }, border: { color: 'rgba(220,184,117,0.18)' }, ticks: { color: '#a8a39c', font: { family: 'IBM Plex Mono', size: 11 } } }
       }
     }
   });
@@ -922,9 +1034,8 @@ function renderErrors(task) {
   if (legendEl) {
     legendEl.innerHTML = orderedCats.map(cat => {
       const label = ERROR_LABELS[cat] || cat.replace(/_/g, ' ');
-      const desc = OBVIOUS_ERRORS.has(cat) ? '' : (ERROR_DESCRIPTIONS[cat] || '');
-      const labelHtml = desc ? `<span data-tooltip="${desc}">${label}</span>` : `<span>${label}</span>`;
-      return `<span class="error-legend-item"><span class="error-legend-dot" style="background:${ERROR_COLORS[cat] || '#666'};"></span>${labelHtml}</span>`;
+      const desc = ERROR_DESCRIPTIONS[cat] || '';
+      return `<div class="error-legend-item"><span class="error-legend-dot" style="background:${ERROR_COLORS[cat] || '#666'};"></span><span class="error-legend-text"><b>${label}</b>${desc ? ' — ' + desc : ''}</span></div>`;
     }).join('');
   }
 }
@@ -996,24 +1107,10 @@ document.getElementById('gpuRate').addEventListener('change', () => {
   if (benchData) renderTCO(benchData.tasks[currentTask]);
 });
 
-// ── HELPERS ────────────────────────────────────────────────────────────────
-function wrapText(text, maxLen) {
-  const words = text.split(' ');
-  const lines = [];
-  let line = '';
-  for (const w of words) {
-    const test = line ? line + ' ' + w : w;
-    if (test.length > maxLen && line) { lines.push(line); line = w; }
-    else line = test;
-  }
-  if (line) lines.push(line);
-  return lines;
-}
-
 // JS tooltip - uses position:fixed to work inside overflow containers
 (function() {
   const tip = document.createElement('div');
-  tip.style.cssText = 'position:fixed;background:#1a1a1a;border:1px solid #1c1c1c;color:#898580;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:8px 12px;max-width:360px;line-height:1.5;z-index:10000;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;';
+  tip.style.cssText = 'position:fixed;background:#17171a;border:1px solid rgba(220,184,117,0.30);color:#d8d3ca;font-family:"IBM Plex Mono",monospace;font-size:11px;padding:8px 12px;max-width:360px;line-height:1.5;z-index:10000;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;box-shadow:0 10px 30px -8px rgba(0,0,0,0.75);';
   document.body.appendChild(tip);
 
   document.addEventListener('mouseover', e => {

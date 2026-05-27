@@ -77,13 +77,13 @@ test.describe("Support Routing leaderboard", () => {
   });
 
   test("renders a row per model/condition", async ({ page }) => {
-    await expect(page.locator("#leaderboardBody tr")).toHaveCount(5);
+    await expect(page.locator("#leaderboardBody tr.lb-row")).toHaveCount(5);
   });
 
   test("shows both the open and frontier model", async ({ page }) => {
     const body = page.locator("#leaderboardBody");
     await expect(body).toContainText("Qwen3-8B");
-    await expect(body).toContainText("GPT 5.4 Mini");
+    await expect(body).toContainText("GPT-5.4 Mini");
   });
 
   test("shows human-readable condition labels", async ({ page }) => {
@@ -98,7 +98,7 @@ test.describe("Support Routing leaderboard", () => {
   });
 
   test("rows are sorted descending by metric by default", async ({ page }) => {
-    const rows = page.locator("#leaderboardBody tr");
+    const rows = page.locator("#leaderboardBody tr.lb-row");
     const firstMetric = await rows.first().locator("td").nth(2).textContent();
     const secondMetric = await rows.nth(1).locator("td").nth(2).textContent();
     expect(parseFloat(firstMetric!)).toBeGreaterThanOrEqual(parseFloat(secondMetric!));
@@ -114,7 +114,7 @@ test.describe("Support Routing leaderboard", () => {
 test("clause extraction uses Token F1 and lists every condition", async ({ page }) => {
   await page.goto("/benchmark.html");
   await expect(page.locator("#metricColLabel")).toContainText("Token F1");
-  await expect(page.locator("#leaderboardBody tr")).toHaveCount(3);
+  await expect(page.locator("#leaderboardBody tr.lb-row")).toHaveCount(3);
 });
 
 // ── Data fetch failure ──────────────────────────────────────────────────────────

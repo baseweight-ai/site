@@ -289,15 +289,15 @@ body::after {
         <table>
           <thead><tr><th>Task</th><th>Dataset</th><th>What it tests</th><th>Metric</th><th>Test size</th></tr></thead>
           <tbody>
-            <tr><td>Contract clause extraction</td><td>CUAD</td><td>Given a commercial contract, identify whether a specific clause type appears and extract the relevant text, or correctly report its absence. 41 clause categories across 510 contracts.</td><td>Token F1</td><td>1,500 sampled</td></tr>
-            <tr><td>Customer support routing</td><td>Banking77</td><td>Given a short customer message, assign the correct intent label from a closed set of 77 banking-specific categories.</td><td>Weighted F1</td><td>1,500</td></tr>
+            <tr><td>Contract clause extraction</td><td>CUAD</td><td>Given a commercial contract, identify whether a specific clause type appears and extract the relevant text, or correctly report its absence. 41 clause categories across 510 contracts.</td><td>Token F1</td><td>500 questions</td></tr>
+            <tr><td>Customer support routing</td><td>Banking77</td><td>Given a short customer message, assign the correct intent label from a closed set of 77 banking-specific categories.</td><td>Weighted F1</td><td>500</td></tr>
           </tbody>
         </table>
         </div>
 
         <h2 id="models">Models</h2>
         <p><strong>Open-source (QLoRA fine-tuned):</strong> Qwen3-8B (8B parameters, Apache 2.0 licence). Served with vLLM on a single NVIDIA RTX 3090.</p>
-        <p><strong>Frontier API (prompted):</strong> GPT 5.4 Mini, tested zero-shot and 5-shot at standard API pricing. The per-query cost in results reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
+        <p><strong>Frontier API (prompted):</strong> GPT-5.4 Mini, tested zero-shot and 5-shot at standard API pricing. The per-query cost in results reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
 
         <h2 id="conditions">Conditions</h2>
         <div class="table-wrap">
@@ -321,23 +321,53 @@ body::after {
         <p><strong>Support routing (Banking77)</strong> uses: correct and wrong class. As a closed-vocabulary classification task, there are no other failure modes; every prediction maps to a valid label.</p>
 
         <h2 id="training-configuration">Training configuration</h2>
-        <p>All QLoRA fine-tuning uses Unsloth on a single NVIDIA RTX 3090 (24GB).</p>
+        <p>All QLoRA fine-tuning uses Unsloth on a single NVIDIA RTX 3090 (24 GB). Hyperparameters for Banking77 were selected by a 6-trial grid sweep over learning rate &times; LoRA rank, ranked by validation loss only &mdash; no test metrics were examined at selection time. CUAD hyperparameters were transferred from the Banking77 sweep winner, with rank increased from 4 to 8 to accommodate span extraction, and early-stopping patience increased from 1 to 2 to account for the different loss profile of extraction tasks.</p>
+
+        <h3 id="hyperparameters">Hyperparameters</h3>
         <div class="table-wrap">
         <table>
-          <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+          <thead><tr><th>Parameter</th><th>Banking77</th><th>CUAD</th></tr></thead>
           <tbody>
-            <tr><td>Quantization</td><td>4-bit NF4</td></tr>
-            <tr><td>LoRA rank</td><td>8 (CUAD), 4 (Banking77)</td></tr>
-            <tr><td>LoRA alpha</td><td>16 (CUAD), 8 (Banking77)</td></tr>
-            <tr><td>LoRA dropout</td><td>0.05</td></tr>
-            <tr><td>Target modules</td><td>All linear layers</td></tr>
-            <tr><td>Learning rate</td><td>5e-5 (constant after 5% warmup)</td></tr>
-            <tr><td>Optimizer</td><td>AdamW 8-bit</td></tr>
-            <tr><td>Effective batch size</td><td>16</td></tr>
-            <tr><td>Precision</td><td>BF16</td></tr>
-            <tr><td>Seed</td><td>42</td></tr>
-            <tr><td>Epoch schedule</td><td>10 epochs for &le;200 training examples, 5 for 201 to 1000, 3 for &gt;1000</td></tr>
-            <tr><td>Checkpoint selection</td><td>Best validation loss</td></tr>
+            <tr><td>Quantization</td><td colspan="2">4-bit NF4</td></tr>
+            <tr><td>LoRA rank</td><td>4</td><td>8</td></tr>
+            <tr><td>LoRA alpha</td><td>8</td><td>16</td></tr>
+            <tr><td>RSLoRA</td><td colspan="2">Yes</td></tr>
+            <tr><td>LoRA dropout</td><td colspan="2">0.05</td></tr>
+            <tr><td>Target modules</td><td colspan="2">All linear layers</td></tr>
+            <tr><td>Learning rate</td><td colspan="2">5e-5 (constant after 5% warmup)</td></tr>
+            <tr><td>Optimizer</td><td colspan="2">AdamW 8-bit</td></tr>
+            <tr><td>Weight decay</td><td colspan="2">0.01</td></tr>
+            <tr><td>Max gradient norm</td><td colspan="2">1.0</td></tr>
+            <tr><td>Effective batch size</td><td colspan="2">16</td></tr>
+            <tr><td>Per-device batch / accumulation steps</td><td>4 / 4</td><td>2 / 8</td></tr>
+            <tr><td>Max sequence length</td><td>1,024 tokens</td><td>2,560 tokens</td></tr>
+            <tr><td>Precision</td><td colspan="2">BF16</td></tr>
+            <tr><td>Seed</td><td colspan="2">42</td></tr>
+            <tr><td>Max epochs</td><td colspan="2">3 (&gt;1,000 training examples)</td></tr>
+            <tr><td>Early stopping patience</td><td>1 eval</td><td>2 evals</td></tr>
+            <tr><td>Checkpoint selection</td><td colspan="2">Best validation loss</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h3 id="dataset-splits">Dataset splits</h3>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th>Train</th><th>Validation</th><th>Test</th></tr></thead>
+          <tbody>
+            <tr><td>Banking77</td><td>4,996</td><td>256</td><td>500</td></tr>
+            <tr><td>CUAD</td><td>2,998</td><td>400</td><td>500 questions (expanded via sliding-window chunking at inference)</td></tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h3 id="compute-budget">Compute budget</h3>
+        <div class="table-wrap">
+        <table>
+          <thead><tr><th>Task</th><th>GPU</th><th>Training time</th><th>GPU hours</th><th>Cost</th></tr></thead>
+          <tbody>
+            <tr><td>Banking77</td><td>RTX 3090</td><td>84.8 min (early stopped, epoch 1.66 of 3)</td><td>1.41</td><td>$0.69</td></tr>
+            <tr><td>CUAD</td><td>RTX 3090</td><td>132.8 min (early stopped, epoch 1.65 of 3)</td><td>2.21</td><td>$1.08</td></tr>
           </tbody>
         </table>
         </div>
