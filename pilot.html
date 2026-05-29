@@ -3,28 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Model Failure Diagnostic: Baseweight</title>
-<meta name="description" content="2-week failure analysis. Classify what's breaking and which intervention closes the gap. Written report you own. $3–5k fixed scope, no build commitment.">
+<title>Pilot: Baseweight</title>
+<meta name="description" content="Prove a custom open model you'd own matches or beats your current option on your task — on your data, with a reproducible eval you keep. $3–5k fixed scope, no build commitment.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
-<link rel="canonical" href="https://baseweight.co/diagnostic">
+<link rel="canonical" href="https://baseweight.co/pilot">
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <link rel="author" href="/about">
 <meta name="author" content="Philip Stevens">
 <link rel="stylesheet" href="/components.css">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://baseweight.co/diagnostic">
-<meta property="og:title" content="Model Failure Diagnostic: Baseweight">
-<meta property="og:description" content="2-week failure mode analysis. Failure mode classification, prioritized interventions, eval design, and build specification. $3–5k fixed scope, no build commitment.">
+<meta property="og:url" content="https://baseweight.co/pilot">
+<meta property="og:title" content="Pilot: Baseweight">
+<meta property="og:description" content="A go/no-go verdict on whether a custom open model you'd own beats your current option — on your data, with a reproducible eval you keep. $3–5k fixed scope.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Model Failure Diagnostic: Baseweight">
-<meta name="twitter:description" content="2-week failure mode analysis. Failure mode classification, prioritized interventions, eval design, and build specification. $3–5k fixed scope, no build commitment.">
+<meta name="twitter:title" content="Pilot: Baseweight">
+<meta name="twitter:description" content="A go/no-go verdict on whether a custom open model you'd own beats your current option — on your data, with a reproducible eval you keep. $3–5k fixed scope.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -350,6 +350,10 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 
   .diag-hero { padding-top: 120px; }
 }
+
+.diag-list { list-style: none; max-width: 680px; margin-bottom: 24px; }
+.diag-list li { font-size: 14px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 8px; padding-left: 20px; position: relative; }
+.diag-list li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 </style>
 <script type="application/ld+json">
 {
@@ -357,10 +361,10 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://baseweight.co/diagnostic#webpage",
-      "url": "https://baseweight.co/diagnostic",
-      "name": "Model Failure Diagnostic: Baseweight",
-      "description": "A 2-week structured failure analysis: classify what's breaking, why, and which intervention closes the gap. Written report you own outright. $3–5k, no build commitment required.",
+      "@id": "https://baseweight.co/pilot#webpage",
+      "url": "https://baseweight.co/pilot",
+      "name": "Pilot: Baseweight",
+      "description": "Prove a custom open model you'd own matches or beats your current option on your task — on your data, with a reproducible eval you keep. $3–5k fixed scope, no build commitment required.",
       "author": {
         "@type": "Person",
         "name": "Philip Stevens",
@@ -378,8 +382,8 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
     },
     {
       "@type": "Service",
-      "name": "Model Failure Diagnostic",
-      "description": "2-week failure mode analysis. Failure mode classification, prioritized interventions, root cause analysis, eval design with acceptance criteria, and build specification. $3–5k fixed scope.",
+      "name": "Pilot",
+      "description": "A go/no-go verdict on whether a custom open model you'd own beats your current option on your task, plus a reproducible eval harness calibrated to your data, TCO for cost-led cases, and a proof artifact. $3–5k fixed scope.",
       "provider": {
         "@type": "Person",
         "name": "Philip Stevens",
@@ -391,7 +395,7 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
         "lowPrice": "3000",
         "highPrice": "5000",
         "availability": "https://schema.org/InStock",
-        "url": "https://baseweight.co/diagnostic"
+        "url": "https://baseweight.co/pilot"
       }
     }
   ]
@@ -416,14 +420,41 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 <section>
   <div class="container">
     <div class="diag-hero">
-      <div class="section-label">Model Failure Diagnostic</div>
-      <h1>Most teams commit to an intervention before they know what&rsquo;s failing. The diagnostic starts one step earlier.</h1>
-      <p class="diag-price">$3&ndash;5k &nbsp;&middot;&nbsp; fixed scope &nbsp;&middot;&nbsp; 2 weeks</p>
-      <p>Most teams pick an intervention &mdash; fine-tuning, RAG refactor, DPO alignment, and then build evals to measure it. That&rsquo;s backwards. The failure modes in your production data determine which intervention has a chance of closing the gap. The diagnostic maps that sequence before you commit.</p>
-      <p>In two weeks, we analyze your production failures across the full stack, retrieval, weights, eval coverage, and classify which failure modes are systematic. The output is a written report you own outright: failure mode analysis, prioritized interventions, eval design, and build specification, whether you build with us, another team, or in-house.</p>
+      <div class="section-label">Pilot</div>
+      <h1>Before you build, prove an owned model wins on your task &mdash; on your data, with an eval you keep.</h1>
+      <p class="diag-price">$3&ndash;5k &nbsp;&middot;&nbsp; fixed scope &nbsp;&middot;&nbsp; you own the eval</p>
+      <p>The Pilot is our public benchmark, run on a sample of your task and your data: a head-to-head between a custom open model you&rsquo;d own and your current option &mdash; the frontier API, rules, or nothing yet. You get a go/no-go verdict with the reason, and the reproducible eval harness behind it, calibrated to your data and yours to keep.</p>
+      <p>It works whether you&rsquo;re replacing an API that&rsquo;s too costly or too wrong, standing up a task you can&rsquo;t legally send to a frontier API, or building something that has no AI yet. If an owned model won&rsquo;t win, the benchmark says so &mdash; and you still walk away owning the eval that proved it.</p>
       <div class="diag-hero-cta">
-        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call &rarr;</a>
-        <p class="diag-nda">Free 30-minute intro call. No commitment. We work under NDA.</p>
+        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call to start &rarr;</a>
+        <p class="diag-nda">Start with a cheap Scan to confirm fit (below). Free 30-minute intro call. We work under NDA.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== SCAN (cheap first step, above the Pilot) ======== -->
+<section class="diag-section">
+  <div class="container">
+    <div class="diag-section-header">
+      <div class="section-label">Start here &middot; the Scan</div>
+      <h2>A cheap read before you commit to the Pilot.</h2>
+      <p>The Scan is a fast, low-cost signal on a sample of your data &mdash; enough to know whether the Pilot is worth running, before anyone builds a calibrated eval.</p>
+    </div>
+    <div class="diag-body-text">
+      <p>It delivers signal only:</p>
+      <ul class="diag-list">
+        <li>a hidden-failure read on a sample of your data</li>
+        <li>self-host feasibility for your task and your volume</li>
+        <li>a rough cost break-even against your current API</li>
+      </ul>
+      <p>No trained model, no calibrated eval, no deliverable artifact &mdash; that&rsquo;s the Pilot below. The Scan is ICP-gated and a low fixed fee, credited toward the Pilot if you go ahead.</p>
+      <div class="diag-why-callout">
+        <p>We only take a Scan on if it&rsquo;s a fit &mdash; representative data exists or can be captured, and the task has a checkable right answer. Not sure? <a href="/fit-score">Score your task</a> first &mdash; free, seven questions.</p>
+      </div>
+      <div style="margin-top: 32px;">
+        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call to start a Scan &rarr;</a>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">For now the Scan starts with a quick call to scope it. We work under NDA.</p>
       </div>
     </div>
   </div>
@@ -433,15 +464,15 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 <section class="diag-section diag-section-alt">
   <div class="container">
     <div class="diag-section-header">
-      <div class="section-label">Why the diagnostic first</div>
-      <h2>The intervention decision is easy to get wrong without a diagnosis.</h2>
+      <div class="section-label">Why benchmark first</div>
+      <h2>Don&rsquo;t commit to a build you haven&rsquo;t proven.</h2>
     </div>
     <div class="diag-body-text">
-      <p>The failure modes in your production data should determine the intervention, not what you&rsquo;ve tried before or what a vendor recommended. A RAG refactor on a problem in the model weights, or a LoRA adapter for a task that needed better retrieval: both are failures of sequence, not execution.</p>
-      <p>Every AI services company has a specialty. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. The recommendation follows from their default, not your production failures.</p>
-      <p>At $3&ndash;5k, the diagnostic classifies which failure modes are actually present, maps each one to the right intervention, and defines what it will cost, before any build commitment. You go into the execution decision with a written analysis, not a guess made before anyone&rsquo;s seen your data.</p>
+      <p>Plenty of vendors will happily train you a model. What they hand back is a loss curve and a bill &mdash; not proof the result is actually better on your task than what you have now. By the time you can tell, the money&rsquo;s already spent.</p>
+      <p>The Pilot inverts that. For $3&ndash;5k, fixed scope, we run a custom open model head-to-head against your current option on a sample of your real data and give you a go/no-go verdict with the reason. You make the build decision with evidence, not a vendor&rsquo;s default.</p>
+      <p>And the eval harness behind the verdict is yours to keep, whatever you decide next. Build with us, take it to another team, or run it in-house &mdash; you own the thing that proves the win.</p>
       <div class="diag-why-callout">
-        <p>The first mistake is usually the technique. The second is the evals built around it.</p>
+        <p>The expensive mistake isn&rsquo;t the build. It&rsquo;s the build you couldn&rsquo;t prove was better.</p>
       </div>
     </div>
   </div>
@@ -452,34 +483,34 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
   <div class="container">
     <div class="diag-section-header">
       <div class="section-label">What you get</div>
-      <h2>A written report you own outright, regardless of what you do next.</h2>
-      <p>After two weeks, you&rsquo;ll have a clear picture of what&rsquo;s failing, why, and what it will cost to fix it, with enough specificity to act on with us, another team, or in-house.</p>
+      <h2>A verdict you can act on &mdash; and the eval that backs it, yours to keep.</h2>
+      <p>The Pilot is the public benchmark, run on a sample of your task and your data. Whatever you decide next, you walk away owning the eval and the proof.</p>
     </div>
     <div class="diag-deliverables-grid">
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">01</div>
-        <h3>A verdict on what&rsquo;s failing and why</h3>
-        <p>Your production failures classified by failure mode and linked to the interventions most likely to close each one. Prioritized by expected impact. Why the top recommendation fits your specific failure pattern, and why the alternatives were ruled out. A document your team can read, challenge, and act on without us in the room.</p>
+        <h3>A go/no-go verdict, with the reason</h3>
+        <p>Does a custom open model you&rsquo;d own match or beat your current option on your task? A clear yes or no, the margin, and why &mdash; measured head-to-head on a sample of your real data, not a generic leaderboard. If it won&rsquo;t win, you hear that plainly.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">02</div>
-        <h3>Where in the stack the problem lives</h3>
-        <p>A systematic breakdown of where and why your current approach is failing: whether the bottleneck is in retrieval, model weights, pipeline design, or data quality. The diagnosis distinguishes a retrieval problem solvable with chunking or embedding changes from a model-layer problem that requires training signal.</p>
+        <h3>A reproducible eval harness, calibrated to your data</h3>
+        <p>The eval behind the verdict, built from your data and your definition of correct, with acceptance thresholds agreed up front. Reproducible and yours to keep &mdash; so you can re-run it on the next model, catch regressions, and prove the win to whoever needs convincing.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">03</div>
-        <h3>Eval design with defined acceptance thresholds</h3>
-        <p>No eval plan means no way to know if you&rsquo;re done. This deliverable defines it: eval set structure, benchmark approach, acceptance thresholds, agreed before execution starts. You verify the build against it, not against how it feels.</p>
+        <h3>TCO, where cost is the driver</h3>
+        <p>For cost-led cases, the total cost of ownership of an owned model at your volume &mdash; self-hosting, compute, and the break-even against your current per-call API bill. The number that tells you whether owning it pays for itself.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">04</div>
-        <h3>Full cost and timeline before you commit</h3>
-        <p>Cost ranges for your problem type and data volume: training compute, infrastructure requirements, and calendar time per intervention. What it will cost, how long it will take, and what the intervention is designed to address, agreed before any build commitment.</p>
+        <h3>A proof artifact on a sample of your task</h3>
+        <p>The actual thing that produced the result, run on your sample: a fine-tuned adapter or weights with the training recipe, a distilled student model, a trained classifier with label schema and inference code, a retrieval stack, a prompt suite with output schema, validators and few-shot set, or a composed pipeline &mdash; whichever the task calls for.</p>
       </div>
     </div>
     <div style="margin-top: 48px;">
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call &rarr;</a>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">Free 30-minute intro call. No commitment.</p>
+      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call to start &rarr;</a>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">Or <a href="/fit-score" style="color: var(--text-muted);">score your task</a> first &mdash; free, seven questions.</p>
     </div>
   </div>
 </section>
@@ -489,28 +520,28 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
   <div class="container">
     <div class="diag-section-header">
       <div class="section-label">How it works</div>
-      <h2>Two weeks. Three stages. One written report.</h2>
+      <h2>Fixed scope. Three stages. You own the output.</h2>
     </div>
     <div class="diag-steps">
       <div class="diag-step">
         <div class="diag-step-num">01</div>
         <div>
-          <h3>Data and pipeline review</h3>
-          <p>We review your training data, current pipeline architecture, and production failure patterns. We identify what&rsquo;s failing, how often, and under what conditions. This establishes the failure profile before any technique is considered.</p>
+          <h3>Scope and data sample</h3>
+          <p>Under NDA, we agree the one task, how &ldquo;correct&rdquo; is judged, and the acceptance threshold &mdash; before any work starts. You provide a representative sample of your data, or we agree how to capture one. Nothing has to leave your environment if it can&rsquo;t.</p>
         </div>
       </div>
       <div class="diag-step">
         <div class="diag-step-num">02</div>
         <div>
-          <h3>Failure classification and intervention mapping</h3>
-          <p>We map each failure mode to the intervention most likely to close it (retrieval hardening, LoRA/QLoRA, full fine-tune, DPO alignment, compression) and determine where in the stack the fix lives. We document alternatives considered, why they were ruled out, and cost and trade-offs for each recommendation.</p>
+          <h3>Build the eval and run the benchmark</h3>
+          <p>We build the eval harness calibrated to your data, then run a custom open model head-to-head against your current option &mdash; the frontier API, rules, or nothing yet &mdash; on your sample. Same protocol as the public benchmark: reproducible, with the proof artifact that produced the result.</p>
         </div>
       </div>
       <div class="diag-step">
         <div class="diag-step-num">03</div>
         <div>
-          <h3>Written report</h3>
-          <p>A structured document with: technique recommendation, decision rationale, alternatives considered, root cause analysis, evaluation plan with acceptance criteria, compute cost estimates, and build timeline. You own it outright. Take it to your internal team, another vendor, or use it to scope a Baseweight execution engagement, no obligation either way.</p>
+          <h3>Verdict and handover</h3>
+          <p>A go/no-go verdict with the reason and the margin, TCO where cost is the driver, and the eval harness plus proof artifact handed over &mdash; yours outright. Use it to scope a Build with us, take it to another team, or run it in-house. If the answer was no, you still own the eval that says so.</p>
         </div>
       </div>
     </div>
@@ -521,56 +552,50 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 <section class="diag-section">
   <div class="container">
     <div class="diag-section-header">
-      <div class="section-label">Questions about the diagnostic</div>
+      <div class="section-label">Questions about the Pilot</div>
       <h2>Common questions</h2>
     </div>
     <div class="diag-faq">
       <div class="diag-faq-item">
-        <button class="diag-faq-q">How is this different from the free intro call?</button>
+        <button class="diag-faq-q">How is this different from the free fit check or intro call?</button>
         <div class="diag-faq-a">
-          <p>The intro call (30 minutes, free) is a scoping conversation: we assess whether the diagnostic is the right next step and what it would cover for your specific situation. The diagnostic is two weeks of technical work: systematic failure analysis, stack-wide assessment, and a written deliverable. The call comes first; the diagnostic follows if it&rsquo;s the right fit.</p>
+          <p>The fit check (seven questions, free) and the intro call tell you whether an owned model is plausibly worth pursuing. The Pilot proves it: real numbers from a custom open model run head-to-head on a sample of your data, plus the eval that produced them. Fit check first, then the cheap Scan to confirm, then the Pilot settles it.</p>
         </div>
       </div>
       <div class="diag-faq-item">
-        <button class="diag-faq-q">What if the diagnostic says our current approach is fine?</button>
+        <button class="diag-faq-q">What if the benchmark says an owned model won&rsquo;t win?</button>
         <div class="diag-faq-a">
-          <p>We&rsquo;ll say so. If better prompting or a minor RAG adjustment closes the gap, that&rsquo;s the recommendation, even if it means no further engagement. Recommending unnecessary work would undermine the independence the diagnostic is designed to provide.</p>
+          <p>Then it says so, with the numbers and the reason &mdash; and you keep the eval harness either way. That&rsquo;s the point of running it before a build: a $3&ndash;5k no is far cheaper than a six-figure build that quietly underperforms. We&rsquo;d rather tell you to keep your API than sell you a model that loses.</p>
         </div>
       </div>
       <div class="diag-faq-item">
-        <button class="diag-faq-q">Why not run fine-tuning directly through a provider API?</button>
+        <button class="diag-faq-q">We can&rsquo;t send our data to an outside API. Can you still run it?</button>
         <div class="diag-faq-a">
-          <p>The API call is easy. What you get back is a training loss curve, not a verdict on whether you fixed the specific failure modes that were breaking production, or whether you regressed on cases you didn&rsquo;t include in training. You need evals calibrated to your production distribution to answer those questions. Building those is most of what the diagnostic produces.</p>
+          <p>Yes &mdash; that&rsquo;s a common reason to run it. We work under NDA and can operate inside your environment; nothing has to leave your walls if it can&rsquo;t. When compliance or residency rules out a frontier API entirely, the benchmark measures an owned model against whatever you can run today: rules, manual, or nothing yet.</p>
         </div>
       </div>
       <div class="diag-faq-item">
-        <button class="diag-faq-q">We already have an eval platform set up. Why do we need this?</button>
+        <button class="diag-faq-q">There&rsquo;s no AI for this task yet. Does the benchmark still apply?</button>
         <div class="diag-faq-a">
-          <p>Eval platforms measure what you configure, accurately. The assumption baked in: you already know which failure modes to track. If your eval coverage doesn&rsquo;t match your production failure distribution, you get accurate measurements of the wrong things. The diagnostic defines what to measure. Your existing platform can then measure it.</p>
+          <p>Yes. For greenfield tasks there&rsquo;s no API to &ldquo;replace&rdquo; &mdash; the benchmark establishes whether an owned model clears your bar at all, against your current manual or rules-based baseline, and sets the acceptance threshold you&rsquo;ll hold the build to.</p>
         </div>
       </div>
       <div class="diag-faq-item">
-        <button class="diag-faq-q">Do we need to share proprietary data?</button>
+        <button class="diag-faq-q">What exactly do we own at the end?</button>
         <div class="diag-faq-a">
-          <p>We work under NDA and can operate within your infrastructure. For the diagnostic, we need access to representative failure cases and pipeline architecture &mdash; not necessarily your full training set. Data handling requirements are agreed before any access begins.</p>
+          <p>The reproducible eval harness calibrated to your data, the verdict and its numbers, and the proof artifact run on your sample (adapter or weights, classifier, retrieval stack, prompt suite, or pipeline). Yours outright, to re-run, extend, or take elsewhere. No license, no hosted dependency.</p>
         </div>
       </div>
       <div class="diag-faq-item">
-        <button class="diag-faq-q">Can we skip the diagnostic and go straight to a build?</button>
+        <button class="diag-faq-q">Why not just fine-tune through a provider API?</button>
         <div class="diag-faq-a">
-          <p>Yes. But execution without a prior failure analysis is how teams end up retrofitting after a failed attempt. The diagnostic is the faster path to a working build, not a gatekeeping step. If you&rsquo;ve already run a thorough internal diagnosis and know exactly what you need, we can scope execution directly on the intro call.</p>
+          <p>A provider hands back a training loss curve, not proof the result is better on your task &mdash; and the model stays behind their API, on their pricing. The Pilot answers the question that matters (does it actually win on your data?) and leaves you owning both the model and the eval that proves it.</p>
         </div>
       </div>
       <div class="diag-faq-item">
-        <button class="diag-faq-q">What if we engage Baseweight for execution after the diagnostic?</button>
+        <button class="diag-faq-q">Can we skip the Scan and go straight to a Build?</button>
         <div class="diag-faq-a">
-          <p>The diagnostic report becomes the scope document for execution. Execution pricing is defined in the report, so you go into a build decision with full information. The report is yours outright: use it with us, take it to another team, or execute in-house. It was written to be actionable regardless of what comes next.</p>
-        </div>
-      </div>
-      <div class="diag-faq-item">
-        <button class="diag-faq-q">We already tried fine-tuning. It didn&rsquo;t fix the problem. Why would this be different?</button>
-        <div class="diag-faq-a">
-          <p>Because the failure mode you were targeting was never defined. You ran a training job: the provider returned a loss curve, you deployed, the problem was still there. The diagnostic starts a step earlier: classifying which failure modes are actually in your production data before any training code runs. Fine-tuning without that step is common. It&rsquo;s also how teams spend months on the wrong fix.</p>
+          <p>You can, if you already know an owned model wins. But the Scan and Pilot exist so nobody pays for a build that can&rsquo;t be proven out first. The Scan fee is credited toward the Pilot, and the Pilot scopes the Build &mdash; so proving it first doesn&rsquo;t cost you time, it saves it.</p>
         </div>
       </div>
     </div>
@@ -581,10 +606,10 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 <section class="diag-cta">
   <div class="container">
     <div class="section-label" style="justify-content: center;">Get started</div>
-    <h2>If you&rsquo;ve been patching the same problem for two sprints and the gap still isn&rsquo;t closing: that&rsquo;s what the diagnostic is for.</h2>
-    <p>Book an intro call to walk through your failure patterns, where performance is breaking down, and whether the diagnostic is the right next step. 30 minutes. Free. No commitment.</p>
-    <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call &rarr;</a>
-    <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">After you book, we&rsquo;ll send 3 questions so we can focus the 30 minutes on your specific situation.</p>
+    <h2>Prove it on your task before you spend on a build.</h2>
+    <p>Start with a cheap Scan to confirm fit, then the Pilot settles it: a go/no-go verdict on your data, and the eval to back it &mdash; yours to keep either way. Book a 30-minute call to scope it, or score your task first.</p>
+    <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call to start &rarr;</a>
+    <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">Not sure yet? <a href="/fit-score" style="color: var(--text-muted);">Score your task</a> &mdash; free, seven questions, instant verdict.</p>
     <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Prefer email? <a href="mailto:phil@baseweight.co" style="color: var(--text-muted);">phil@baseweight.co</a> &nbsp;&middot;&nbsp; We work under NDA.</p>
     <p style="margin-top: 48px; font-size: 13px;"><a href="/">&larr; Back to home</a></p>
   </div>

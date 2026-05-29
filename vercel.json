@@ -1,5 +1,8 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    { "source": "/diagnostic", "destination": "/pilot", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",

@@ -391,7 +391,7 @@ body::after {
   <div class="container">
 
     <!-- INTRO NOTE -->
-    <p class="bench-note bench-anim" style="animation-delay: 0.28s;">Each task below compares a fine-tuned open model with a frontier API on quality and cost per query. Two published so far; more tasks and models are underway.</p>
+    <p class="bench-note bench-anim" style="animation-delay: 0.28s;">Each task below compares a fine-tuned open model against a frontier API on the two axes that decide production viability: quality on the task, and cost per query at scale. The tasks are narrow and repeatable &mdash; the kind that can run thousands of times a day inside a product &mdash; so the comparison speaks to a concrete question: for this kind of task, does a model you host yourself hold up against a frontier API? Two published so far; more tasks and models are underway.</p>
 
     <!-- KEY RESULT (populated from data on load) -->
     <p class="bench-keyresult" id="benchKeyResult" style="display:none;"></p>
@@ -467,6 +467,7 @@ body::after {
         </div>
         <p class="tco-summary" id="tcoSummary" style="display:none;"></p>
       </div>
+      <p class="bench-note">Cost is only one axis. A self-hosted open model also runs entirely on infrastructure you control: the data never leaves your environment &mdash; decisive when compliance or residency rules out a third-party API &mdash; and there&rsquo;s no per-call vendor dependency, since the weights are yours to run, version, and keep. The calculator prices the cost axis; ownership and compliance move on the same decision.</p>
     </div>
 
     <!-- REPRODUCE -->
@@ -481,15 +482,10 @@ body::after {
 
     <!-- CTA -->
     <div class="cta-block bench-reveal">
-      <h2>What do your failure modes actually look like?</h2>
-      <p>You've seen the accuracy and the cost gap on public data. Your contracts, your support messages, your failure modes will produce different numbers. A 30-minute call identifies which failure modes to target and whether fine-tuning will close the gap for your workload.</p>
-      <ul class="cta-points">
-        <li>Which of your failure modes are worth targeting</li>
-        <li>Whether a fine-tuned open model beats your current API on your data</li>
-        <li>What it takes to run it in production</li>
-      </ul>
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call</a>
-      <p style="font-size:12px; color: var(--text-muted); margin-top: 14px;">30-minute call. No proposal, no pitch.</p>
+      <h2>These are public-data results. Does it hold for your task?</h2>
+      <p>Same question, your data: would a custom open model you own match or beat your current option on the one task you care about? The fit check is the fastest way to find out &mdash; seven questions, an instant verdict, no email required to see it.</p>
+      <a href="/fit-score" class="btn-primary">Score your task &rarr;</a>
+      <p style="font-size:13px; color: var(--text-secondary); margin-top: 16px;">Already know it fits? <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer">Book a free call &rarr;</a></p>
     </div>
 
   </div>
@@ -498,8 +494,9 @@ body::after {
 </main>
 
 <div class="sticky-cta" id="stickyCta" aria-hidden="true">
-  <span class="sticky-cta-text">30-minute call. No proposal, no pitch.</span>
-  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="sticky-cta-btn" tabindex="-1">Book a free call</a>
+  <span class="sticky-cta-text">Does it hold for your task?</span>
+  <a href="/fit-score" class="sticky-cta-btn" tabindex="-1">Score your task</a>
+  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" tabindex="-1" style="font-size:13px; color:var(--text-secondary); white-space:nowrap;">Book a free call</a>
 </div>
 
 <footer></footer>
@@ -1152,7 +1149,7 @@ document.querySelectorAll('.bench-reveal').forEach(el => revealObserver.observe(
 (function() {
   const bar = document.getElementById('stickyCta');
   if (!bar) return;
-  const link = bar.querySelector('a');
+  const links = bar.querySelectorAll('a');
   const hero = document.querySelector('.page-hero');
   const finalCta = document.querySelector('.cta-block');
   let pastHero = false, finalVisible = false;
@@ -1160,7 +1157,7 @@ document.querySelectorAll('.bench-reveal').forEach(el => revealObserver.observe(
     const show = pastHero && !finalVisible;
     bar.classList.toggle('visible', show);
     bar.setAttribute('aria-hidden', show ? 'false' : 'true');
-    if (link) link.tabIndex = show ? 0 : -1;
+    links.forEach(l => { l.tabIndex = show ? 0 : -1; });
   };
   const observe = (el, cb) => {
     if (!el) return;

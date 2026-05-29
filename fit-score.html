@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fit check: should this task run on intelligence you own? | Baseweight</title>
+<meta name="description" content="A free, seven-question fit check. See whether a custom open model you own could match or beat your current option on your task — and what proving it would take. No email required to see your verdict.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/icon.jpg">
+<link rel="canonical" href="https://baseweight.co/fit-score">
+<link rel="preload" href="/images/logo.png" as="image" type="image/png">
+<link rel="author" href="/about">
+<meta name="author" content="Philip Stevens">
+<link rel="stylesheet" href="/components.css">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://baseweight.co/fit-score">
+<meta property="og:title" content="Fit check: should this task run on intelligence you own?">
+<meta property="og:description" content="Seven questions, an instant verdict: would a custom open model you own win on your task? No email required to see it.">
+<meta property="og:image" content="https://baseweight.co/images/featured.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fit check: should this task run on intelligence you own?">
+<meta name="twitter:description" content="Seven questions, an instant verdict: would a custom open model you own win on your task? No email required to see it.">
+<meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #080808;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --border: #1c1c1c;
+  --border-accent: #282828;
+  --text-primary: #e8e4de;
+  --text-secondary: #898580;
+  --text-muted: #555;
+  --accent: #dcb875;
+  --accent-hover: #dbb960;
+  --accent-dim: rgba(201, 168, 76, 0.1);
+  --accent-cool: #6aa6ea;
+  --danger: #c98b8b;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max-width: 1120px;
+  --section-pad: clamp(72px, 10vh, 120px);
+}
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { font-family: var(--font-mono); font-size: 15px; line-height: 1.75; color: var(--text-primary); background: var(--bg-primary); overflow-x: hidden; }
+body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.025; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); background-size: 128px 128px; }
+::selection { background: var(--accent); color: var(--bg-primary); }
+a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--accent-hover); }
+
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; }
+h1 { font-size: clamp(2rem, 4.5vw, 3.2rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
+
+.section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+
+.btn-primary { display: inline-block; background: var(--accent); color: var(--bg-primary); font-family: var(--font-mono); font-size: 14px; font-weight: 600; padding: 16px 36px; letter-spacing: 0.03em; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+.btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-2px); }
+
+/* ======== HERO ======== */
+.fs-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+.fs-hero h1 { max-width: 760px; margin-bottom: 20px; }
+.fs-hero h1 .accent { color: var(--accent); }
+.fs-hero-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.85; max-width: 620px; margin-bottom: 16px; }
+.fs-hero-note { font-size: 13px; color: var(--text-muted); line-height: 1.7; max-width: 620px; }
+
+/* ======== QUIZ ======== */
+.fs-quiz { padding: var(--section-pad) 0; }
+.fs-form { max-width: 720px; }
+.fs-q { padding: 30px 0; border-top: 1px solid var(--border); }
+.fs-q:first-child { border-top: none; padding-top: 0; }
+.fs-q-head { display: flex; gap: 12px; align-items: baseline; margin-bottom: 6px; }
+.fs-q-num { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: rgba(201,168,76,0.5); line-height: 1; }
+.fs-q-label { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.fs-q-req { color: var(--accent); font-weight: 600; }
+.fs-q-help { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin: 0 0 16px 32px; }
+.fs-q-body { margin-left: 32px; }
+@media (max-width: 560px) { .fs-q-help, .fs-q-body { margin-left: 0; } }
+
+.fs-opts { display: flex; flex-direction: column; gap: 10px; }
+.fs-opt { display: flex; gap: 11px; align-items: flex-start; padding: 13px 15px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; font-size: 13.5px; line-height: 1.55; color: var(--text-secondary); transition: border-color 0.2s, background 0.2s; }
+.fs-opt:hover { border-color: var(--border-accent); background: var(--bg-card-hover); }
+.fs-opt input { margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); }
+.fs-opt:has(input:checked) { border-color: var(--accent); background: rgba(201,168,76,0.06); color: var(--text-primary); }
+
+.fs-input, .fs-textarea, .fs-select { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); font-family: var(--font-mono); font-size: 13.5px; padding: 12px 14px; transition: border-color 0.2s, box-shadow 0.2s; }
+.fs-input::placeholder, .fs-textarea::placeholder { color: var(--text-muted); }
+.fs-input:focus, .fs-textarea:focus, .fs-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,168,76,0.18); }
+.fs-textarea { min-height: 84px; resize: vertical; line-height: 1.7; }
+.fs-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23555' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
+.fs-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.fs-row > * { flex: 1 1 180px; min-width: 0; }
+.fs-sublabel { font-size: 12px; color: var(--text-muted); margin: 14px 0 8px; }
+
+.fs-submit-row { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
+.fs-error { color: var(--danger); font-size: 13px; margin-top: 14px; display: none; }
+
+/* ======== RESULT ======== */
+.fs-result { display: none; padding: var(--section-pad) 0; }
+.fs-result-inner { max-width: 680px; }
+.fs-badge { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 6px 12px; border: 1px solid currentColor; margin-bottom: 22px; }
+.fs-badge--candidate { color: var(--accent); }
+.fs-badge--build { color: var(--accent-cool); }
+.fs-badge--notyet { color: var(--text-secondary); }
+.fs-badge--no { color: var(--text-muted); }
+.fs-result h2 { margin-bottom: 18px; }
+.fs-verdict-body { font-size: 15px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 28px; }
+.fs-verdict-body strong { color: var(--text-primary); font-weight: 600; }
+.fs-verdict-body em { color: var(--text-primary); font-style: italic; }
+.fs-checklist { list-style: none; margin: 0 0 28px; }
+.fs-checklist li { font-size: 14px; color: var(--text-secondary); line-height: 1.75; padding-left: 22px; position: relative; margin-bottom: 10px; }
+.fs-checklist li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+.fs-cta-row { margin-bottom: 8px; }
+.fs-cta-sub { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+
+.fs-capture { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); max-width: 560px; }
+.fs-capture h3 { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+.fs-capture p.fs-capture-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.7; }
+.fs-capture-row { display: flex; gap: 12px; }
+.fs-capture-row .fs-input { flex: 1; }
+.fs-checkbox { display: flex; gap: 9px; align-items: flex-start; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin-top: 14px; cursor: pointer; }
+.fs-checkbox input { margin-top: 2px; accent-color: var(--accent); }
+.fs-capture-note { margin-top: 14px; font-size: 11px; color: var(--text-muted); }
+.fs-success { padding: 20px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); }
+.fs-success p { font-size: 14px; color: var(--text-primary); }
+.fs-restart { margin-top: 40px; font-size: 13px; }
+@media (max-width: 560px) { .fs-capture-row { flex-direction: column; } }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://baseweight.co/fit-score#webpage",
+      "url": "https://baseweight.co/fit-score",
+      "name": "Fit check: should this task run on intelligence you own?",
+      "description": "A free, seven-question fit check that returns an instant verdict on whether a custom open model you own could win on your task.",
+      "author": { "@type": "Person", "name": "Philip Stevens", "url": "https://baseweight.co/about" },
+      "inLanguage": "en-US",
+      "isPartOf": { "@type": "WebSite", "@id": "https://baseweight.co/#website", "url": "https://baseweight.co/", "name": "Baseweight" }
+    }
+  ]
+}
+</script>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
+<!-- ======== NAV ======== -->
+<nav id="nav"></nav>
+
+<main id="main-content">
+
+<!-- ======== HERO ======== -->
+<section class="fs-hero">
+  <div class="container">
+    <div class="section-label">Fit check</div>
+    <h1>Should this task run on <span class="accent">intelligence you own?</span></h1>
+    <p class="fs-hero-sub">Seven questions, about three minutes. You get a straight verdict &mdash; candidate, not yet, or honestly-not-us &mdash; with the reasoning. No email required to see it.</p>
+    <p class="fs-hero-note">The <a href="/benchmark">public benchmark</a> shows a small owned model can match or beat a frontier API on a focused task. This tells you whether that&rsquo;s true for <em>your</em> task.</p>
+  </div>
+</section>
+
+<!-- ======== QUIZ ======== -->
+<section class="fs-quiz" id="quiz">
+  <div class="container">
+    <form class="fs-form" id="fsForm" novalidate>
+
+      <!-- Q1 -->
+      <div class="fs-q" id="fsq-q1_task">
+        <div class="fs-q-head"><span class="fs-q-num">1</span><span class="fs-q-label">The task <span class="fs-q-req">*</span></span></div>
+        <p class="fs-q-help">In a sentence or two: what single task would the model do, and where does it sit in your workflow?</p>
+        <div class="fs-q-body">
+          <textarea class="fs-textarea" name="q1_task" placeholder="e.g. Read an incoming support message and route it to one of 40 queues." required></textarea>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="fs-q" id="fsq-q2_correctness">
+        <div class="fs-q-head"><span class="fs-q-num">2</span><span class="fs-q-label">How would you know an answer is right? <span class="fs-q-req">*</span></span></div>
+        <p class="fs-q-help">The most important question. Pick the closest &mdash; it decides whether a win can be proven.</p>
+        <div class="fs-q-body">
+          <div class="fs-opts">
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>It matches a known correct value exactly &mdash; a label, a field, a number.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="rule"><span>It passes a rule or checklist a reviewer could apply.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="human"><span>A person judges each case (two reviewers would mostly agree).</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s subjective, or no one checks today.</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="fs-q" id="fsq-q3_today">
+        <div class="fs-q-head"><span class="fs-q-num">3</span><span class="fs-q-label">What handles this today &mdash; and what does getting it wrong cost? <span class="fs-q-req">*</span></span></div>
+        <p class="fs-q-help">Your baseline, how often it misses, and the stakes.</p>
+        <div class="fs-q-body">
+          <select class="fs-select" name="q3_today" required>
+            <option value="">What runs this task today?</option>
+            <option value="frontier-api">A frontier API</option>
+            <option value="rules">Rules or scripts</option>
+            <option value="manual">A person, manually</option>
+            <option value="nothing">Nothing yet</option>
+          </select>
+          <div class="fs-row" style="margin-top:12px;">
+            <input class="fs-input" type="text" name="q3_error_rate" placeholder="Roughly how often is it wrong? (e.g. 10%)">
+            <input class="fs-input" type="text" name="q3_cost" placeholder="What does one wrong answer cost?">
+          </div>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="fs-q" id="fsq-q4_capture">
+        <div class="fs-q-head"><span class="fs-q-num">4</span><span class="fs-q-label">Data reality <span class="fs-q-req">*</span></span></div>
+        <p class="fs-q-help">Volume and labels are decisive for proving a win on your data.</p>
+        <div class="fs-q-body">
+          <div class="fs-row">
+            <input class="fs-input" type="number" name="q4_examples" min="0" placeholder="Real examples you have (#)">
+            <input class="fs-input" type="number" name="q4_labeled" min="0" placeholder="Of those, how many are labelled (#)">
+          </div>
+          <p class="fs-sublabel">If few are labelled, can you produce or capture more?</p>
+          <select class="fs-select" name="q4_capture" required>
+            <option value="">Can you get more labelled data?</option>
+            <option value="easily">Yes, easily</option>
+            <option value="effort">Yes, with effort</option>
+            <option value="no">No, it&rsquo;s hard to get more</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="fs-q" id="fsq-q5">
+        <div class="fs-q-head"><span class="fs-q-num">5</span><span class="fs-q-label">Why isn&rsquo;t a frontier API the answer?</span></div>
+        <p class="fs-q-help">Mark all that apply, then name the single biggest blocker.</p>
+        <div class="fs-q-body">
+          <div class="fs-opts">
+            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="compliance"><span>Can&rsquo;t send the data out &mdash; compliance, residency, contracts.</span></label>
+            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="cost"><span>Too costly at our volume.</span></label>
+            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="quality"><span>Not accurate enough on our task.</span></label>
+            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="ownership"><span>We&rsquo;d rather own it.</span></label>
+          </div>
+          <p class="fs-sublabel">The dealbreaker:</p>
+          <select class="fs-select" name="q5_dealbreaker">
+            <option value="">&mdash; pick the single biggest blocker &mdash;</option>
+            <option value="compliance">Compliance &mdash; can&rsquo;t send data out</option>
+            <option value="cost">Cost at our scale</option>
+            <option value="quality">Quality on our task</option>
+            <option value="ownership">Ownership</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="fs-q" id="fsq-q6">
+        <div class="fs-q-head"><span class="fs-q-num">6</span><span class="fs-q-label">Scale</span></div>
+        <p class="fs-q-help">Roughly how many of these do you run &mdash; now, and projected? This is the number behind cost and self-hosting economics.</p>
+        <div class="fs-q-body">
+          <div class="fs-row">
+            <input class="fs-input" type="number" name="q6_volume_now" min="0" placeholder="How many now (#)">
+            <select class="fs-select" name="q6_unit">
+              <option value="per day">per day</option>
+              <option value="per month" selected>per month</option>
+            </select>
+            <input class="fs-input" type="number" name="q6_volume_projected" min="0" placeholder="Projected (#)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="fs-q" id="fsq-q7_own">
+        <div class="fs-q-head"><span class="fs-q-num">7</span><span class="fs-q-label">Ownership <span class="fs-q-req">*</span></span></div>
+        <p class="fs-q-help">The qualifying question.</p>
+        <div class="fs-q-body">
+          <div class="fs-opts">
+            <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes &mdash; we want to own and control the model long-term, not depend on a vendor API.</span></label>
+            <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No &mdash; we&rsquo;re happy renting an API for this.</span></label>
+          </div>
+          <p class="fs-sublabel">Who would run and maintain it?</p>
+          <select class="fs-select" name="q7_operate">
+            <option value="">Who would operate it?</option>
+            <option value="team">Our own team</option>
+            <option value="managed">We&rsquo;d want it managed for us</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fs-submit-row">
+        <button type="submit" class="btn-primary">Score my task &rarr;</button>
+        <p class="fs-error" id="fsError">Please answer the starred questions (1, 2, 3, 4, 7) so the verdict is meaningful.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ======== RESULT ======== -->
+<section class="fs-result" id="result" aria-live="polite">
+  <div class="container">
+    <div class="fs-result-inner" id="fsResultTop" tabindex="-1">
+      <div class="fs-badge" id="fsBadge"></div>
+      <h2 id="fsTitle"></h2>
+      <div class="fs-verdict-body" id="fsBody"></div>
+      <div class="fs-cta-row" id="fsCta"></div>
+
+      <!-- Email capture (gated AFTER the verdict; hidden for the "not us" verdict) -->
+      <div class="fs-capture" id="fsCapture">
+        <h3 id="fsCaptureHeading">Want this in writing?</h3>
+        <p class="fs-capture-sub" id="fsCaptureSub">Drop your email and I&rsquo;ll send your verdict, your answers, and the recommended next step. No sequence.</p>
+        <form
+          action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
+          method="post"
+          id="fs_capture_form"
+          target="fs_hidden_iframe"
+          onsubmit="fsCaptureSubmit(event)"
+        >
+          <div class="fs-capture-row">
+            <input class="fs-input" type="email" name="email" placeholder="you@company.com" required autocomplete="email" aria-label="Email address" />
+            <button type="submit" class="btn-primary">Send it to me</button>
+          </div>
+          <label class="fs-checkbox"><input type="checkbox" name="notify" value="yes"> <span>Also send me new public benchmarks as they publish.</span></label>
+          <input type="text" name="company" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" />
+          <input type="hidden" name="k" value="formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn" />
+          <input type="hidden" name="source" value="fit-score" />
+          <input type="hidden" name="verdict" id="fs_field_verdict" value="" />
+          <input type="hidden" name="answers" id="fs_field_answers" value="" />
+          <input type="hidden" name="ua" id="fs_field_ua" />
+        </form>
+        <iframe name="fs_hidden_iframe" title="Form submission target" style="display:none"></iframe>
+        <div id="fs_capture_success" class="fs-success" style="display:none">
+          <p><strong>Sent. I&rsquo;ll be in touch with your full read and the next step.</strong></p>
+        </div>
+        <p class="fs-capture-note">No spam, no sequence. Your answers reach me so I can give you a real read.</p>
+      </div>
+
+      <p class="fs-restart"><a href="#" id="fsRestart">&larr; Start over</a></p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ======== FOOTER ======== -->
+<footer></footer>
+
+<script src="/components.js"></script>
+
+<!-- ======== JS ======== -->
+<script>
+(function () {
+  var CAL = 'https://cal.com/philip-stevens/baseweight-intro';
+  var FORM = document.getElementById('fsForm');
+  var REQUIRED = ['q1_task', 'q2_correctness', 'q3_today', 'q4_capture', 'q7_own'];
+
+  var uaField = document.getElementById('fs_field_ua');
+  if (uaField) uaField.value = navigator.userAgent;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function v(name) {
+    var el = FORM.elements[name];
+    if (!el) return '';
+    var val = el.value == null ? '' : el.value;
+    return typeof val === 'string' ? val.trim() : val;
+  }
+  function calBtn(label) {
+    return '<a href="' + CAL + '" target="_blank" rel="noopener noreferrer" class="btn-primary">' + label + '</a>';
+  }
+
+  function compute() {
+    var own = v('q7_own');                 // own | rent
+    var correctness = v('q2_correctness'); // exact | rule | human | subjective
+    var labeled = parseInt(v('q4_labeled'), 10) || 0;
+    var capture = v('q4_capture');         // easily | effort | no
+    var dataOK = labeled >= 200 || capture === 'easily' || capture === 'effort';
+
+    var verdict;
+    if (own === 'rent') verdict = 'no';
+    else if (correctness === 'subjective') verdict = 'build';
+    else if (dataOK) verdict = 'candidate';
+    else verdict = 'notyet';
+    return verdict;
+  }
+
+  function wedge() {
+    var d = v('q5_dealbreaker');
+    return {
+      compliance: 'not being able to send the data to a third-party API',
+      cost: 'the API bill at your volume',
+      quality: 'a general model that isn’t accurate enough on your task',
+      ownership: 'wanting to own it outright'
+    }[d] || '';
+  }
+  function volumeClause() {
+    var now = v('q6_volume_now');
+    if (!/^\d/.test(now)) return '';
+    return ' At roughly <strong>' + esc(now) + ' ' + esc(v('q6_unit') || 'per month') + '</strong>, the cost and self-hosting maths are worth running too.';
+  }
+
+  function answersBlob(verdict) {
+    var blockers = Array.prototype.slice
+      .call(FORM.querySelectorAll('input[name="q5_blockers"]:checked'))
+      .map(function (c) { return c.value; }).join(', ');
+    return [
+      'Q1 task: ' + v('q1_task'),
+      'Q2 correctness: ' + v('q2_correctness'),
+      'Q3 today: ' + v('q3_today') + ' | error rate: ' + (v('q3_error_rate') || '-') + ' | cost of wrong: ' + (v('q3_cost') || '-'),
+      'Q4 examples: ' + (v('q4_examples') || '-') + ' | labelled: ' + (v('q4_labeled') || '-') + ' | can capture: ' + v('q4_capture'),
+      'Q5 blockers: ' + (blockers || '-') + ' | dealbreaker: ' + (v('q5_dealbreaker') || '-'),
+      'Q6 volume now: ' + (v('q6_volume_now') || '-') + ' ' + (v('q6_unit') || '') + ' | projected: ' + (v('q6_volume_projected') || '-'),
+      'Q7 own: ' + v('q7_own') + ' | operate: ' + (v('q7_operate') || '-'),
+      'VERDICT: ' + verdict
+    ].join('\n');
+  }
+
+  function render(verdict) {
+    var w = wedge();
+    var managed = v('q7_operate') === 'managed';
+    var badge = document.getElementById('fsBadge');
+    var title = document.getElementById('fsTitle');
+    var body = document.getElementById('fsBody');
+    var cta = document.getElementById('fsCta');
+    var capture = document.getElementById('fsCapture');
+    var capHeading = document.getElementById('fsCaptureHeading');
+    var capSub = document.getElementById('fsCaptureSub');
+
+    badge.className = 'fs-badge fs-badge--' + verdict;
+    capture.style.display = '';
+    capHeading.textContent = 'Want this in writing?';
+    capSub.textContent = 'Drop your email and I’ll send your verdict, your answers, and the recommended next step. No sequence.';
+
+    if (verdict === 'candidate') {
+      badge.textContent = 'Candidate → Pilot';
+      title.textContent = 'You’re a candidate.';
+      body.innerHTML = 'Your task has a checkable right answer, so an owned model can be benchmarked head-to-head with your current option <strong>on your data</strong>' +
+        (w ? ', and ' + w + ' is exactly the kind of reason owning beats renting' : '') + '.' + volumeClause() +
+        ' The cheap <strong>Scan</strong> confirms it on a sample before you commit, and it leads into the <a href="/pilot">Pilot</a>' +
+        (managed ? ' — and we can run and maintain it for you afterwards' : '') + '.';
+      cta.innerHTML = calBtn('Book a call to start a Scan &rarr;') +
+        '<p class="fs-cta-sub">The Scan is the cheap first step; its fee is credited toward the Pilot.</p>';
+    } else if (verdict === 'build') {
+      badge.textContent = 'Candidate → Build';
+      title.textContent = 'We can build it — we just can’t prove it the same way.';
+      body.innerHTML = 'You want to own it and the task is real, but because correctness is subjective (no checkable right answer), we can’t <em>prove</em> a win the way the <a href="/benchmark">public benchmark</a> does. We can still build it' +
+        (w ? ', with ' + w + ' as the driver' : '') + ' — we’d scope it on a call rather than a benchmark.';
+      cta.innerHTML = calBtn('Book a call to scope &rarr;');
+    } else if (verdict === 'notyet') {
+      badge.textContent = 'Not yet';
+      title.textContent = 'You’re close — the missing piece is labelled data.';
+      body.innerHTML = 'Your task has a checkable right answer, which is what makes a win provable. What’s missing is enough labelled data to train and measure on, and it sounds hard to capture more right now. Get this in place first:' +
+        '<ul class="fs-checklist" style="margin-top:18px;">' +
+        '<li>A few hundred real examples of the task &mdash; more is better.</li>' +
+        '<li>The correct answer recorded for each; the label is what makes it measurable.</li>' +
+        '<li>A repeatable way to keep capturing them as you go.</li>' +
+        '</ul>Come back when you have it and the Scan will settle it.';
+      cta.innerHTML = '';
+      capHeading.textContent = 'Want the data checklist emailed to you?';
+      capSub.textContent = 'Drop your email and I’ll send the checklist plus your answers, so it’s easy to pick up when the data’s ready.';
+    } else { // no
+      badge.textContent = 'Probably not us';
+      title.textContent = 'Honestly — keep your API.';
+      body.innerHTML = 'You’re happy renting, and for this task that’s a perfectly good answer. Owning a model earns its keep when you can’t send data out, the bill is brutal at scale, the quality isn’t there, or ownership itself matters. If that changes, come back.';
+      cta.innerHTML = '<a href="/benchmark" class="btn-primary">See the public benchmark &rarr;</a>';
+      capture.style.display = 'none';
+    }
+  }
+
+  function firstMissing() {
+    for (var i = 0; i < REQUIRED.length; i++) {
+      if (!v(REQUIRED[i])) return REQUIRED[i];
+    }
+    return null;
+  }
+
+  FORM.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = document.getElementById('fsError');
+    var miss = firstMissing();
+    if (miss) {
+      err.style.display = 'block';
+      var node = document.getElementById('fsq-' + miss) || document.getElementById('fsq-' + miss.split('_')[0]);
+      if (node) { node.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      return;
+    }
+    err.style.display = 'none';
+
+    var verdict = compute();
+    document.getElementById('fs_field_verdict').value = verdict;
+    document.getElementById('fs_field_answers').value = answersBlob(verdict);
+    render(verdict);
+
+    document.getElementById('quiz').style.display = 'none';
+    var result = document.getElementById('result');
+    result.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    var top = document.getElementById('fsResultTop');
+    if (top && top.focus) top.focus();
+  });
+
+  document.getElementById('fsRestart').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('quiz').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Exposed for the capture form's inline onsubmit.
+  window.fsCaptureSubmit = function () {
+    document.getElementById('fs_capture_form').style.display = 'none';
+    document.getElementById('fs_capture_success').style.display = 'block';
+  };
+})();
+</script>
+
+</body>
+</html>

@@ -283,6 +283,16 @@ body::after {
         <p class="lead">The benchmark compares Qwen3-8B with a task-specific LoRA adapter against a frontier API baseline (zero-shot and 5-shot) on two tasks representative of common production AI work. It measures accuracy on the task, total cost of ownership at production volume, and error composition.</p>
         <p>Every result is reproducible. Training code, evaluation scripts, model weights, and prediction logs are public. The benchmark is ongoing; more tasks and model families will be added.</p>
 
+        <h2 id="independence">Independence &amp; funding</h2>
+        <p>The benchmark is self-funded and unsponsored today. Its credibility is the entire point, so the rules are fixed in advance and hold even once that changes:</p>
+        <ul>
+          <li><strong>Sponsors fund the work, never the conclusion.</strong> A model lab, inference host, or tooling vendor may underwrite a run, but gets no say over the method, the numbers, or how they read.</li>
+          <li><strong>Results are published regardless of outcome</strong> &mdash; including when an open model loses, or a sponsor&rsquo;s product comes out behind.</li>
+          <li><strong>Code and methodology stay public.</strong> Every result is reproducible from the released adapters, prediction logs, and pipeline, so anyone can check the numbers rather than take them on trust.</li>
+          <li><strong>Any sponsorship is disclosed</strong> on the run it applies to.</li>
+        </ul>
+        <p>If a result can&rsquo;t survive being reproduced by a skeptic, it doesn&rsquo;t ship.</p>
+
         <h2 id="tasks">Tasks</h2>
         <p>Both datasets are public and version-pinned. Test sets are held out from all fine-tuning.</p>
         <div class="table-wrap">

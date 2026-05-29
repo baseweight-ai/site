@@ -68,6 +68,18 @@ test("error analysis lives on the main page; the per-task subpage link is gone",
   await expect(page.locator("#taskDeepLink")).toHaveCount(0);
 });
 
+// The closing CTA bridges to the Fit Score (primary), with "Book a free call"
+// demoted to the quiet secondary. The cal CTA keeps its canonical name + href.
+test("closing CTA bridges to the Fit Score, with the call as secondary", async ({ page }) => {
+  await page.goto("/benchmark.html");
+  const cta = page.locator(".cta-block");
+  await expect(cta.getByRole("link", { name: /Score your task/i })).toHaveAttribute("href", "/fit-score");
+  await expect(cta.getByRole("link", { name: /Book a free call/i })).toHaveAttribute(
+    "href",
+    "https://cal.com/philip-stevens/baseweight-intro"
+  );
+});
+
 // ── Leaderboard (Support Routing / banking77 — has all conditions) ──────────────
 
 test.describe("Support Routing leaderboard", () => {

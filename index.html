@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseweight: Passes the demo. Fails in production.</title>
-<meta name="description" content="Prompting and RAG maxed out. Baseweight diagnoses failure modes in your production data, then executes the right adaptation. Entry point: $3–5k diagnostic.">
+<title>Baseweight: AI you own, proven on your task</title>
+<meta name="description" content="When a frontier API is too risky, too costly, or just wrong for a task you can't afford to get wrong, Baseweight builds a custom open-source model calibrated to your data — proven against the frontier with an eval you own. No ML team required.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -15,14 +15,14 @@
 <link rel="stylesheet" href="/components.css">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/">
-<meta property="og:title" content="Baseweight: Passes the demo. Fails in production.">
-<meta property="og:description" content="Prompting and RAG maxed out. Baseweight diagnoses failure modes in your production data, then executes the right adaptation to close the gap.">
+<meta property="og:title" content="Baseweight: AI you own, proven on your task">
+<meta property="og:description" content="A custom open-source model, calibrated to your data and proven against the frontier with an eval you own. For tasks too sensitive, too costly, or too important to leave to a rented API.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Baseweight: Passes the demo. Fails in production.">
-<meta name="twitter:description" content="Prompting and RAG maxed out. Baseweight diagnoses failure modes in your production data, then executes the right adaptation to close the gap.">
+<meta name="twitter:title" content="Baseweight: AI you own, proven on your task">
+<meta name="twitter:description" content="A custom open-source model, calibrated to your data and proven against the frontier with an eval you own. For tasks too sensitive, too costly, or too important to leave to a rented API.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -1136,6 +1136,74 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   margin-bottom: 18px;
 }
 
+/* ========================================
+   PROOF STRIP
+   ======================================== */
+.proof-strip {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: clamp(40px, 6vh, 64px) 0;
+}
+.proof-strip-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+.proof-stat-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 3.2vw, 2.3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.proof-stat-label {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.proof-link {
+  display: inline-block;
+  margin-top: 28px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+@media (max-width: 760px) {
+  .proof-strip-inner { grid-template-columns: 1fr; gap: 24px; }
+}
+
+/* ========================================
+   PROBLEMS EXTRA (greenfield + measurement gap)
+   ======================================== */
+.problems-extra {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 24px;
+}
+.problem-extra-item {
+  padding: 28px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--text-muted);
+}
+.problem-extra-item h3 {
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+}
+.problem-extra-item p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+@media (max-width: 760px) {
+  .problems-extra { grid-template-columns: 1fr; }
+}
+
 </style>
 <meta name="author" content="Philip Stevens">
 <link rel="author" href="/about">
@@ -1175,8 +1243,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       "@type": "WebPage",
       "@id": "https://baseweight.co/#webpage",
       "url": "https://baseweight.co/",
-      "name": "Baseweight: Passes the demo. Fails in production.",
-      "description": "Your prompting and RAG are maxed out. Baseweight diagnoses which failure modes are in your production data, then executes the right adaptation to close the gap.",
+      "name": "Baseweight: AI you own, proven on your task",
+      "description": "When a frontier API is too risky, too costly, or just wrong for a task you can't afford to get wrong, Baseweight builds a custom open-source model calibrated to your data — proven against the frontier with an eval you own. No ML team required.",
       "author": { "@id": "https://baseweight.co/#person" },
       "publisher": { "@id": "https://baseweight.co/#organization" },
       "datePublished": "2025-01-01",
@@ -1209,16 +1277,41 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   </div>
   <div class="container">
     <div class="hero-content">
-      <div class="section-label reveal">ML adaptation practice</div>
-      <h1 class="reveal">You&rsquo;ve hit the ceiling. <span class="accent">We break through it, without hiring an ML team.</span></h1>
-      <p class="hero-sub reveal reveal-delay-1">Your prompting and RAG are maxed out. The gap between demo and production isn&rsquo;t a configuration problem. It&rsquo;s a model quality problem. We diagnose which failure modes are present, then execute the right adaptation to close the gap.</p>
+      <div class="section-label reveal">Custom AI you own</div>
+      <h1 class="reveal">Match or even beat the big AI platforms on your task. <span class="accent">On intelligence you own, not rent.</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">When they&rsquo;re too risky, too costly, or just wrong for a task you can&rsquo;t afford to get wrong: we build you a custom solution calibrated to your data, with the eval to prove it holds &mdash; and you own all of it. No ML team required.</p>
       <div class="hero-cta-group reveal reveal-delay-2">
-        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call</a>
-        <p class="hero-support">Free 30-minute call first. We&rsquo;ll tell you if we can help.</p>
-        <p class="hero-support" style="margin-top: 0; font-size: 11px; letter-spacing: 0.04em; opacity: 0.5;">$3&ndash;5k diagnostic, fixed scope, if it&rsquo;s the right fit.</p>
-        <p class="hero-support" style="margin-top: 0;"><a href="#cases" style="color: var(--text-secondary); font-size: 13px; display: inline-block; padding: 12px 0;">See how it works &darr;</a> &nbsp;&middot;&nbsp; <a href="/about" style="color: var(--text-secondary); font-size: 13px;">About the practice &rarr;</a></p>
+        <a href="/fit-score" class="btn-primary">Score your task</a>
+        <p class="hero-support">A free, 7-question fit check. See whether an owned model can win on your task &mdash; before you spend anything.</p>
+        <p class="hero-support" style="margin-top: 0;"><a href="/benchmark" style="color: var(--text-secondary); font-size: 13px; display: inline-block; padding: 6px 0;">See it proven in public &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); font-size: 13px;">Book a free call</a></p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ======== PROOF STRIP ======== -->
+<!-- DATA PROVENANCE: stats below are derived from data/benchmark/results.json,
+     snapshot generated_at 2026-05-26. Source rows:
+       banking77  LoRA Qwen3-8B 0.876  vs GPT-5.4 Mini 5-shot   0.7869  → +8.9pp,  138x cheaper/correct
+       cuad       LoRA Qwen3-8B 0.7553 vs GPT-5.4 Mini zero-shot 0.6259 → +12.9pp,  28x cheaper/correct
+     RE-SYNC these three stat tiles if the benchmark reruns (results.json generated_at changes). -->
+<section class="proof-strip" id="proof">
+  <div class="container">
+    <div class="proof-strip-inner">
+      <div class="reveal">
+        <div class="proof-stat-num">2 of 2</div>
+        <div class="proof-stat-label">public vertical tasks where a fine-tuned 8B open model beat GPT-5.4 Mini</div>
+      </div>
+      <div class="reveal reveal-delay-1">
+        <div class="proof-stat-num">+8.9&ndash;12.9 pts</div>
+        <div class="proof-stat-label">accuracy over the frontier API, on support routing and contract-clause extraction</div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="proof-stat-num">28&ndash;138&times; cheaper</div>
+        <div class="proof-stat-label">per correct answer, self-hosted vs the same frontier API</div>
+      </div>
+    </div>
+    <a href="/benchmark" class="proof-link">See it proven in public &mdash; every number reproducible from open weights and code &rarr;</a>
   </div>
 </section>
 
@@ -1236,209 +1329,144 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 </section>
 -->
 
+<!-- ======== WEDGES (why an owned model) ======== -->
+<section class="problems-section" id="why">
+  <div class="container">
+    <div class="problems-header reveal">
+      <div class="section-label">When a frontier API isn&rsquo;t the answer</div>
+      <h2>You have a task that has to be right. The rented API isn&rsquo;t the way to do it.</h2>
+    </div>
+    <div class="problems-grid">
+      <div class="problem-card reveal reveal-delay-1">
+        <div class="problem-number">01</div>
+        <h3>You&rsquo;re not allowed to use it</h3>
+        <p>The data can&rsquo;t leave your walls &mdash; regulation, customer contracts, residency, or a security review that will never sign off on sending it to someone else&rsquo;s API. The default everyone else reaches for is off the table for you.</p>
+        <div class="kicker">&ldquo;We&rsquo;re not allowed to use the big AI platforms everyone else uses.&rdquo;</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="problem-number">02</div>
+        <h3>It&rsquo;s too expensive at your scale</h3>
+        <p>Per-call pricing is painless in a demo and brutal in production. Once the task runs millions of times a month, the API bill dwarfs what the same task costs on hardware you control.</p>
+        <div class="kicker">&ldquo;AI is too expensive to run at our scale.&rdquo;</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-3">
+        <div class="problem-number">03</div>
+        <h3>It&rsquo;s just wrong too often</h3>
+        <p>On your specific task, the general-purpose model misses in ways you can&rsquo;t patch from the outside &mdash; and you can&rsquo;t retrain what you don&rsquo;t own. Prompting only carries you so far.</p>
+        <div class="kicker">&ldquo;AI gets it wrong and we can&rsquo;t fix it.&rdquo;</div>
+      </div>
+    </div>
+    <div class="problems-extra reveal">
+      <div class="problem-extra-item">
+        <h3>Or there&rsquo;s no AI for this yet</h3>
+        <p>The task is still manual or rules-based and you want it AI-powered &mdash; done right, owned, and trustworthy from day one. There&rsquo;s no frontier API to &ldquo;replace&rdquo;; the value is doing it at all, on intelligence you control.</p>
+      </div>
+      <div class="problem-extra-item">
+        <h3>And once you try, you can&rsquo;t tell if it worked</h3>
+        <p>Maybe you already tried to fix or build one. The hard part isn&rsquo;t running a training job &mdash; it&rsquo;s proving the result is actually better on your data. Without an eval calibrated to your task, &ldquo;it feels better&rdquo; is the best anyone can say.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ======== WHO THIS IS FOR ======== -->
 <section class="audience-section" id="audience">
   <div class="container">
     <div class="reveal">
       <div class="section-label">Who it&rsquo;s for</div>
-      <h2>Built for the technical founder who&rsquo;s exhausted prompting and RAG and can&rsquo;t afford six months to hire around it</h2>
+      <h2>For teams that want an AI capability they own &mdash; and are ready to prove it works.</h2>
     </div>
     <div class="audience-fit-grid reveal">
       <div>
-        <div class="audience-fit-label audience-fit-label--yes">Right for this if</div>
+        <div class="audience-fit-label audience-fit-label--yes">Best fit</div>
         <ul class="audience-fit-list audience-fit-list--yes">
-          <li>LLM feature shipped to production</li>
-          <li>Prompting and RAG are maxed out</li>
-          <li>Post-training is the obvious next step, but nobody on the team can execute it</li>
-          <li>Quality &ldquo;feels better&rdquo; after the last fix, but you can&rsquo;t prove it</li>
+          <li>You want a capability you own outright &mdash; for compliance, cost, quality, or just because you&rsquo;d rather not rent it</li>
+          <li>The task matters enough that getting it wrong is expensive</li>
+          <li>You have representative data, or you can capture it</li>
+          <li>You&rsquo;re ready to invest once to prove it works</li>
         </ul>
       </div>
       <div>
-        <div class="audience-fit-label audience-fit-label--no">Not right for this if</div>
+        <div class="audience-fit-label audience-fit-label--no">Probably not us</div>
         <ul class="audience-fit-list audience-fit-list--no">
-          <li>Still prototyping or pre-production</li>
-          <li>Haven&rsquo;t exhausted prompting and RAG yet</li>
-          <li>Have an in-house ML team that can own post-training</li>
+          <li>You&rsquo;d rather not own or run your own model &mdash; renting an API is fine for this task</li>
+          <li>You won&rsquo;t invest even once the win is proven on your data</li>
         </ul>
       </div>
     </div>
     <div class="audience-right reveal">
-      <div class="qualifier-label">Honest qualifier</div>
-      <p>You&rsquo;ve considered post-training, fine-tuning, or switching to open-source weights, but nobody on the team can execute any of it, and hiring someone who can will take six months you don&rsquo;t have.</p>
-      <p>If you haven&rsquo;t hit the ceiling on prompting yet, come back when you have. We&rsquo;re not the right call before that point.</p>
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Book a free call</a>
-      <p class="nda-note">We&rsquo;ll tell you within 30 minutes whether we can help. We work under NDA. Your data and architecture stay confidential.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ======== PROBLEM ======== -->
-<section class="problems-section" id="problems">
-  <div class="container">
-    <div class="problems-header reveal">
-      <div class="section-label">Problem</div>
-      <h2>Three ways teams end up building the wrong fix.</h2>
-    </div>
-    <div class="problems-grid">
-      <div class="problem-card reveal reveal-delay-1">
-        <div class="problem-number">01</div>
-        <h3>You fine-tuned. You don&rsquo;t know if it helped.</h3>
-        <p>The provider returned a training loss curve. Looks like it converged. But did it fix the failure modes that were breaking production? Did it regress on cases you didn&rsquo;t include in training? Did it overfit? There&rsquo;s no way to know without evals calibrated to your actual production distribution.</p>
-        <div class="kicker">A green loss curve is not a green light.</div>
-      </div>
-      <div class="problem-card reveal reveal-delay-2">
-        <div class="problem-number">02</div>
-        <h3>Performance looked solid in testing. It&rsquo;s degrading in production.</h3>
-        <p>Your evals passed. In production, the model fails on input types that weren&rsquo;t in your test set: distribution shift, edge cases real users send but testers don&rsquo;t. The model was optimized for the eval, not the problem.</p>
-        <div class="kicker">The model was ready for your eval. It wasn&rsquo;t ready for your users.</div>
-      </div>
-      <div class="problem-card reveal reveal-delay-3">
-        <div class="problem-number">03</div>
-        <h3>No way to prove the fix worked</h3>
-        <p>Your team ran a fine-tune or rebuilt the RAG pipeline. Performance feels better. But &ldquo;feels better&rdquo; isn&rsquo;t a number, and without evals calibrated to your production failure cases, there&rsquo;s no defensible way to know whether quality improved or whether the next model update will silently regress it.</p>
-        <div class="kicker">Progress by opinion is indistinguishable from no progress at all.</div>
-      </div>
+      <div class="qualifier-label">One soft test</div>
+      <p>Does your task have a checkable right answer &mdash; an exact value, a rule it must pass, a label a person could confirm? If so, we can benchmark an owned model head-to-head and <em>prove</em> the win on your data. If it&rsquo;s open-ended, we probe deeper before promising anything.</p>
+      <p>Not sure where you land? The fit check sorts it in a few minutes.</p>
+      <a href="/fit-score" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Score your task</a>
+      <p class="nda-note">We work under NDA &mdash; your data and architecture stay confidential &mdash; and we&rsquo;ll tell you honestly if an owned model won&rsquo;t win.</p>
     </div>
   </div>
 </section>
 
 <!-- ======== INLINE CTA ======== -->
 <div class="cta-interstitial">
-  <p>30 minutes to map the failure modes.</p>
-  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call</a>
+  <p>Not sure which of these is you? Find out in seven questions.</p>
+  <a href="/fit-score" class="btn-primary">Score your task</a>
 </div>
 
-<!-- ======== TRANSITION ======== -->
-<section class="transition-section" id="transition">
+<!-- ======== DEMOTED: THREE WAYS TEAMS BUILD THE WRONG FIX ======== -->
+<section class="transition-section" id="pitfalls">
   <div class="container">
     <div class="reveal">
-      <div class="section-label" style="justify-content: center;">What you&rsquo;ve tried</div>
-      <h2>None of them closed the gap.</h2>
+      <div class="section-label" style="justify-content: center;">If you&rsquo;ve already tried</div>
+      <h2>Three ways teams build the wrong fix.</h2>
     </div>
     <div class="body-text reveal reveal-delay-1">
-      <p><strong>Model switching.</strong> Fast to test. If you hit the same ceiling on the new model, the failure mode is in the task, not the model family. You&rsquo;re buying time, not fixing the problem.</p>
-      <p><strong>Fine-tuning through a provider API.</strong> The API call is easy. What you get back is a training loss curve, not a verdict on whether you fixed the failure modes breaking production. You need evals calibrated to your production distribution for that, and building those is most of the work.</p>
-      <p><strong>Eval platforms.</strong> They measure whatever you configure, accurately. The gap: they require you to already know which failure modes matter and how to detect them. If your evals don&rsquo;t cover your actual production failures, you get a green dashboard on a broken model.</p>
-      <p><strong>An ML consultant.</strong> A good one can do most of what we do: diagnose failure modes, recommend the right technique, build the solution. The difference is measurement. Without a domain benchmark calibrated to your production bar, the consultant leaves and you have no way to know if the next model update holds. Six months later there&rsquo;s a regression and you start over.</p>
-      <p class="punch">We fix the model. Not the prompt.</p>
+      <p><strong>Build it blind.</strong> Run a fine-tune or wire up a pipeline with no eval calibrated to the task. It ships, it &ldquo;feels better,&rdquo; and nobody can say whether it&rsquo;s actually right more often than before.</p>
+      <p><strong>Optimise to the wrong target.</strong> Tune against a generic benchmark or a clean test set that doesn&rsquo;t look like the real task. The dashboard goes green while production stays wrong.</p>
+      <p><strong>No way to prove it &mdash; or keep it proven.</strong> Without an eval you own, the next model swap or data shift silently regresses the result, and you hear about it from a customer instead of from a test.</p>
+      <p class="punch">Owning the model is half of it. Owning the proof is the other half.</p>
     </div>
   </div>
 </section>
 
-<!-- ======== CASES ======== -->
-<section class="cases-section" id="cases">
-  <div class="container">
-    <div class="cases-header reveal">
-      <div class="section-label">Failure Modes</div>
-      <h2>Three cases. Wrong intervention each time.</h2>
-    </div>
-    <div class="cases-list">
-      <div class="case-item reveal">
-        <button class="case-question">The symptom looks like a retrieval problem. The root cause is in the weights.</button>
-        <p class="case-kicker">Without the diagnostic: a RAG refactor that doesn&rsquo;t close the gap, followed by a fine-tuning engagement that should have come first.</p>
-        <div class="case-answer">
-          <div class="case-body">
-            <div class="case-block">
-              <div class="case-block-label">What teams see</div>
-              <p>Domain extraction performance degrades after a model update or provider change. The assumption is that chunking strategy or the embedding model is to blame: retrieval is the obvious variable.</p>
-            </div>
-            <div class="case-block">
-              <div class="case-block-label">What the diagnostic finds</div>
-              <p>Failure analysis shows systematic gaps in domain terminology handling that aren&rsquo;t retrieval-dependent. The model lacks weight-level knowledge of your domain entities. Better chunking won&rsquo;t close this gap. Only training signal will.</p>
-            </div>
-            <div class="case-block">
-              <div class="case-block-label">Technique that follows</div>
-              <p>LoRA adapter with a custom eval set covering domain-specific entities, edge cases, and adversarial inputs. Eval-gated deployment blocks any release that regresses below threshold, making model swaps survivable without emergency retraining.</p>
-            </div>
-            <div class="case-outcome">Without the diagnostic: a RAG refactor that doesn&rsquo;t close the gap, followed by a fine-tuning engagement that should have come first.</div>
-          </div>
-        </div>
-      </div>
-      <div class="case-item reveal reveal-delay-1">
-        <button class="case-question">Performance looked good in testing. It's degrading in production.</button>
-        <p class="case-kicker">Without the diagnostic: continuous patching against an eval that doesn&rsquo;t reflect real inputs, shipping updates that pass tests but keep failing users.</p>
-        <div class="case-answer">
-          <div class="case-body">
-            <div class="case-block">
-              <div class="case-block-label">What teams see</div>
-              <p>Performance looked solid on internal testing. In production, accuracy slips on specific input types, after a model provider update, or as data distribution shifts over time. Nobody can explain why, because nobody defined what &ldquo;working&rdquo; looks like in production.</p>
-            </div>
-            <div class="case-block">
-              <div class="case-block-label">What the diagnostic finds</div>
-              <p>The test set was built from clean, well-formed examples, not the ambiguous, edge-case, adversarial inputs that production traffic actually contains. The model was optimised for the eval, not for the problem. There&rsquo;s no baseline to measure regression against.</p>
-            </div>
-            <div class="case-block">
-              <div class="case-block-label">Technique that follows</div>
-              <p>Eval-first: production failure cases classified and used to construct a representative test set, must-pass thresholds agreed before any technique decision is made. Often reveals the fix is smaller than assumed, or different than planned.</p>
-            </div>
-            <div class="case-outcome">Without the diagnostic: continuous patching against an eval that doesn&rsquo;t reflect production, shipping model updates that pass tests but keep failing users.</div>
-          </div>
-        </div>
-      </div>
-      <div class="case-item reveal reveal-delay-2">
-        <button class="case-question">The model looks broken. The eval set is broken.</button>
-        <p class="case-kicker">Without the diagnostic: a fine-tune trained against a flawed eval set, shipping a model that passes tests but still fails in production.</p>
-        <div class="case-answer">
-          <div class="case-body">
-            <div class="case-block">
-              <div class="case-block-label">What teams see</div>
-              <p>Structured field extraction passes every stakeholder demo but fails on real-world inputs. Quality is assessed by eyeballing samples: no formal definition of correct, no measurement, no baseline.</p>
-            </div>
-            <div class="case-block">
-              <div class="case-block-label">What the diagnostic finds</div>
-              <p>Without a reliable eval set, there&rsquo;s no reliable measurement, and without measurement, there&rsquo;s no defensible technique decision. Failure pattern analysis classifies which inputs fail and why. The problem is often more tractable than it looks once it&rsquo;s actually measured.</p>
-            </div>
-            <div class="case-block">
-              <div class="case-block-label">Technique that follows</div>
-              <p>Eval-first: adversarial and representative failure cases classified, must-pass gates defined, acceptance criteria agreed before any training begins. The technique follows from what the eval reveals, not from what was planned in advance.</p>
-            </div>
-            <div class="case-outcome">Without the diagnostic: a fine-tune trained against a flawed eval set, shipping a model that passes tests but still fails in production.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ======== (legacy cases section removed in repositioning) ======== -->
 
-<!-- ======== INLINE CTA (post-cases) ======== -->
+<!-- ======== INLINE CTA (post-pitfalls) ======== -->
 <div class="cta-interstitial">
-  <p>One of these patterns is in your production data. Thirty minutes to find out which one.</p>
-  <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call</a>
+  <p>Stop guessing whether an owned model wins. Get a straight verdict on your task.</p>
+  <a href="/fit-score" class="btn-primary">Score your task</a>
 </div>
 
 <!-- ======== HOW WE WORK ======== -->
 <section class="how-section" id="how">
   <div class="container">
     <div class="how-header reveal">
-      <div class="section-label">How we work</div>
-      <h2>Diagnose first. Build second. Hand over everything.</h2>
+      <div class="section-label">How it works</div>
+      <h2>Prove it first. Build second. Hand over everything.</h2>
     </div>
     <div class="steps">
       <div class="step reveal">
         <div class="step-num">01</div>
         <div>
-          <h3>Failure diagnosis</h3>
-          <p>We go through your production failure logs and separate systematic failures from noise: only systematic failures respond to training intervention. Each failure mode gets mapped to the fix most likely to close it, with decision rationale. The output is a written report: what&rsquo;s failing, why it&rsquo;s systematic, and what fixing it will cost. You see it before we touch anything.</p>
+          <h3>Prove it on your data</h3>
+          <p>Before you commit to a build, we benchmark an owned model head-to-head against your current option &mdash; the frontier API, rules, or whatever runs the task today &mdash; on a sample of your real data. You get a go/no-go verdict and a reproducible eval calibrated to your task. If an owned model won&rsquo;t win, we tell you, and you&rsquo;ve spent very little to find out.</p>
         </div>
       </div>
       <div class="step reveal reveal-delay-1">
         <div class="step-num">02</div>
         <div>
-          <h3>Intervention execution</h3>
-          <p>You approve the work before it starts. Target metric, cost, and timeline, all defined before a line of training code runs. We build what the diagnostic prescribed. Not what&rsquo;s easiest to bill, not what we know best.</p>
+          <h3>Build the solution</h3>
+          <p>You approve scope, target metric, and cost before any build work starts. We build what the benchmark prescribed &mdash; a fine-tuned adapter, a distilled model, a trained classifier, a retrieval stack, a composed pipeline &mdash; calibrated to your data, not to whatever&rsquo;s easiest to bill.</p>
         </div>
       </div>
       <div class="step reveal reveal-delay-2">
         <div class="step-num">03</div>
         <div>
-          <h3>Complete handoff, including the benchmark</h3>
-          <p>Trained weights, training recipes, deployment configs, adapter templates: all yours. The evals are built from your production failure cases, not the clean examples you had when you started, and ship with everything else. They make the test/prod gap measurable, catch regressions before deployment, and expand as production surfaces new failure modes. Your team runs them. We&rsquo;re not in the loop unless you want us to be.</p>
+          <h3>Hand over everything</h3>
+          <p>Weights, adapters, the eval suite, training recipes, inference code: all yours, outright. No license, no hosted dependency, no call back to us before you ship a change. Your team runs it &mdash; and the eval keeps proving it holds as models and data move.</p>
         </div>
       </div>
     </div>
     <div class="how-cta reveal">
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call</a>
-      <p style="font-size: 13px; color: var(--text-muted); margin: 14px auto 0; max-width: 420px; text-align: center;">Free 30-minute intro call to walk through your failure patterns and whether the diagnostic is the right next step.</p>
+      <a href="/fit-score" class="btn-primary">Score your task</a>
+      <p style="font-size: 13px; color: var(--text-muted); margin: 14px auto 0; max-width: 420px; text-align: center;">Seven questions to see whether an owned model can win on your task &mdash; and what proving it would take.</p>
     </div>
   </div>
 </section>
@@ -1448,20 +1476,20 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="diff-header reveal">
       <div class="section-label">What&rsquo;s different</div>
-      <h2>The diagnostic outputs are yours.</h2>
+      <h2>You own the result &mdash; and the proof it works.</h2>
     </div>
     <div class="diff-grid">
       <div class="diff-item reveal reveal-delay-1">
-        <h3>Evals calibrated to production, not test set artifacts</h3>
-        <p>Every engagement ships evals built from your actual production failures. They tell you whether the intervention worked. They catch regressions before deployment. You know when you&rsquo;re done. You can prove it.</p>
+        <h3>An eval calibrated to your task, not a generic leaderboard</h3>
+        <p>Every engagement ships an eval built from your data and your definition of correct. It&rsquo;s what proves the win, catches regressions before you deploy, and tells you when a new model is actually better &mdash; not just newer.</p>
       </div>
       <div class="diff-item reveal reveal-delay-2">
-        <h3>A compounding benchmark, not a one-time engagement artifact</h3>
-        <p>The eval suite ships calibrated to your production failures and evolves as your data does. Each model update runs through the same gates. Each new failure mode extends the taxonomy. The benchmark lives in your stack and catches regressions before each deployment, not in a consultant&rsquo;s repo that nobody runs after the engagement ends.</p>
+        <h3>Owned outright &mdash; no license, no lock-in</h3>
+        <p>Weights, adapters, eval, recipes, inference code. Yours to run on your own infrastructure: no inference contract, no hosted dependency, no permission needed before you ship a change.</p>
       </div>
       <div class="diff-item reveal reveal-delay-3">
-        <h3>No ongoing license, no hosted dependency</h3>
-        <p>Trained weights, evals, training recipes, deployment configs. Yours outright: no inference contract, no hosted eval dependency, no call back to us before you can ship a model update. Your team runs it independently.</p>
+        <h3>We&rsquo;ll tell you if it won&rsquo;t win</h3>
+        <p>The cheap proof step comes first precisely so nobody builds the wrong thing. If an owned model can&rsquo;t beat what you have on your data, you hear it early &mdash; and you keep the eval that says so.</p>
       </div>
     </div>
   </div>
@@ -1472,40 +1500,45 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="pricing-header reveal">
       <div class="section-label">Pricing</div>
-      <h2>One fixed-scope entry point. Then a continuous improvement loop.</h2>
+      <h2>A cheap way to find out. A clear path once you know.</h2>
     </div>
     <div class="pricing-table-wrap reveal reveal-delay-1">
       <table class="pricing-table">
         <thead>
           <tr>
-            <th>Engagement type</th>
-            <th>Typical scope</th>
-            <th>Range</th>
+            <th>Step</th>
+            <th>What you get</th>
+            <th>Price</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td><a href="/diagnostic" style="color: var(--accent);">Diagnostic &rarr;</a></td>
-            <td style="color: var(--accent); font-weight: 500;">Entry point, converts to retainer on success</td>
+            <td>Scan</td>
+            <td>An ICP-gated read on a sample of your data: hidden-failure check, self-host feasibility, rough cost break-even. Signal only &mdash; no trained model or calibrated eval yet.</td>
+            <td style="white-space: normal;">Low fixed fee, credited toward the Pilot</td>
+          </tr>
+          <tr>
+            <td><a href="/pilot" style="color: var(--accent);">Pilot &rarr;</a></td>
+            <td style="color: var(--accent); font-weight: 500;">A go/no-go verdict plus a reproducible eval you own, calibrated to your data &mdash; the public benchmark, run on a sample of your task. TCO where cost is the driver, and a proof artifact.</td>
             <td>$3&ndash;5k</td>
           </tr>
           <tr>
-            <td>Core retainer</td>
-            <td>Continuous improvement loop: intervention execution, benchmark maintenance, new failure patterns, regression monitoring</td>
-            <td>$8&ndash;15k/mo</td>
+            <td>Build</td>
+            <td>Done-for-you: the owned solution the Pilot prescribed &mdash; adapter or weights, classifier, retrieval stack, or pipeline &mdash; handed over outright.</td>
+            <td style="white-space: normal;">Project-priced, scoped from the Pilot</td>
           </tr>
           <tr>
-            <td>Scale retainer</td>
-            <td>Multiple models or product lines; buyer typically Series B+ or multi-product</td>
-            <td>$20&ndash;40k/mo</td>
+            <td>Assurance</td>
+            <td>We keep proving it holds: re-run the eval as models and data move, catch regressions, extend coverage as new cases appear.</td>
+            <td>$8&ndash;40k/mo</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="pricing-note reveal reveal-delay-2">The diagnostic is $3&ndash;5k, fixed scope. What comes next, if anything, is defined in the report. Target metric, cost, and timeline are agreed before any build work begins. Retainers build on the diagnostic: benchmark maintenance, new failure patterns closed as your data evolves, regressions caught before each model update.</p>
+    <p class="pricing-note reveal reveal-delay-2">Start with the Scan to confirm fit cheaply; its fee is credited toward the Pilot. The Pilot is fixed-scope &mdash; you walk away owning the eval whatever you decide next. Build is scoped from what the benchmark proves; Assurance is optional and keeps the proof current.</p>
     <div style="margin-top: 36px;" class="reveal">
-      <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call</a>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">30 minutes. Free. No commitment.</p>
+      <a href="/fit-score" class="btn-primary">Score your task</a>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">Free. Seven questions. See your verdict before you give an email.</p>
     </div>
   </div>
 </section>
@@ -1520,63 +1553,45 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     </div>
     <div class="faq-list">
       <div class="faq-item reveal">
-        <button class="faq-question">How long does the diagnostic take?</button>
+        <button class="faq-question">What&rsquo;s the cheapest way to find out if this is worth it?</button>
         <div class="faq-answer">
-          <p>Two to three weeks from kickoff to written report. We need access to your production failure logs and a working session to walk through the failure patterns. The report covers what&rsquo;s failing, why it&rsquo;s systematic, and what closing each failure mode will cost, all defined before we propose anything further.</p>
+          <p>The fit check is free and takes a few minutes &mdash; seven questions about your task, an instant verdict, no email required to see it. If you&rsquo;re a candidate, the next step is a low-cost Scan on a sample of your data, and its fee is credited toward the Pilot. You never commit to a build before the win is proven.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">What if the diagnostic says our current approach is fine?</button>
+        <button class="faq-question">We can&rsquo;t send our data to an outside API. Can you still help?</button>
         <div class="faq-answer">
-          <p>We&rsquo;ll tell you. If better prompting or a RAG refactor is the answer, we&rsquo;ll say so, even if that means a smaller engagement or no engagement at all. The recommendation follows the data, not the business case for more work.</p>
+          <p>That&rsquo;s one of the main reasons teams come to us. The whole point of an owned model is that it runs on your infrastructure &mdash; nothing has to leave your environment. We work under NDA and can operate inside your walls. For compliance and data-residency cases there&rsquo;s often no frontier API that&rsquo;s even permitted; owning the model is the only viable path.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">How do I know the diagnostic won&rsquo;t just recommend a full engagement?</button>
+        <button class="faq-question">What if an owned model won&rsquo;t beat our current setup?</button>
         <div class="faq-answer">
-          <p>The diagnostic deliverable is a written report you own regardless of what you do next. If we recommend fine-tuning and you want to take it to an in-house team or another vendor, that&rsquo;s fine. If your current approach is adequate, that&rsquo;s what the report says, even if it means no further engagement.</p>
+          <p>Then we tell you, early and plainly &mdash; and you keep the eval that proves it. The proof step exists precisely so nobody spends on a build that won&rsquo;t pay off. We&rsquo;d rather lose the engagement than ship you something we can&rsquo;t stand behind.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">Do we need to share our proprietary data?</button>
+        <button class="faq-question">We don&rsquo;t have an ML team. Is that a problem?</button>
         <div class="faq-answer">
-          <p>We work under NDA and can operate within your infrastructure. For fine-tuning, we need access to representative training data. We agree on data handling requirements before any access.</p>
+          <p>No &mdash; that&rsquo;s who this is for. You get a runnable artifact (weights or adapter, a classifier, or a pipeline) plus the eval and recipes, handed over so your existing engineers can deploy and re-run it. No ML hires required. If you&rsquo;d rather we keep it current as models and data move, that&rsquo;s the optional Assurance step.</p>
         </div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-question">What do we own at the end?</button>
         <div class="faq-answer">
-          <p>Everything. Trained weights, adapters, evaluation sets, training recipes, deployment configs. No ongoing licensing. No vendor lock-in.</p>
+          <p>Everything. Weights and adapters, the eval suite, training recipes, inference code. No ongoing license, no hosted dependency, no permission needed before you ship a change. It&rsquo;s yours to run, modify, or take elsewhere.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">How is this different from hiring an ML engineer?</button>
+        <button class="faq-question">How is this different from fine-tuning through a provider API?</button>
         <div class="faq-answer">
-          <p>A senior ML hire is right if you need someone in-house long-term. The trade-off: 3&ndash;6 months to ramp, $200&ndash;300k fully loaded, and they&rsquo;ll approach the problem through the techniques they know best, which may or may not match your failure modes. We bring cross-vertical diagnosis experience and deliver a written recommendation in two weeks. If you need permanent in-house ML capability, that&rsquo;s the right long-term call. Come back to us to scope the problem first.</p>
+          <p>Two ways. First, what a provider hands back is a training loss curve, not proof the result is better on <em>your</em> task &mdash; we ship an eval calibrated to your data that answers exactly that. Second, you don&rsquo;t own the result: it stays behind their API, on their pricing, subject to their changes. Here the model and the proof are yours outright.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">Why not use an eval platform for this?</button>
+        <button class="faq-question">Do we need labelled data?</button>
         <div class="faq-answer">
-          <p>Eval platforms measure whatever you configure them to measure, accurately and well. The gap is that they require you to already know which failure modes are in your production data and how to detect them. If your eval coverage doesn&rsquo;t match your production failure distribution, the platform faithfully tells you nothing is wrong. The diagnostic comes before the eval platform, not instead of it.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">Why not run fine-tuning directly through a provider API?</button>
-        <div class="faq-answer">
-          <p>The API call is easy. What you get back is a training loss curve. The curve doesn&rsquo;t tell you whether you fixed the specific failure modes that were breaking production, whether you regressed on cases you didn&rsquo;t include in training, or whether you overfit to your training examples rather than learning the underlying pattern. You need evals calibrated to your production distribution to answer any of those questions, and building those is the diagnostic.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">How is this different from an ML consulting engagement?</button>
-        <div class="faq-answer">
-          <p>A good consultant can do most of what we do: diagnose failure modes, recommend the right technique, build the solution. The difference is measurement. Without a domain benchmark calibrated to your production bar, the consultant leaves and you have no way to know if the next model update holds. The benchmark they built lives in a repo nobody runs. The institutional memory of what was tried is in their notes, not yours. Six months later there&rsquo;s a regression and you start from zero. The retainer model exists specifically to prevent this: benchmark maintenance, new failure modes closed as production evolves, regressions caught before each model update.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">We already tried fine-tuning. It didn&rsquo;t fix the problem. Why would this be different?</button>
-        <div class="faq-answer">
-          <p>Because the failure mode you were targeting was never defined. You ran a training job: the provider returned a loss curve, you deployed, the problem was still there. The diagnostic starts a step earlier: classifying which failure modes are actually in your production data before any training code runs. Fine-tuning without that step is common. It&rsquo;s also how teams spend months on the wrong fix.</p>
+          <p>It helps, and for some approaches it&rsquo;s decisive &mdash; but &ldquo;representative data exists or can be captured&rdquo; is enough to start. The fit check asks what you have and tells you straight whether it&rsquo;s sufficient, or what to capture first. If the data isn&rsquo;t there yet, we&rsquo;ll say so rather than take the work.</p>
         </div>
       </div>
     </div>
@@ -1590,14 +1605,15 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     <div class="final-cta-content">
       <div class="reveal">
         <div class="section-label" style="justify-content: center;">Start</div>
-        <h2>If you&rsquo;ve been patching the same problem for two sprints and the gap still isn&rsquo;t closing: that&rsquo;s what the diagnostic is for.</h2>
+        <h2>Find out if an owned model wins on your task.</h2>
       </div>
       <div class="body-text reveal reveal-delay-1">
-        <p>Book an intro call to walk through your failure patterns, where performance is breaking down, and whether the diagnostic is the right next step. Thirty minutes. We&rsquo;ll tell you what&rsquo;s wrong, or we&rsquo;ll tell you it isn&rsquo;t us.</p>
+        <p>Seven questions &mdash; what the task is, how &ldquo;right&rdquo; is judged, the data you have, and why the frontier API isn&rsquo;t the answer. You get a straight verdict: candidate, not yet, or honestly-not-us. No email required to see it.</p>
       </div>
       <div class="reveal reveal-delay-2">
-        <p class="support-text" style="margin-bottom: 20px;">No pitch deck. No sales sequence. Just a technical conversation about your stack.</p>
-        <a href="https://cal.com/philip-stevens/baseweight-intro" class="btn-primary" target="_blank" rel="noopener noreferrer">Book a free call</a>
+        <p class="support-text" style="margin-bottom: 20px;">No pitch deck. No sales sequence. Just a clear read on whether this is worth your time.</p>
+        <a href="/fit-score" class="btn-primary">Score your task</a>
+        <p class="support-text" style="margin-top: 20px;">Prefer to talk it through? <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">Book a free call &rarr;</a></p>
       </div>
     </div>
   </div>

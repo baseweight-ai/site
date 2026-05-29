@@ -24,4 +24,6 @@ test-results/
 # Benchmark data (local dev + real pipeline output; force-add before deploying: git add -f)
 data/benchmark/results.json
 
+# Local strategy / agent docs — keep private (not for the public repo)
 CLAUDE.md
+STRATEGY.md
