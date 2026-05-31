@@ -166,3 +166,82 @@ test("fit score blocks the verdict until the required questions are answered", a
   await expect(page.locator("#fsError")).toBeVisible();
   await expect(page.locator("#result")).toBeHidden();
 });
+
+// The verdict must not hinge on the optional labelled-count field. A data-rich
+// team that can't capture more (capture="no") but already holds plenty of
+// labelled examples is a candidate — it must never fall through to "Not yet"
+// just because a number was filled in. (Regression: audit finding 3.1.)
+test("fit score: data-rich 'can't get more' still scores as a candidate", async ({ page }) => {
+  await page.goto("/fit-score.html");
+  await page.fill('textarea[name="q1_task"]', "Classify a transaction into one of 77 categories.");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.selectOption('select[name="q3_today"]', "manual");
+  await page.selectOption('select[name="q4_capture"]', "no");
+  await page.selectOption('select[name="q4_labeled"]', "1000plus");
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click('#fsForm button[type="submit"]');
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
+});
+
+// When capture="no", the labelled count is decisive, so a blank must be caught
+// rather than silently read as zero (which would mis-verdict). (Finding 3.1.)
+test("fit score: blank labelled count with 'can't get more' is blocked, not mis-verdicted", async ({ page }) => {
+  await page.goto("/fit-score.html");
+  await page.fill('textarea[name="q1_task"]', "Extract a clause from a contract.");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.selectOption('select[name="q3_today"]', "manual");
+  await page.selectOption('select[name="q4_capture"]', "no");
+  // q4_labeled deliberately left blank
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click('#fsForm button[type="submit"]');
+
+  // Verdict withheld; the labelled-specific error shows and Q4 is marked invalid.
+  await expect(page.locator("#result")).toBeHidden();
+  await expect(page.locator("#fsErrLabeled")).toBeVisible();
+  await expect(page.locator("#fsq-q4_capture")).toHaveClass(/fs-q--invalid/);
+
+  // Supplying a low range unblocks it; little data + can't-capture-more → "Not yet".
+  await page.selectOption('select[name="q4_labeled"]', "lt50");
+  await page.selectOption('select[name="q4_examples"]', "lt50");
+  await page.click('#fsForm button[type="submit"]');
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/not yet/i);
+});
+
+// The error names only the questions actually missing, and marks them. (Finding 3.3.)
+test("fit score: error names only the missing question and marks it", async ({ page }) => {
+  await page.goto("/fit-score.html");
+  await page.fill('textarea[name="q1_task"]', "Route a ticket.");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.selectOption('select[name="q3_today"]', "frontier-api");
+  await page.selectOption('select[name="q4_capture"]', "easily");
+  // q7 (Ownership) deliberately left unanswered
+  await page.click('#fsForm button[type="submit"]');
+
+  await expect(page.locator("#result")).toBeHidden();
+  await expect(page.locator("#fsError")).toContainText("question 7");
+  await expect(page.locator("#fsError")).not.toContainText("1, 2, 3");
+  await expect(page.locator("#fsq-q7_own")).toHaveClass(/fs-q--invalid/);
+  // a field the user did answer is not flagged
+  await expect(page.locator("#fsq-q1_task")).not.toHaveClass(/fs-q--invalid/);
+});
+
+// "Edit my answers" returns to the quiz with answers preserved. (Finding 2.1.)
+test("fit score: 'Edit my answers' returns to the quiz with answers intact", async ({ page }) => {
+  await page.goto("/fit-score.html");
+  await page.fill('textarea[name="q1_task"]', "Summarise a call transcript.");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.selectOption('select[name="q3_today"]', "manual");
+  await page.selectOption('select[name="q4_capture"]', "easily");
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click('#fsForm button[type="submit"]');
+  await expect(page.locator("#result")).toBeVisible();
+
+  await page.getByRole("link", { name: /Edit my answers/i }).click();
+  await expect(page.locator("#quiz")).toBeVisible();
+  await expect(page.locator("#result")).toBeHidden();
+  // previously entered answers survive the round-trip
+  await expect(page.locator('textarea[name="q1_task"]')).toHaveValue("Summarise a call transcript.");
+  await expect(page.locator('input[name="q7_own"][value="own"]')).toBeChecked();
+});

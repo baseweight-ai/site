@@ -107,6 +107,21 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-submit-row { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
 .fs-error { color: var(--danger); font-size: 13px; margin-top: 14px; display: none; }
 
+/* fieldset reset — used to group radio/checkbox questions for a11y */
+.fs-fieldset { border: none; margin: 0; padding: 0; min-width: 0; }
+.fs-legend { display: block; padding: 0; width: 100%; }
+.fs-req { color: var(--accent); font-weight: 600; }
+.fs-optional { color: var(--text-muted); font-weight: 400; font-size: 13px; }
+.fs-req-key { font-size: 12px; color: var(--text-muted); margin: 0 0 16px 32px; }
+@media (max-width: 560px) { .fs-req-key { margin-left: 0; } }
+.fs-progress { height: 3px; background: var(--border); margin: 0 0 32px; border-radius: 2px; overflow: hidden; }
+.fs-progress-bar { height: 100%; width: 0; background: var(--accent); transition: width 0.3s ease; }
+
+/* invalid field marker (set by JS on failed submit) */
+.fs-q.fs-q--invalid { box-shadow: inset 3px 0 0 var(--danger); }
+.fs-q.fs-q--invalid .fs-q-num { color: var(--danger); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
 /* ======== RESULT ======== */
 .fs-result { display: none; padding: var(--section-pad) 0; }
 .fs-result-inner { max-width: 680px; }
@@ -170,10 +185,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 <!-- ======== HERO ======== -->
 <section class="fs-hero">
   <div class="container">
-    <div class="section-label">Fit check</div>
-    <h1>Should this task run on <span class="accent">intelligence you own?</span></h1>
+    <div class="section-label">Score your task &middot; fit check</div>
+    <h1>Should this task run on <span class="accent">AI you own?</span></h1>
     <p class="fs-hero-sub">Seven questions, about three minutes. You get a straight verdict &mdash; candidate, not yet, or honestly-not-us &mdash; with the reasoning. No email required to see it.</p>
-    <p class="fs-hero-note">The <a href="/benchmark">public benchmark</a> shows a small owned model can match or beat a frontier API on a focused task. This tells you whether that&rsquo;s true for <em>your</em> task.</p>
+    <p class="fs-hero-note">The <a href="/benchmark">public benchmark</a> shows a small owned model can match or beat the big AI platforms on a focused task. This tells you whether that&rsquo;s true for <em>your</em> task.</p>
   </div>
 </section>
 
@@ -181,60 +196,79 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 <section class="fs-quiz" id="quiz">
   <div class="container">
     <form class="fs-form" id="fsForm" novalidate>
+      <p class="fs-req-key"><span class="fs-req">*</span> required &mdash; the rest are optional but sharpen your verdict.</p>
+      <div class="fs-progress" aria-hidden="true"><div class="fs-progress-bar" id="fsProgressBar"></div></div>
 
       <!-- Q1 -->
       <div class="fs-q" id="fsq-q1_task">
-        <div class="fs-q-head"><span class="fs-q-num">1</span><span class="fs-q-label">The task <span class="fs-q-req">*</span></span></div>
-        <p class="fs-q-help">In a sentence or two: what single task would the model do, and where does it sit in your workflow?</p>
+        <div class="fs-q-head"><span class="fs-q-num">1</span><span class="fs-q-label" id="lbl-q1">The task <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q1">In a sentence or two: what single task would the model do, and where does it sit in your workflow? The more specific &mdash; the input, the output, where it sits &mdash; the sharper your verdict.</p>
         <div class="fs-q-body">
-          <textarea class="fs-textarea" name="q1_task" placeholder="e.g. Read an incoming support message and route it to one of 40 queues." required></textarea>
+          <textarea class="fs-textarea" name="q1_task" placeholder="e.g. Read an incoming support message and route it to one of 40 queues." required aria-required="true" aria-labelledby="lbl-q1" aria-describedby="help-q1"></textarea>
         </div>
       </div>
 
       <!-- Q2 -->
       <div class="fs-q" id="fsq-q2_correctness">
-        <div class="fs-q-head"><span class="fs-q-num">2</span><span class="fs-q-label">How would you know an answer is right? <span class="fs-q-req">*</span></span></div>
-        <p class="fs-q-help">The most important question. Pick the closest &mdash; it decides whether a win can be proven.</p>
+        <div class="fs-q-head"><span class="fs-q-num">2</span><span class="fs-q-label" id="lbl-q2">How would you know an answer is right? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q2">The most important question. Pick the closest &mdash; it decides whether a win can be proven.</p>
         <div class="fs-q-body">
-          <div class="fs-opts">
+          <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q2 help-q2" aria-required="true">
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>It matches a known correct value exactly &mdash; a label, a field, a number.</span></label>
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="rule"><span>It passes a rule or checklist a reviewer could apply.</span></label>
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="human"><span>A person judges each case (two reviewers would mostly agree).</span></label>
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s subjective, or no one checks today.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="unchecked"><span>It has a right answer, but nobody checks it today.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s subjective &mdash; reasonable people would disagree.</span></label>
           </div>
         </div>
       </div>
 
       <!-- Q3 -->
       <div class="fs-q" id="fsq-q3_today">
-        <div class="fs-q-head"><span class="fs-q-num">3</span><span class="fs-q-label">What handles this today &mdash; and what does getting it wrong cost? <span class="fs-q-req">*</span></span></div>
-        <p class="fs-q-help">Your baseline, how often it misses, and the stakes.</p>
+        <div class="fs-q-head"><span class="fs-q-num">3</span><span class="fs-q-label" id="lbl-q3">What handles this today? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q3">Your current baseline for this task.</p>
         <div class="fs-q-body">
-          <select class="fs-select" name="q3_today" required>
+          <select class="fs-select" name="q3_today" required aria-required="true" aria-labelledby="lbl-q3" aria-describedby="help-q3">
             <option value="">What runs this task today?</option>
-            <option value="frontier-api">A frontier API</option>
+            <option value="frontier-api">A big AI platform</option>
             <option value="rules">Rules or scripts</option>
             <option value="manual">A person, manually</option>
             <option value="nothing">Nothing yet</option>
           </select>
-          <div class="fs-row" style="margin-top:12px;">
-            <input class="fs-input" type="text" name="q3_error_rate" placeholder="Roughly how often is it wrong? (e.g. 10%)">
-            <input class="fs-input" type="text" name="q3_cost" placeholder="What does one wrong answer cost?">
+          <p class="fs-sublabel">How often it misses, and what a wrong answer costs <span class="fs-optional">(optional &mdash; this is what lets me tell you if owning it actually pays off)</span>:</p>
+          <div class="fs-row">
+            <input class="fs-input" type="text" name="q3_error_rate" placeholder="Roughly how often is it wrong? (e.g. 10%)" aria-label="Roughly how often is it wrong?">
+            <input class="fs-input" type="text" name="q3_cost" placeholder="What does one wrong answer cost?" aria-label="What does one wrong answer cost?">
           </div>
         </div>
       </div>
 
       <!-- Q4 -->
       <div class="fs-q" id="fsq-q4_capture">
-        <div class="fs-q-head"><span class="fs-q-num">4</span><span class="fs-q-label">Data reality <span class="fs-q-req">*</span></span></div>
-        <p class="fs-q-help">Volume and labels are decisive for proving a win on your data.</p>
+        <div class="fs-q-head"><span class="fs-q-num">4</span><span class="fs-q-label" id="lbl-q4">Your data <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q4">Volume and labels are decisive for proving a win on your data.</p>
         <div class="fs-q-body">
           <div class="fs-row">
-            <input class="fs-input" type="number" name="q4_examples" min="0" placeholder="Real examples you have (#)">
-            <input class="fs-input" type="number" name="q4_labeled" min="0" placeholder="Of those, how many are labelled (#)">
+            <select class="fs-select" name="q4_examples" aria-label="Roughly how many real examples you have">
+              <option value="">Real examples you have&hellip;</option>
+              <option value="lt50">Under 50</option>
+              <option value="50-200">50&ndash;200</option>
+              <option value="200-1000">200&ndash;1,000</option>
+              <option value="1000plus">1,000+</option>
+              <option value="unsure">Not sure</option>
+            </select>
+            <select class="fs-select" name="q4_labeled" aria-label="Roughly how many are labelled">
+              <option value="">&hellip;of those, how many labelled</option>
+              <option value="lt50">Under 50</option>
+              <option value="50-200">50&ndash;200</option>
+              <option value="200-1000">200&ndash;1,000</option>
+              <option value="1000plus">1,000+</option>
+              <option value="unsure">Not sure</option>
+            </select>
           </div>
+          <p class="fs-error" id="fsErrLabeled">Pick roughly how many are labelled &mdash; it decides the verdict.</p>
           <p class="fs-sublabel">If few are labelled, can you produce or capture more?</p>
-          <select class="fs-select" name="q4_capture" required>
+          <select class="fs-select" name="q4_capture" required aria-required="true" aria-labelledby="lbl-q4" aria-describedby="help-q4">
             <option value="">Can you get more labelled data?</option>
             <option value="easily">Yes, easily</option>
             <option value="effort">Yes, with effort</option>
@@ -245,10 +279,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
       <!-- Q5 -->
       <div class="fs-q" id="fsq-q5">
-        <div class="fs-q-head"><span class="fs-q-num">5</span><span class="fs-q-label">Why isn&rsquo;t a frontier API the answer?</span></div>
-        <p class="fs-q-help">Mark all that apply, then name the single biggest blocker.</p>
+        <div class="fs-q-head"><span class="fs-q-num">5</span><span class="fs-q-label" id="lbl-q5">Why aren&rsquo;t the big AI platforms the answer? <span class="fs-optional">(optional)</span></span></div>
+        <p class="fs-q-help" id="help-q5">Mark all that apply, then name the single biggest blocker.</p>
         <div class="fs-q-body">
-          <div class="fs-opts">
+          <div class="fs-opts" role="group" aria-labelledby="lbl-q5 help-q5">
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="compliance"><span>Can&rsquo;t send the data out &mdash; compliance, residency, contracts.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="cost"><span>Too costly at our volume.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="quality"><span>Not accurate enough on our task.</span></label>
@@ -267,26 +301,25 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
       <!-- Q6 -->
       <div class="fs-q" id="fsq-q6">
-        <div class="fs-q-head"><span class="fs-q-num">6</span><span class="fs-q-label">Scale</span></div>
-        <p class="fs-q-help">Roughly how many of these do you run &mdash; now, and projected? This is the number behind cost and self-hosting economics.</p>
+        <div class="fs-q-head"><span class="fs-q-num">6</span><span class="fs-q-label">Scale <span class="fs-optional">(optional)</span></span></div>
+        <p class="fs-q-help">Roughly how many of these you run. <span class="fs-optional">Optional, but it&rsquo;s the number behind whether owning it pays off.</span></p>
         <div class="fs-q-body">
-          <div class="fs-row">
-            <input class="fs-input" type="number" name="q6_volume_now" min="0" placeholder="How many now (#)">
-            <select class="fs-select" name="q6_unit">
-              <option value="per day">per day</option>
-              <option value="per month" selected>per month</option>
-            </select>
-            <input class="fs-input" type="number" name="q6_volume_projected" min="0" placeholder="Projected (#)">
-          </div>
+          <select class="fs-select" name="q6_volume" aria-label="Roughly how many you run">
+            <option value="">How many do you run?</option>
+            <option value="lt1k">Under 1,000 / month</option>
+            <option value="1k-100k">1,000&ndash;100,000 / month</option>
+            <option value="100k-1M">100,000&ndash;1M / month</option>
+            <option value="1Mplus">Over 1M / month</option>
+          </select>
         </div>
       </div>
 
       <!-- Q7 -->
       <div class="fs-q" id="fsq-q7_own">
-        <div class="fs-q-head"><span class="fs-q-num">7</span><span class="fs-q-label">Ownership <span class="fs-q-req">*</span></span></div>
-        <p class="fs-q-help">The qualifying question.</p>
+        <div class="fs-q-head"><span class="fs-q-num">7</span><span class="fs-q-label" id="lbl-q7">Ownership <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q7">The qualifying question.</p>
         <div class="fs-q-body">
-          <div class="fs-opts">
+          <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q7 help-q7" aria-required="true">
             <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes &mdash; we want to own and control the model long-term, not depend on a vendor API.</span></label>
             <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No &mdash; we&rsquo;re happy renting an API for this.</span></label>
           </div>
@@ -301,7 +334,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
       <div class="fs-submit-row">
         <button type="submit" class="btn-primary">Score my task &rarr;</button>
-        <p class="fs-error" id="fsError">Please answer the starred questions (1, 2, 3, 4, 7) so the verdict is meaningful.</p>
+        <p class="fs-error" id="fsError" role="alert" aria-live="assertive">Please answer the required questions so the verdict is meaningful.</p>
       </div>
     </form>
   </div>
@@ -314,12 +347,11 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       <div class="fs-badge" id="fsBadge"></div>
       <h2 id="fsTitle"></h2>
       <div class="fs-verdict-body" id="fsBody"></div>
-      <div class="fs-cta-row" id="fsCta"></div>
 
       <!-- Email capture (gated AFTER the verdict; hidden for the "not us" verdict) -->
       <div class="fs-capture" id="fsCapture">
-        <h3 id="fsCaptureHeading">Want this in writing?</h3>
-        <p class="fs-capture-sub" id="fsCaptureSub">Drop your email and I&rsquo;ll send your verdict, your answers, and the recommended next step. No sequence.</p>
+        <h3 id="fsCaptureHeading">Want my personal read on this?</h3>
+        <p class="fs-capture-sub" id="fsCaptureSub">Leave your email and I&rsquo;ll personally review your answers and send back the 2&ndash;3 things that would make or break it on your task &mdash; not a copy of this page, my actual take.</p>
         <form
           action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
           method="post"
@@ -346,7 +378,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <p class="fs-capture-note">No spam, no sequence. Your answers reach me so I can give you a real read.</p>
       </div>
 
-      <p class="fs-restart"><a href="#" id="fsRestart">&larr; Start over</a></p>
+      <div class="fs-cta-row" id="fsCta"></div>
+
+      <p class="fs-restart"><a href="#" id="fsRestart">&larr; Edit my answers</a></p>
     </div>
   </div>
 </section>
@@ -368,6 +402,17 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
   var uaField = document.getElementById('fs_field_ua');
   if (uaField) uaField.value = navigator.userAgent;
 
+  function updateProgress() {
+    var bar = document.getElementById('fsProgressBar');
+    if (!bar) return;
+    var done = 0;
+    for (var i = 0; i < REQUIRED.length; i++) { if (v(REQUIRED[i])) done++; }
+    bar.style.width = Math.round((done / REQUIRED.length) * 100) + '%';
+  }
+  FORM.addEventListener('input', updateProgress);
+  FORM.addEventListener('change', updateProgress);
+  updateProgress();
+
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -382,17 +427,21 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
   function calBtn(label) {
     return '<a href="' + CAL + '" target="_blank" rel="noopener noreferrer" class="btn-primary">' + label + '</a>';
   }
+  function calLink(label) {
+    return '<a href="' + CAL + '" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">' + label + '</a>';
+  }
 
   function compute() {
     var own = v('q7_own');                 // own | rent
-    var correctness = v('q2_correctness'); // exact | rule | human | subjective
-    var labeled = parseInt(v('q4_labeled'), 10) || 0;
+    var correctness = v('q2_correctness'); // exact | rule | human | unchecked | subjective
     var capture = v('q4_capture');         // easily | effort | no
-    var dataOK = labeled >= 200 || capture === 'easily' || capture === 'effort';
+    // Buckets: "enough" means a 200+ range in either examples or labelled.
+    var enough = function (b) { return b === '200-1000' || b === '1000plus'; };
+    var dataOK = capture === 'easily' || capture === 'effort' || enough(v('q4_labeled')) || enough(v('q4_examples'));
 
     var verdict;
     if (own === 'rent') verdict = 'no';
-    else if (correctness === 'subjective') verdict = 'build';
+    else if (correctness === 'subjective') verdict = 'build'; // only 'subjective' is unprovable; 'unchecked' has a right answer
     else if (dataOK) verdict = 'candidate';
     else verdict = 'notyet';
     return verdict;
@@ -408,9 +457,15 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     }[d] || '';
   }
   function volumeClause() {
-    var now = v('q6_volume_now');
-    if (!/^\d/.test(now)) return '';
-    return ' At roughly <strong>' + esc(now) + ' ' + esc(v('q6_unit') || 'per month') + '</strong>, the cost and self-hosting maths are worth running too.';
+    var vol = v('q6_volume');
+    if (!vol) return '';
+    var label = {
+      'lt1k': 'under 1,000 a month',
+      '1k-100k': '1,000–100,000 a month',
+      '100k-1M': '100,000–1M a month',
+      '1Mplus': 'over 1M a month'
+    }[vol] || vol;
+    return ' At roughly <strong>' + esc(label) + '</strong>, the cost and self-hosting maths are worth running too.';
   }
 
   function answersBlob(verdict) {
@@ -423,7 +478,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       'Q3 today: ' + v('q3_today') + ' | error rate: ' + (v('q3_error_rate') || '-') + ' | cost of wrong: ' + (v('q3_cost') || '-'),
       'Q4 examples: ' + (v('q4_examples') || '-') + ' | labelled: ' + (v('q4_labeled') || '-') + ' | can capture: ' + v('q4_capture'),
       'Q5 blockers: ' + (blockers || '-') + ' | dealbreaker: ' + (v('q5_dealbreaker') || '-'),
-      'Q6 volume now: ' + (v('q6_volume_now') || '-') + ' ' + (v('q6_unit') || '') + ' | projected: ' + (v('q6_volume_projected') || '-'),
+      'Q6 volume: ' + (v('q6_volume') || '-'),
       'Q7 own: ' + v('q7_own') + ' | operate: ' + (v('q7_operate') || '-'),
       'VERDICT: ' + verdict
     ].join('\n');
@@ -442,8 +497,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
     badge.className = 'fs-badge fs-badge--' + verdict;
     capture.style.display = '';
-    capHeading.textContent = 'Want this in writing?';
-    capSub.textContent = 'Drop your email and I’ll send your verdict, your answers, and the recommended next step. No sequence.';
+    capHeading.textContent = 'Want my personal read on this?';
+    capSub.textContent = 'Leave your email and I’ll personally review your answers and send back the 2–3 things that would make or break it on your task — not a copy of this page, my actual take.';
 
     if (verdict === 'candidate') {
       badge.textContent = 'Candidate → Pilot';
@@ -452,14 +507,13 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         (w ? ', and ' + w + ' is exactly the kind of reason owning beats renting' : '') + '.' + volumeClause() +
         ' The cheap <strong>Scan</strong> confirms it on a sample before you commit, and it leads into the <a href="/pilot">Pilot</a>' +
         (managed ? ' — and we can run and maintain it for you afterwards' : '') + '.';
-      cta.innerHTML = calBtn('Book a call to start a Scan &rarr;') +
-        '<p class="fs-cta-sub">The Scan is the cheap first step; its fee is credited toward the Pilot.</p>';
+      cta.innerHTML = '<p class="fs-cta-sub">Ready to move now? ' + calLink('Book a call to start a Scan &rarr;') + ' &mdash; the Scan fee credits toward the Pilot.</p>';
     } else if (verdict === 'build') {
       badge.textContent = 'Candidate → Build';
       title.textContent = 'We can build it — we just can’t prove it the same way.';
       body.innerHTML = 'You want to own it and the task is real, but because correctness is subjective (no checkable right answer), we can’t <em>prove</em> a win the way the <a href="/benchmark">public benchmark</a> does. We can still build it' +
         (w ? ', with ' + w + ' as the driver' : '') + ' — we’d scope it on a call rather than a benchmark.';
-      cta.innerHTML = calBtn('Book a call to scope &rarr;');
+      cta.innerHTML = '<p class="fs-cta-sub">Ready to move now? ' + calLink('Book a call to scope &rarr;') + '</p>';
     } else if (verdict === 'notyet') {
       badge.textContent = 'Not yet';
       title.textContent = 'You’re close — the missing piece is labelled data.';
@@ -481,24 +535,72 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     }
   }
 
-  function firstMissing() {
+  // question number + container + focus target for each required field
+  var QMETA = {
+    q1_task:        { num: 1, container: 'fsq-q1_task' },
+    q2_correctness: { num: 2, container: 'fsq-q2_correctness' },
+    q3_today:       { num: 3, container: 'fsq-q3_today' },
+    q4_capture:     { num: 4, container: 'fsq-q4_capture' },
+    q7_own:         { num: 7, container: 'fsq-q7_own' }
+  };
+  function focusTarget(name) {
+    var el = FORM.elements[name];
+    // radio groups return a RadioNodeList — focus the first control instead
+    if (el && typeof el.focus !== 'function') el = FORM.querySelector('[name="' + name + '"]');
+    return el;
+  }
+  function clearInvalid() {
+    Array.prototype.forEach.call(FORM.querySelectorAll('.fs-q--invalid'), function (el) {
+      el.classList.remove('fs-q--invalid');
+    });
+    document.getElementById('fsErrLabeled').style.display = 'none';
+    document.getElementById('fsError').style.display = 'none';
+  }
+  function validate() {
+    var missing = [];
     for (var i = 0; i < REQUIRED.length; i++) {
-      if (!v(REQUIRED[i])) return REQUIRED[i];
+      if (!v(REQUIRED[i])) missing.push(REQUIRED[i]);
     }
-    return null;
+    // labelled count is required only when more data can't be captured —
+    // otherwise a blank would silently read as zero and mis-verdict (see compute)
+    var needLabeled = v('q4_capture') === 'no' && v('q4_labeled') === '';
+    return { missing: missing, needLabeled: needLabeled };
   }
 
   FORM.addEventListener('submit', function (e) {
     e.preventDefault();
-    var err = document.getElementById('fsError');
-    var miss = firstMissing();
-    if (miss) {
+    clearInvalid();
+    var res = validate();
+
+    if (res.missing.length || res.needLabeled) {
+      var nums = [];
+      res.missing.forEach(function (name) {
+        var c = document.getElementById(QMETA[name].container);
+        if (c) c.classList.add('fs-q--invalid');
+        nums.push(QMETA[name].num);
+      });
+      if (res.needLabeled) {
+        document.getElementById('fsq-q4_capture').classList.add('fs-q--invalid');
+        document.getElementById('fsErrLabeled').style.display = 'block';
+        if (nums.indexOf(4) === -1) nums.push(4);
+      }
+      nums.sort(function (a, b) { return a - b; });
+
+      var err = document.getElementById('fsError');
+      err.textContent = nums.length === 1
+        ? 'Please answer question ' + nums[0] + ' to get your verdict.'
+        : 'Please answer questions ' + nums.join(', ') + ' to get your verdict.';
       err.style.display = 'block';
-      var node = document.getElementById('fsq-' + miss) || document.getElementById('fsq-' + miss.split('_')[0]);
-      if (node) { node.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+
+      // scroll the first problem into view and move focus to it
+      var firstName = res.missing[0];
+      var containerId = firstName ? QMETA[firstName].container : 'fsq-q4_capture';
+      var node = document.getElementById(containerId);
+      if (node) node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var fld = firstName ? focusTarget(firstName) : FORM.elements['q4_labeled'];
+      if (fld && fld.focus) { try { fld.focus({ preventScroll: true }); } catch (err2) { fld.focus(); } }
       return;
     }
-    err.style.display = 'none';
 
     var verdict = compute();
     document.getElementById('fs_field_verdict').value = verdict;
@@ -515,15 +617,27 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
   document.getElementById('fsRestart').addEventListener('click', function (e) {
     e.preventDefault();
+    clearInvalid();
     document.getElementById('result').style.display = 'none';
     document.getElementById('quiz').style.display = '';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Exposed for the capture form's inline onsubmit.
+  // Exposed for the capture form's inline onsubmit. Native submit still posts to
+  // the hidden iframe; we confirm on its load rather than claiming "Sent" instantly.
   window.fsCaptureSubmit = function () {
-    document.getElementById('fs_capture_form').style.display = 'none';
-    document.getElementById('fs_capture_success').style.display = 'block';
+    var btn = document.querySelector('#fs_capture_form button[type="submit"]');
+    if (btn) btn.textContent = 'Sending…';
+    var iframe = document.querySelector('iframe[name="fs_hidden_iframe"]');
+    var done = false;
+    function showSuccess() {
+      if (done) return;
+      done = true;
+      document.getElementById('fs_capture_form').style.display = 'none';
+      document.getElementById('fs_capture_success').style.display = 'block';
+    }
+    if (iframe) iframe.addEventListener('load', showSuccess, { once: true });
+    setTimeout(showSuccess, 2500); // fallback if the iframe load doesn't fire
   };
 })();
 </script>
