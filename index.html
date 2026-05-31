@@ -1277,13 +1277,13 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   </div>
   <div class="container">
     <div class="hero-content">
-      <div class="section-label reveal">Custom AI you own</div>
-      <h1 class="reveal">Match or even beat the big AI platforms on your task. <span class="accent">On intelligence you own, not rent.</span></h1>
-      <p class="hero-sub reveal reveal-delay-1">When they&rsquo;re too risky, too costly, or just wrong for a task you can&rsquo;t afford to get wrong: we build you a custom solution calibrated to your data, with the eval to prove it holds &mdash; and you own all of it. No ML team required.</p>
+      <div class="section-label reveal">For the tasks the big AI platforms can&rsquo;t touch</div>
+      <h1 class="reveal">The big AI platforms can&rsquo;t do your most important task. <span class="accent">That doesn&rsquo;t mean it can&rsquo;t be done.</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">When ChatGPT and the big platforms are off-limits, too costly, or just wrong for a task you can&rsquo;t get wrong &mdash; a smaller AI, built for that one job and yours to keep, can beat them. We prove it on your data first, and tell you straight if it won&rsquo;t.</p>
       <div class="hero-cta-group reveal reveal-delay-2">
         <a href="/fit-score" class="btn-primary">Score your task</a>
-        <p class="hero-support">A free, 7-question fit check. See whether an owned model can win on your task &mdash; before you spend anything.</p>
-        <p class="hero-support" style="margin-top: 0;"><a href="/benchmark" style="color: var(--text-secondary); font-size: 13px; display: inline-block; padding: 6px 0;">See it proven in public &rarr;</a> &nbsp;&middot;&nbsp; <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); font-size: 13px;">Book a free call</a></p>
+        <p class="hero-support">Free &middot; 7 questions &middot; no email to see your verdict. No ML team needed.</p>
+        <p class="hero-support" style="margin-top: 0;"><a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary); font-size: 13px;">Book a free call</a> &nbsp;&middot;&nbsp; <a href="/benchmark" style="color: var(--text-muted); font-size: 12px;">See it proven &rarr;</a></p>
       </div>
     </div>
   </div>
@@ -1294,27 +1294,39 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
      snapshot generated_at 2026-05-26. Source rows:
        banking77  LoRA Qwen3-8B 0.876  vs GPT-5.4 Mini 5-shot   0.7869  → +8.9pp,  138x cheaper/correct
        cuad       LoRA Qwen3-8B 0.7553 vs GPT-5.4 Mini zero-shot 0.6259 → +12.9pp,  28x cheaper/correct
+     "2 of 2" tile = tasks won vs the zero-shot API (results.json comparisons.lora_vs_zero_shot: 2/2).
+       Note top-level tasks_won_by_oss=1 counts wins vs the harder 5-shot baseline; the tile says
+       "used as-is" to make the zero-shot basis explicit and honest. Tiles 2-3 keep the conservative
+       mixed basis above (banking77 vs 5-shot, cuad vs zero-shot).
      RE-SYNC these three stat tiles if the benchmark reruns (results.json generated_at changes). -->
 <section class="proof-strip" id="proof">
   <div class="container">
+    <div class="section-label reveal" style="justify-content: center; margin-bottom: 36px;">Proof, not promises</div>
     <div class="proof-strip-inner">
       <div class="reveal">
         <div class="proof-stat-num">2 of 2</div>
-        <div class="proof-stat-label">public vertical tasks where a fine-tuned 8B open model beat GPT-5.4 Mini</div>
+        <div class="proof-stat-label">public tasks where an AI we built &mdash; and you&rsquo;d own &mdash; beat a ChatGPT-tier model used as-is (contract review, support routing)</div>
       </div>
       <div class="reveal reveal-delay-1">
         <div class="proof-stat-num">+8.9&ndash;12.9 pts</div>
-        <div class="proof-stat-label">accuracy over the frontier API, on support routing and contract-clause extraction</div>
+        <div class="proof-stat-label">more accurate than the big-platform API on those tasks</div>
       </div>
       <div class="reveal reveal-delay-2">
         <div class="proof-stat-num">28&ndash;138&times; cheaper</div>
-        <div class="proof-stat-label">per correct answer, self-hosted vs the same frontier API</div>
+        <div class="proof-stat-label">per correct answer, run on hardware you control</div>
       </div>
     </div>
-    <a href="/benchmark" class="proof-link">See it proven in public &mdash; every number reproducible from open weights and code &rarr;</a>
+    <a href="/benchmark" class="proof-link">Every number reproducible from open code &mdash; see exactly how &rarr;</a>
   </div>
 </section>
 
+
+<!-- ======== WHY THIS WORKS (belief bridge) ======== -->
+<section style="border-bottom: 1px solid var(--border); text-align: center; padding: clamp(48px, 7vh, 80px) 0;">
+  <div class="container">
+    <p class="reveal" style="max-width: 760px; margin: 0 auto; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.05rem, 2.2vw, 1.45rem); line-height: 1.5; letter-spacing: -0.01em; color: var(--text-primary);">A giant model knows a little about everything. A small one, trained on your one task, can know that one thing better &mdash; and runs for pennies because it&rsquo;s small.</p>
+  </div>
+</section>
 
 <!-- ======== TESTIMONIAL ======== -->
 <!-- TODO: Replace with a real attributed quote when available -->
@@ -1333,8 +1345,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 <section class="problems-section" id="why">
   <div class="container">
     <div class="problems-header reveal">
-      <div class="section-label">When a frontier API isn&rsquo;t the answer</div>
-      <h2>You have a task that has to be right. The rented API isn&rsquo;t the way to do it.</h2>
+      <div class="section-label">Sound familiar?</div>
+      <h2>You have a task that has to be right &mdash; and the big platforms aren&rsquo;t the way to do it.</h2>
     </div>
     <div class="problems-grid">
       <div class="problem-card reveal reveal-delay-1">
@@ -1359,7 +1371,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     <div class="problems-extra reveal">
       <div class="problem-extra-item">
         <h3>Or there&rsquo;s no AI for this yet</h3>
-        <p>The task is still manual or rules-based and you want it AI-powered &mdash; done right, owned, and trustworthy from day one. There&rsquo;s no frontier API to &ldquo;replace&rdquo;; the value is doing it at all, on intelligence you control.</p>
+        <p>The task is still manual or rules-based and you want it AI-powered &mdash; done right, owned, and trustworthy from day one. There&rsquo;s no big-platform AI to &ldquo;replace&rdquo;; the value is doing it at all, on an AI you control.</p>
       </div>
       <div class="problem-extra-item">
         <h3>And once you try, you can&rsquo;t tell if it worked</h3>
@@ -1398,7 +1410,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       <div class="qualifier-label">One soft test</div>
       <p>Does your task have a checkable right answer &mdash; an exact value, a rule it must pass, a label a person could confirm? If so, we can benchmark an owned model head-to-head and <em>prove</em> the win on your data. If it&rsquo;s open-ended, we probe deeper before promising anything.</p>
       <p>Not sure where you land? The fit check sorts it in a few minutes.</p>
-      <a href="/fit-score" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Score your task</a>
+      <a href="/fit-score" class="btn-primary" style="margin-bottom: 16px; display: inline-block;">Check if your task qualifies</a>
       <p class="nda-note">We work under NDA &mdash; your data and architecture stay confidential &mdash; and we&rsquo;ll tell you honestly if an owned model won&rsquo;t win.</p>
     </div>
   </div>
@@ -1407,7 +1419,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 <!-- ======== INLINE CTA ======== -->
 <div class="cta-interstitial">
   <p>Not sure which of these is you? Find out in seven questions.</p>
-  <a href="/fit-score" class="btn-primary">Score your task</a>
+  <a href="/fit-score" class="btn-primary">Which one are you? &mdash; find out free</a>
 </div>
 
 <!-- ======== DEMOTED: THREE WAYS TEAMS BUILD THE WRONG FIX ======== -->
@@ -1431,7 +1443,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 <!-- ======== INLINE CTA (post-pitfalls) ======== -->
 <div class="cta-interstitial">
   <p>Stop guessing whether an owned model wins. Get a straight verdict on your task.</p>
-  <a href="/fit-score" class="btn-primary">Score your task</a>
+  <a href="/fit-score" class="btn-primary">Get your verdict</a>
 </div>
 
 <!-- ======== HOW WE WORK ======== -->
@@ -1446,7 +1458,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
         <div class="step-num">01</div>
         <div>
           <h3>Prove it on your data</h3>
-          <p>Before you commit to a build, we benchmark an owned model head-to-head against your current option &mdash; the frontier API, rules, or whatever runs the task today &mdash; on a sample of your real data. You get a go/no-go verdict and a reproducible eval calibrated to your task. If an owned model won&rsquo;t win, we tell you, and you&rsquo;ve spent very little to find out.</p>
+          <p>Before you commit to a build, we benchmark an owned model head-to-head against your current option &mdash; the big platforms, rules, or whatever runs the task today &mdash; on a sample of your real data. You get a go/no-go verdict and a reproducible eval calibrated to your task. If an owned model won&rsquo;t win, we tell you, and you&rsquo;ve spent very little to find out.</p>
         </div>
       </div>
       <div class="step reveal reveal-delay-1">
@@ -1465,7 +1477,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       </div>
     </div>
     <div class="how-cta reveal">
-      <a href="/fit-score" class="btn-primary">Score your task</a>
+      <a href="/fit-score" class="btn-primary">Start with step 1 &mdash; score your task</a>
       <p style="font-size: 13px; color: var(--text-muted); margin: 14px auto 0; max-width: 420px; text-align: center;">Seven questions to see whether an owned model can win on your task &mdash; and what proving it would take.</p>
     </div>
   </div>
@@ -1476,20 +1488,20 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="diff-header reveal">
       <div class="section-label">What&rsquo;s different</div>
-      <h2>You own the result &mdash; and the proof it works.</h2>
+      <h2>No technique to sell you. No lock-in. Just what wins on your data.</h2>
     </div>
     <div class="diff-grid">
       <div class="diff-item reveal reveal-delay-1">
-        <h3>An eval calibrated to your task, not a generic leaderboard</h3>
-        <p>Every engagement ships an eval built from your data and your definition of correct. It&rsquo;s what proves the win, catches regressions before you deploy, and tells you when a new model is actually better &mdash; not just newer.</p>
+        <h3>We&rsquo;ve no technique to sell you</h3>
+        <p>Every AI shop has a house specialty &mdash; fine-tuning, RAG, a platform &mdash; and recommends the thing it sells. We don&rsquo;t have one. We pick the approach from what wins on your data, because we&rsquo;ve nothing else to push.</p>
       </div>
       <div class="diff-item reveal reveal-delay-2">
-        <h3>Owned outright &mdash; no license, no lock-in</h3>
-        <p>Weights, adapters, eval, recipes, inference code. Yours to run on your own infrastructure: no inference contract, no hosted dependency, no permission needed before you ship a change.</p>
+        <h3>We prove it before you build &mdash; and we&rsquo;ll tell you to walk away</h3>
+        <p>The cheap proof step comes first precisely so nobody builds the wrong thing. If a model you&rsquo;d own can&rsquo;t beat what you have on your data, you hear it early &mdash; and you keep the proof that says so. We&rsquo;d rather lose the build than sell you one that loses.</p>
       </div>
       <div class="diff-item reveal reveal-delay-3">
-        <h3>We&rsquo;ll tell you if it won&rsquo;t win</h3>
-        <p>The cheap proof step comes first precisely so nobody builds the wrong thing. If an owned model can&rsquo;t beat what you have on your data, you hear it early &mdash; and you keep the eval that says so.</p>
+        <h3>You own the result &mdash; and the proof it works</h3>
+        <p>Weights, eval, recipes, inference code: yours to run on your own infrastructure, no license, no lock-in. The eval is built from your data and your definition of correct &mdash; so it proves the win, catches regressions, and tells you when a new model is actually better, not just newer.</p>
       </div>
     </div>
   </div>
@@ -1515,29 +1527,29 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
           <tr>
             <td>Scan</td>
             <td>An ICP-gated read on a sample of your data: hidden-failure check, self-host feasibility, rough cost break-even. Signal only &mdash; no trained model or calibrated eval yet.</td>
-            <td style="white-space: normal;">Low fixed fee, credited toward the Pilot</td>
+            <td style="white-space: normal;">$1,500, credited toward the Pilot</td>
           </tr>
           <tr>
             <td><a href="/pilot" style="color: var(--accent);">Pilot &rarr;</a></td>
             <td style="color: var(--accent); font-weight: 500;">A go/no-go verdict plus a reproducible eval you own, calibrated to your data &mdash; the public benchmark, run on a sample of your task. TCO where cost is the driver, and a proof artifact.</td>
-            <td>$3&ndash;5k</td>
+            <td>$6&ndash;9k</td>
           </tr>
           <tr>
             <td>Build</td>
             <td>Done-for-you: the owned solution the Pilot prescribed &mdash; adapter or weights, classifier, retrieval stack, or pipeline &mdash; handed over outright.</td>
-            <td style="white-space: normal;">Project-priced, scoped from the Pilot</td>
+            <td style="white-space: normal;">From $25k, scoped from the Pilot</td>
           </tr>
           <tr>
             <td>Assurance</td>
             <td>We keep proving it holds: re-run the eval as models and data move, catch regressions, extend coverage as new cases appear.</td>
-            <td>$8&ndash;40k/mo</td>
+            <td>$2&ndash;10k/mo</td>
           </tr>
         </tbody>
       </table>
     </div>
     <p class="pricing-note reveal reveal-delay-2">Start with the Scan to confirm fit cheaply; its fee is credited toward the Pilot. The Pilot is fixed-scope &mdash; you walk away owning the eval whatever you decide next. Build is scoped from what the benchmark proves; Assurance is optional and keeps the proof current.</p>
     <div style="margin-top: 36px;" class="reveal">
-      <a href="/fit-score" class="btn-primary">Score your task</a>
+      <a href="/fit-score" class="btn-primary">See if it&rsquo;s worth proving &mdash; free</a>
       <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">Free. Seven questions. See your verdict before you give an email.</p>
     </div>
   </div>
@@ -1561,7 +1573,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       <div class="faq-item reveal">
         <button class="faq-question">We can&rsquo;t send our data to an outside API. Can you still help?</button>
         <div class="faq-answer">
-          <p>That&rsquo;s one of the main reasons teams come to us. The whole point of an owned model is that it runs on your infrastructure &mdash; nothing has to leave your environment. We work under NDA and can operate inside your walls. For compliance and data-residency cases there&rsquo;s often no frontier API that&rsquo;s even permitted; owning the model is the only viable path.</p>
+          <p>That&rsquo;s one of the main reasons teams come to us. The whole point of an owned model is that it runs on your infrastructure &mdash; nothing has to leave your environment. We work under NDA and can operate inside your walls. For compliance and data-residency cases there&rsquo;s often no big-platform API that&rsquo;s even permitted; owning the model is the only viable path.</p>
         </div>
       </div>
       <div class="faq-item reveal">
@@ -1608,7 +1620,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
         <h2>Find out if an owned model wins on your task.</h2>
       </div>
       <div class="body-text reveal reveal-delay-1">
-        <p>Seven questions &mdash; what the task is, how &ldquo;right&rdquo; is judged, the data you have, and why the frontier API isn&rsquo;t the answer. You get a straight verdict: candidate, not yet, or honestly-not-us. No email required to see it.</p>
+        <p>Seven questions &mdash; what the task is, how &ldquo;right&rdquo; is judged, the data you have, and why the big platforms aren&rsquo;t the answer. You get a straight verdict: candidate, not yet, or honestly-not-us. No email required to see it.</p>
       </div>
       <div class="reveal reveal-delay-2">
         <p class="support-text" style="margin-bottom: 20px;">No pitch deck. No sales sequence. Just a clear read on whether this is worth your time.</p>
