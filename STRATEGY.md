@@ -2,7 +2,7 @@
 
 > The current, agreed strategy — the yardstick for copy, design, and offers. It is a
 > **decision record, not law**: challenge it freely in review, and when a decision changes,
-> update it here so it stays the single source of truth. Structural/build facts live in `CLAUDE.md`.
+> update it here so it stays the single source of truth. Structural/build facts live in `CLAUDE.md`; the competitive read and the awareness-gap analysis live in `COMPETITIVE-ANALYSIS.md`.
 
 ## Who it's for
 
@@ -17,10 +17,11 @@
 - A frontier API isn't viable or preferred — for compliance, cost, quality, or mere preference.
 - The cost of the task being wrong is high.
 - No in-house ability to define-correct / diagnose / fix / verify, and no reason to build it.
+- **Solution-unaware:** feels the problem but does not know an owned open-source model can beat the big platforms on a narrow task — the claim is *news* to them (only consensus among ML practitioners). Messaging must reveal the category, then prove it.
 
 **Other audiences to account for (not the buyer, but they gate or amplify):**
 - **The buyer's technical gatekeeper** — a skeptical ML/AI advisor who can veto on credibility.
-  Win = no red flags, no overclaim, earns their sign-off.
+  Win = no red flags, no overclaim, earns their sign-off. **Secondary — may not exist, or may only advise the buyer; give them a credibility track (benchmark/methodology), but do not let their language lead the buyer’s narrative.**
 - **Peers / potential partners, hires, mentors** — the ML/AI crowd who see the public benchmark.
   Win = earns respect, worth engaging with.
 
@@ -34,21 +35,30 @@
 Supply the judgment they lack and deliver a **custom AI solution they own, with proof it can be
 trusted** — replacing or enabling a result they couldn't get (compliantly / affordably / accurately)
 from a frontier API. Offer ladder:
-- **Scan** — cheap, ICP-gated read on a data sample: is it worth proving?
+- **Scan** — cheap, ICP-gated read on a data sample: is it worth proving? *($1,500, a ~1-day read, credited toward the Pilot.)*
 - **Pilot** — the paid proof on their data: a go/no-go verdict + the reproducible eval they own
-  (+ a proof artifact; TCO for cost-led cases).
+  (+ a proof artifact; TCO for cost-led cases). *($6–9k, a ~1-week fixed-scope box.)*
 - **Build** — build the solution, prove it hits the bar, hand off everything (weights, eval,
-  configs, recipes).
-- **Assurance** — keep proving it as models and data change.
+  configs, recipes). *(Value-priced from ~$25k, scoped from the Pilot.)*
+- **Assurance** — keep proving it as models and data change. *($2–10k/mo, tiered.)*
+
+> Prices are pre-revenue working hypotheses (set 2026-05-31), timebox-anchored to bound solo
+> delivery cost (Scan ~1 day, Pilot ~1 week); revisit after ~3 engagements once real delivery
+> time and WTP are known. The cost-vs-API wedge is eroding (API prices fell ~80% YoY) — anchor
+> Build value on cost-of-error × volume, not on being cheaper than the API.
 
 ## Strategy
 
-### 1. Sell the trusted, owned result, in the buyer's language
-Continue the public benchmark's argument for a buy-not-build business buyer. Promise ≈ *match
-or even beat the big AI platforms on your task — on intelligence you own, not rent.* The public
-benchmark is the proof that the least-believable part (a small, owned model beating the frontier)
-is real. Trust assets — you own the weights/evals, no lock-in, "we'll tell you if it won't work" —
-stay as qualifiers, not the headline.
+### 1. Lead with the buyer’s struggle, then the proof — in their language
+The business buyer is **solution-unaware**: lead with the struggling moment (the big platforms
+can’t do their one task), *reveal* that an owned model can, then prove it. The durable,
+hard-to-copy differentiators are **independence, technique-neutrality, and the honest go/no-go**
+(“we’ll tell you to keep your API”) — promote these to the spine; no platform or SI can copy
+them without breaking their own business model. “A small owned model beats the frontier, and you
+own it” is now table-stakes among practitioners — keep *match/beat* and *you own it* as
+**support, not the headline**. The public benchmark’s job is **reason-to-believe a new
+possibility** for the buyer (and credibility for any gatekeeper), translated into their terms —
+not a cold demand hook.
 
 ### 2. Lead with all the wedges, not just cost-vs-API
 Frontier fails for **compliance, cost, or quality** — and some buyers have no AI yet (greenfield).
