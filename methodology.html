@@ -295,7 +295,7 @@ body::after {
         <p>The benchmark is self-funded and unsponsored today. Its credibility is the entire point, so the rules are fixed in advance and hold even once that changes:</p>
         <ul>
           <li><strong>Sponsors fund the work, never the conclusion.</strong> A model lab, inference host, or tooling vendor may underwrite a run, but gets no say over the method, the numbers, or how they read.</li>
-          <li><strong>Results are published regardless of outcome</strong> &mdash; including when an open model loses, or a sponsor&rsquo;s product comes out behind.</li>
+          <li><strong>Results are published regardless of outcome</strong>, including when an open model loses, or a sponsor&rsquo;s product comes out behind.</li>
           <li><strong>Code and methodology stay public.</strong> Every result is reproducible from the released adapters, prediction logs, and pipeline, so anyone can check the numbers rather than take them on trust.</li>
           <li><strong>Any sponsorship is disclosed</strong> on the run it applies to.</li>
         </ul>
@@ -315,8 +315,8 @@ body::after {
 
         <h2 id="models">Models</h2>
         <p><strong>Open-source (QLoRA fine-tuned):</strong> Qwen3-8B (8B parameters, Apache 2.0 licence). Served with vLLM on a single NVIDIA RTX 3090.</p>
-        <p><strong>Hosted API (prompted):</strong> GPT-5.4 Mini &mdash; the cost-efficient API tier a team would actually deploy for a task at this volume, not the pricier flagship or a reasoning model &mdash; tested zero-shot and 5-shot at standard API pricing. Other vendors&rsquo; models, and flagship or reasoning tiers where a task&rsquo;s latency and cost budget justify them, are being added. The per-query cost reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
-        <p><strong>Why a decoder for a classification task?</strong> For a single closed-set task like Banking77 in isolation, a small encoder classifier (a fine-tuned DeBERTa, or SetFit on a few hundred labels) is often the more accurate and cheaper-to-serve tool &mdash; and encoder and other non-decoder baselines are being added per task. We report a decoder here because most deployments run a <em>portfolio</em> of tasks: one open base model with per-task LoRA adapters, hot-swapped or served concurrently, covers classification, extraction, and generation on a single inference stack &mdash; frequently the better fleet-level trade even when an encoder wins a task on its own.</p>
+        <p><strong>Hosted API (prompted):</strong> GPT-5.4 Mini (the cost-efficient API tier a team would actually deploy for a task at this volume, not the pricier flagship or a reasoning model) tested zero-shot and 5-shot at standard API pricing. Other vendors&rsquo; models, and flagship or reasoning tiers where a task&rsquo;s latency and cost budget justify them, are being added. The per-query cost reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
+        <p><strong>Why a decoder for a classification task?</strong> For a single closed-set task like Banking77 in isolation, a small encoder classifier (a fine-tuned DeBERTa, or SetFit on a few hundred labels) is often the more accurate and cheaper-to-serve tool. Encoder and other non-decoder baselines are being added per task. We report a decoder here because most deployments run a <em>portfolio</em> of tasks: one open base model with per-task LoRA adapters, hot-swapped or served concurrently, covers classification, extraction, and generation on a single inference stack, frequently the better fleet-level trade even when an encoder wins a task on its own.</p>
 
         <h2 id="conditions">Conditions</h2>
         <div class="table-wrap">
@@ -331,7 +331,7 @@ body::after {
         </div>
 
         <h2 id="metrics">Metrics</h2>
-        <p><strong>Task accuracy.</strong> For extraction (CUAD), the primary metric is <strong>AUPR</strong> &mdash; area under the precision&ndash;recall curve for clause detection, the metric the CUAD authors report and the right one when most clause types are absent from any given contract. Token F1 (token-level overlap, partial credit for near-correct extractions) is reported alongside as a secondary, partial-credit check. Weighted F1 for classification (accounts for label imbalance across all categories).</p>
+        <p><strong>Task accuracy.</strong> For extraction (CUAD), the primary metric is <strong>AUPR</strong>, area under the precision&ndash;recall curve for clause detection, the metric the CUAD authors report and the right one when most clause types are absent from any given contract. Token F1 (token-level overlap, partial credit for near-correct extractions) is reported alongside as a secondary, partial-credit check. Weighted F1 for classification (accounts for label imbalance across all categories).</p>
         <p><strong>Deployment cost.</strong> Presented as an interactive total-cost-of-ownership calculator on the benchmark page, since real cost depends on query volume and the hardware you deploy on. The hosted API is usage-priced from measured input and output token counts at the published per-token rate. The self-hosted model is priced as a GPU reservation at a rate you choose (on-prem, A40, A10G, or H100), scaled to the number of GPUs your volume needs, plus one-time fine-tuning. The benchmark ran on an RTX 3090; the calculator lets you model your own setup.</p>
 
         <h2 id="error-analysis">Error analysis</h2>
@@ -340,7 +340,7 @@ body::after {
         <p><strong>Support routing (Banking77)</strong> uses: correct and wrong class. As a closed-vocabulary classification task, there are no other failure modes; every prediction maps to a valid label.</p>
 
         <h2 id="training-configuration">Training configuration</h2>
-        <p>All QLoRA fine-tuning uses Unsloth on a single NVIDIA RTX 3090 (24 GB). Hyperparameters for Banking77 were selected by a 6-trial grid sweep over learning rate &times; LoRA rank, ranked by validation loss only &mdash; no test metrics were examined at selection time. CUAD hyperparameters were transferred from the Banking77 sweep winner, with rank increased from 4 to 8 to accommodate span extraction, and early-stopping patience increased from 1 to 2 to account for the different loss profile of extraction tasks.</p>
+        <p>All QLoRA fine-tuning uses Unsloth on a single NVIDIA RTX 3090 (24 GB). Hyperparameters for Banking77 were selected by a 6-trial grid sweep over learning rate &times; LoRA rank, ranked by validation loss only, no test metrics were examined at selection time. CUAD hyperparameters were transferred from the Banking77 sweep winner, with rank increased from 4 to 8 to accommodate span extraction, and early-stopping patience increased from 1 to 2 to account for the different loss profile of extraction tasks.</p>
 
         <h3 id="hyperparameters">Hyperparameters</h3>
         <div class="table-wrap">

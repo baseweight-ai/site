@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fit check: should this task run on intelligence you own? | Baseweight</title>
-<meta name="description" content="A free, two-minute fit check — one question at a time. See whether a custom open model you own could match or beat your current option on your task, and what proving it would take. No email required to see your verdict.">
+<meta name="description" content="A free, two-minute fit check, one question at a time. See whether a custom open model you own could match or beat your current option on your task, and what proving it would take. No email required to see your verdict.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -189,7 +189,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
   <div class="container">
     <div class="section-label">Score your task &middot; fit check</div>
     <h1>Should this task run on <span class="accent">AI you own?</span></h1>
-    <p class="fs-hero-sub">About two minutes, one question at a time. You get a straight verdict &mdash; candidate, not yet, or honestly-not-us &mdash; with the reasoning. No email required to see it.</p>
+    <p class="fs-hero-sub">About two minutes, one question at a time. You get a straight verdict (candidate, not yet, or honestly-not-us) with the reasoning. No email required to see it.</p>
     <p class="fs-hero-note">The <a href="/benchmark">public benchmark</a> shows a small owned model can match or beat the big AI platforms on a focused task. This tells you whether that&rsquo;s true for <em>your</em> task.</p>
   </div>
 </section>
@@ -201,7 +201,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       <div class="fs-progress" aria-hidden="true"><div class="fs-progress-bar" id="fsProgressBar"></div></div>
       <p class="fs-step-counter" id="fsStepCounter" aria-live="polite">Question 1 of 6</p>
 
-      <!-- Step 1 — what runs it today (easy single click, builds momentum) -->
+      <!-- Step 1, what runs it today (easy single click, builds momentum) -->
       <div class="fs-q fs-step" id="fsq-q3_today" style="display:block;">
         <div class="fs-q-head"><span class="fs-q-label" id="lbl-q3">What handles this task today? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
         <p class="fs-q-help" id="help-q3">Your current baseline for this one task.</p>
@@ -213,7 +213,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
             <option value="manual">A person, manually</option>
             <option value="nothing">Nothing yet</option>
           </select>
-          <p class="fs-sublabel">How often it misses, and what a wrong answer costs <span class="fs-optional">(optional &mdash; this is what lets me tell you if owning it actually pays off)</span>:</p>
+          <p class="fs-sublabel">How often it misses, and what a wrong answer costs <span class="fs-optional">(optional, this is what lets me tell you if owning it actually pays off)</span>:</p>
           <div class="fs-row">
             <input class="fs-input" type="text" name="q3_error_rate" placeholder="Roughly how often is it wrong? (e.g. 10%)" aria-label="Roughly how often is it wrong?">
             <input class="fs-input" type="text" name="q3_cost" placeholder="What does one wrong answer cost?" aria-label="What does one wrong answer cost?">
@@ -221,22 +221,22 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Step 2 — how is "correct" judged (decides provability) -->
+      <!-- Step 2, how is "correct" judged (decides provability) -->
       <div class="fs-q fs-step" id="fsq-q2_correctness">
         <div class="fs-q-head"><span class="fs-q-label" id="lbl-q2">How would you know an answer is right? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
-        <p class="fs-q-help" id="help-q2">The most important question. Pick the closest &mdash; it decides whether a win can be proven.</p>
+        <p class="fs-q-help" id="help-q2">The most important question. Pick the closest, it decides whether a win can be proven.</p>
         <div class="fs-q-body">
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q2 help-q2" aria-required="true">
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>It matches a known correct value exactly &mdash; a label, a field, a number.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>It matches a known correct value exactly, a label, a field, a number.</span></label>
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="rule"><span>It passes a rule or checklist a reviewer could apply.</span></label>
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="human"><span>A person judges each case (two reviewers would mostly agree).</span></label>
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="unchecked"><span>It has a right answer, but nobody checks it today.</span></label>
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s subjective &mdash; reasonable people would disagree.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s subjective, reasonable people would disagree.</span></label>
           </div>
         </div>
       </div>
 
-      <!-- Step 3 — data -->
+      <!-- Step 3, data -->
       <div class="fs-q fs-step" id="fsq-q4_capture">
         <div class="fs-q-head"><span class="fs-q-label" id="lbl-q4">Your data <span class="fs-q-req" aria-hidden="true">*</span></span></div>
         <p class="fs-q-help" id="help-q4">Volume and labels are decisive for proving a win on your data.</p>
@@ -259,7 +259,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
               <option value="unsure">Not sure</option>
             </select>
           </div>
-          <p class="fs-error" id="fsErrLabeled">Pick roughly how many are labelled &mdash; it decides the verdict.</p>
+          <p class="fs-error" id="fsErrLabeled">Pick roughly how many are labelled, it decides the verdict.</p>
           <p class="fs-sublabel">If few are labelled, can you produce or capture more?</p>
           <select class="fs-select" name="q4_capture" required aria-required="true" aria-labelledby="lbl-q4" aria-describedby="help-q4">
             <option value="">Can you get more labelled data?</option>
@@ -270,21 +270,21 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Step 4 — why not the big platforms (optional) -->
+      <!-- Step 4, why not the big platforms (optional) -->
       <div class="fs-q fs-step" id="fsq-q5">
         <div class="fs-q-head"><span class="fs-q-label" id="lbl-q5">Why aren&rsquo;t the big AI platforms the answer? <span class="fs-optional">(optional)</span></span></div>
         <p class="fs-q-help" id="help-q5">Mark all that apply, then name the single biggest blocker.</p>
         <div class="fs-q-body">
           <div class="fs-opts" role="group" aria-labelledby="lbl-q5 help-q5">
-            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="compliance"><span>Can&rsquo;t send the data out &mdash; compliance, residency, contracts.</span></label>
+            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="compliance"><span>Can&rsquo;t send the data out, compliance, residency, contracts.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="cost"><span>Too costly at our volume.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="quality"><span>Not accurate enough on our task.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="ownership"><span>We&rsquo;d rather own it.</span></label>
           </div>
           <p class="fs-sublabel">The dealbreaker:</p>
           <select class="fs-select" name="q5_dealbreaker">
-            <option value="">&mdash; pick the single biggest blocker &mdash;</option>
-            <option value="compliance">Compliance &mdash; can&rsquo;t send data out</option>
+            <option value="">Pick the single biggest blocker</option>
+            <option value="compliance">Compliance, can&rsquo;t send data out</option>
             <option value="cost">Cost at our scale</option>
             <option value="quality">Quality on our task</option>
             <option value="ownership">Ownership</option>
@@ -292,7 +292,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Step 5 — scale (optional) -->
+      <!-- Step 5, scale (optional) -->
       <div class="fs-q fs-step" id="fsq-q6">
         <div class="fs-q-head"><span class="fs-q-label">Scale <span class="fs-optional">(optional)</span></span></div>
         <p class="fs-q-help">Roughly how many of these you run. <span class="fs-optional">It&rsquo;s the number behind whether owning it pays off.</span></p>
@@ -307,14 +307,14 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Step 6 — ownership (the qualifying question, last) -->
+      <!-- Step 6, ownership (the qualifying question, last) -->
       <div class="fs-q fs-step" id="fsq-q7_own">
         <div class="fs-q-head"><span class="fs-q-label" id="lbl-q7">Do you want to own it? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
         <p class="fs-q-help" id="help-q7">The qualifying question.</p>
         <div class="fs-q-body">
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q7 help-q7" aria-required="true">
-            <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes &mdash; we want to own and control the model long-term, not depend on a vendor API.</span></label>
-            <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No &mdash; we&rsquo;re happy renting an API for this.</span></label>
+            <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes, we want to own and control the model long-term, not depend on a vendor API.</span></label>
+            <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No, we&rsquo;re happy renting an API for this.</span></label>
           </div>
           <p class="fs-sublabel">Who would run and maintain it?</p>
           <select class="fs-select" name="q7_operate">
@@ -343,10 +343,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       <div class="fs-verdict-body" id="fsBody"></div>
 
       <!-- Email capture (gated AFTER the verdict; hidden for the "not us" verdict).
-           The task description lives here now — asked once commitment is high, not up front. -->
+           The task description lives here now, asked once commitment is high, not up front. -->
       <div class="fs-capture" id="fsCapture">
         <h3 id="fsCaptureHeading">Want my personal read on this?</h3>
-        <p class="fs-capture-sub" id="fsCaptureSub">Leave your email and I&rsquo;ll personally review your answers and send back the 2&ndash;3 things that would make or break it on your task &mdash; not a copy of this page, my actual take.</p>
+        <p class="fs-capture-sub" id="fsCaptureSub">Leave your email and I&rsquo;ll personally review your answers and send back the 2&ndash;3 things that would make or break it on your task, not a copy of this page, my actual take.</p>
         <form
           action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
           method="post"
@@ -372,7 +372,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <div id="fs_capture_success" class="fs-success" style="display:none">
           <p><strong>Sent. I&rsquo;ll be in touch with your full read and the next step.</strong></p>
         </div>
-        <p class="fs-capture-note">No spam, no sequence &mdash; and we work under NDA. Your answers come straight to me for a real read.</p>
+        <p class="fs-capture-note">No spam, no sequence, and we work under NDA. Your answers come straight to me for a real read.</p>
       </div>
 
       <div class="fs-cta-row" id="fsCta"></div>
@@ -472,7 +472,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       document.getElementById('fsError').style.display = 'block';
       return false;
     }
-    // labelled count is required only when more data can't be captured —
+    // labelled count is required only when more data can't be captured;
     // otherwise a blank would silently read as zero and mis-verdict (see compute)
     if (step.id === 'fsq-q4_capture' && v('q4_capture') === 'no' && v('q4_labeled') === '') {
       document.getElementById('fsq-q4_capture').classList.add('fs-q--invalid');
@@ -569,7 +569,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     badge.className = 'fs-badge fs-badge--' + verdict;
     capture.style.display = '';
     capHeading.textContent = 'Want my personal read on this?';
-    capSub.textContent = 'Leave your email and I’ll personally review your answers and send back the 2–3 things that would make or break it on your task — not a copy of this page, my actual take.';
+    capSub.textContent = 'Leave your email and I’ll personally review your answers and send back the 2–3 things that would make or break it on your task, not a copy of this page, my actual take.';
 
     if (verdict === 'candidate') {
       badge.textContent = 'Candidate → Pilot';
@@ -577,20 +577,20 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       body.innerHTML = 'Your task has a checkable right answer, so an owned model can be benchmarked head-to-head with your current option <strong>on your data</strong>' +
         (w ? ', and ' + w + ' is exactly the kind of reason owning beats renting' : '') + '.' + volumeClause() +
         ' The cheap <strong>Scan</strong> confirms it on a sample before you commit, and it leads into the <a href="/pilot">Pilot</a>' +
-        (managed ? ' — and we can run and maintain it for you afterwards' : '') + '.';
-      cta.innerHTML = '<p class="fs-cta-sub">Ready to move now? ' + calLink('Book a call to start a Scan &rarr;') + ' &mdash; the Scan fee credits toward the Pilot.</p>';
+        (managed ? ', and we can run and maintain it for you afterwards' : '') + '.';
+      cta.innerHTML = '<p class="fs-cta-sub">Ready to move now? ' + calLink('Book a call to start a Scan &rarr;') + ', the Scan fee credits toward the Pilot.</p>';
     } else if (verdict === 'build') {
       badge.textContent = 'Candidate → Build';
-      title.textContent = 'We can build it — we just can’t prove it the same way.';
+      title.textContent = 'We can build it, we just can’t prove it the same way.';
       body.innerHTML = 'You want to own it and the task is real, but because correctness is subjective (no checkable right answer), we can’t <em>prove</em> a win the way the <a href="/benchmark">public benchmark</a> does. We can still build it' +
-        (w ? ', with ' + w + ' as the driver' : '') + ' — we’d scope it on a call rather than a benchmark.';
+        (w ? ', with ' + w + ' as the driver' : '') + ', we’d scope it on a call rather than a benchmark.';
       cta.innerHTML = '<p class="fs-cta-sub">Ready to move now? ' + calLink('Book a call to scope &rarr;') + '</p>';
     } else if (verdict === 'notyet') {
       badge.textContent = 'Not yet';
-      title.textContent = 'You’re close — the missing piece is labelled data.';
+      title.textContent = 'You’re close, the missing piece is labelled data.';
       body.innerHTML = 'Your task has a checkable right answer, which is what makes a win provable. What’s missing is enough labelled data to train and measure on, and it sounds hard to capture more right now. Get this in place first:' +
         '<ul class="fs-checklist" style="margin-top:18px;">' +
-        '<li>A few hundred real examples of the task &mdash; more is better.</li>' +
+        '<li>A few hundred real examples of the task, more is better.</li>' +
         '<li>The correct answer recorded for each; the label is what makes it measurable.</li>' +
         '<li>A repeatable way to keep capturing them as you go.</li>' +
         '</ul>Come back when you have it and the Scan will settle it.';
@@ -599,7 +599,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       capSub.textContent = 'Drop your email and I’ll send the checklist plus your answers, so it’s easy to pick up when the data’s ready.';
     } else { // no
       badge.textContent = 'Probably not us';
-      title.textContent = 'Honestly — keep your API.';
+      title.textContent = 'Honestly, keep your API.';
       body.innerHTML = 'You’re happy renting, and for this task that’s a perfectly good answer. Owning a model earns its keep when you can’t send data out, the bill is brutal at scale, the quality isn’t there, or ownership itself matters. If that changes, come back.';
       cta.innerHTML = '<a href="/benchmark" class="btn-primary">See the public benchmark &rarr;</a>';
       capture.style.display = 'none';

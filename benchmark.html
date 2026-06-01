@@ -47,7 +47,7 @@
   --color-opensource: #60a5fa;
   --color-frontier: #dcb875;
   --color-apift: #4ade80;
-  /* evolved "instrument" tokens — gold = frontier, blue = open source */
+  /* evolved "instrument" tokens, gold = frontier, blue = open source */
   --accent-cool: #6aa6ea;
   --accent-cool-hover: #8fbef0;
   --grid-line: rgba(232,228,222,0.022);
@@ -66,7 +66,7 @@ body {
     var(--bg-primary);
   background-attachment: fixed;
 }
-/* engineering grid — the page reads as a measurement surface, fading downward */
+/* engineering grid, the page reads as a measurement surface, fading downward */
 body::before {
   content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background-image:
@@ -242,7 +242,7 @@ body::after {
 .tco-summary { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
 .tco-summary strong { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 
-/* REPRODUCE — per-row panel (expanded inline from a leaderboard row) */
+/* REPRODUCE, per-row panel (expanded inline from a leaderboard row) */
 .repro-panel { padding: 2px 16px 14px; border-top: 1px solid var(--border); }
 .repro-row-line { display: flex; gap: 14px; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 12px; line-height: 1.65; }
 .repro-row-line:last-child { border-bottom: none; }
@@ -252,7 +252,7 @@ body::after {
 .repro-v code, .repro-art-t code { font-family: var(--font-mono); color: var(--text-primary); font-size: 11px; }
 .repro-pending { color: var(--text-muted); font-style: italic; }
 
-/* REPRODUCE — global block */
+/* REPRODUCE, global block */
 .repro-block { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; }
 .repro-lead { font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 760px; margin-bottom: 20px; }
 .repro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
@@ -285,27 +285,27 @@ body::after {
 }
 
 /* ════════════════════════════════════════════════════════════════
-   INSTRUMENT EVOLUTION — measurement motifs + dual accent
+   INSTRUMENT EVOLUTION, measurement motifs + dual accent
    (gold = frontier · blue = open source). Layered after the base
    rules so the visual evolution is easy to read and revert.
    ════════════════════════════════════════════════════════════════ */
 @keyframes barSweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* INTRO NOTE — a measurement tick down its edge */
+/* INTRO NOTE, a measurement tick down its edge */
 .bench-note { position: relative; padding-left: 18px; }
 .bench-note::before { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 2px; background: linear-gradient(180deg, var(--accent-cool), transparent); }
 
-/* TASK TABS — bolder, with a status dot per tab */
+/* TASK TABS, bolder, with a status dot per tab */
 .task-selector-wrap { padding: 44px 0 0; }
 .task-tab { font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 13px 22px; }
 .task-tab::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 9px; background: var(--text-muted); vertical-align: middle; transition: background 0.2s, transform 0.2s; }
 .task-tab.active::before { background: var(--accent); }
 .task-tab:hover::before { transform: scale(1.5); }
 
-/* SECTION INDEX — larger instrument numeral */
+/* SECTION INDEX, larger instrument numeral */
 .bench-section-num { font-size: 13px; font-weight: 700; letter-spacing: 0.2em; }
 
-/* LEADERBOARD — a readout surface with one bold family edge per row */
+/* LEADERBOARD, a readout surface with one bold family edge per row */
 .leaderboard-wrap { border: 1px solid var(--border-accent); background: linear-gradient(180deg, rgba(255,255,255,0.014), transparent 38%); }
 .leaderboard-table th { background: rgba(11,11,11,0.72); padding: 12px 16px; }
 .leaderboard-table td { padding: 13px 16px; }
@@ -320,7 +320,7 @@ body::after {
 .cell-metric .metric-bar { width: 104px; height: 4px; background: rgba(255,255,255,0.05); }
 .cell-metric .metric-bar i { transform-origin: left center; animation: barSweep 0.8s cubic-bezier(0.16,0.84,0.44,1) both; box-shadow: 0 0 9px -1px currentColor; }
 
-/* LEADERBOARD ROWS — every row carries an explicit "Reproduce" expander */
+/* LEADERBOARD ROWS, every row carries an explicit "Reproduce" expander */
 .lb-row { cursor: pointer; }
 .lb-row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .cell-metric .metric-val[data-tooltip] { border-bottom: 1px dotted rgba(232,228,222,0.32); cursor: help; }
@@ -337,19 +337,19 @@ body::after {
 .lb-hint { font-size: 12px; letter-spacing: 0.02em; color: var(--text-secondary); margin: 2px 0 18px; max-width: 760px; line-height: 1.6; }
 .lb-hint b { color: var(--accent); font-weight: 600; }
 
-/* CARDS — chart / calculator / reproduce share an instrument frame + label tab */
+/* CARDS, chart / calculator / reproduce share an instrument frame + label tab */
 .chart-container, .tco-calculator, .repro-block { position: relative; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border-color: var(--border-accent); }
 .chart-container::before, .tco-calculator::before, .repro-block::before { content: ''; position: absolute; top: -1px; left: 22px; width: 42px; height: 2px; background: var(--accent); }
 
-/* COST CALCULATOR — focus glow + cheapest marker (rows sort ascending) */
+/* COST CALCULATOR, focus glow + cheapest marker (rows sort ascending) */
 .tco-input:focus, .tco-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
 .tco-table tbody tr:first-child td { color: var(--text-primary); }
 .tco-table tbody tr:first-child .tco-model::after { content: 'CHEAPEST'; margin-left: 8px; font-size: 9px; letter-spacing: 0.1em; color: var(--accent-cool); border: 1px solid rgba(106,166,234,0.45); padding: 1px 5px; }
 
-/* REPRODUCE — provenance artifact cards */
+/* REPRODUCE, provenance artifact cards */
 .repro-art:hover .repro-art-t { color: var(--accent); }
 
-/* CTAs — sharper, with a lift glow */
+/* CTAs, sharper, with a lift glow */
 .btn-primary:hover, .sticky-cta-btn:hover { box-shadow: 0 8px 24px -10px var(--accent); }
 .cta-block { position: relative; overflow: hidden; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border-color: var(--border-accent); }
 .cta-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 92% at 50% 0%, var(--glow-gold), transparent 58%); pointer-events: none; }
@@ -411,8 +411,8 @@ body::after {
 <section class="page-hero">
   <div class="container">
     <div class="section-label bench-anim" style="animation-delay: 0s;">Benchmark</div>
-    <h1 class="bench-anim" style="animation-delay: 0.07s;">An AI you own, beating the big platforms on real tasks &mdash; at a fraction of the cost.</h1>
-    <p class="subtitle bench-anim" style="animation-delay: 0.14s;">On two focused jobs &mdash; reviewing contracts and routing support tickets &mdash; a model trained for the one task and run on your own hardware made fewer mistakes than the big-platform AI, and cost far less per answer. Here&rsquo;s the proof &mdash; and the same test runs on your task.</p>
+    <h1 class="bench-anim" style="animation-delay: 0.07s;">A specialist model beats the big platforms on the one task it&rsquo;s trained for, at a fraction of the cost.</h1>
+    <p class="subtitle bench-anim" style="animation-delay: 0.14s;">This is the open evidence for that claim. We put a model trained for one narrow job against the big-platform AI a team would otherwise reach for, score both on public data anyone can re-run, and publish all of it. A couple of tasks so far, with more underway. The same test runs on your task.</p>
     <div class="hero-proof bench-anim" style="animation-delay: 0.21s;">
       <a href="/methodology">How it&rsquo;s tested &rarr;</a>
       <a href="https://github.com/baseweight-ai/benchmark" target="_blank" rel="noopener noreferrer">View the code &rarr;</a>
@@ -464,13 +464,11 @@ body::after {
           </table>
         </div>
         <p class="tco-summary" id="tcoSummary" style="display:none;"></p>
-      </div>
-      <p class="bench-note">Cost is only one axis. Run it yourself and the data never leaves your environment &mdash; the deciding factor when compliance rules out a third-party API &mdash; and there&rsquo;s no per-call vendor to depend on, because the model is yours to keep.</p>
-    </div>
+      </div>    </div>
 
     <!-- ENGINEER DETAIL (depth on tap) -->
     <details class="eng-details bench-reveal">
-      <summary>The full results &amp; how it&rsquo;s scored <span class="eng-sub">&mdash; for your engineer</span></summary>
+      <summary>The full results &amp; how it&rsquo;s scored</summary>
       <div class="eng-details-body">
 
         <div class="eng-block">
@@ -479,7 +477,7 @@ body::after {
             <table class="leaderboard-table" id="leaderboardTable">
               <thead>
                 <tr>
-                  <th data-col="model_label" data-tooltip="Open-source models are self-hosted and can be fine-tuned; the API baseline is a hosted, closed model accessed through a provider — here the cost-efficient tier a team would run at volume.">Model</th>
+                  <th data-col="model_label" data-tooltip="Open-source models are self-hosted and can be fine-tuned; the API baseline is a hosted, closed model accessed through a provider, here the cost-efficient tier a team would run at volume.">Model</th>
                   <th data-col="condition_label" data-tooltip="How the model was set up for this task. Click to sort.">Method</th>
                   <th data-col="metric_value" class="sorted" data-tooltip="Primary quality metric for this task. Higher is better."><span id="metricColLabel">Metric</span> <span class="sort-indicator">↓</span></th>
                   <th class="th-expand" aria-label="Reproduction details"></th>
@@ -507,21 +505,16 @@ body::after {
 
         <div class="eng-block">
           <h3>Reproduce any number</h3>
-          <p class="repro-lead">Every result is reproducible from published artifacts &mdash; no access to our training code required. Run the released adapter on the eval data, or recompute the scores from the raw prediction logs.</p>
+          <p class="repro-lead">Every result is reproducible from published artifacts, no access to our training code required. Run the released adapter on the eval data, or recompute the scores from the raw prediction logs.</p>
           <div class="repro-grid" id="reproArtifacts"></div>
           <p class="repro-prov" id="reproProvenance"></p>
         </div>
 
       </div>
     </details>
-
-    <!-- REPRO POINTER (quiet) -->
-    <p class="repro-pointer">Every number here is reproducible from public code and open weights. <a href="/methodology">See how it&rsquo;s tested &rarr;</a></p>
-
     <!-- CTA -->
     <div class="cta-block bench-reveal">
       <h2>These are public-data results. See if it holds for <em>your</em> task.</h2>
-      <p>No email needed to see your verdict &mdash; about two minutes, an instant read on whether a custom open model you own would match or beat your current option on the one task you care about. Same test you just saw, your data.</p>
       <a href="/fit-score" class="btn-primary">Score your task &rarr;</a>
       <p style="font-size:13px; color: var(--text-secondary); margin-top: 16px;">Already know it fits? <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer">Book a free call &rarr;</a></p>
     </div>
@@ -545,9 +538,9 @@ body::after {
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
 const TASKS = [
   { id: 'cuad', name: 'Contract review', vertical: 'Legal',
-    blurb: "Find a specific clause in a full contract — governing law, IP ownership, a termination right — and return it exactly, or correctly say it isn't there. A confidently invented clause is worse than a missed one." },
+    blurb: "Find a specific clause in a full contract (governing law, IP ownership, a termination right) and return it exactly, or correctly say it isn't there. A confidently invented clause is worse than a missed one." },
   { id: 'banking77', name: 'Support triage', vertical: 'Banking',
-    blurb: "Read a short customer message and route it to the right one of 77 intents — telling a cancelled payment apart from a failed transfer — so far fewer tickets get misrouted." },
+    blurb: "Read a short customer message and route it to the right one of 77 intents (telling a cancelled payment apart from a failed transfer) so far fewer tickets get misrouted." },
 ];
 
 const FAMILY_COLORS = { 'open-source': '#60a5fa', 'frontier': '#dcb875', 'api-finetuned': '#4ade80' };
@@ -572,7 +565,7 @@ const COND_DESCRIPTIONS = {
 };
 
 const METRIC_DESCRIPTIONS = {
-  'AUPR': 'Area under the precision–recall curve for clause detection — the metric the CUAD authors report, and the right one when most clause types are absent from any given contract (heavy class imbalance). Token F1 is reported alongside as a partial-credit overlap check. Range: 0 to 1, higher is better.',
+  'AUPR': 'Area under the precision–recall curve for clause detection, the metric the CUAD authors report, and the right one when most clause types are absent from any given contract (heavy class imbalance). Token F1 is reported alongside as a partial-credit overlap check. Range: 0 to 1, higher is better.',
   'Token F1': 'Token-level overlap between predicted and expected text. Gives partial credit for partially correct extractions. Range: 0 to 1, higher is better.',
   'Weighted F1': 'F1 score weighted by class frequency. Accounts for label imbalance across all intent categories. Range: 0 to 1, higher is better.',
   'Accuracy': 'Fraction of predictions exactly correct.',
@@ -734,7 +727,7 @@ function renumberSections() {
 }
 
 // Buyer headline, built from the same rows the table shows: the fine-tuned model
-// you'd own vs the best-quality hosted-API baseline, in plain terms — how much less
+// you'd own vs the best-quality hosted-API baseline, in plain terms, how much less
 // often it was wrong, and how much cheaper per correct answer. Nothing hard-coded.
 function mistakeStats(r) {
   const ec = r.error_counts || {};
@@ -747,7 +740,6 @@ function mistakeStats(r) {
 function renderHeadline(task, taskId) {
   const el = document.getElementById('benchHeadline');
   if (!el) return;
-  const meta = TASKS.find(t => t.id === taskId) || {};
   const fine = task.results
     .filter(r => r.model_family === 'open-source' && /^LoRA/.test(r.condition || '') && r.metric_value != null)
     .sort((a, b) => b.metric_value - a.metric_value)[0];
@@ -771,7 +763,7 @@ function renderHeadline(task, taskId) {
     mistakesCard =
       '<div class="bh-card"><div class="bh-stat">' + fewer + '% fewer</div>' +
       '<div class="bh-stat-cap">mistakes than the big-platform AI, used as-is</div><div class="bh-bars">' +
-      bar('Your owned model', Math.max(5, ms.rate / ma.rate * 100), om + ' in 100 wrong', 'var(--color-opensource)') +
+      bar('Built for the task', Math.max(5, ms.rate / ma.rate * 100), om + ' in 100 wrong', 'var(--color-opensource)') +
       bar('Big-platform AI', 100, am + ' in 100 wrong', 'var(--color-frontier)') +
       '</div></div>';
   }
@@ -783,15 +775,12 @@ function renderHeadline(task, taskId) {
     costCard =
       '<div class="bh-card"><div class="bh-stat">' + rstr + '× cheaper</div>' +
       '<div class="bh-stat-cap">per correct answer, on hardware you control</div><div class="bh-bars">' +
-      bar('Your owned model', Math.max(5, fine.cost_per_1k_correct / api.cost_per_1k_correct * 100), fmtCost(fine.cost_per_1k_correct) + ' / 1k', 'var(--color-opensource)') +
+      bar('Built for the task', Math.max(5, fine.cost_per_1k_correct / api.cost_per_1k_correct * 100), fmtCost(fine.cost_per_1k_correct) + ' / 1k', 'var(--color-opensource)') +
       bar('Big-platform AI', 100, fmtCost(api.cost_per_1k_correct) + ' / 1k', 'var(--color-frontier)') +
-      '</div><div class="bh-cost-note">Nothing leaves your building &mdash; the model runs where your data already is.</div></div>';
+      '</div></div>';
   }
 
-  el.innerHTML =
-    '<div class="bh-intro">A model you own vs the big-platform AI used as-is, on <strong>' +
-    (meta.vertical ? meta.vertical + ' · ' : '') + (meta.name || '') + '</strong>:</div>' +
-    '<div class="bh-cards">' + mistakesCard + costCard + '</div>';
+  el.innerHTML = '<div class="bh-cards">' + mistakesCard + costCard + '</div>';
 }
 
 // ── REPRODUCE (per-row panel, expanded inline from a leaderboard row) ────────
@@ -801,7 +790,7 @@ function reproLine(label, html) {
 
 function reproArtifactLink(url, label) {
   const pend = ARTIFACTS_LIVE ? '' : ' <span class="repro-pending">· publishing</span>';
-  const title = ARTIFACTS_LIVE ? '' : ' title="Publishing — link goes live once artifacts are uploaded"';
+  const title = ARTIFACTS_LIVE ? '' : ' title="Publishing, link goes live once artifacts are uploaded"';
   return '<a href="' + url + '" target="_blank" rel="noopener noreferrer"' + title + '>' + label + pend + '</a>';
 }
 
@@ -814,13 +803,13 @@ function reproPanel(r, taskId, metricLabel, base) {
   const ma = (mf.adapters || {})[r.model_id + '/' + taskId];
   const lines = [];
 
-  let result = (r.metric_value != null ? pct(r.metric_value) : '—');
+  let result = (r.metric_value != null ? pct(r.metric_value) : '-');
   if (r.metric_ci_lo != null && r.metric_ci_hi != null) result += '  95% CI ' + pct(r.metric_ci_lo) + '–' + pct(r.metric_ci_hi);
   if (r.n_seeds) result += '  (' + r.n_seeds + ' seeds × ' + (r.n_predictions != null ? r.n_predictions.toLocaleString() : '?') + ' preds)';
   lines.push(reproLine(metricLabel, result));
 
   // Secondary metric: for extraction we lead with AUPR (the CUAD-standard detection
-  // metric) and report Token F1 — with its seed CI — as the partial-credit overlap check.
+  // metric) and report Token F1 (with its seed CI) as the partial-credit overlap check.
   if (r.token_f1 != null) {
     let tf = pct(r.token_f1);
     if (r.token_f1_ci_lo != null && r.token_f1_ci_hi != null) tf += '  95% CI ' + pct(r.token_f1_ci_lo) + '–' + pct(r.token_f1_ci_hi);
@@ -886,7 +875,7 @@ function reproPanel(r, taskId, metricLabel, base) {
 
   if (r.pipeline_commit) {
     const commitUrl = REPRO.code + '/commit/' + r.pipeline_commit;
-    lines.push(reproLine('Protocol', 'pipeline locked at <a href="' + commitUrl + '" target="_blank" rel="noopener noreferrer"><code>' + r.pipeline_commit + '</code></a> before training — eval config and prompts committed prior to any training run'));
+    lines.push(reproLine('Protocol', 'pipeline locked at <a href="' + commitUrl + '" target="_blank" rel="noopener noreferrer"><code>' + r.pipeline_commit + '</code></a> before training, eval config and prompts committed prior to any training run'));
   }
 
   const arts = [];
@@ -1101,7 +1090,7 @@ function renderErrors(task) {
     legendEl.innerHTML = orderedCats.map(cat => {
       const label = ERROR_LABELS[cat] || cat.replace(/_/g, ' ');
       const desc = ERROR_DESCRIPTIONS[cat] || '';
-      return `<div class="error-legend-item"><span class="error-legend-dot" style="background:${ERROR_COLORS[cat] || '#666'};"></span><span class="error-legend-text"><b>${label}</b>${desc ? ' — ' + desc : ''}</span></div>`;
+      return `<div class="error-legend-item"><span class="error-legend-dot" style="background:${ERROR_COLORS[cat] || '#666'};"></span><span class="error-legend-text"><b>${label}</b>${desc ? ', ' + desc : ''}</span></div>`;
     }).join('');
   }
 }

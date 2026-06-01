@@ -149,7 +149,34 @@ footer p:last-child {
 }
 
 /* ========================================
-   RESPONSIVE — NAV
+   MEASUREMENT SURFACE  (shared page background, every page)
+   Corner glows (cool top-right, gold top-left) over a faint engineering grid
+   that fades downward, masked, behind the content. Replicates the benchmark
+   page's top treatment site-wide. `html body` beats each page's flat inline
+   `body { background }`; main/footer ride above the fixed grid layer.
+   ======================================== */
+html body {
+  background:
+    radial-gradient(120% 60% at 82% -10%, rgba(106,166,234,0.10), transparent 58%),
+    radial-gradient(120% 55% at -8% -4%, rgba(220,184,117,0.11), transparent 54%),
+    var(--bg-primary);
+  background-attachment: fixed;
+}
+html body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(232,228,222,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,228,222,0.022) 1px, transparent 1px),
+    linear-gradient(rgba(232,228,222,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,228,222,0.05) 1px, transparent 1px);
+  background-size: 38px 38px, 38px 38px, 190px 190px, 190px 190px;
+  -webkit-mask-image: radial-gradient(135% 92% at 50% -8%, #000 28%, rgba(0,0,0,0.32) 60%, transparent 86%);
+  mask-image: radial-gradient(135% 92% at 50% -8%, #000 28%, rgba(0,0,0,0.32) 60%, transparent 86%);
+}
+body > main, body > footer { position: relative; z-index: 1; }
+
+/* ========================================
+   RESPONSIVE / NAV
    ======================================== */
 @media (max-width: 640px) {
   .nav-links { display: none; }
@@ -173,7 +200,7 @@ footer p:last-child {
 }
 
 /* ========================================
-   KEYBOARD FOCUS  (WCAG 2.2 — Focus Visible)
+   KEYBOARD FOCUS  (WCAG 2.2 / Focus Visible)
    One gold ring for keyboard users on every interactive element. Shows only
    for keyboard navigation (:focus-visible), never on mouse click. The 2px
    offset keeps the ring on the dark background, so it stays visible even on
@@ -190,7 +217,7 @@ textarea:focus-visible,
 }
 
 /* ========================================
-   BUTTON PRESS  (micro-interaction — tactile feedback on click)
+   BUTTON PRESS  (micro-interaction / tactile feedback on click)
    Hover lifts the button; active presses it back down.
    ======================================== */
 .btn-primary:active,
@@ -200,7 +227,7 @@ textarea:focus-visible,
 }
 
 /* ========================================
-   REDUCED MOTION — respect the user's system preference.
+   REDUCED MOTION / respect the user's system preference.
    Neutralises the decorative animation (radar rings, gold shimmer, CTA glow)
    and the scroll-reveal slide; content simply appears. (index / fit-score /
    pilot / about had no guard; benchmark / methodology already did.)
