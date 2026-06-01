@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fit check: should this task run on intelligence you own? | Baseweight</title>
-<meta name="description" content="A free, seven-question fit check. See whether a custom open model you own could match or beat your current option on your task — and what proving it would take. No email required to see your verdict.">
+<meta name="description" content="A free, two-minute fit check — one question at a time. See whether a custom open model you own could match or beat your current option on your task, and what proving it would take. No email required to see your verdict.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -18,13 +18,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/fit-score">
 <meta property="og:title" content="Fit check: should this task run on intelligence you own?">
-<meta property="og:description" content="Seven questions, an instant verdict: would a custom open model you own win on your task? No email required to see it.">
+<meta property="og:description" content="A two-minute fit check, one question at a time: would a custom open model you own win on your task? No email required to see it.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Fit check: should this task run on intelligence you own?">
-<meta name="twitter:description" content="Seven questions, an instant verdict: would a custom open model you own win on your task? No email required to see it.">
+<meta name="twitter:description" content="A two-minute fit check, one question at a time: would a custom open model you own win on your task? No email required to see it.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,7 +38,7 @@
   --border-accent: #282828;
   --text-primary: #e8e4de;
   --text-secondary: #898580;
-  --text-muted: #555;
+  --text-muted: #807d76;
   --accent: #dcb875;
   --accent-hover: #dbb960;
   --accent-dim: rgba(201, 168, 76, 0.1);
@@ -76,50 +76,46 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-hero-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.85; max-width: 620px; margin-bottom: 16px; }
 .fs-hero-note { font-size: 13px; color: var(--text-muted); line-height: 1.7; max-width: 620px; }
 
-/* ======== QUIZ ======== */
+/* ======== QUIZ (one question per screen) ======== */
 .fs-quiz { padding: var(--section-pad) 0; }
 .fs-form { max-width: 720px; }
-.fs-q { padding: 30px 0; border-top: 1px solid var(--border); }
-.fs-q:first-child { border-top: none; padding-top: 0; }
-.fs-q-head { display: flex; gap: 12px; align-items: baseline; margin-bottom: 6px; }
-.fs-q-num { font-family: var(--font-display); font-weight: 800; font-size: 20px; color: rgba(201,168,76,0.5); line-height: 1; }
-.fs-q-label { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.fs-progress { height: 3px; background: var(--border); margin: 0 0 16px; border-radius: 2px; overflow: hidden; }
+.fs-progress-bar { height: 100%; width: 0; background: var(--accent); transition: width 0.35s cubic-bezier(0.16,1,0.3,1); }
+.fs-step-counter { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 28px; }
+
+.fs-q { padding: 0; }
+.fs-step { display: none; }
+.fs-q-head { margin-bottom: 6px; }
+.fs-q-label { font-size: clamp(17px, 2.4vw, 20px); font-weight: 600; color: var(--text-primary); }
 .fs-q-req { color: var(--accent); font-weight: 600; }
-.fs-q-help { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin: 0 0 16px 32px; }
-.fs-q-body { margin-left: 32px; }
-@media (max-width: 560px) { .fs-q-help, .fs-q-body { margin-left: 0; } }
+.fs-q-help { font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; margin: 0 0 20px; }
+.fs-q-body { margin-left: 0; }
 
 .fs-opts { display: flex; flex-direction: column; gap: 10px; }
-.fs-opt { display: flex; gap: 11px; align-items: flex-start; padding: 13px 15px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; font-size: 13.5px; line-height: 1.55; color: var(--text-secondary); transition: border-color 0.2s, background 0.2s; }
+.fs-opt { display: flex; gap: 11px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border); background: var(--bg-card); cursor: pointer; font-size: 13.5px; line-height: 1.55; color: var(--text-secondary); transition: border-color 0.2s, background 0.2s; }
 .fs-opt:hover { border-color: var(--border-accent); background: var(--bg-card-hover); }
-.fs-opt input { margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); }
+.fs-opt input { margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); width: 16px; height: 16px; }
 .fs-opt:has(input:checked) { border-color: var(--accent); background: rgba(201,168,76,0.06); color: var(--text-primary); }
 
-.fs-input, .fs-textarea, .fs-select { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); font-family: var(--font-mono); font-size: 13.5px; padding: 12px 14px; transition: border-color 0.2s, box-shadow 0.2s; }
+.fs-input, .fs-textarea, .fs-select { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); font-family: var(--font-mono); font-size: 13.5px; padding: 13px 14px; transition: border-color 0.2s, box-shadow 0.2s; }
 .fs-input::placeholder, .fs-textarea::placeholder { color: var(--text-muted); }
 .fs-input:focus, .fs-textarea:focus, .fs-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,168,76,0.18); }
 .fs-textarea { min-height: 84px; resize: vertical; line-height: 1.7; }
 .fs-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23555' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
 .fs-row { display: flex; gap: 12px; flex-wrap: wrap; }
 .fs-row > * { flex: 1 1 180px; min-width: 0; }
-.fs-sublabel { font-size: 12px; color: var(--text-muted); margin: 14px 0 8px; }
-
-.fs-submit-row { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); }
-.fs-error { color: var(--danger); font-size: 13px; margin-top: 14px; display: none; }
-
-/* fieldset reset — used to group radio/checkbox questions for a11y */
-.fs-fieldset { border: none; margin: 0; padding: 0; min-width: 0; }
-.fs-legend { display: block; padding: 0; width: 100%; }
-.fs-req { color: var(--accent); font-weight: 600; }
+.fs-sublabel { font-size: 12px; color: var(--text-muted); margin: 18px 0 8px; }
 .fs-optional { color: var(--text-muted); font-weight: 400; font-size: 13px; }
-.fs-req-key { font-size: 12px; color: var(--text-muted); margin: 0 0 16px 32px; }
-@media (max-width: 560px) { .fs-req-key { margin-left: 0; } }
-.fs-progress { height: 3px; background: var(--border); margin: 0 0 32px; border-radius: 2px; overflow: hidden; }
-.fs-progress-bar { height: 100%; width: 0; background: var(--accent); transition: width 0.3s ease; }
 
-/* invalid field marker (set by JS on failed submit) */
-.fs-q.fs-q--invalid { box-shadow: inset 3px 0 0 var(--danger); }
-.fs-q.fs-q--invalid .fs-q-num { color: var(--danger); }
+/* nav footer */
+.fs-error { color: var(--danger); font-size: 13px; margin-top: 18px; display: none; }
+.fs-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--border); }
+.fs-back { background: none; border: none; color: var(--text-secondary); font-family: var(--font-mono); font-size: 13px; cursor: pointer; padding: 14px 12px; transition: color 0.2s; }
+.fs-back:hover { color: var(--text-primary); }
+.fs-nav .btn-primary { min-width: 160px; text-align: center; }
+
+/* invalid field marker (set by JS on a blocked step) */
+.fs-q--invalid { box-shadow: inset 3px 0 0 var(--danger); padding-left: 16px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
 /* ======== RESULT ======== */
@@ -143,6 +139,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-capture { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); max-width: 560px; }
 .fs-capture h3 { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
 .fs-capture p.fs-capture-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.7; }
+.fs-cap-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.fs-capture .fs-textarea { margin-bottom: 14px; }
 .fs-capture-row { display: flex; gap: 12px; }
 .fs-capture-row .fs-input { flex: 1; }
 .fs-checkbox { display: flex; gap: 9px; align-items: flex-start; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin-top: 14px; cursor: pointer; }
@@ -151,7 +149,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-success { padding: 20px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); }
 .fs-success p { font-size: 14px; color: var(--text-primary); }
 .fs-restart { margin-top: 40px; font-size: 13px; }
-@media (max-width: 560px) { .fs-capture-row { flex-direction: column; } }
+@media (max-width: 560px) { .fs-capture-row { flex-direction: column; } .fs-nav .btn-primary { min-width: 0; } }
 </style>
 <script type="application/ld+json">
 {
@@ -162,7 +160,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       "@id": "https://baseweight.co/fit-score#webpage",
       "url": "https://baseweight.co/fit-score",
       "name": "Fit check: should this task run on intelligence you own?",
-      "description": "A free, seven-question fit check that returns an instant verdict on whether a custom open model you own could win on your task.",
+      "description": "A free, two-minute fit check that returns an instant verdict on whether a custom open model you own could win on your task.",
       "author": { "@type": "Person", "name": "Philip Stevens", "url": "https://baseweight.co/about" },
       "inLanguage": "en-US",
       "isPartOf": { "@type": "WebSite", "@id": "https://baseweight.co/#website", "url": "https://baseweight.co/", "name": "Baseweight" }
@@ -171,7 +169,11 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 }
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
-<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
+<!-- Vercel Web Analytics + Speed Insights event shims (queue events before the scripts load) -->
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 <body>
@@ -187,7 +189,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
   <div class="container">
     <div class="section-label">Score your task &middot; fit check</div>
     <h1>Should this task run on <span class="accent">AI you own?</span></h1>
-    <p class="fs-hero-sub">Seven questions, about three minutes. You get a straight verdict &mdash; candidate, not yet, or honestly-not-us &mdash; with the reasoning. No email required to see it.</p>
+    <p class="fs-hero-sub">About two minutes, one question at a time. You get a straight verdict &mdash; candidate, not yet, or honestly-not-us &mdash; with the reasoning. No email required to see it.</p>
     <p class="fs-hero-note">The <a href="/benchmark">public benchmark</a> shows a small owned model can match or beat the big AI platforms on a focused task. This tells you whether that&rsquo;s true for <em>your</em> task.</p>
   </div>
 </section>
@@ -196,40 +198,16 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 <section class="fs-quiz" id="quiz">
   <div class="container">
     <form class="fs-form" id="fsForm" novalidate>
-      <p class="fs-req-key"><span class="fs-req">*</span> required &mdash; the rest are optional but sharpen your verdict.</p>
       <div class="fs-progress" aria-hidden="true"><div class="fs-progress-bar" id="fsProgressBar"></div></div>
+      <p class="fs-step-counter" id="fsStepCounter" aria-live="polite">Question 1 of 6</p>
 
-      <!-- Q1 -->
-      <div class="fs-q" id="fsq-q1_task">
-        <div class="fs-q-head"><span class="fs-q-num">1</span><span class="fs-q-label" id="lbl-q1">The task <span class="fs-q-req" aria-hidden="true">*</span></span></div>
-        <p class="fs-q-help" id="help-q1">In a sentence or two: what single task would the model do, and where does it sit in your workflow? The more specific &mdash; the input, the output, where it sits &mdash; the sharper your verdict.</p>
-        <div class="fs-q-body">
-          <textarea class="fs-textarea" name="q1_task" placeholder="e.g. Read an incoming support message and route it to one of 40 queues." required aria-required="true" aria-labelledby="lbl-q1" aria-describedby="help-q1"></textarea>
-        </div>
-      </div>
-
-      <!-- Q2 -->
-      <div class="fs-q" id="fsq-q2_correctness">
-        <div class="fs-q-head"><span class="fs-q-num">2</span><span class="fs-q-label" id="lbl-q2">How would you know an answer is right? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
-        <p class="fs-q-help" id="help-q2">The most important question. Pick the closest &mdash; it decides whether a win can be proven.</p>
-        <div class="fs-q-body">
-          <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q2 help-q2" aria-required="true">
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>It matches a known correct value exactly &mdash; a label, a field, a number.</span></label>
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="rule"><span>It passes a rule or checklist a reviewer could apply.</span></label>
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="human"><span>A person judges each case (two reviewers would mostly agree).</span></label>
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="unchecked"><span>It has a right answer, but nobody checks it today.</span></label>
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s subjective &mdash; reasonable people would disagree.</span></label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Q3 -->
-      <div class="fs-q" id="fsq-q3_today">
-        <div class="fs-q-head"><span class="fs-q-num">3</span><span class="fs-q-label" id="lbl-q3">What handles this today? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
-        <p class="fs-q-help" id="help-q3">Your current baseline for this task.</p>
+      <!-- Step 1 — what runs it today (easy single click, builds momentum) -->
+      <div class="fs-q fs-step" id="fsq-q3_today" style="display:block;">
+        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q3">What handles this task today? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q3">Your current baseline for this one task.</p>
         <div class="fs-q-body">
           <select class="fs-select" name="q3_today" required aria-required="true" aria-labelledby="lbl-q3" aria-describedby="help-q3">
-            <option value="">What runs this task today?</option>
+            <option value="">Choose one&hellip;</option>
             <option value="frontier-api">A big AI platform</option>
             <option value="rules">Rules or scripts</option>
             <option value="manual">A person, manually</option>
@@ -243,9 +221,24 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Q4 -->
-      <div class="fs-q" id="fsq-q4_capture">
-        <div class="fs-q-head"><span class="fs-q-num">4</span><span class="fs-q-label" id="lbl-q4">Your data <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+      <!-- Step 2 — how is "correct" judged (decides provability) -->
+      <div class="fs-q fs-step" id="fsq-q2_correctness">
+        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q2">How would you know an answer is right? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q2">The most important question. Pick the closest &mdash; it decides whether a win can be proven.</p>
+        <div class="fs-q-body">
+          <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q2 help-q2" aria-required="true">
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>It matches a known correct value exactly &mdash; a label, a field, a number.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="rule"><span>It passes a rule or checklist a reviewer could apply.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="human"><span>A person judges each case (two reviewers would mostly agree).</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="unchecked"><span>It has a right answer, but nobody checks it today.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s subjective &mdash; reasonable people would disagree.</span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 — data -->
+      <div class="fs-q fs-step" id="fsq-q4_capture">
+        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q4">Your data <span class="fs-q-req" aria-hidden="true">*</span></span></div>
         <p class="fs-q-help" id="help-q4">Volume and labels are decisive for proving a win on your data.</p>
         <div class="fs-q-body">
           <div class="fs-row">
@@ -277,9 +270,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Q5 -->
-      <div class="fs-q" id="fsq-q5">
-        <div class="fs-q-head"><span class="fs-q-num">5</span><span class="fs-q-label" id="lbl-q5">Why aren&rsquo;t the big AI platforms the answer? <span class="fs-optional">(optional)</span></span></div>
+      <!-- Step 4 — why not the big platforms (optional) -->
+      <div class="fs-q fs-step" id="fsq-q5">
+        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q5">Why aren&rsquo;t the big AI platforms the answer? <span class="fs-optional">(optional)</span></span></div>
         <p class="fs-q-help" id="help-q5">Mark all that apply, then name the single biggest blocker.</p>
         <div class="fs-q-body">
           <div class="fs-opts" role="group" aria-labelledby="lbl-q5 help-q5">
@@ -299,10 +292,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Q6 -->
-      <div class="fs-q" id="fsq-q6">
-        <div class="fs-q-head"><span class="fs-q-num">6</span><span class="fs-q-label">Scale <span class="fs-optional">(optional)</span></span></div>
-        <p class="fs-q-help">Roughly how many of these you run. <span class="fs-optional">Optional, but it&rsquo;s the number behind whether owning it pays off.</span></p>
+      <!-- Step 5 — scale (optional) -->
+      <div class="fs-q fs-step" id="fsq-q6">
+        <div class="fs-q-head"><span class="fs-q-label">Scale <span class="fs-optional">(optional)</span></span></div>
+        <p class="fs-q-help">Roughly how many of these you run. <span class="fs-optional">It&rsquo;s the number behind whether owning it pays off.</span></p>
         <div class="fs-q-body">
           <select class="fs-select" name="q6_volume" aria-label="Roughly how many you run">
             <option value="">How many do you run?</option>
@@ -314,9 +307,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Q7 -->
-      <div class="fs-q" id="fsq-q7_own">
-        <div class="fs-q-head"><span class="fs-q-num">7</span><span class="fs-q-label" id="lbl-q7">Ownership <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+      <!-- Step 6 — ownership (the qualifying question, last) -->
+      <div class="fs-q fs-step" id="fsq-q7_own">
+        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q7">Do you want to own it? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
         <p class="fs-q-help" id="help-q7">The qualifying question.</p>
         <div class="fs-q-body">
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q7 help-q7" aria-required="true">
@@ -332,9 +325,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <div class="fs-submit-row">
-        <button type="submit" class="btn-primary">Score my task &rarr;</button>
-        <p class="fs-error" id="fsError" role="alert" aria-live="assertive">Please answer the required questions so the verdict is meaningful.</p>
+      <p class="fs-error" id="fsError" role="alert" aria-live="assertive">Please answer this question to continue.</p>
+      <div class="fs-nav">
+        <button type="button" class="fs-back" id="fsBack" style="visibility:hidden;">&larr; Back</button>
+        <button type="button" class="btn-primary" id="fsNext">Next &rarr;</button>
       </div>
     </form>
   </div>
@@ -348,7 +342,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       <h2 id="fsTitle"></h2>
       <div class="fs-verdict-body" id="fsBody"></div>
 
-      <!-- Email capture (gated AFTER the verdict; hidden for the "not us" verdict) -->
+      <!-- Email capture (gated AFTER the verdict; hidden for the "not us" verdict).
+           The task description lives here now — asked once commitment is high, not up front. -->
       <div class="fs-capture" id="fsCapture">
         <h3 id="fsCaptureHeading">Want my personal read on this?</h3>
         <p class="fs-capture-sub" id="fsCaptureSub">Leave your email and I&rsquo;ll personally review your answers and send back the 2&ndash;3 things that would make or break it on your task &mdash; not a copy of this page, my actual take.</p>
@@ -359,8 +354,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
           target="fs_hidden_iframe"
           onsubmit="fsCaptureSubmit(event)"
         >
+          <label class="fs-cap-label" for="fs_cap_task">One line on the task, so my read is specific <span class="fs-optional">(optional)</span></label>
+          <textarea class="fs-textarea" id="fs_cap_task" name="q1_task" placeholder="e.g. Read an incoming support message and route it to one of 40 queues." aria-label="The task, in a line"></textarea>
           <div class="fs-capture-row">
-            <input class="fs-input" type="email" name="email" placeholder="you@company.com" required autocomplete="email" aria-label="Email address" />
+            <input class="fs-input" type="email" name="email" placeholder="you@company.com" required autocomplete="email" inputmode="email" aria-label="Email address" />
             <button type="submit" class="btn-primary">Send it to me</button>
           </div>
           <label class="fs-checkbox"><input type="checkbox" name="notify" value="yes"> <span>Also send me new public benchmarks as they publish.</span></label>
@@ -375,7 +372,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <div id="fs_capture_success" class="fs-success" style="display:none">
           <p><strong>Sent. I&rsquo;ll be in touch with your full read and the next step.</strong></p>
         </div>
-        <p class="fs-capture-note">No spam, no sequence. Your answers reach me so I can give you a real read.</p>
+        <p class="fs-capture-note">No spam, no sequence &mdash; and we work under NDA. Your answers come straight to me for a real read.</p>
       </div>
 
       <div class="fs-cta-row" id="fsCta"></div>
@@ -397,21 +394,27 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 (function () {
   var CAL = 'https://cal.com/philip-stevens/baseweight-intro';
   var FORM = document.getElementById('fsForm');
-  var REQUIRED = ['q1_task', 'q2_correctness', 'q3_today', 'q4_capture', 'q7_own'];
+
+  // One question per screen. Q1 (the task description) is asked later, at capture.
+  var STEPS = [
+    { id: 'fsq-q3_today',       req: 'q3_today' },
+    { id: 'fsq-q2_correctness', req: 'q2_correctness' },
+    { id: 'fsq-q4_capture',     req: 'q4_capture' },
+    { id: 'fsq-q5',             req: null },
+    { id: 'fsq-q6',             req: null },
+    { id: 'fsq-q7_own',         req: 'q7_own' }
+  ];
+  var idx = 0;
+  var started = false;
+  var currentVerdict = '';
 
   var uaField = document.getElementById('fs_field_ua');
   if (uaField) uaField.value = navigator.userAgent;
 
-  function updateProgress() {
-    var bar = document.getElementById('fsProgressBar');
-    if (!bar) return;
-    var done = 0;
-    for (var i = 0; i < REQUIRED.length; i++) { if (v(REQUIRED[i])) done++; }
-    bar.style.width = Math.round((done / REQUIRED.length) * 100) + '%';
+  // ── analytics (Vercel Web Analytics custom events; safe no-op if not loaded) ──
+  function track(name, data) {
+    try { (window.va || function () { (window.vaq = window.vaq || []).push(arguments); })('event', { name: name, data: data || {} }); } catch (e) {}
   }
-  FORM.addEventListener('input', updateProgress);
-  FORM.addEventListener('change', updateProgress);
-  updateProgress();
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
@@ -424,18 +427,88 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     var val = el.value == null ? '' : el.value;
     return typeof val === 'string' ? val.trim() : val;
   }
-  function calBtn(label) {
-    return '<a href="' + CAL + '" target="_blank" rel="noopener noreferrer" class="btn-primary">' + label + '</a>';
+  // task description lives in the capture form, not the quiz
+  function capV(name) {
+    var f = document.getElementById('fs_capture_form');
+    if (!f) return '';
+    var el = f.elements[name];
+    var val = el && el.value != null ? el.value : '';
+    return typeof val === 'string' ? val.trim() : val;
   }
   function calLink(label) {
     return '<a href="' + CAL + '" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">' + label + '</a>';
   }
 
+  // ── wizard navigation ──────────────────────────────────────────────────────
+  function focusFirst(stepEl) {
+    var f = stepEl.querySelector('select, input[type="radio"], input[type="checkbox"], input, textarea');
+    if (f && f.focus) { try { f.focus({ preventScroll: true }); } catch (e) { f.focus(); } }
+  }
+  function showStep(i) {
+    for (var j = 0; j < STEPS.length; j++) {
+      var el = document.getElementById(STEPS[j].id);
+      if (el) el.style.display = (j === i ? 'block' : 'none');
+    }
+    idx = i;
+    var bar = document.getElementById('fsProgressBar');
+    if (bar) bar.style.width = Math.round(((idx + 1) / STEPS.length) * 100) + '%';
+    var counter = document.getElementById('fsStepCounter');
+    if (counter) counter.textContent = 'Question ' + (idx + 1) + ' of ' + STEPS.length;
+    document.getElementById('fsBack').style.visibility = idx === 0 ? 'hidden' : 'visible';
+    document.getElementById('fsNext').innerHTML = (idx === STEPS.length - 1) ? 'Score my task &rarr;' : 'Next &rarr;';
+    focusFirst(document.getElementById(STEPS[idx].id));
+  }
+  function clearError() {
+    var cur = document.getElementById(STEPS[idx].id);
+    if (cur) cur.classList.remove('fs-q--invalid');
+    document.getElementById('fsError').style.display = 'none';
+    document.getElementById('fsErrLabeled').style.display = 'none';
+  }
+  function validateStep() {
+    clearError();
+    var step = STEPS[idx];
+    if (step.req && !v(step.req)) {
+      document.getElementById(step.id).classList.add('fs-q--invalid');
+      document.getElementById('fsError').style.display = 'block';
+      return false;
+    }
+    // labelled count is required only when more data can't be captured —
+    // otherwise a blank would silently read as zero and mis-verdict (see compute)
+    if (step.id === 'fsq-q4_capture' && v('q4_capture') === 'no' && v('q4_labeled') === '') {
+      document.getElementById('fsq-q4_capture').classList.add('fs-q--invalid');
+      document.getElementById('fsErrLabeled').style.display = 'block';
+      var lab = FORM.elements['q4_labeled'];
+      if (lab && lab.focus) lab.focus();
+      return false;
+    }
+    return true;
+  }
+  function advance() {
+    if (!validateStep()) return;
+    track('fit_step', { step: idx + 1, q: STEPS[idx].id });
+    if (idx === STEPS.length - 1) { finish(); return; }
+    showStep(idx + 1);
+    document.getElementById('quiz').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function goBack() {
+    if (idx === 0) return;
+    clearError();
+    showStep(idx - 1);
+  }
+
+  document.getElementById('fsNext').addEventListener('click', advance);
+  document.getElementById('fsBack').addEventListener('click', goBack);
+  // Enter inside a field advances rather than reloading the page.
+  FORM.addEventListener('submit', function (e) { e.preventDefault(); advance(); });
+  // fire fit_start once, on first real interaction
+  FORM.addEventListener('change', function () { if (!started) { started = true; track('fit_start'); } });
+  FORM.addEventListener('input', function () { if (!started) { started = true; track('fit_start'); } });
+
+  // ── verdict ────────────────────────────────────────────────────────────────
   function compute() {
     var own = v('q7_own');                 // own | rent
     var correctness = v('q2_correctness'); // exact | rule | human | unchecked | subjective
     var capture = v('q4_capture');         // easily | effort | no
-    // Buckets: "enough" means a 200+ range in either examples or labelled.
     var enough = function (b) { return b === '200-1000' || b === '1000plus'; };
     var dataOK = capture === 'easily' || capture === 'effort' || enough(v('q4_labeled')) || enough(v('q4_examples'));
 
@@ -446,7 +519,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     else verdict = 'notyet';
     return verdict;
   }
-
   function wedge() {
     var d = v('q5_dealbreaker');
     return {
@@ -467,13 +539,12 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     }[vol] || vol;
     return ' At roughly <strong>' + esc(label) + '</strong>, the cost and self-hosting maths are worth running too.';
   }
-
   function answersBlob(verdict) {
     var blockers = Array.prototype.slice
       .call(FORM.querySelectorAll('input[name="q5_blockers"]:checked'))
       .map(function (c) { return c.value; }).join(', ');
     return [
-      'Q1 task: ' + v('q1_task'),
+      'Q1 task: ' + (capV('q1_task') || '-'),
       'Q2 correctness: ' + v('q2_correctness'),
       'Q3 today: ' + v('q3_today') + ' | error rate: ' + (v('q3_error_rate') || '-') + ' | cost of wrong: ' + (v('q3_cost') || '-'),
       'Q4 examples: ' + (v('q4_examples') || '-') + ' | labelled: ' + (v('q4_labeled') || '-') + ' | can capture: ' + v('q4_capture'),
@@ -535,77 +606,13 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     }
   }
 
-  // question number + container + focus target for each required field
-  var QMETA = {
-    q1_task:        { num: 1, container: 'fsq-q1_task' },
-    q2_correctness: { num: 2, container: 'fsq-q2_correctness' },
-    q3_today:       { num: 3, container: 'fsq-q3_today' },
-    q4_capture:     { num: 4, container: 'fsq-q4_capture' },
-    q7_own:         { num: 7, container: 'fsq-q7_own' }
-  };
-  function focusTarget(name) {
-    var el = FORM.elements[name];
-    // radio groups return a RadioNodeList — focus the first control instead
-    if (el && typeof el.focus !== 'function') el = FORM.querySelector('[name="' + name + '"]');
-    return el;
-  }
-  function clearInvalid() {
-    Array.prototype.forEach.call(FORM.querySelectorAll('.fs-q--invalid'), function (el) {
-      el.classList.remove('fs-q--invalid');
-    });
-    document.getElementById('fsErrLabeled').style.display = 'none';
-    document.getElementById('fsError').style.display = 'none';
-  }
-  function validate() {
-    var missing = [];
-    for (var i = 0; i < REQUIRED.length; i++) {
-      if (!v(REQUIRED[i])) missing.push(REQUIRED[i]);
-    }
-    // labelled count is required only when more data can't be captured —
-    // otherwise a blank would silently read as zero and mis-verdict (see compute)
-    var needLabeled = v('q4_capture') === 'no' && v('q4_labeled') === '';
-    return { missing: missing, needLabeled: needLabeled };
-  }
-
-  FORM.addEventListener('submit', function (e) {
-    e.preventDefault();
-    clearInvalid();
-    var res = validate();
-
-    if (res.missing.length || res.needLabeled) {
-      var nums = [];
-      res.missing.forEach(function (name) {
-        var c = document.getElementById(QMETA[name].container);
-        if (c) c.classList.add('fs-q--invalid');
-        nums.push(QMETA[name].num);
-      });
-      if (res.needLabeled) {
-        document.getElementById('fsq-q4_capture').classList.add('fs-q--invalid');
-        document.getElementById('fsErrLabeled').style.display = 'block';
-        if (nums.indexOf(4) === -1) nums.push(4);
-      }
-      nums.sort(function (a, b) { return a - b; });
-
-      var err = document.getElementById('fsError');
-      err.textContent = nums.length === 1
-        ? 'Please answer question ' + nums[0] + ' to get your verdict.'
-        : 'Please answer questions ' + nums.join(', ') + ' to get your verdict.';
-      err.style.display = 'block';
-
-      // scroll the first problem into view and move focus to it
-      var firstName = res.missing[0];
-      var containerId = firstName ? QMETA[firstName].container : 'fsq-q4_capture';
-      var node = document.getElementById(containerId);
-      if (node) node.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      var fld = firstName ? focusTarget(firstName) : FORM.elements['q4_labeled'];
-      if (fld && fld.focus) { try { fld.focus({ preventScroll: true }); } catch (err2) { fld.focus(); } }
-      return;
-    }
-
+  function finish() {
     var verdict = compute();
+    currentVerdict = verdict;
     document.getElementById('fs_field_verdict').value = verdict;
     document.getElementById('fs_field_answers').value = answersBlob(verdict);
     render(verdict);
+    track('fit_verdict', { verdict: verdict });
 
     document.getElementById('quiz').style.display = 'none';
     var result = document.getElementById('result');
@@ -613,19 +620,21 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     var top = document.getElementById('fsResultTop');
     if (top && top.focus) top.focus();
-  });
+  }
 
   document.getElementById('fsRestart').addEventListener('click', function (e) {
     e.preventDefault();
-    clearInvalid();
     document.getElementById('result').style.display = 'none';
     document.getElementById('quiz').style.display = '';
+    showStep(0);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Exposed for the capture form's inline onsubmit. Native submit still posts to
-  // the hidden iframe; we confirm on its load rather than claiming "Sent" instantly.
+  // Capture submit: refresh the answers blob (it now picks up the task entered here),
+  // record the event, then let the native submit post to the hidden iframe.
   window.fsCaptureSubmit = function () {
+    document.getElementById('fs_field_answers').value = answersBlob(currentVerdict);
+    track('fit_capture', { verdict: currentVerdict });
     var btn = document.querySelector('#fs_capture_form button[type="submit"]');
     if (btn) btn.textContent = 'Sending…';
     var iframe = document.querySelector('iframe[name="fs_hidden_iframe"]');
@@ -639,6 +648,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     if (iframe) iframe.addEventListener('load', showSuccess, { once: true });
     setTimeout(showSuccess, 2500); // fallback if the iframe load doesn't fire
   };
+
+  // init
+  showStep(0);
 })();
 </script>
 

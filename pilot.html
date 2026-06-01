@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pilot: Baseweight</title>
-<meta name="description" content="Prove a custom open model you'd own matches or beats your current option on your task — on your data, with a reproducible eval you keep. $6–9k fixed scope, no build commitment.">
+<meta name="description" content="Prove a custom open model you'd own matches or beats your current option on your task — on your data, with a reproducible test you keep. $6–9k fixed scope, no build commitment.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -18,13 +18,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/pilot">
 <meta property="og:title" content="Pilot: Baseweight">
-<meta property="og:description" content="A go/no-go verdict on whether a custom open model you'd own beats your current option — on your data, with a reproducible eval you keep. $6–9k fixed scope.">
+<meta property="og:description" content="A go/no-go verdict on whether a custom open model you'd own beats your current option — on your data, with a reproducible test you keep. $6–9k fixed scope.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pilot: Baseweight">
-<meta name="twitter:description" content="A go/no-go verdict on whether a custom open model you'd own beats your current option — on your data, with a reproducible eval you keep. $6–9k fixed scope.">
+<meta name="twitter:description" content="A go/no-go verdict on whether a custom open model you'd own beats your current option — on your data, with a reproducible test you keep. $6–9k fixed scope.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,7 +37,7 @@
   --border-accent: #282828;
   --text-primary: #e8e4de;
   --text-secondary: #898580;
-  --text-muted: #555;
+  --text-muted: #807d76;
   --accent: #dcb875;
   --accent-hover: #dbb960;
   --accent-dim: rgba(201, 168, 76, 0.1);
@@ -354,6 +354,14 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 .diag-list { list-style: none; max-width: 680px; margin-bottom: 24px; }
 .diag-list li { font-size: 14px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 8px; padding-left: 20px; position: relative; }
 .diag-list li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+/* ── Sticky CTA (floating primary action) ───────────────────────────────── */
+.sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
+.sticky-cta.visible { transform: none; opacity: 1; }
+.sticky-cta-text { font-size: 13px; color: var(--text-secondary); }
+.sticky-cta-btn { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 10px 22px; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s; }
+.sticky-cta-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
+@media (max-width: 520px) { .sticky-cta { padding: 10px 16px; gap: 12px; } .sticky-cta-text { display: none; } .sticky-cta-btn { flex: 1; text-align: center; } }
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
 </style>
 <script type="application/ld+json">
 {
@@ -364,7 +372,7 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
       "@id": "https://baseweight.co/pilot#webpage",
       "url": "https://baseweight.co/pilot",
       "name": "Pilot: Baseweight",
-      "description": "Prove a custom open model you'd own matches or beats your current option on your task — on your data, with a reproducible eval you keep. $6–9k fixed scope, no build commitment required.",
+      "description": "Prove a custom open model you'd own matches or beats your current option on your task — on your data, with a reproducible test you keep. $6–9k fixed scope, no build commitment required.",
       "author": {
         "@type": "Person",
         "name": "Philip Stevens",
@@ -383,11 +391,11 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
     {
       "@type": "Service",
       "name": "Pilot",
-      "description": "A go/no-go verdict on whether a custom open model you'd own beats your current option on your task, plus a reproducible eval harness calibrated to your data, TCO for cost-led cases, and a proof artifact. $6–9k fixed scope.",
+      "description": "A go/no-go verdict on whether a custom open model you'd own beats your current option on your task, plus a reproducible test calibrated to your data, a total-cost comparison for cost-led cases, and a proof artifact. $6–9k fixed scope.",
       "provider": {
-        "@type": "Person",
-        "name": "Philip Stevens",
-        "url": "https://baseweight.co/about"
+        "@type": "Organization",
+        "name": "Baseweight",
+        "url": "https://baseweight.co/"
       },
       "offers": {
         "@type": "Offer",
@@ -421,12 +429,12 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
   <div class="container">
     <div class="diag-hero">
       <div class="section-label">Pilot</div>
-      <h1>Before you build, prove an owned model wins on your task &mdash; on your data, with an eval you keep.</h1>
-      <p class="diag-price">$6&ndash;9k &nbsp;&middot;&nbsp; a one-week, fixed-scope proof &nbsp;&middot;&nbsp; you own the eval</p>
-      <p>The Pilot is our public benchmark, run on a sample of your task and your data: a head-to-head between a custom open model you&rsquo;d own and whatever runs the task today &mdash; the big platforms, rules, or nothing yet. You get a go/no-go verdict with the reason, plus the reproducible eval behind it, calibrated to your data and yours to keep. If an owned model won&rsquo;t win, the benchmark says so &mdash; and you keep the eval that proved it.</p>
+      <h1>Prove an owned model wins on your task &mdash; before you pay to build one.</h1>
+      <p class="diag-price">$6&ndash;9k &nbsp;&middot;&nbsp; one week, fixed scope &nbsp;&middot;&nbsp; you keep the proof</p>
+      <p>We test a model you&rsquo;d own against whatever does the job today, on a sample of your real data, and give you a straight go/no-go &mdash; plus the test that proves it, yours to keep whichever way it goes.</p>
       <div class="diag-hero-cta">
-        <a href="/fit-score" class="btn-primary">Score your task &mdash; free</a>
-        <p class="diag-nda">Seven questions, an instant verdict, no email needed to see it &mdash; the fastest way to tell if the Pilot is worth it. Or <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">book a free call</a> (30 min, under NDA).</p>
+        <a href="/fit-score" class="btn-primary">Score your task</a>
+        <p class="diag-nda">Free, about two minutes, no email to see your verdict. Or <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">book a free call</a>.</p>
       </div>
     </div>
   </div>
@@ -436,111 +444,75 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 <section class="diag-section">
   <div class="container">
     <div class="diag-section-header">
-      <div class="section-label">Start here &middot; the Scan</div>
-      <h2>A cheap read before you commit to the Pilot.</h2>
-      <p>The Scan is a fast, low-cost signal on a sample of your data &mdash; enough to know whether the Pilot is worth running, before anyone builds a calibrated eval.</p>
-    </div>
-    <div class="diag-body-text">
-      <p>It delivers signal only:</p>
-      <ul class="diag-list">
-        <li>a hidden-failure read on a sample of your data</li>
-        <li>self-host feasibility for your task and your volume</li>
-        <li>a rough cost break-even against your current API</li>
-      </ul>
-      <p>No trained model, no calibrated eval, no deliverable artifact &mdash; that&rsquo;s the Pilot below. The Scan is ICP-gated and $1,500 &mdash; a one-day read &mdash; credited toward the Pilot if you go ahead.</p>
-      <div class="diag-why-callout">
-        <p>We only take a Scan on if it&rsquo;s a fit &mdash; representative data exists or can be captured, and the task has a checkable right answer. Not sure? <a href="/fit-score">Score your task</a> first &mdash; free, seven questions.</p>
-      </div>
-      <div style="margin-top: 32px;">
-        <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a free call to scope a Scan &rarr;</a>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">A free 30-minute call, under NDA &mdash; we scope the Scan together; you commit to nothing on the call.</p>
-      </div>
+      <div class="section-label">Start cheap &middot; the Scan</div>
+      <h2>Not ready for a Pilot? Start with a $1,500 Scan.</h2>
+      <p>A one-day read on a sample of your data: is an owned model worth proving on your task at all? It&rsquo;s the low-cost way in, and the fee comes off your Pilot if you go ahead. The free fit check points you to the right first step.</p>
     </div>
   </div>
 </section>
 
-<!-- ======== WHY ======== -->
+<!-- (Why-benchmark-first section removed: the homepage already makes this case; its one keeper line moved to the closing CTA) -->
+
+<!-- ======== DELIVERABLES ======== -->
 <section class="diag-section diag-section-alt">
   <div class="container">
     <div class="diag-section-header">
-      <div class="section-label">Why benchmark first</div>
-      <h2>Don&rsquo;t commit to a build you haven&rsquo;t proven.</h2>
-    </div>
-    <div class="diag-body-text">
-      <p>Plenty of vendors will happily train you a model. What they hand back is a loss curve and a bill &mdash; not proof the result is actually better on your task than what you have now. By the time you can tell, the money&rsquo;s already spent.</p>
-      <p>The Pilot inverts that. For $6&ndash;9k, a one-week fixed-scope proof, we run a custom open model head-to-head against your current option on a sample of your real data and give you a go/no-go verdict with the reason. You make the build decision with evidence, not a vendor&rsquo;s default.</p>
-      <p>And the eval harness behind the verdict is yours to keep, whatever you decide next. Build with us, take it to another team, or run it in-house &mdash; you own the thing that proves the win.</p>
-      <div class="diag-why-callout">
-        <p>The expensive mistake isn&rsquo;t the build. It&rsquo;s the build you couldn&rsquo;t prove was better.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======== DELIVERABLES ======== -->
-<section class="diag-section">
-  <div class="container">
-    <div class="diag-section-header">
       <div class="section-label">What you get</div>
-      <h2>A verdict you can act on &mdash; and the eval that backs it, yours to keep.</h2>
-      <p>The Pilot is the public benchmark, run on a sample of your task and your data. Whatever you decide next, you walk away owning the eval and the proof.</p>
+      <h2>A verdict you can act on &mdash; and the test that proves it, yours to keep.</h2>
+      <p>The same test behind our public benchmark, run on a sample of your task and your data. Whichever way it goes, you walk away owning the proof.</p>
     </div>
     <div class="diag-deliverables-grid">
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">01</div>
-        <h3>A go/no-go verdict, with the reason</h3>
-        <p>Does a custom open model you&rsquo;d own match or beat your current option on your task? A clear yes or no, the margin, and why &mdash; measured head-to-head on a sample of your real data, not a generic leaderboard. If it won&rsquo;t win, you hear that plainly.</p>
+        <h3>A straight go/no-go</h3>
+        <p>Does a model you&rsquo;d own match or beat what you use today &mdash; by how much, and why? A clear yes or no, measured on a sample of your real data, not a generic leaderboard. If it won&rsquo;t win, you hear that plainly.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">02</div>
-        <h3>A reproducible eval harness, calibrated to your data</h3>
-        <p>The eval behind the verdict, built from your data and your definition of correct, with acceptance thresholds agreed up front. Reproducible and yours to keep &mdash; so you can re-run it on the next model, catch regressions, and prove the win to whoever needs convincing.</p>
+        <h3>The test that proves it &mdash; yours to keep</h3>
+        <p>Built from your data and your definition of right, with the pass mark agreed up front. Re-run it on the next model, catch the day quality slips, and show the result to whoever needs convincing &mdash; your board, your auditor, the team that has to trust it.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">03</div>
-        <h3>TCO, where cost is the driver</h3>
-        <p>For cost-led cases, the total cost of ownership of an owned model at your volume &mdash; self-hosting, compute, and the break-even against your current per-call API bill. The number that tells you whether owning it pays for itself.</p>
+        <h3>What it costs to own &mdash; when cost is the point</h3>
+        <p>For cost-driven cases, the all-in cost of running it yourself at your volume, and where it breaks even against your current bill. The number that says whether owning it pays for itself.</p>
       </div>
       <div class="diag-deliverable">
         <div class="diag-deliverable-num">04</div>
-        <h3>A proof artifact on a sample of your task</h3>
-        <p>The actual thing that produced the result, run on your sample: a fine-tuned adapter or weights with the training recipe, a distilled student model, a trained classifier with label schema and inference code, a retrieval stack, a prompt suite with output schema, validators and few-shot set, or a composed pipeline &mdash; whichever the task calls for.</p>
+        <h3>The working model itself, not a write-up</h3>
+        <p>You keep the actual model that produced the result, run on your sample and handed over &mdash; whatever shape the task called for. The thing, not a slide about it.</p>
       </div>
-    </div>
-    <div style="margin-top: 48px;">
-      <a href="/fit-score" class="btn-primary">Score your task &mdash; free</a>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">Seven questions, instant verdict, no email needed to see it. Or <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted);">book a free call</a> (30 min, under NDA).</p>
     </div>
   </div>
 </section>
 
 <!-- ======== PROCESS ======== -->
-<section class="diag-section diag-section-alt">
+<section class="diag-section">
   <div class="container">
     <div class="diag-section-header">
       <div class="section-label">How it works</div>
-      <h2>One week, fixed scope. Three stages. You own the output.</h2>
+      <h2>One week, fixed scope, three steps.</h2>
     </div>
     <div class="diag-steps">
       <div class="diag-step">
         <div class="diag-step-num">01</div>
         <div>
-          <h3>Scope and data sample</h3>
-          <p>Under NDA, we agree the one task, how &ldquo;correct&rdquo; is judged, and the acceptance threshold &mdash; before any work starts. You provide a representative sample of your data, or we agree how to capture one. Nothing has to leave your environment if it can&rsquo;t.</p>
+          <h3>Agree the task and the bar</h3>
+          <p>Under NDA, we settle the one task, what &ldquo;right&rdquo; means, and the mark it has to clear &mdash; before any work starts. You share a sample of your data, or we agree how to capture one. Nothing leaves your environment if it can&rsquo;t.</p>
         </div>
       </div>
       <div class="diag-step">
         <div class="diag-step-num">02</div>
         <div>
-          <h3>Build the eval and run the benchmark</h3>
-          <p>We build the eval harness calibrated to your data, then run a custom open model head-to-head against your current option &mdash; the big platforms, rules, or nothing yet &mdash; on your sample. Same protocol as the public benchmark: reproducible, with the proof artifact that produced the result.</p>
+          <h3>Run the head-to-head</h3>
+          <p>We build the test from your data, then run a model you&rsquo;d own against what you use today &mdash; on your sample, the same way our public benchmark does it.</p>
         </div>
       </div>
       <div class="diag-step">
         <div class="diag-step-num">03</div>
         <div>
           <h3>Verdict and handover</h3>
-          <p>A go/no-go verdict with the reason and the margin, TCO where cost is the driver, and the eval harness plus proof artifact handed over &mdash; yours outright. Use it to scope a Build with us, take it to another team, or run it in-house. If the answer was no, you still own the eval that says so.</p>
+          <p>You get the go/no-go with the margin and the reason, the cost number where cost is the point, and everything handed over outright &mdash; the test and the working model both yours. Use it to scope a build with us, take it elsewhere, or run it yourself. If the answer was no, you still own the proof that says so.</p>
         </div>
       </div>
     </div>
@@ -548,7 +520,7 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 </section>
 
 <!-- ======== FAQ ======== -->
-<section class="diag-section">
+<section class="diag-section diag-section-alt">
   <div class="container">
     <div class="diag-section-header">
       <div class="section-label">Questions about the Pilot</div>
@@ -556,45 +528,21 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
     </div>
     <div class="diag-faq">
       <div class="diag-faq-item">
-        <button class="diag-faq-q">How is this different from the free fit check or intro call?</button>
+        <button class="diag-faq-q">How is this different from the free fit check?</button>
         <div class="diag-faq-a">
-          <p>The fit check (seven questions, free) and the intro call tell you whether an owned model is plausibly worth pursuing. The Pilot proves it: real numbers from a custom open model run head-to-head on a sample of your data, plus the eval that produced them. Fit check first, then the cheap Scan to confirm, then the Pilot settles it.</p>
+          <p>The fit check (two minutes, free) tells you whether an owned model is plausibly worth pursuing. The Pilot proves it &mdash; real numbers on a sample of your data, plus the test that produced them. Fit check first, then the cheap Scan to confirm, then the Pilot settles it.</p>
         </div>
       </div>
       <div class="diag-faq-item">
-        <button class="diag-faq-q">What if the benchmark says an owned model won&rsquo;t win?</button>
+        <button class="diag-faq-q">What if it says an owned model won&rsquo;t win?</button>
         <div class="diag-faq-a">
-          <p>Then it says so, with the numbers and the reason &mdash; and you keep the eval harness either way. That&rsquo;s the point of running it before a build: a $6&ndash;9k no is far cheaper than a six-figure build that quietly underperforms. We&rsquo;d rather tell you to keep your API than sell you a model that loses.</p>
-        </div>
-      </div>
-      <div class="diag-faq-item">
-        <button class="diag-faq-q">We can&rsquo;t send our data to an outside API. Can you still run it?</button>
-        <div class="diag-faq-a">
-          <p>Yes &mdash; that&rsquo;s a common reason to run it. We work under NDA and can operate inside your environment; nothing has to leave your walls if it can&rsquo;t. When compliance or residency rules out the big platforms entirely, the benchmark measures an owned model against whatever you can run today: rules, manual, or nothing yet.</p>
-        </div>
-      </div>
-      <div class="diag-faq-item">
-        <button class="diag-faq-q">There&rsquo;s no AI for this task yet. Does the benchmark still apply?</button>
-        <div class="diag-faq-a">
-          <p>Yes. For greenfield tasks there&rsquo;s no API to &ldquo;replace&rdquo; &mdash; the benchmark establishes whether an owned model clears your bar at all, against your current manual or rules-based baseline, and sets the acceptance threshold you&rsquo;ll hold the build to.</p>
-        </div>
-      </div>
-      <div class="diag-faq-item">
-        <button class="diag-faq-q">What exactly do we own at the end?</button>
-        <div class="diag-faq-a">
-          <p>The reproducible eval harness calibrated to your data, the verdict and its numbers, and the proof artifact run on your sample (adapter or weights, classifier, retrieval stack, prompt suite, or pipeline). Yours outright, to re-run, extend, or take elsewhere. No license, no hosted dependency.</p>
-        </div>
-      </div>
-      <div class="diag-faq-item">
-        <button class="diag-faq-q">Why not just fine-tune through a provider API?</button>
-        <div class="diag-faq-a">
-          <p>A provider hands back a training loss curve, not proof the result is better on your task &mdash; and the model stays behind their API, on their pricing. The Pilot answers the question that matters (does it actually win on your data?) and leaves you owning both the model and the eval that proves it.</p>
+          <p>Then it says so, with the numbers and the reason &mdash; and you keep the test either way. A $6&ndash;9k no is far cheaper than a six-figure build that quietly underperforms.</p>
         </div>
       </div>
       <div class="diag-faq-item">
         <button class="diag-faq-q">Can we skip the Scan and go straight to a Build?</button>
         <div class="diag-faq-a">
-          <p>You can, if you already know an owned model wins. But the Scan and Pilot exist so nobody pays for a build that can&rsquo;t be proven out first. The Scan fee is credited toward the Pilot, and the Pilot scopes the Build &mdash; so proving it first doesn&rsquo;t cost you time, it saves it.</p>
+          <p>You can, if you already know an owned model wins. But proving it first is cheap insurance: the Scan fee credits toward the Pilot, and the Pilot scopes the Build &mdash; so it doesn&rsquo;t cost you time, it saves it.</p>
         </div>
       </div>
     </div>
@@ -605,16 +553,22 @@ h3 { font-size: clamp(1rem, 1.8vw, 1.2rem); }
 <section class="diag-cta">
   <div class="container">
     <div class="section-label" style="justify-content: center;">Get started</div>
-    <h2>Prove it on your task before you spend on a build.</h2>
-    <p>Start with a cheap Scan to confirm fit, then the Pilot settles it: a go/no-go verdict on your data, and the eval to back it &mdash; yours to keep either way. Score your task first, or book a 30-minute call to scope it.</p>
-    <a href="/fit-score" class="btn-primary">Score your task &mdash; free</a>
-    <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">Seven questions, instant verdict, no email needed to see it. Or <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted);">book a free call</a> to scope it.</p>
+    <h2>Prove it before you spend on a build.</h2>
+    <p>The expensive mistake isn&rsquo;t the build &mdash; it&rsquo;s the build you couldn&rsquo;t prove was better. Score your task to see if the Pilot fits, or book a call to scope it.</p>
+    <a href="/fit-score" class="btn-primary">Score your task</a>
+    <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">Free, about two minutes, no email to see your verdict. Or <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-muted);">book a free call</a> to scope it.</p>
     <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">Prefer email? <a href="mailto:phil@baseweight.co" style="color: var(--text-muted);">phil@baseweight.co</a> &nbsp;&middot;&nbsp; We work under NDA.</p>
     <p style="margin-top: 48px; font-size: 13px;"><a href="/">&larr; Back to home</a></p>
   </div>
 </section>
 
 </main>
+
+<!-- ======== STICKY CTA (floating primary action) ======== -->
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <span class="sticky-cta-text">See if the Pilot is worth it</span>
+  <a href="/fit-score" class="sticky-cta-btn" tabindex="-1">Score your task</a>
+</div>
 
 <!-- ======== FOOTER ======== -->
 <footer></footer>
@@ -632,6 +586,31 @@ document.querySelectorAll('.diag-faq-q').forEach(btn => {
     if (!isOpen) item.classList.add('open');
   });
 });
+</script>
+
+<!-- Sticky CTA controller -->
+<script>
+(function () {
+  const bar = document.getElementById('stickyCta');
+  if (!bar) return;
+  const link = bar.querySelector('a');
+  const hero = document.querySelector('.diag-hero');
+  const finalCta = document.querySelector('.diag-cta');
+  let pastHero = false, finalVisible = false;
+  const update = () => {
+    const show = pastHero && !finalVisible;
+    bar.classList.toggle('visible', show);
+    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+    if (link) link.tabIndex = show ? 0 : -1;
+  };
+  const observe = (el, cb) => {
+    if (!el) return;
+    new IntersectionObserver(es => { cb(es[0]); update(); }, { threshold: 0 }).observe(el);
+  };
+  if (hero) observe(hero, e => { pastHero = !e.isIntersecting; }); else pastHero = true;
+  observe(finalCta, e => { finalVisible = e.isIntersecting; });
+  update();
+})();
 </script>
 
 </body>

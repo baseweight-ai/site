@@ -12,7 +12,7 @@ const PAGES = [
   { path: "/about.html",       title: /About/ },
   { path: "/benchmark.html",   title: /Benchmark/ },
   { path: "/pilot.html",  title: /Pilot/ },
-  { path: "/methodology.html", title: /Methodology/ },
+  { path: "/methodology.html", title: /How it.s tested/i },
   { path: "/contact.html",     title: /Contact/ },
   { path: "/privacy.html",     title: /Privacy/ },
   { path: "/fit-score.html",   title: /Baseweight/ },
@@ -118,21 +118,33 @@ test("about page notify capture posts to the endpoint and shows success", async 
   await expect(page.locator("#about_lead_success")).toBeVisible();
 });
 
+// ── Fit Score: one-question-per-screen wizard ──────────────────────────────
+// Step order: Q3 (today) → Q2 (correctness) → Q4 (data) → Q5 (optional) →
+// Q6 (optional) → Q7 (ownership) → verdict. Only the active step is visible, so
+// each answer is followed by clicking Next (#fsNext). The task description (q1)
+// moved out of the quiz and is now asked at the email-capture step.
+
 test("fit score candidate verdict is ungated, then captures answers + verdict + email", async ({ page }) => {
   await page.route("**/macros/s/**", (route) => route.fulfill({ status: 200, contentType: "text/plain", body: "OK" }));
   await page.goto("/fit-score.html");
-  await page.fill('textarea[name="q1_task"]', "Route an incoming support message to one of 40 queues.");
-  await page.check('input[name="q2_correctness"][value="exact"]');
   await page.selectOption('select[name="q3_today"]', "frontier-api");
+  await page.click("#fsNext");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext");
   await page.selectOption('select[name="q4_capture"]', "easily");
+  await page.click("#fsNext"); // Q4 → Q5
+  await page.click("#fsNext"); // Q5 (optional) → Q6
+  await page.click("#fsNext"); // Q6 (optional) → Q7
   await page.check('input[name="q7_own"][value="own"]');
-  await page.click('#fsForm button[type="submit"]');
+  await page.click("#fsNext"); // last step → verdict
 
   // Verdict shows with no email asked yet (nothing gated); the email block is separate.
   await expect(page.locator("#result")).toBeVisible();
   await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
   await expect(page.locator("#fsCapture")).toBeVisible();
 
+  // The task description now lives at capture (moved out of the upfront quiz).
+  await page.fill('#fs_capture_form textarea[name="q1_task"]', "Route an incoming support message to one of 40 queues.");
   await page.fill('#fs_capture_form input[name="email"]', "e2e+fit@example.com");
   const [req] = await Promise.all([
     page.waitForRequest("**/macros/s/**"),
@@ -149,37 +161,45 @@ test("fit score candidate verdict is ungated, then captures answers + verdict + 
 
 test("fit score renting verdict shows the result but no capture form", async ({ page }) => {
   await page.goto("/fit-score.html");
-  await page.fill('textarea[name="q1_task"]', "Draft a marketing email from a brief.");
-  await page.check('input[name="q2_correctness"][value="exact"]');
   await page.selectOption('select[name="q3_today"]', "frontier-api");
+  await page.click("#fsNext");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext");
   await page.selectOption('select[name="q4_capture"]', "easily");
+  await page.click("#fsNext");
+  await page.click("#fsNext"); // Q5
+  await page.click("#fsNext"); // Q6
   await page.check('input[name="q7_own"][value="rent"]');
-  await page.click('#fsForm button[type="submit"]');
+  await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
   await expect(page.locator("#fsBadge")).toContainText(/not us/i);
   await expect(page.locator("#fsCapture")).toBeHidden();
 });
 
-test("fit score blocks the verdict until the required questions are answered", async ({ page }) => {
+test("fit score blocks advancing until the current question is answered", async ({ page }) => {
   await page.goto("/fit-score.html");
-  await page.click('#fsForm button[type="submit"]');
+  await page.click("#fsNext"); // first step (Q3) unanswered
   await expect(page.locator("#fsError")).toBeVisible();
   await expect(page.locator("#result")).toBeHidden();
+  await expect(page.locator("#fsq-q3_today")).toBeVisible(); // still on step 1
 });
 
 // The verdict must not hinge on the optional labelled-count field. A data-rich
 // team that can't capture more (capture="no") but already holds plenty of
-// labelled examples is a candidate — it must never fall through to "Not yet"
-// just because a number was filled in. (Regression: audit finding 3.1.)
+// labelled examples is a candidate — it must never fall through to "Not yet". (Finding 3.1.)
 test("fit score: data-rich 'can't get more' still scores as a candidate", async ({ page }) => {
   await page.goto("/fit-score.html");
-  await page.fill('textarea[name="q1_task"]', "Classify a transaction into one of 77 categories.");
-  await page.check('input[name="q2_correctness"][value="exact"]');
   await page.selectOption('select[name="q3_today"]', "manual");
+  await page.click("#fsNext");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext");
   await page.selectOption('select[name="q4_capture"]', "no");
   await page.selectOption('select[name="q4_labeled"]', "1000plus");
+  await page.click("#fsNext");
+  await page.click("#fsNext"); // Q5
+  await page.click("#fsNext"); // Q6
   await page.check('input[name="q7_own"][value="own"]');
-  await page.click('#fsForm button[type="submit"]');
+  await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
   await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
 });
@@ -188,60 +208,66 @@ test("fit score: data-rich 'can't get more' still scores as a candidate", async 
 // rather than silently read as zero (which would mis-verdict). (Finding 3.1.)
 test("fit score: blank labelled count with 'can't get more' is blocked, not mis-verdicted", async ({ page }) => {
   await page.goto("/fit-score.html");
-  await page.fill('textarea[name="q1_task"]', "Extract a clause from a contract.");
-  await page.check('input[name="q2_correctness"][value="exact"]');
   await page.selectOption('select[name="q3_today"]', "manual");
+  await page.click("#fsNext");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext");
+  // Q4 step: can't capture more, labelled left blank → blocked on this step.
   await page.selectOption('select[name="q4_capture"]', "no");
-  // q4_labeled deliberately left blank
-  await page.check('input[name="q7_own"][value="own"]');
-  await page.click('#fsForm button[type="submit"]');
-
-  // Verdict withheld; the labelled-specific error shows and Q4 is marked invalid.
-  await expect(page.locator("#result")).toBeHidden();
+  await page.click("#fsNext");
   await expect(page.locator("#fsErrLabeled")).toBeVisible();
   await expect(page.locator("#fsq-q4_capture")).toHaveClass(/fs-q--invalid/);
+  await expect(page.locator("#result")).toBeHidden();
 
   // Supplying a low range unblocks it; little data + can't-capture-more → "Not yet".
   await page.selectOption('select[name="q4_labeled"]', "lt50");
   await page.selectOption('select[name="q4_examples"]', "lt50");
-  await page.click('#fsForm button[type="submit"]');
+  await page.click("#fsNext"); // past Q4
+  await page.click("#fsNext"); // Q5
+  await page.click("#fsNext"); // Q6
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
   await expect(page.locator("#fsBadge")).toContainText(/not yet/i);
 });
 
-// The error names only the questions actually missing, and marks them. (Finding 3.3.)
-test("fit score: error names only the missing question and marks it", async ({ page }) => {
+// A blank required step is blocked, and that step is marked invalid. (Finding 3.3.)
+test("fit score: a blank required step is blocked and marked invalid", async ({ page }) => {
   await page.goto("/fit-score.html");
-  await page.fill('textarea[name="q1_task"]', "Route a ticket.");
-  await page.check('input[name="q2_correctness"][value="exact"]');
   await page.selectOption('select[name="q3_today"]', "frontier-api");
+  await page.click("#fsNext");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext");
   await page.selectOption('select[name="q4_capture"]', "easily");
-  // q7 (Ownership) deliberately left unanswered
-  await page.click('#fsForm button[type="submit"]');
-
+  await page.click("#fsNext");
+  await page.click("#fsNext"); // Q5
+  await page.click("#fsNext"); // Q6
+  // Q7 (Ownership) deliberately left unanswered.
+  await page.click("#fsNext");
   await expect(page.locator("#result")).toBeHidden();
-  await expect(page.locator("#fsError")).toContainText("question 7");
-  await expect(page.locator("#fsError")).not.toContainText("1, 2, 3");
+  await expect(page.locator("#fsError")).toBeVisible();
   await expect(page.locator("#fsq-q7_own")).toHaveClass(/fs-q--invalid/);
-  // a field the user did answer is not flagged
-  await expect(page.locator("#fsq-q1_task")).not.toHaveClass(/fs-q--invalid/);
 });
 
 // "Edit my answers" returns to the quiz with answers preserved. (Finding 2.1.)
 test("fit score: 'Edit my answers' returns to the quiz with answers intact", async ({ page }) => {
   await page.goto("/fit-score.html");
-  await page.fill('textarea[name="q1_task"]', "Summarise a call transcript.");
-  await page.check('input[name="q2_correctness"][value="exact"]');
   await page.selectOption('select[name="q3_today"]', "manual");
+  await page.click("#fsNext");
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext");
   await page.selectOption('select[name="q4_capture"]', "easily");
+  await page.click("#fsNext");
+  await page.click("#fsNext"); // Q5
+  await page.click("#fsNext"); // Q6
   await page.check('input[name="q7_own"][value="own"]');
-  await page.click('#fsForm button[type="submit"]');
+  await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
 
   await page.getByRole("link", { name: /Edit my answers/i }).click();
   await expect(page.locator("#quiz")).toBeVisible();
   await expect(page.locator("#result")).toBeHidden();
-  // previously entered answers survive the round-trip
-  await expect(page.locator('textarea[name="q1_task"]')).toHaveValue("Summarise a call transcript.");
+  // back on step 1; previously entered answers survive the round-trip
+  await expect(page.locator('select[name="q3_today"]')).toHaveValue("manual");
   await expect(page.locator('input[name="q7_own"][value="own"]')).toBeChecked();
 });

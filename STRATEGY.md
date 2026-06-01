@@ -46,6 +46,11 @@ from a frontier API. Offer ladder:
 > delivery cost (Scan ~1 day, Pilot ~1 week); revisit after ~3 engagements once real delivery
 > time and WTP are known. The cost-vs-API wedge is eroding (API prices fell ~80% YoY) — anchor
 > Build value on cost-of-error × volume, not on being cheaper than the API.
+>
+> **Site presentation (2026-06-01):** the homepage merges pricing + the design-partner ask into one
+> "Founding partners" block — Scan $1,500 and Pilot $6–9k shown as *founding rates*; Build is
+> "scoped — founding-partner terms" and Assurance "by arrangement" (the ~$25k / $2–10k figures stay
+> internal estimates, not published). No anchor/strike-through pricing.
 
 ## Strategy
 
@@ -54,7 +59,7 @@ The business buyer is **solution-unaware**: lead with the struggling moment (the
 can’t do their one task), *reveal* that an owned model can, then prove it. The durable,
 hard-to-copy differentiators are **independence, technique-neutrality, and the honest go/no-go**
 (“we’ll tell you to keep your API”) — promote these to the spine; no platform or SI can copy
-them without breaking their own business model. “A small owned model beats the frontier, and you
+them without breaking their own business model. “A small owned model beats the API tier you'd actually deploy, and you
 own it” is now table-stakes among practitioners — keep *match/beat* and *you own it* as
 **support, not the headline**. The public benchmark’s job is **reason-to-believe a new
 possibility** for the buyer (and credibility for any gatekeeper), translated into their terms —
@@ -78,7 +83,7 @@ demand is proven:
   to semi-capable buyers; sell artefact kits to build-capable buyers).
 
 ### 4. Channel / hook (resolve before broadcasting)
-A reproducible "open model beats the frontier, here are the hashes" post draws ML engineers — who
+A reproducible "open model beats the hosted API tier, here are the hashes" post draws ML engineers — who
 fail the buy-not-build filter. Translate the benchmark into the business buyer's terms and target
 vertical/industry channels (compliance, ops, product leaders), with the benchmark as the proof
 link, not the hook. Lead with the ICP's problem (can't / too costly / too wrong / can't tell if it
@@ -90,7 +95,9 @@ worked).
   the policy — sponsor funds the work, never the conclusion; results published regardless; code +
   methodology public.
 - **Don't over-claim:** "open wins on these tasks" ≠ "open always wins." The Pilot ("we test it on
-  *your* data and tell you honestly if it doesn't") is the defensible framing.
+  *your* data and tell you honestly if it doesn't") is the defensible framing. The benchmark beats
+  the **cost-efficient API tier teams actually deploy** (e.g. GPT-5.4 Mini), not the flagship — say
+  "the API tier you'd deploy," never "the frontier."
 - **Don't over-build:** earlier stages before later ones; wait for the demand signal.
 
 ## Technical rigour (the credibility floor)

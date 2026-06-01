@@ -43,13 +43,13 @@ test("clause extraction tab is active on load", async ({ page }) => {
   await page.goto("/benchmark.html");
   const active = page.locator('[role="tab"][aria-selected="true"]');
   await expect(active).toHaveCount(1);
-  await expect(active).toHaveText(/Clause Extraction/i);
+  await expect(active).toHaveText(/Contract review/i);
 });
 
 test("clicking a task tab switches the active tab", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await page.getByRole("tab", { name: /Support Routing/i }).click();
-  await expect(page.locator('[role="tab"][aria-selected="true"]')).toHaveText(/Support Routing/i);
+  await page.getByRole("tab", { name: /Support triage/i }).click();
+  await expect(page.locator('[role="tab"][aria-selected="true"]')).toHaveText(/Support triage/i);
 });
 
 // ── Per-task explanation + consolidated layout ──────────────────────────────────
@@ -58,13 +58,14 @@ test("per-task explanation renders and updates on tab switch", async ({ page }) 
   await page.goto("/benchmark.html");
   await expect(page.locator("#taskBlurb")).not.toBeEmpty();
   await expect(page.locator("#taskBlurb")).toContainText(/contract/i);
-  await page.getByRole("tab", { name: /Support Routing/i }).click();
+  await page.getByRole("tab", { name: /Support triage/i }).click();
   await expect(page.locator("#taskBlurb")).toContainText(/rout/i);
 });
 
-test("error analysis lives on the main page; the per-task subpage link is gone", async ({ page }) => {
+test("buyer headline renders on the main page; the per-task subpage link is gone", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await expect(page.getByRole("heading", { name: "Error analysis" })).toBeVisible();
+  await expect(page.locator("#benchHeadline")).toBeVisible();
+  await expect(page.locator("#benchHeadline")).toContainText(/fewer|cheaper/i);
   await expect(page.locator("#taskDeepLink")).toHaveCount(0);
 });
 
@@ -82,17 +83,17 @@ test("closing CTA bridges to the Fit Score, with the call as secondary", async (
 
 // ── Leaderboard (Support Routing / banking77 — has all conditions) ──────────────
 
-test.describe("Support Routing leaderboard", () => {
+test.describe("Support triage leaderboard (banking77 — has all conditions)", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/benchmark.html");
-    await page.getByRole("tab", { name: /Support Routing/i }).click();
+    await page.getByRole("tab", { name: /Support triage/i }).click();
   });
 
   test("renders a row per model/condition", async ({ page }) => {
     await expect(page.locator("#leaderboardBody tr.lb-row")).toHaveCount(5);
   });
 
-  test("shows both the open and frontier model", async ({ page }) => {
+  test("shows both the open and hosted-API model", async ({ page }) => {
     const body = page.locator("#leaderboardBody");
     await expect(body).toContainText("Qwen3-8B");
     await expect(body).toContainText("GPT-5.4 Mini");
@@ -123,9 +124,9 @@ test.describe("Support Routing leaderboard", () => {
 
 // ── Clause Extraction (cuad — token_f1, default tab) ────────────────────────────
 
-test("clause extraction uses Token F1 and lists every condition", async ({ page }) => {
+test("contract review leads with AUPR and lists every condition", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await expect(page.locator("#metricColLabel")).toContainText("Token F1");
+  await expect(page.locator("#metricColLabel")).toContainText("AUPR");
   await expect(page.locator("#leaderboardBody tr.lb-row")).toHaveCount(3);
 });
 

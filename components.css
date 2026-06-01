@@ -171,3 +171,51 @@ footer p:last-child {
 
   .nav-mobile-toggle { display: block; }
 }
+
+/* ========================================
+   KEYBOARD FOCUS  (WCAG 2.2 — Focus Visible)
+   One gold ring for keyboard users on every interactive element. Shows only
+   for keyboard navigation (:focus-visible), never on mouse click. The 2px
+   offset keeps the ring on the dark background, so it stays visible even on
+   the gold buttons.
+   ======================================== */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   BUTTON PRESS  (micro-interaction — tactile feedback on click)
+   Hover lifts the button; active presses it back down.
+   ======================================== */
+.btn-primary:active,
+.nav-cta:active,
+.sticky-cta-btn:active {
+  transform: translateY(0) !important;
+}
+
+/* ========================================
+   REDUCED MOTION — respect the user's system preference.
+   Neutralises the decorative animation (radar rings, gold shimmer, CTA glow)
+   and the scroll-reveal slide; content simply appears. (index / fit-score /
+   pilot / about had no guard; benchmark / methodology already did.)
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal, .reveal-delay-1, .reveal-delay-2, .reveal-delay-3,
+  .bench-reveal, .bench-anim, .bench-fade, .meth-anim {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-radar-ring { display: none !important; }
+}

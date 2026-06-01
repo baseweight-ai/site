@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Methodology | Baseweight Benchmark</title>
+<title>How it's tested | Baseweight Benchmark</title>
 <meta name="description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,11 +13,11 @@
 <link rel="canonical" href="https://baseweight.co/methodology">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/methodology">
-<meta property="og:title" content="Methodology | Baseweight Benchmark">
+<meta property="og:title" content="How it's tested | Baseweight Benchmark">
 <meta property="og:description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Methodology | Baseweight Benchmark">
+<meta name="twitter:title" content="How it's tested | Baseweight Benchmark">
 <meta name="twitter:description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
@@ -32,7 +32,7 @@
   --border-accent: #282828;
   --text-primary: #e8e4de;
   --text-secondary: #898580;
-  --text-muted: #555;
+  --text-muted: #807d76;
   --accent: #dcb875;
   --accent-hover: #dbb960;
   --accent-dim: rgba(201, 168, 76, 0.1);
@@ -243,6 +243,14 @@ body::after {
   .methodology-layout { grid-template-columns: 1fr; gap: 0; }
   .toc-sidebar { display: none; }
 }
+/* ── Sticky CTA (floating primary action) ───────────────────────────────── */
+.sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
+.sticky-cta.visible { transform: none; opacity: 1; }
+.sticky-cta-text { font-size: 13px; color: var(--text-secondary); }
+.sticky-cta-btn { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 10px 22px; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s; }
+.sticky-cta-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
+@media (max-width: 520px) { .sticky-cta { padding: 10px 16px; gap: 12px; } .sticky-cta-text { display: none; } .sticky-cta-btn { flex: 1; text-align: center; } }
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
 </style>
 <meta name="author" content="Philip Stevens">
 <link rel="author" href="/about">
@@ -260,8 +268,8 @@ body::after {
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label meth-anim" style="animation-delay: 0s;"><a href="/benchmark" style="color: var(--accent); text-decoration: none;">Benchmark</a></div>
-    <h1 class="meth-anim" style="animation-delay: 0.07s;">Methodology</h1>
+    <div class="section-label meth-anim" style="animation-delay: 0s;"><a href="/benchmark" style="color: var(--accent); text-decoration: none;">Benchmark</a> <span style="color: var(--text-muted);">/ How it&rsquo;s tested</span></div>
+    <h1 class="meth-anim" style="animation-delay: 0.07s;">How it&rsquo;s tested</h1>
     <p class="subtitle meth-anim" style="animation-delay: 0.14s;">How the benchmark was designed, run, and measured.</p>
   </div>
 </section>
@@ -280,7 +288,7 @@ body::after {
       <article class="methodology-content" id="methodologyContent">
 
         <h2 id="what-this-measures">What this measures</h2>
-        <p class="lead">The benchmark compares Qwen3-8B with a task-specific LoRA adapter against a frontier API baseline (zero-shot and 5-shot) on two tasks representative of common production AI work. It measures accuracy on the task, total cost of ownership at production volume, and error composition.</p>
+        <p class="lead">The benchmark compares Qwen3-8B with a task-specific LoRA adapter against a hosted API baseline (zero-shot and 5-shot) on two tasks representative of common production AI work. It measures accuracy on the task, total cost of ownership at production volume, and error composition.</p>
         <p>Every result is reproducible. Training code, evaluation scripts, model weights, and prediction logs are public. The benchmark is ongoing; more tasks and model families will be added.</p>
 
         <h2 id="independence">Independence &amp; funding</h2>
@@ -299,7 +307,7 @@ body::after {
         <table>
           <thead><tr><th>Task</th><th>Dataset</th><th>What it tests</th><th>Metric</th><th>Test size</th></tr></thead>
           <tbody>
-            <tr><td>Contract clause extraction</td><td>CUAD</td><td>Given a commercial contract, identify whether a specific clause type appears and extract the relevant text, or correctly report its absence. 41 clause categories across 510 contracts.</td><td>Token F1</td><td>500 questions</td></tr>
+            <tr><td>Contract clause extraction</td><td>CUAD</td><td>Given a commercial contract, identify whether a specific clause type appears and extract the relevant text, or correctly report its absence. 41 clause categories across 510 contracts.</td><td>AUPR (+ Token F1)</td><td>500 questions</td></tr>
             <tr><td>Customer support routing</td><td>Banking77</td><td>Given a short customer message, assign the correct intent label from a closed set of 77 banking-specific categories.</td><td>Weighted F1</td><td>500</td></tr>
           </tbody>
         </table>
@@ -307,23 +315,24 @@ body::after {
 
         <h2 id="models">Models</h2>
         <p><strong>Open-source (QLoRA fine-tuned):</strong> Qwen3-8B (8B parameters, Apache 2.0 licence). Served with vLLM on a single NVIDIA RTX 3090.</p>
-        <p><strong>Frontier API (prompted):</strong> GPT-5.4 Mini, tested zero-shot and 5-shot at standard API pricing. The per-query cost in results reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
+        <p><strong>Hosted API (prompted):</strong> GPT-5.4 Mini &mdash; the cost-efficient API tier a team would actually deploy for a task at this volume, not the pricier flagship or a reasoning model &mdash; tested zero-shot and 5-shot at standard API pricing. Other vendors&rsquo; models, and flagship or reasoning tiers where a task&rsquo;s latency and cost budget justify them, are being added. The per-query cost reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
+        <p><strong>Why a decoder for a classification task?</strong> For a single closed-set task like Banking77 in isolation, a small encoder classifier (a fine-tuned DeBERTa, or SetFit on a few hundred labels) is often the more accurate and cheaper-to-serve tool &mdash; and encoder and other non-decoder baselines are being added per task. We report a decoder here because most deployments run a <em>portfolio</em> of tasks: one open base model with per-task LoRA adapters, hot-swapped or served concurrently, covers classification, extraction, and generation on a single inference stack &mdash; frequently the better fleet-level trade even when an encoder wins a task on its own.</p>
 
         <h2 id="conditions">Conditions</h2>
         <div class="table-wrap">
         <table>
           <thead><tr><th>Condition</th><th>Applied to</th><th>What it means</th></tr></thead>
           <tbody>
-            <tr><td>Zero-shot</td><td>Frontier API</td><td>Task instruction only, no examples in the prompt. The model relies on pre-training.</td></tr>
-            <tr><td>5-shot</td><td>Frontier API</td><td>Five labelled examples prepended to every query. No weights updated.</td></tr>
+            <tr><td>Zero-shot</td><td>Hosted API</td><td>Task instruction only, no examples in the prompt. The model relies on pre-training.</td></tr>
+            <tr><td>5-shot</td><td>Hosted API</td><td>Five labelled examples prepended to every query. No weights updated.</td></tr>
             <tr><td>LoRA</td><td>Qwen3-8B</td><td>QLoRA fine-tuning on the task training set. A small adapter layer is trained; the base model weights are unchanged.</td></tr>
           </tbody>
         </table>
         </div>
 
         <h2 id="metrics">Metrics</h2>
-        <p><strong>Task accuracy.</strong> Token F1 for extraction (measures token-level overlap between predicted and expected text, giving partial credit for near-correct extractions). Weighted F1 for classification (accounts for label imbalance across all categories).</p>
-        <p><strong>Deployment cost.</strong> Presented as an interactive total-cost-of-ownership calculator on the benchmark page, since real cost depends on query volume and the hardware you deploy on. The frontier API is usage-priced from measured input and output token counts at the published per-token rate. The self-hosted model is priced as a GPU reservation at a rate you choose (on-prem, A40, A10G, or H100), scaled to the number of GPUs your volume needs, plus one-time fine-tuning. The benchmark ran on an RTX 3090; the calculator lets you model your own setup.</p>
+        <p><strong>Task accuracy.</strong> For extraction (CUAD), the primary metric is <strong>AUPR</strong> &mdash; area under the precision&ndash;recall curve for clause detection, the metric the CUAD authors report and the right one when most clause types are absent from any given contract. Token F1 (token-level overlap, partial credit for near-correct extractions) is reported alongside as a secondary, partial-credit check. Weighted F1 for classification (accounts for label imbalance across all categories).</p>
+        <p><strong>Deployment cost.</strong> Presented as an interactive total-cost-of-ownership calculator on the benchmark page, since real cost depends on query volume and the hardware you deploy on. The hosted API is usage-priced from measured input and output token counts at the published per-token rate. The self-hosted model is priced as a GPU reservation at a rate you choose (on-prem, A40, A10G, or H100), scaled to the number of GPUs your volume needs, plus one-time fine-tuning. The benchmark ran on an RTX 3090; the calculator lets you model your own setup.</p>
 
         <h2 id="error-analysis">Error analysis</h2>
         <p>Every prediction is classified into one error category by deterministic rules, not by judgment.</p>
@@ -402,6 +411,12 @@ body::after {
 
 </main>
 
+<!-- ======== STICKY CTA (floating primary action) ======== -->
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <span class="sticky-cta-text">See if it holds for your task</span>
+  <a href="/fit-score" class="sticky-cta-btn" tabindex="-1">Score your task</a>
+</div>
+
 <footer></footer>
 
 <script src="/components.js"></script>
@@ -444,6 +459,31 @@ function initTOCScroll() {
 
 buildTOC();
 initTOCScroll();
+</script>
+
+<!-- Sticky CTA controller -->
+<script>
+(function () {
+  const bar = document.getElementById('stickyCta');
+  if (!bar) return;
+  const link = bar.querySelector('a');
+  const hero = document.querySelector('.page-hero');
+  const finalCta = null;
+  let pastHero = false, finalVisible = false;
+  const update = () => {
+    const show = pastHero && !finalVisible;
+    bar.classList.toggle('visible', show);
+    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+    if (link) link.tabIndex = show ? 0 : -1;
+  };
+  const observe = (el, cb) => {
+    if (!el) return;
+    new IntersectionObserver(es => { cb(es[0]); update(); }, { threshold: 0 }).observe(el);
+  };
+  if (hero) observe(hero, e => { pastHero = !e.isIntersecting; }); else pastHero = true;
+  observe(finalCta, e => { finalVisible = e.isIntersecting; });
+  update();
+})();
 </script>
 </body>
 </html>

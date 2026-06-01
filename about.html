@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Baseweight: the judgment behind AI you own</title>
-<meta name="description" content="Baseweight proves and builds custom open models you own — for tasks where a frontier API is too risky, too costly, or too wrong. Proof first: we benchmark the win on your data before anyone commits to a build.">
+<meta name="description" content="Baseweight proves and builds custom open models you own — for tasks where the big AI platforms are too risky, too costly, or too wrong. Proof first: we benchmark the win on your data before anyone commits to a build.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
   --border-accent: #282828;
   --text-primary: #e8e4de;
   --text-secondary: #898580;
-  --text-muted: #555;
+  --text-muted: #807d76;
   --accent: #dcb875;
   --accent-hover: #dbb960;
   --accent-dim: rgba(201, 168, 76, 0.1);
@@ -406,6 +406,14 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     flex-direction: column;
   }
 }
+/* ── Sticky CTA (floating primary action) ───────────────────────────────── */
+.sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
+.sticky-cta.visible { transform: none; opacity: 1; }
+.sticky-cta-text { font-size: 13px; color: var(--text-secondary); }
+.sticky-cta-btn { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 10px 22px; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s; }
+.sticky-cta-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
+@media (max-width: 520px) { .sticky-cta { padding: 10px 16px; gap: 12px; } .sticky-cta-text { display: none; } .sticky-cta-btn { flex: 1; text-align: center; } }
+@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
 </style>
 <meta name="author" content="Philip Stevens">
 <link rel="author" href="/about">
@@ -418,7 +426,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       "@id": "https://baseweight.co/about#webpage",
       "url": "https://baseweight.co/about",
       "name": "About: Baseweight",
-      "description": "Philip Stevens: 15 years in applied ML. Baseweight proves and builds custom open models you own — for tasks where a frontier API is too risky, too costly, or too wrong.",
+      "description": "Philip Stevens: 15 years in applied ML. Baseweight proves and builds custom open models you own — for tasks where the big AI platforms are too risky, too costly, or too wrong.",
       "author": {
         "@type": "Person",
         "name": "Philip Stevens",
@@ -467,10 +475,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="about-body-inner">
       <div class="reveal">
-        <p>Every AI services company has a specialty, and it&rsquo;s usually the thing they sell. Fine-tuning shops recommend fine-tuning. RAG consultancies recommend RAG. The recommendation follows from their default, not from what actually wins on your task.</p>
-        <p>Baseweight starts somewhere else: prove it first. Before anyone commits to a build, we benchmark a custom open model you&rsquo;d own against your current option &mdash; on your data, with an eval calibrated to your task. The technique follows from what the benchmark shows, not from a house style.</p>
-        <p>That matters most when a frontier API isn&rsquo;t the answer &mdash; the data can&rsquo;t leave your walls, the per-call bill is brutal at your scale, or the general model is simply wrong too often on your task. The deliverable is intelligence you own and the proof it works, not a dependency on us.</p>
-        <p>Every engagement produces artifacts you own outright: weights or adapters, training recipes, the eval harness, inference code. You can run it, extend it, or take it elsewhere. Retainers exist, but the goal is never lock-in.</p>
+        <p>Most AI shops have a house technique, and it&rsquo;s usually what they recommend &mdash; fine-tuning shops fine-tune, RAG consultancies do RAG, and the advice follows the product, not your task. Baseweight doesn&rsquo;t have one to sell. We pick whatever wins on your data and prove it before you build &mdash; and with nothing of our own to push, the recommendation can follow the evidence instead of the sales sheet. That independence is the whole point of the company.</p>
       </div>
     </div>
   </div>
@@ -489,15 +494,15 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       </div>
       <div class="belief-item reveal reveal-delay-2">
         <h3>Ownership over dependency</h3>
-        <p>You should own your model, your weights, and the eval that proves it works. Full stop.</p>
+        <p>You should own your model, your weights, and the test that proves it works. Full stop.</p>
       </div>
       <div class="belief-item reveal reveal-delay-1">
         <h3>Patterns over bespoke</h3>
-        <p>Each engagement extends a library of task and failure patterns built across clients and verticals. The second time we see a pattern, the work is faster and better grounded. We don&rsquo;t start from zero.</p>
+        <p>Every engagement adds to a library of task and failure patterns we carry forward, so the work gets faster and better-grounded each time &mdash; you&rsquo;re not paying to reinvent it.</p>
       </div>
       <div class="belief-item reveal reveal-delay-2">
         <h3>Honesty over revenue</h3>
-        <p>If an owned model won&rsquo;t beat what you have, we&rsquo;ll tell you &mdash; and you keep the eval that says so. We&rsquo;d rather earn trust than manufacture scope.</p>
+        <p>If an owned model won&rsquo;t beat what you have, we&rsquo;ll tell you &mdash; and you keep the test that says so. We&rsquo;d rather earn trust than manufacture scope.</p>
       </div>
     </div>
   </div>
@@ -513,8 +518,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       </div>
       <div class="reveal reveal-delay-1">
         <p>15 years in applied ML. Production work at Agoda building personalization and recommendation systems at scale, and at Quantcast managing the end-to-end ML lifecycle for core targeting models: feature engineering, model architecture, and domain drift monitoring.</p>
-        <p>Independent since 2023. Baseweight exists to supply the judgment most teams don&rsquo;t have in-house and can&rsquo;t justify hiring for: deciding what &ldquo;correct&rdquo; means for your task, choosing the technique the evidence supports, and verifying it actually holds &mdash; so you get an owned model that wins without standing up an ML team to get there.</p>
-        <p>I work across the full stack and pick the approach after looking at your task, your data, and what the benchmark shows. Your team owns the output outright and can run and extend it independently.</p>
+        <p>Baseweight exists to supply the judgment most teams don&rsquo;t have in-house and can&rsquo;t justify hiring for: deciding what &ldquo;correct&rdquo; means for your task, choosing the technique the evidence supports, and verifying it holds &mdash; so you get an owned model that wins without standing up an ML team.</p>
         <ul class="founder-credentials">
           <li>Fine-tuning (LoRA, QLoRA, full)</li>
           <li>Eval design &amp; regression harnesses</li>
@@ -534,8 +538,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="about-lead-inner">
       <div class="reveal">
-        <h2>We publish open-vs-frontier benchmarks. Get the next one when it drops.</h2>
-        <p class="lead-sub">The <a href="/benchmark">public benchmark</a> is live, with more tasks and models underway. Leave your email and we&rsquo;ll send new results as they publish &mdash; methodology, failure analysis, and per-task numbers. No pitch sequence; technical content only.</p>
+        <h2>We publish open-model-vs-API benchmarks. Get the next one when it drops.</h2>
+        <p class="lead-sub">The <a href="/benchmark">public benchmark</a> is live, with more tasks and models underway. Leave your email and we&rsquo;ll send the next one &mdash; methodology, failure analysis, per-task numbers. Technical content only, no pitch sequence.</p>
       </div>
       <div class="reveal reveal-delay-1">
         <form
@@ -576,7 +580,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="reveal">
       <h2>Wondering if an owned model wins on your task?</h2>
-      <p>Find out in seven questions &mdash; free, instant verdict, no email required to see it. Or book a call and we&rsquo;ll talk it through. We&rsquo;ll tell you honestly if it isn&rsquo;t us.</p>
+      <p>Find out in about two minutes &mdash; free, instant verdict, no email to see it.</p>
       <a href="/fit-score" class="btn-primary">Score your task</a>
       <p style="font-size: 13px; color: var(--text-secondary); margin-top: 20px;">Prefer to talk? <a href="https://cal.com/philip-stevens/baseweight-intro" target="_blank" rel="noopener noreferrer">Book a free call &rarr;</a></p>
     </div>
@@ -589,6 +593,12 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 </div>
 
 </main>
+
+<!-- ======== STICKY CTA (floating primary action) ======== -->
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <span class="sticky-cta-text">See if an owned model wins on your task</span>
+  <a href="/fit-score" class="sticky-cta-btn" tabindex="-1">Score your task</a>
+</div>
 
 <!-- ======== FOOTER ======== -->
 <footer></footer>
@@ -625,6 +635,31 @@ function aboutLeadCaptureSubmit(e) {
   if (form) form.style.display = 'none';
   if (success) success.style.display = 'block';
 }
+</script>
+
+<!-- Sticky CTA controller -->
+<script>
+(function () {
+  const bar = document.getElementById('stickyCta');
+  if (!bar) return;
+  const link = bar.querySelector('a');
+  const hero = document.querySelector('.about-hero');
+  const finalCta = document.querySelector('.about-cta');
+  let pastHero = false, finalVisible = false;
+  const update = () => {
+    const show = pastHero && !finalVisible;
+    bar.classList.toggle('visible', show);
+    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
+    if (link) link.tabIndex = show ? 0 : -1;
+  };
+  const observe = (el, cb) => {
+    if (!el) return;
+    new IntersectionObserver(es => { cb(es[0]); update(); }, { threshold: 0 }).observe(el);
+  };
+  if (hero) observe(hero, e => { pastHero = !e.isIntersecting; }); else pastHero = true;
+  observe(finalCta, e => { finalVisible = e.isIntersecting; });
+  update();
+})();
 </script>
 
 </body>
