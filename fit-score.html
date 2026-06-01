@@ -354,8 +354,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
           target="fs_hidden_iframe"
           onsubmit="fsCaptureSubmit(event)"
         >
-          <label class="fs-cap-label" for="fs_cap_task">One line on the task, so my read is specific <span class="fs-optional">(optional)</span></label>
-          <textarea class="fs-textarea" id="fs_cap_task" name="q1_task" placeholder="e.g. Read an incoming support message and route it to one of 40 queues." aria-label="The task, in a line"></textarea>
+          <label class="fs-cap-label" for="fs_cap_task">One line on the task, so my read is specific</label>
+          <textarea class="fs-textarea" id="fs_cap_task" name="q1_task" required placeholder="e.g. Read an incoming support message and route it to one of 40 queues." aria-label="The task, in a line"></textarea>
           <div class="fs-capture-row">
             <input class="fs-input" type="email" name="email" placeholder="you@company.com" required autocomplete="email" inputmode="email" aria-label="Email address" />
             <button type="submit" class="btn-primary">Send it to me</button>
@@ -543,14 +543,16 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     var blockers = Array.prototype.slice
       .call(FORM.querySelectorAll('input[name="q5_blockers"]:checked'))
       .map(function (c) { return c.value; }).join(', ');
+    // Labelled in the order the questions appear on screen, with plain labels
+    // (no Q-numbers), so a lead reads the same as the wizard flowed.
     return [
-      'Q1 task: ' + (capV('q1_task') || '-'),
-      'Q2 correctness: ' + v('q2_correctness'),
-      'Q3 today: ' + v('q3_today') + ' | error rate: ' + (v('q3_error_rate') || '-') + ' | cost of wrong: ' + (v('q3_cost') || '-'),
-      'Q4 examples: ' + (v('q4_examples') || '-') + ' | labelled: ' + (v('q4_labeled') || '-') + ' | can capture: ' + v('q4_capture'),
-      'Q5 blockers: ' + (blockers || '-') + ' | dealbreaker: ' + (v('q5_dealbreaker') || '-'),
-      'Q6 volume: ' + (v('q6_volume') || '-'),
-      'Q7 own: ' + v('q7_own') + ' | operate: ' + (v('q7_operate') || '-'),
+      'Task: ' + (capV('q1_task') || '-'),
+      'Handled today: ' + v('q3_today') + ' | error rate: ' + (v('q3_error_rate') || '-') + ' | cost of wrong: ' + (v('q3_cost') || '-'),
+      'Correctness: ' + v('q2_correctness'),
+      'Data: examples ' + (v('q4_examples') || '-') + ' | labelled ' + (v('q4_labeled') || '-') + ' | can capture ' + v('q4_capture'),
+      'Blockers: ' + (blockers || '-') + ' | dealbreaker: ' + (v('q5_dealbreaker') || '-'),
+      'Volume: ' + (v('q6_volume') || '-'),
+      'Own: ' + v('q7_own') + ' | operate: ' + (v('q7_operate') || '-'),
       'VERDICT: ' + verdict
     ].join('\n');
   }
