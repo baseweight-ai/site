@@ -17,7 +17,7 @@ const CONFIG = {
   FROM_NAME: "Philip Stevens",
   REPLY_TO:  "phil@baseweight.co",   // reply-to on auto-replies
   NOTIFY_TO: "phil@baseweight.co",   // where YOU get pinged on a new lead (change to your Gmail if you prefer)
-  CAL_URL:   "https://cal.com/philip-stevens/baseweight-intro",
+  CAL_URL:   "https://cal.com/baseweight/intro",
   SITE_URL:  "https://baseweight.co",
   BENCHMARK_URL: "https://baseweight.co/benchmark",
   BRAND: "Baseweight"

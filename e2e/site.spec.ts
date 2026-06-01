@@ -18,7 +18,7 @@ const PAGES = [
   { path: "/fit-score.html",   title: /Baseweight/ },
 ];
 
-const CAL_URL = "https://cal.com/philip-stevens/baseweight-intro";
+const CAL_URL = "https://cal.com/baseweight/intro";
 
 // Silence the benchmark data fetch on non-benchmark pages — it's not loaded on
 // those pages but belt-and-suspenders in case paths change.

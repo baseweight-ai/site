@@ -1,5 +1,5 @@
 (function () {
-  const CAL = 'https://cal.com/philip-stevens/baseweight-intro';
+  const CAL = 'https://cal.com/baseweight/intro';
   const LINKS = [
     { href: '/', label: 'Home' },
     { href: '/benchmark', label: 'Benchmark' },

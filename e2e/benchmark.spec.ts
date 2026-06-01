@@ -77,7 +77,7 @@ test("closing CTA bridges to the Fit Score, with the call as secondary", async (
   await expect(cta.getByRole("link", { name: /Score your task/i })).toHaveAttribute("href", "/fit-score");
   await expect(cta.getByRole("link", { name: /Book a free call/i })).toHaveAttribute(
     "href",
-    "https://cal.com/philip-stevens/baseweight-intro"
+    "https://cal.com/baseweight/intro"
   );
 });
 
