@@ -148,6 +148,20 @@ footer p:last-child {
   margin-top: 6px;
 }
 
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin-bottom: 18px;
+}
+.footer-social a {
+  color: var(--text-muted);
+  display: inline-flex;
+  transition: color 0.2s, transform 0.2s;
+}
+.footer-social a:hover { color: var(--accent); transform: translateY(-1px); }
+.footer-social svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+
 /* ========================================
    MEASUREMENT SURFACE  (shared page background, every page)
    Corner glows (cool top-right, gold top-left) over a faint engineering grid
