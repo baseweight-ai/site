@@ -202,9 +202,7 @@ body > main, body > footer { position: relative; z-index: 1; }
     top: 72px;
     left: 0;
     right: 0;
-    background: rgba(8, 8, 8, 0.97);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: var(--bg-primary);
     padding: 24px clamp(24px, 5vw, 48px);
     gap: 20px;
     border-bottom: 1px solid var(--border);
