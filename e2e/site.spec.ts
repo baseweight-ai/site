@@ -119,32 +119,38 @@ test("about page notify capture posts to the endpoint and shows success", async 
 });
 
 // ── Fit Score: one-question-per-screen wizard ──────────────────────────────
-// Step order: Q3 (today) → Q2 (correctness) → Q4 (data) → Q5 (optional) →
-// Q6 (optional) → Q7 (ownership) → verdict. Only the active step is visible, so
-// each answer is followed by clicking Next (#fsNext). The task description (q1)
-// moved out of the quiz and is now asked at the email-capture step.
+// Flow order: task → correctness (the gate) → data → what-handles-it-today →
+// wedge (optional) → scale (optional) → ownership → verdict. Q1 takes ≥1 task-type
+// tick or a one-line description; each later answer is followed by clicking Next.
+// startFit() opens the wizard and clears Q1 so a test can focus on the rest.
+async function startFit(page) {
+  await page.goto("/fit-score.html");
+  await page.check('input[name="q1_type"][value="sort"]');
+  await page.click("#fsNext");
+}
 
 test("fit score candidate verdict is ungated, then captures answers + verdict + email", async ({ page }) => {
   await page.route("**/macros/s/**", (route) => route.fulfill({ status: 200, contentType: "text/plain", body: "OK" }));
-  await page.goto("/fit-score.html");
-  await page.selectOption('select[name="q3_today"]', "frontier-api");
-  await page.click("#fsNext");
+  await startFit(page); // Q1 (task) → correctness
   await page.check('input[name="q2_correctness"][value="exact"]');
-  await page.click("#fsNext");
-  await page.selectOption('select[name="q4_capture"]', "easily");
-  await page.click("#fsNext"); // Q4 → Q5
-  await page.click("#fsNext"); // Q5 (optional) → Q6
-  await page.click("#fsNext"); // Q6 (optional) → Q7
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="frontier-api"]');
+  await page.click("#fsNext"); // → wedge (optional)
+  await page.click("#fsNext"); // → scale (optional)
+  await page.click("#fsNext"); // → ownership
   await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext"); // last step → verdict
 
   // Verdict shows with no email asked yet (nothing gated); the email block is separate.
   await expect(page.locator("#result")).toBeVisible();
   await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
+  // The candidate verdict now surfaces the founding-rate Scan price at peak intent.
+  await expect(page.locator("#fsBody")).toContainText("$1,500");
   await expect(page.locator("#fsCapture")).toBeVisible();
 
-  // The task description now lives at capture (moved out of the upfront quiz).
-  await page.fill('#fs_capture_form textarea[name="q1_task"]', "Route an incoming support message to one of 40 queues.");
+  // Task was captured up front (Q1); capture is now just email.
   await page.fill('#fs_capture_form input[name="email"]', "e2e+fit@example.com");
   const [req] = await Promise.all([
     page.waitForRequest("**/macros/s/**"),
@@ -154,21 +160,192 @@ test("fit score candidate verdict is ungated, then captures answers + verdict + 
   expect(posted).toContain("source=fit-score");
   expect(posted).toContain("verdict=candidate");
   expect(posted).toContain("email=");
+  expect(posted).toContain("q1_task="); // the task captured up front is carried to the POST
   // form-urlencoded encodes spaces as "+", which decodeURIComponent doesn't undo.
   expect(decodeURIComponent(posted.replace(/\+/g, " "))).toContain("VERDICT: candidate");
   await expect(page.locator("#fs_capture_success")).toBeVisible();
 });
 
-test("fit score renting verdict shows the result but no capture form", async ({ page }) => {
-  await page.goto("/fit-score.html");
-  await page.selectOption('select[name="q3_today"]', "frontier-api");
-  await page.click("#fsNext");
+// The biggest blocker personalizes the Candidate verdict's wedge clause; latency shows up
+// as "run on your own hardware".
+test("fit score: the biggest blocker personalizes the candidate verdict", async ({ page }) => {
+  await startFit(page);
   await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.check('input[name="q5_blockers"][value="latency"]');
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
-  await page.selectOption('select[name="q4_capture"]', "easily");
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
+  await expect(page.locator("#fsBody")).toContainText(/own hardware/i);
+});
+
+// With two or more blockers, a "biggest one?" picker appears listing only the ticked
+// options; the explicit pick overrides the DOM-order fallback in the wedge clause.
+test("fit score: with multiple blockers, the biggest-one picker drives the wedge", async ({ page }) => {
+  await startFit(page);
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  // one blocker: no picker (the sole blocker is already the biggest)
+  await page.check('input[name="q5_blockers"][value="compliance"]');
+  await expect(page.locator("#q5Biggest")).toBeHidden();
+  // a second blocker reveals the picker, listing only the ticked options
+  await page.check('input[name="q5_blockers"][value="cost"]');
+  await expect(page.locator("#q5Biggest")).toBeVisible();
+  await expect(page.locator('input[name="q5_dealbreaker"][value="compliance"]')).toBeVisible();
+  await expect(page.locator('input[name="q5_dealbreaker"][value="cost"]')).toBeVisible();
+  await expect(page.locator('input[name="q5_dealbreaker"][value="quality"]')).toBeHidden();
+  // compliance is first in DOM, so the fallback would feature it; pick cost instead
+  await page.check('input[name="q5_dealbreaker"][value="cost"]');
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
-  await page.click("#fsNext"); // Q5
-  await page.click("#fsNext"); // Q6
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBody")).toContainText(/bill at your volume/i);
+  await expect(page.locator("#fsBody")).not.toContainText(/send data out/i);
+});
+
+// The wedge question adapts to the current state: someone already on a big AI platform
+// gets a "what's wrong with it" framing, not the hypothetical "what would stop you".
+test("fit score: the wedge question reframes when they're already on a big AI platform", async ({ page }) => {
+  await startFit(page);
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="frontier-api"]');
+  await page.click("#fsNext"); // → wedge
+  await expect(page.locator("#lbl-q5-text")).toContainText(/why isn.t the big AI platform you.re using enough/i);
+  // flip the current state to manual; the stem reverts to the hypothetical framing
+  await page.click("#fsBack"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await expect(page.locator("#lbl-q5-text")).toContainText(/what would stop you just using a big AI platform/i);
+});
+
+// "Who would run it?" only applies once they choose to own — hidden on "rent" and before answering.
+test("fit score: the 'who runs it' sub-question shows only when they want to own it", async ({ page }) => {
+  await startFit(page);
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await expect(page.locator("#q7Op")).toBeHidden();  // before answering own/rent
+  await page.check('input[name="q7_own"][value="rent"]');
+  await expect(page.locator("#q7Op")).toBeHidden();  // renting: the provider runs it
+  await page.check('input[name="q7_own"][value="own"]');
+  await expect(page.locator("#q7Op")).toBeVisible(); // owning: your team vs managed applies
+});
+
+// Reliably-judged correctness reuses the data gate, reworded around reviewer judgments:
+// having judged records (or reviewers to judge more) is a candidate.
+test("fit score: reliably-judged with reviewer records scores as a candidate", async ({ page }) => {
+  await startFit(page);
+  await page.check('input[name="q2_correctness"][value="human"]');
+  await page.click("#fsNext"); // → data (shown for reliably-judged)
+  await expect(page.locator("#fsq-q4_capture")).toBeVisible();
+  await expect(page.locator("#lbl-q4-text")).toContainText(/reviewers/i); // wording reframed
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await expect(page.locator("#lbl-q4ease-text")).toContainText(/reviewers/i); // follow-up reframed too
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click("#fsNext");
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
+});
+
+// The subjective-correctness path can't be benchmarked, so it routes to "Build" —
+// the verdict must still tell the buyer what they get (a model they own) and that
+// scope + price come before any commitment. (No single ground truth = no proof.)
+test("fit score: subjective correctness routes to Build with an ownership + scope read", async ({ page }) => {
+  await startFit(page); // Q1 (task) → correctness
+  await page.check('input[name="q2_correctness"][value="subjective"]');
+  await page.click("#fsNext"); // correctness → subjective data question (standard data skipped)
+  await expect(page.locator("#fsq-q4_capture")).toBeHidden();
+  await expect(page.locator("#fsq-q4_subjective")).toBeVisible();
+  await page.check('input[name="q4_judge"][value="have"]'); // can construct an eval → Build
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click("#fsNext");
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Build/i);
+  await expect(page.locator("#fsBody")).toContainText("a model you own");
+  await expect(page.locator("#fsBody")).toContainText(/before you commit/i);
+});
+
+// Subjective + "nothing we'd all agree on" can't construct an eval, so it routes to a
+// Scan (does any workable rubric exist?) rather than a false Build.
+test("fit score: subjective with no reachable agreement routes to a Scan", async ({ page }) => {
+  await startFit(page);
+  await page.check('input[name="q2_correctness"][value="subjective"]');
+  await page.click("#fsNext"); // → subjective data question
+  await expect(page.locator("#fsq-q4_subjective")).toBeVisible();
+  await page.check('input[name="q4_judge"][value="no"]'); // no agreement → Scan
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click("#fsNext");
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Scan/i);
+});
+
+// "Not sure how we'd measure it" can't be gated yet, so it routes to a Scan — the
+// cheap read that settles whether the task is measurable before any build. (ICP #4.)
+test("fit score: unsure-how-to-measure routes to a Scan-first verdict", async ({ page }) => {
+  await startFit(page); // Q1 (task) → correctness
+  await page.check('input[name="q2_correctness"][value="unsure"]');
+  await page.click("#fsNext"); // correctness → today (both data steps skipped for unsure)
+  await expect(page.locator("#fsq-q4_capture")).toBeHidden();
+  await expect(page.locator("#fsq-q4_subjective")).toBeHidden();
+  await expect(page.locator("#fsq-q3_today")).toBeVisible();
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
+  await page.click("#fsNext"); // → verdict
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Scan/i);
+  await expect(page.locator("#fsBody")).toContainText(/measurable/i);
+  await expect(page.locator("#fsCapture")).toBeVisible();
+});
+
+test("fit score renting verdict shows the result but no capture form", async ({ page }) => {
+  await startFit(page); // Q1 (task) → correctness
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="frontier-api"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
   await page.check('input[name="q7_own"][value="rent"]');
   await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
@@ -176,72 +353,113 @@ test("fit score renting verdict shows the result but no capture form", async ({ 
   await expect(page.locator("#fsCapture")).toBeHidden();
 });
 
-test("fit score blocks advancing until the current question is answered", async ({ page }) => {
+test("fit score blocks advancing until a question is answered", async ({ page }) => {
   await page.goto("/fit-score.html");
-  await page.click("#fsNext"); // first step (Q3) unanswered
+  await page.click("#fsNext"); // Q1 (task) unanswered — no type, no line
   await expect(page.locator("#fsError")).toBeVisible();
   await expect(page.locator("#result")).toBeHidden();
-  await expect(page.locator("#fsq-q3_today")).toBeVisible(); // still on step 1
+  await expect(page.locator("#fsq-q1_task")).toBeVisible(); // still on Q1
+  // a single type tick satisfies Q1 and advances
+  await page.check('input[name="q1_type"][value="sort"]');
+  await page.click("#fsNext");
+  await expect(page.locator("#fsq-q2_correctness")).toBeVisible();
 });
 
-// The verdict must not hinge on the optional labelled-count field. A data-rich
-// team that can't capture more (capture="no") but already holds plenty of
-// labelled examples is a candidate — it must never fall through to "Not yet". (Finding 3.1.)
-test("fit score: data-rich 'can't get more' still scores as a candidate", async ({ page }) => {
-  await page.goto("/fit-score.html");
-  await page.selectOption('select[name="q3_today"]', "manual");
-  await page.click("#fsNext");
+// "No data yet, but we could get it" is a candidate: being able to create the eval set
+// counts as provable.
+test("fit score: 'could get it' data scores as a candidate", async ({ page }) => {
+  await startFit(page); // Q1 → correctness
   await page.check('input[name="q2_correctness"][value="exact"]');
-  await page.click("#fsNext");
-  await page.selectOption('select[name="q4_capture"]', "no");
-  await page.selectOption('select[name="q4_labeled"]', "1000plus");
-  await page.click("#fsNext");
-  await page.click("#fsNext"); // Q5
-  await page.click("#fsNext"); // Q6
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="nohave_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
   await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
   await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
 });
 
-// When capture="no", the labelled count is decisive, so a blank must be caught
-// rather than silently read as zero (which would mis-verdict). (Finding 3.1.)
-test("fit score: blank labelled count with 'can't get more' is blocked, not mis-verdicted", async ({ page }) => {
-  await page.goto("/fit-score.html");
-  await page.selectOption('select[name="q3_today"]', "manual");
-  await page.click("#fsNext");
+// "Yes, but hard to get more" unlocks the amount; a few hundred already on hand is enough
+// to prove on → candidate.
+test("fit score: 'have but stuck' with enough on hand scores as a candidate", async ({ page }) => {
+  await startFit(page); // Q1 → correctness
   await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_noget"]');
+  await expect(page.locator("#q4Amount")).toBeVisible();
+  await page.check('input[name="q4_amount"][value="enough"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
-  // Q4 step: can't capture more, labelled left blank → blocked on this step.
-  await page.selectOption('select[name="q4_capture"]', "no");
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
+});
+
+// "Not sure" on the amount doesn't turn a have-but-stuck buyer away; the Scan sizes their
+// existing data, and only a clear "too few" is a no.
+test("fit score: 'have but stuck' with unsure amount still scores as a candidate", async ({ page }) => {
+  await startFit(page); // Q1 → correctness
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_noget"]');
+  await page.check('input[name="q4_amount"][value="unsure"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
+  await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
-  await expect(page.locator("#fsErrLabeled")).toBeVisible();
+  await expect(page.locator("#result")).toBeVisible();
+  await expect(page.locator("#fsBadge")).toContainText(/Pilot/i);
+});
+
+// The data step is required; "Yes, but hard to get more" unlocks a required amount, and
+// fewer than a few hundred there can't clear the gate → "Not yet".
+test("fit score: data required; 'have but stuck' with too few routes to Not yet", async ({ page }) => {
+  await startFit(page); // Q1 → correctness
+  await page.check('input[name="q2_correctness"][value="exact"]');
+  await page.click("#fsNext"); // → data
+  await page.click("#fsNext"); // unanswered → blocked
+  await expect(page.locator("#fsError")).toBeVisible();
   await expect(page.locator("#fsq-q4_capture")).toHaveClass(/fs-q--invalid/);
   await expect(page.locator("#result")).toBeHidden();
-
-  // Supplying a low range unblocks it; little data + can't-capture-more → "Not yet".
-  await page.selectOption('select[name="q4_labeled"]', "lt50");
-  await page.selectOption('select[name="q4_examples"]', "lt50");
-  await page.click("#fsNext"); // past Q4
-  await page.click("#fsNext"); // Q5
-  await page.click("#fsNext"); // Q6
+  await page.check('input[name="q4_data"][value="have_noget"]'); // unlocks the amount
+  await expect(page.locator("#q4Amount")).toBeVisible();
+  await page.click("#fsNext"); // amount blank → blocked
+  await expect(page.locator("#fsError")).toBeVisible();
+  await page.check('input[name="q4_amount"][value="few"]'); // too few → not yet
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
   await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
   await expect(page.locator("#fsBadge")).toContainText(/not yet/i);
+  await expect(page.locator("#fsCta")).toContainText(/quick call/i);
 });
 
 // A blank required step is blocked, and that step is marked invalid. (Finding 3.3.)
 test("fit score: a blank required step is blocked and marked invalid", async ({ page }) => {
-  await page.goto("/fit-score.html");
-  await page.selectOption('select[name="q3_today"]', "frontier-api");
-  await page.click("#fsNext");
+  await startFit(page); // Q1 → correctness
   await page.check('input[name="q2_correctness"][value="exact"]');
-  await page.click("#fsNext");
-  await page.selectOption('select[name="q4_capture"]', "easily");
-  await page.click("#fsNext");
-  await page.click("#fsNext"); // Q5
-  await page.click("#fsNext"); // Q6
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="frontier-api"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
   // Q7 (Ownership) deliberately left unanswered.
   await page.click("#fsNext");
   await expect(page.locator("#result")).toBeHidden();
@@ -251,15 +469,15 @@ test("fit score: a blank required step is blocked and marked invalid", async ({ 
 
 // "Edit my answers" returns to the quiz with answers preserved. (Finding 2.1.)
 test("fit score: 'Edit my answers' returns to the quiz with answers intact", async ({ page }) => {
-  await page.goto("/fit-score.html");
-  await page.selectOption('select[name="q3_today"]', "manual");
-  await page.click("#fsNext");
+  await startFit(page); // Q1 → correctness
   await page.check('input[name="q2_correctness"][value="exact"]');
-  await page.click("#fsNext");
-  await page.selectOption('select[name="q4_capture"]', "easily");
-  await page.click("#fsNext");
-  await page.click("#fsNext"); // Q5
-  await page.click("#fsNext"); // Q6
+  await page.click("#fsNext"); // → data
+  await page.check('input[name="q4_data"][value="have_get"]');
+  await page.click("#fsNext"); // → what handles it today
+  await page.check('input[name="q3_today"][value="manual"]');
+  await page.click("#fsNext"); // → wedge
+  await page.click("#fsNext"); // → scale
+  await page.click("#fsNext"); // → ownership
   await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
@@ -267,7 +485,8 @@ test("fit score: 'Edit my answers' returns to the quiz with answers intact", asy
   await page.getByRole("link", { name: /Edit my answers/i }).click();
   await expect(page.locator("#quiz")).toBeVisible();
   await expect(page.locator("#result")).toBeHidden();
-  // back on step 1; previously entered answers survive the round-trip
-  await expect(page.locator('select[name="q3_today"]')).toHaveValue("manual");
+  // back at Q1; previously entered answers survive the round-trip
+  await expect(page.locator('input[name="q1_type"][value="sort"]')).toBeChecked();
+  await expect(page.locator('input[name="q3_today"][value="manual"]')).toBeChecked();
   await expect(page.locator('input[name="q7_own"][value="own"]')).toBeChecked();
 });

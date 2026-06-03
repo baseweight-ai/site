@@ -27,18 +27,23 @@ const CONFIG = {
 const VERDICTS = {
   candidate: {
     label: "Candidate",
-    line: "Your task has a checkable right answer, so an owned model can be benchmarked head-to-head with your current option on your data.",
-    next: function (c) { return "The cheap Scan confirms it on a sample before you commit, then leads into the Pilot. Want to start now? Book a call: " + c.CAL_URL + " (the Scan fee credits toward the Pilot)."; }
+    line: "There's a reliable way to tell right from wrong on your task, so an owned model can be tested head-to-head against your current option, on your data.",
+    next: function (c) { return "A $1,500 Scan confirms it on a sample first; its fee credits toward the Pilot (fixed-scope $6–9k, on your full data). Book a call: " + c.CAL_URL + "."; }
   },
   build: {
     label: "We can build it",
-    line: "You want to own it and the task is real, but correctness is subjective, so we can't prove a win the way the public benchmark does. We can still build it.",
-    next: function (c) { return "We'd scope it on a call rather than a benchmark. Book one here: " + c.CAL_URL + "."; }
+    line: "Correctness is subjective here, so we can't prove a win the way the public benchmark does. You'd still own the model and get a way to score it you both trust (a rubric, or agreement with your reviewers), just not a single right/wrong test.",
+    next: function (c) { return "We scope it on a call, and you'll see a fixed scope and price before you commit. Book one: " + c.CAL_URL + "."; }
   },
   notyet: {
     label: "Not yet",
-    line: "Your task has a checkable right answer (good), but there isn't enough labelled data to train and measure on yet. Get this in place first:\n  - A few hundred real examples of the task (more is better).\n  - The correct answer recorded for each (the label is what makes it measurable).\n  - A repeatable way to keep capturing them.",
-    next: function (c) { return "Come back when you have it and the cheap Scan will settle it. Questions in the meantime? Just reply."; }
+    line: "Your task is provable, but you don't have enough labelled data yet. You need:\n  - A few hundred real examples (more is better).\n  - The correct result recorded for each.\n  - A repeatable way to capture more.",
+    next: function (c) { return "Start now: record the correct result next to each new case, a spreadsheet is fine. At a few hundred, a cheap Scan settles it. Not sure how? Book a quick call: " + c.CAL_URL + "."; }
+  },
+  scan: {
+    label: "Start with a Scan",
+    line: "Before anything can be built or proven, there has to be a reliable way to tell right from wrong on your task. That's the first thing to pin down.",
+    next: function (c) { return "A $1,500 Scan reads exactly that: whether it's measurable and worth proving. If it is, you're likely a candidate; if it genuinely isn't, I'll tell you straight. Book a call: " + c.CAL_URL + "."; }
   }
 };
 
@@ -115,7 +120,7 @@ function sendFitScoreReply(email, verdict) {
   const verdictPara = v ? ("Your quick verdict: " + v.label + ".\n" + v.line + "\n\n" + v.next(CONFIG) + "\n\n") : "";
   const body =
     "Hi,\n\n" +
-    "Thanks for running the fit check. I'll personally go through your answers and send back the two or three things that would make or break it on your task, my actual read, not a copy of the page.\n\n" +
+    "Thanks for running the fit check. I'll personally review your answers and send back the two or three things that make or break it on your task, my real read.\n\n" +
     verdictPara +
     "Philip Stevens\n" + CONFIG.BRAND + " · " + CONFIG.SITE_URL;
   MailApp.sendEmail({
