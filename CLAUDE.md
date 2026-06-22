@@ -23,13 +23,13 @@ lives in `components.css`.
   these are *decisions, not law*. When you intentionally change one, update its assertion in
   the **same** change so the suite tracks the decision instead of freezing it.
 
-## Lead capture (mechanics + a hard external dependency)
+## Lead capture (mechanics; endpoint lives outside this repo)
 - Captures POST to a Google Apps Script endpoint via a hidden iframe — formkey `k`, a `company`
   honeypot, success state swapped in by the form's `onsubmit`. Reuse this wiring; don't add new
   capture infrastructure.
-- The Fit Score additionally POSTs a computed `verdict` + an `answers` blob. **The deployed
-  Apps Script must be extended server-side to store those fields — it lives outside this repo.
-  Until it is, submissions record only the email and silently drop the diagnosis.**
+- The Fit Score also POSTs a computed `verdict` + `answers` blob; the Apps Script stores these
+  alongside the email. Any new or renamed posted field needs a matching server-side change there,
+  since that script lives outside this repo.
 
 ## Data provenance
 - Any benchmark figures shown in the marketing pages (e.g. the homepage proof strip) are a

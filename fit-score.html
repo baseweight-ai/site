@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fit check: when the big AI platforms aren't the answer | Baseweight</title>
-<meta name="description" content="The big AI platforms aren't the answer for every task. A two-minute fit check tells you whether a model you own could be. No email to see your verdict.">
+<meta name="description" content="A straight verdict on whether your task belongs on a model you own — candidate, not yet, or keep your API. With the reasoning. No email.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -17,14 +17,14 @@
 <link rel="stylesheet" href="/components.css">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/fit-score">
-<meta property="og:title" content="Fit check: when the big AI platforms aren't the answer">
-<meta property="og:description" content="Stuck on a task the big AI platforms can't do? A two-minute fit check says whether a model you own could, candidate, not yet, or not us. No email to see it.">
+<meta property="og:title" content="Should this task run on AI built for it? (2-minute check)">
+<meta property="og:description" content="A straight verdict on whether your task belongs on a model you own — candidate, not yet, or keep your API. With the reasoning. No email.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Fit check: when the big AI platforms aren't the answer">
-<meta name="twitter:description" content="Stuck on a task the big AI platforms can't do? A two-minute fit check says whether a model you own could, candidate, not yet, or not us. No email to see it.">
+<meta name="twitter:title" content="Should this task run on AI built for it? (2-minute check)">
+<meta name="twitter:description" content="A straight verdict on whether your task belongs on a model you own — candidate, not yet, or keep your API. With the reasoning. No email.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -208,6 +208,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <div class="fs-q-body">
           <div class="fs-opts" role="group" aria-labelledby="lbl-q1 help-q1">
             <label class="fs-opt"><input type="checkbox" name="q1_type" value="sort"><span>Sort, route, or tag it into categories</span></label>
+            <label class="fs-opt"><input type="checkbox" name="q1_type" value="match"><span>Match, compare, or de-duplicate records</span></label>
             <label class="fs-opt"><input type="checkbox" name="q1_type" value="extract"><span>Pull out specific details (amounts, dates, names&hellip;)</span></label>
             <label class="fs-opt"><input type="checkbox" name="q1_type" value="transform"><span>Summarize, rewrite, reformat, or clean up</span></label>
             <label class="fs-opt"><input type="checkbox" name="q1_type" value="qa"><span>Answer questions from your own documents or data</span></label>
@@ -215,7 +216,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
             <label class="fs-opt"><input type="checkbox" name="q1_type" value="generate"><span>Write or create something new</span></label>
           </div>
           <p class="fs-sublabel">Or describe it in a line:</p>
-          <input class="fs-input" type="text" name="q1_task" id="q1TaskLine" placeholder="e.g. route a support ticket to one of ~40 queues" aria-label="Describe the task in a line">
+          <input class="fs-input" type="text" name="q1_task" id="q1TaskLine" placeholder="e.g. flag records that need review" aria-label="Describe the task in a line">
         </div>
       </div>
 
@@ -324,7 +325,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
       <!-- Step 5, scale (optional) -->
       <div class="fs-q fs-step" id="fsq-q6">
-        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q6">How many times a month do you run this task, or expect to? <span class="fs-optional">(optional)</span></span></div>
+        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q6">How many items run through this task a month (now or expected)? <span class="fs-optional">(optional)</span></span></div>
         <div class="fs-q-body">
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q6">
             <label class="fs-opt"><input type="radio" name="q6_volume" value="lt1k"><span>Under 1,000</span></label>
@@ -342,7 +343,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <div class="fs-q-body">
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q7 help-q7" aria-required="true">
             <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes, it should be ours to keep and control, even if someone else runs it.</span></label>
-            <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No, we&rsquo;re fine depending on a third-party API, we don&rsquo;t need to own it.</span></label>
+            <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No, renting from a third-party API is the sensible call for this task.</span></label>
           </div>
           <div id="q7Op" style="display:none;">
             <p class="fs-q-sub" id="lbl-q7op">Who would run it? <span class="fs-optional">(optional)</span></p>
@@ -376,7 +377,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
            mirror of the task (fs_field_task) so the lead row still carries it. -->
       <div class="fs-capture" id="fsCapture">
         <h3 id="fsCaptureHeading">Want my personal read on this?</h3>
-        <p class="fs-capture-sub" id="fsCaptureSub">Leave your email, I&rsquo;ll personally review your answers and send the 2&ndash;3 things that make or break it on your task. My real read, not this page rehashed.</p>
+        <p class="fs-capture-sub" id="fsCaptureSub">Leave your email, I&rsquo;ll review your answers and send the 2&ndash;3 things that make or break it.</p>
         <form
           action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
           method="post"
@@ -513,9 +514,13 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
   // what's wrong with it, not "what would stop you" (nothing did — they're already on it).
   function syncWedgeWording() {
     var el = document.getElementById('lbl-q5-text');
-    if (el) el.textContent = v('q3_today') === 'frontier-api'
-      ? 'Why isn’t the big AI platform you’re using enough?'
-      : 'What would stop you just using a big AI platform?';
+    if (!el) return;
+    el.textContent = {
+      'frontier-api': 'Why isn’t the big AI platform you’re using enough?',
+      'other-ai':     'Why isn’t the AI tool you’re using enough?',
+      'rules':        'Where do your rules or scripts fall short?',
+      'manual':       'What makes doing it by hand hard to keep up?'
+    }[v('q3_today')] || 'What would stop you just using a big AI platform?';
   }
   function showStep(i) {
     for (var j = 0; j < STEPS.length; j++) {
@@ -690,22 +695,20 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     var pick = v('q5_dealbreaker') || (FORM.querySelector('input[name="q5_blockers"]:checked') || {}).value;
     return {
       compliance: 'not being able to send data out',
-      cost: 'the API bill at your volume',
-      quality: 'a general model not accurate enough on your task',
-      latency: 'needing it to run on your own hardware',
-      ownership: 'wanting to own it outright'
+      cost: 'the cost at your volume',
+      quality: 'not getting the accuracy you need',
+      latency: 'needing it to run on your own hardware'
     }[pick] || '';
   }
   function volumeClause() {
-    var vol = v('q6_volume');
-    if (!vol) return '';
+    // Cost only worth raising at high volume (below 100k/mo it's noise). With only a request count —
+    // no token size or tier — we can say "worth pricing", not which way it tips.
     var label = {
-      'lt1k': 'under 1,000 a month',
-      '1k-100k': '1,000–100,000 a month',
       '100k-1M': '100,000–1M a month',
       '1Mplus': 'over 1M a month'
-    }[vol] || vol;
-    return ' At <strong>' + esc(label) + '</strong>, volume alone makes owning worth it.';
+    }[v('q6_volume')];
+    if (!label) return '';
+    return ' At <strong>' + esc(label) + '</strong>, the rent-vs-own cost gap is worth pricing.';
   }
   function answersBlob(verdict) {
     var checked = function (name) {
@@ -744,14 +747,14 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     badge.className = 'fs-badge fs-badge--' + verdict;
     capture.style.display = '';
     capHeading.textContent = 'Want my personal read on this?';
-    capSub.textContent = 'Leave your email, I’ll personally review your answers and send the 2–3 things that make or break it on your task. My real read, not this page rehashed.';
+    capSub.textContent = 'Leave your email, I’ll review your answers and send the 2–3 things that make or break it.';
 
     if (verdict === 'candidate') {
       badge.textContent = 'Candidate → Pilot';
       title.textContent = 'You’re a candidate.';
       body.innerHTML = 'There’s a reliable way to tell right from wrong on your task, so an owned model can be tested head-to-head against your current option <strong>on your data</strong>' +
-        (w ? ', and ' + w + ' is exactly why owning beats renting' : '') + '.' + volumeClause() +
-        ' A <strong>$1,500 Scan</strong> confirms it on a sample and sizes the labelled data you&rsquo;ll need (more categories, more data); its fee credits toward the <a href="/pilot">Pilot</a>, the fixed-scope <strong>$6–9k</strong> proof on your full data.' +
+        (w ? ', and ' + w + ' is where owning earns its keep' : '') + '.' + volumeClause() +
+        ' A <strong>$1,500 Scan</strong> checks it on a sample and sizes the labelled data you&rsquo;ll need; its fee credits toward the <a href="/pilot">Pilot</a>, the fixed-scope <strong>$6–9k</strong> proof on your full data.' +
         (managed ? ' You own the result; we can run it for you.' : '');
       cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a call to start the Scan &rarr;') + '</p>';
     } else if (verdict === 'build') {
@@ -775,7 +778,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     } else if (verdict === 'scan') {
       badge.textContent = 'Start with a Scan';
       title.textContent = 'First, let’s find out if it’s measurable.';
-      body.innerHTML = 'Nothing can be built or proven until there’s a reliable way to tell right from wrong on your task. A <strong>$1,500 Scan</strong> settles exactly that: a quick read on whether it’s measurable and worth proving. If it is, you’re likely a fit; if it genuinely isn’t, I’ll tell you straight.';
+      body.innerHTML = 'Nothing can be built or proven until there’s a reliable way to tell right from wrong on your task. A <strong>$1,500 Scan</strong> settles exactly that: a quick read on whether it’s measurable and worth proving.';
       cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a call to start the Scan &rarr;') + '</p>';
     } else { // no
       badge.textContent = 'Probably not us';

@@ -23,3 +23,7 @@ test-results/
 
 # Benchmark data (local dev + real pipeline output; force-add before deploying: git add -f)
 data/benchmark/results.json
+
+# Local-only GTM working files — third-party contact data + internal ICP, never push
+leads/
+.agents/

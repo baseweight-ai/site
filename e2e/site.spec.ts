@@ -166,6 +166,32 @@ test("fit score candidate verdict is ungated, then captures answers + verdict + 
   await expect(page.locator("#fs_capture_success")).toBeVisible();
 });
 
+// The cost clause ("rent-vs-own cost gap is worth pricing") is gated to high volume — below 100k/mo
+// it'd be noise, so absent there, present at scale.
+test("fit score: the volume clause is gated to high-volume bands", async ({ page }) => {
+  async function candidateWithVolume(volume) {
+    await startFit(page); // Q1 → correctness
+    await page.check('input[name="q2_correctness"][value="exact"]');
+    await page.click("#fsNext"); // → data
+    await page.check('input[name="q4_data"][value="have_get"]');
+    await page.click("#fsNext"); // → what handles it today
+    await page.check('input[name="q3_today"][value="manual"]');
+    await page.click("#fsNext"); // → wedge
+    await page.click("#fsNext"); // → scale
+    await page.check(`input[name="q6_volume"][value="${volume}"]`);
+    await page.click("#fsNext"); // → ownership
+    await page.check('input[name="q7_own"][value="own"]');
+    await page.click("#fsNext"); // → verdict
+    await expect(page.locator("#result")).toBeVisible();
+    await expect(page.locator("#fsBadge")).toContainText(/Pilot/i); // candidate, so the clause is in play
+  }
+  const CLAUSE = /rent-vs-own cost gap is worth pricing/i;
+  await candidateWithVolume("lt1k"); // under 1,000/mo — no cost economics raised
+  await expect(page.locator("#fsBody")).not.toContainText(CLAUSE);
+  await candidateWithVolume("1Mplus"); // over 1M/mo — cost is worth pricing, so the clause appears
+  await expect(page.locator("#fsBody")).toContainText(CLAUSE);
+});
+
 // The biggest blocker personalizes the Candidate verdict's wedge clause; latency shows up
 // as "run on your own hardware".
 test("fit score: the biggest blocker personalizes the candidate verdict", async ({ page }) => {
@@ -212,13 +238,13 @@ test("fit score: with multiple blockers, the biggest-one picker drives the wedge
   await page.check('input[name="q7_own"][value="own"]');
   await page.click("#fsNext");
   await expect(page.locator("#result")).toBeVisible();
-  await expect(page.locator("#fsBody")).toContainText(/bill at your volume/i);
+  await expect(page.locator("#fsBody")).toContainText(/cost at your volume/i);
   await expect(page.locator("#fsBody")).not.toContainText(/send data out/i);
 });
 
-// The wedge question adapts to the current state: someone already on a big AI platform
-// gets a "what's wrong with it" framing, not the hypothetical "what would stop you".
-test("fit score: the wedge question reframes when they're already on a big AI platform", async ({ page }) => {
+// The wedge stem adapts to what handles the task today: API → "what's wrong with it"; rules or
+// manual → a stem about their own approach, not a hypothetical API they never weighed.
+test("fit score: the wedge question adapts to what handles the task today", async ({ page }) => {
   await startFit(page);
   await page.check('input[name="q2_correctness"][value="exact"]');
   await page.click("#fsNext"); // → data
@@ -227,11 +253,16 @@ test("fit score: the wedge question reframes when they're already on a big AI pl
   await page.check('input[name="q3_today"][value="frontier-api"]');
   await page.click("#fsNext"); // → wedge
   await expect(page.locator("#lbl-q5-text")).toContainText(/why isn.t the big AI platform you.re using enough/i);
-  // flip the current state to manual; the stem reverts to the hypothetical framing
+  // rules today → stem asks where the rules fall short, not about an API
+  await page.click("#fsBack"); // → what handles it today
+  await page.check('input[name="q3_today"][value="rules"]');
+  await page.click("#fsNext"); // → wedge
+  await expect(page.locator("#lbl-q5-text")).toContainText(/where do your rules or scripts fall short/i);
+  // manual today → a stem about doing it by hand
   await page.click("#fsBack"); // → what handles it today
   await page.check('input[name="q3_today"][value="manual"]');
   await page.click("#fsNext"); // → wedge
-  await expect(page.locator("#lbl-q5-text")).toContainText(/what would stop you just using a big AI platform/i);
+  await expect(page.locator("#lbl-q5-text")).toContainText(/what makes doing it by hand hard to keep up/i);
 });
 
 // "Who would run it?" only applies once they choose to own — hidden on "rent" and before answering.
