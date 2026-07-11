@@ -1112,6 +1112,12 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   .audience-fit-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 
+/* ======== TASK EXAMPLES STRIP ======== */
+.task-eg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 40px; max-width: 860px; }
+.task-eg { position: relative; padding-left: 22px; font-size: 13.5px; color: var(--text-primary); line-height: 1.6; }
+.task-eg::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+@media (max-width: 640px) { .task-eg-grid { grid-template-columns: 1fr; } }
+
 /* ========================================
    INLINE CTA INTERSTITIAL
    ======================================== */
@@ -1280,6 +1286,24 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   </div>
 </section>
 
+<!-- ======== TASKS LIKE THESE (concrete examples so an under-aware reader recognizes their own work) ======== -->
+<section style="border-bottom: 1px solid var(--border); padding: clamp(48px, 7vh, 80px) 0;">
+  <div class="container">
+    <div class="section-label reveal">Tasks like these</div>
+    <h2 class="reveal" style="max-width: 640px; margin-bottom: 16px;">The kind of narrow, repeatable job a specialist model does well.</h2>
+    <p class="reveal reveal-delay-1" style="max-width: 640px; font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 36px;">If your most important task looks like one of these, and runs at volume on data that has to be right, it&rsquo;s worth scoring.</p>
+    <div class="task-eg-grid reveal reveal-delay-1">
+      <div class="task-eg">Pull the details off a PO, invoice, or drawing</div>
+      <div class="task-eg">Sort or route each item into the right category</div>
+      <div class="task-eg">Match or de-duplicate records across systems</div>
+      <div class="task-eg">Check an entry against your rules or standards</div>
+      <div class="task-eg">Answer questions from your own documents</div>
+      <div class="task-eg">Flag the cases that need a person to look</div>
+    </div>
+    <p class="reveal reveal-delay-1" style="max-width: 640px; font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-top: 28px;">It handles the routine work and routes the hard cases to your experts.</p>
+  </div>
+</section>
+
 <!-- ======== WHY THIS WORKS (belief bridge, moved above the proof so the claim is believable before the numbers) ======== -->
 <section style="border-bottom: 1px solid var(--border); padding: clamp(56px, 8vh, 96px) 0;">
   <div class="container" style="max-width: 840px; text-align: center;">
@@ -1321,6 +1345,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
         <div class="proof-stat-label">every result is from a model you own and host yourself, so your data never leaves your environment.</div>
       </div>
     </div>
+    <p class="reveal" style="text-align: center; max-width: 720px; margin: 32px auto 0; font-size: 13px; color: var(--text-secondary); line-height: 1.7;">Two public examples. The same test runs on your task: pull a spec off a datasheet, classify a part or customs line, match a record, check an entry.</p>
     <a href="/benchmark" class="proof-link">See the benchmark &rarr;</a>
   </div>
 </section>
@@ -1357,8 +1382,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       </div>
       <div class="problem-card reveal reveal-delay-2">
         <div class="problem-number">02</div>
-        <h3>It&rsquo;s too expensive at your scale</h3>
-        <p>Per-call pricing is fine in a demo and brutal in production. Run the task at any real volume and the API bill dwarfs the same work on hardware you own, and it climbs with every call instead of flattening.</p>
+        <h3>You pay for every call, forever</h3>
+        <p>A rented API charges per call, so the bill climbs with your volume, forever. Poll two or three big models per item to push accuracy up, and you pay that premium several times over.</p>
         <div class="kicker">&ldquo;AI is too expensive to run at our scale.&rdquo;</div>
       </div>
       <div class="problem-card reveal reveal-delay-3">
@@ -1396,6 +1421,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
         </ul>
       </div>
     </div>
+    <p class="reveal" style="margin-top: 28px; font-size: 12px; color: var(--text-muted);">Not you, but you know a team it fits? Send them <a href="/benchmark" style="color: var(--text-secondary); text-decoration: underline;">the benchmark</a>, or <a href="mailto:hello@baseweight.co?subject=Intro" style="color: var(--text-secondary); text-decoration: underline;">intro us</a>.</p>
     <p class="nda-note reveal" style="margin-top: 32px; max-width: 600px;">We work under NDA; your data and architecture stay confidential.</p>
   </div>
 </section>
@@ -1416,7 +1442,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
         <div class="step-num">01</div>
         <div>
           <h3>Prove it on your data</h3>
-          <p>Before you commit to a build, we benchmark an owned model head-to-head against your current option (the big platforms, rules, or whatever runs the task today) on a sample of your real data. You get a go/no-go verdict and a reproducible test calibrated to your task. If an owned model won&rsquo;t win, we tell you, and you&rsquo;ve spent next to nothing to find out.</p>
+          <p>Before you commit to a build, we benchmark an owned model head-to-head against your current option (the big platforms, rules, or whatever runs the task today) on a sample of your real data, run in your walls or on a de-identified sample, so nothing sensitive has to leave. You get a go/no-go verdict and a reproducible test calibrated to your task. If an owned model won&rsquo;t win, we tell you, and you&rsquo;ve spent next to nothing to find out.</p>
         </div>
       </div>
       <div class="step reveal reveal-delay-1">
@@ -1466,8 +1492,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="pricing-header reveal">
       <div class="section-label">Founding partners</div>
-      <h2>We&rsquo;re taking a few founding partners, at founding rates.</h2>
-      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.85; max-width: 680px; margin-top: 16px;">You work directly with the person doing the build, help shape it, and you&rsquo;re first in your vertical, at founding rates while we&rsquo;re early. We let the proof do the talking instead of a logo wall: the public benchmark, plus a paid Pilot that proves it on your data before you commit to a build. In return, if it works out, we&rsquo;d ask to share the result, anonymised and only with your sign-off, so the next team has the reference you didn&rsquo;t.</p>
+      <h2>First in your vertical, at founding rates.</h2>
+      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.85; max-width: 680px; margin-top: 16px;">You work directly with the person doing the build (Philip Stevens, 15 years in applied ML at Agoda and Quantcast) and help shape it. Proof does the talking instead of a logo wall: the public benchmark, plus a paid Pilot that proves it on your data. If it works out, we&rsquo;d share the result, anonymised and with your sign-off, so the next team has the reference you didn&rsquo;t.</p>
     </div>
     <div class="pricing-table-wrap reveal reveal-delay-1">
       <table class="pricing-table">
@@ -1524,7 +1550,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       <div class="faq-item reveal">
         <button class="faq-question">We can&rsquo;t send our data to an outside API. Can you still help?</button>
         <div class="faq-answer">
-          <p>That&rsquo;s one of the main reasons teams come to us. The whole point of an owned model is that it runs on your infrastructure, nothing has to leave your environment. We work under NDA and can operate inside your walls. For compliance and data-residency cases there&rsquo;s often no big-platform API that&rsquo;s even permitted; owning the model is the only viable path.</p>
+          <p>That&rsquo;s one of the main reasons teams come to us. The whole point of an owned model is that it runs on your infrastructure, nothing has to leave your environment. We work under NDA and can operate inside your walls, including the proof step: the Scan and Pilot can run in your VPC or on-prem, so nothing sensitive leaves even during evaluation. Where a de-identified sample works, we use that. For compliance and data-residency cases there&rsquo;s often no big-platform API that&rsquo;s even permitted; owning the model is the only viable path.</p>
         </div>
       </div>
       <div class="faq-item reveal">
@@ -1591,6 +1617,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       <div class="reveal reveal-delay-1">
         <a href="/fit-score" class="btn-primary">Score your task</a>
         <p class="support-text" style="margin-top: 20px;">Prefer to talk it through? <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">Book a free call &rarr;</a></p>
+        <p class="support-text" style="margin-top: 14px; font-size: 12px; color: var(--text-muted);">No testimonials, every benchmark number is open code and hashes you can re-run yourself.</p>
       </div>
     </div>
   </div>

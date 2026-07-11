@@ -127,6 +127,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-badge--notyet { color: var(--text-secondary); }
 .fs-badge--no { color: var(--text-muted); }
 .fs-badge--scan { color: var(--accent-cool); }
+.fs-badge--builder { color: var(--accent-cool); }
 .fs-result h2 { margin-bottom: 18px; }
 .fs-verdict-body { font-size: 15px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 28px; }
 .fs-verdict-body strong { color: var(--text-primary); font-weight: 600; }
@@ -150,6 +151,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-success { padding: 20px; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); }
 .fs-success p { font-size: 14px; color: var(--text-primary); }
 .fs-restart { margin-top: 40px; font-size: 13px; }
+.fs-referral { margin-top: 20px; font-size: 12px; color: var(--text-muted); line-height: 1.65; }
+.fs-referral a { color: var(--text-secondary); text-decoration: underline; }
 @media (max-width: 560px) { .fs-capture-row { flex-direction: column; } .fs-nav .btn-primary { min-width: 0; } }
 </style>
 <script type="application/ld+json">
@@ -231,6 +234,13 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
             <label class="fs-opt"><input type="radio" name="q3_today" value="manual"><span>A person or team, manually</span></label>
             <label class="fs-opt"><input type="radio" name="q3_today" value="nothing"><span>Nothing yet</span></label>
             <label class="fs-opt"><input type="radio" name="q3_today" value="other"><span>Something else</span></label>
+          </div>
+          <div id="q3Builder" style="display:none;">
+            <p class="fs-q-sub" id="lbl-q3builder">Is that a model your own team builds and maintains?</p>
+            <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q3builder">
+              <label class="fs-opt"><input type="radio" name="q3_builtinhouse" value="yes"><span>Yes, we build and run our own models.</span></label>
+              <label class="fs-opt"><input type="radio" name="q3_builtinhouse" value="no"><span>No, it&rsquo;s a third-party tool or vendor.</span></label>
+            </div>
           </div>
         </div>
       </div>
@@ -344,6 +354,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q7 help-q7" aria-required="true">
             <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes, it should be ours to keep and control, even if someone else runs it.</span></label>
             <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No, renting from a third-party API is the sensible call for this task.</span></label>
+            <label class="fs-opt"><input type="radio" name="q7_own" value="notmine"><span>It&rsquo;s not my call, I don&rsquo;t own the budget or decision here.</span></label>
           </div>
           <div id="q7Op" style="display:none;">
             <p class="fs-q-sub" id="lbl-q7op">Who would run it? <span class="fs-optional">(optional)</span></p>
@@ -360,6 +371,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <button type="button" class="fs-back" id="fsBack" style="visibility:hidden;">&larr; Back</button>
         <button type="button" class="btn-primary" id="fsNext">Next &rarr;</button>
       </div>
+      <p class="fs-referral">Not the person who owns this task? Forward it to them, or <a href="mailto:hello@baseweight.co?subject=Intro">intro us</a>.</p>
     </form>
   </div>
 </section>
@@ -406,6 +418,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       </div>
 
       <div class="fs-cta-row" id="fsCta"></div>
+
+      <p class="fs-referral" id="fsReferral">Not the person who owns this task? Forward it to them, or <a href="mailto:hello@baseweight.co?subject=Intro">intro us</a>.</p>
 
       <p class="fs-restart"><a href="#" id="fsRestart">&larr; Edit my answers</a></p>
     </div>
@@ -667,6 +681,22 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     syncOwn();
   })();
 
+  // Q3: if they're already on their own model/AI, ask whether their team builds it. A
+  // build-capable buyer gets the own-vs-rent verdict, not a naive Pilot pitch.
+  (function () {
+    var builder = document.getElementById('q3Builder');
+    if (!builder) return;
+    function syncBuilder() {
+      var show = v('q3_today') === 'other-ai';
+      builder.style.display = show ? '' : 'none';
+      if (!show) Array.prototype.forEach.call(FORM.querySelectorAll('input[name="q3_builtinhouse"]'),
+        function (r) { r.checked = false; });
+    }
+    Array.prototype.forEach.call(FORM.querySelectorAll('input[name="q3_today"]'),
+      function (r) { r.addEventListener('change', syncBuilder); });
+    syncBuilder();
+  })();
+
   // ── verdict ────────────────────────────────────────────────────────────────
   function compute() {
     var own = v('q7_own');                 // own | rent
@@ -677,8 +707,17 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     else if (data === 'have_noget') dataOK = v('q4_amount') === 'enough' || v('q4_amount') === 'unsure'; // have but stuck: enough/not-sure -> Scan sizes it; only a clear "too few" is a no
     else dataOK = false;                                                   // nohave_noget, unsure -> not yet
 
+    // A binding constraint renting can't satisfy: compliance (often no permitted API at all),
+    // quality, on-hardware/latency, or cost that actually bites at high volume. Only one of these
+    // overrides a "rent is fine" answer, so a solution-unaware buyer can't self-select out of the
+    // one task where owning wins (the wedge + scale answers they gave are the evidence).
+    var blockers = Array.prototype.slice.call(FORM.querySelectorAll('input[name="q5_blockers"]:checked'))
+      .map(function (c) { return c.value; });
+    var hardWedge = blockers.indexOf('compliance') > -1 || blockers.indexOf('quality') > -1 || blockers.indexOf('latency') > -1
+      || (blockers.indexOf('cost') > -1 && (v('q6_volume') === '100k-1M' || v('q6_volume') === '1Mplus'));
+
     var verdict;
-    if (own === 'rent') verdict = 'no';
+    if (own === 'rent' && !hardWedge) verdict = 'no';
     else if (correctness === 'subjective') {
       // judgment-based eval: can construct one (rubric / reviewer agreement) -> build;
       // can't, or not sure -> a Scan settles whether it's measurable at all
@@ -688,6 +727,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     else if (correctness === 'unsure') verdict = 'scan';      // measurability unknown: a Scan settles it
     else if (dataOK) verdict = 'candidate';
     else verdict = 'notyet';
+    // A build-capable buyer (their own team builds models) on a positive-fit task: reframe to
+    // own-vs-rent rather than over-call them as a naive Pilot candidate, they can build it.
+    if (verdict === 'candidate' && v('q3_builtinhouse') === 'yes') verdict = 'builder';
     return verdict;
   }
   function wedge() {
@@ -721,7 +763,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     // (no Q-numbers), so a lead reads the same as the wizard flowed.
     return [
       'Task: ' + (v('q1_task') || '-') + ' | types: ' + (checked('q1_type') || '-'),
-      'Handled today: ' + v('q3_today'),
+      'Handled today: ' + v('q3_today') + (v('q3_builtinhouse') ? ' (own team builds models: ' + v('q3_builtinhouse') + ')' : ''),
       'Correctness: ' + v('q2_correctness'),
       (v('q2_correctness') === 'unsure'
         ? 'Data: not probed (correctness was "not sure"), worth probing'
@@ -756,13 +798,13 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         (w ? ', and ' + w + ' is where owning earns its keep' : '') + '.' + volumeClause() +
         ' A <strong>$1,500 Scan</strong> checks it on a sample and sizes the labelled data you&rsquo;ll need; its fee credits toward the <a href="/pilot">Pilot</a>, the fixed-scope <strong>$6–9k</strong> proof on your full data.' +
         (managed ? ' You own the result; we can run it for you.' : '');
-      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a call to start the Scan &rarr;') + '</p>';
+      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a 20-min call, no pitch, I&rsquo;ll say if it&rsquo;s worth a Scan &rarr;') + '</p>';
     } else if (verdict === 'build') {
       badge.textContent = 'Candidate → Build';
-      title.textContent = 'We can build it, we just can’t prove it the same way.';
-      body.innerHTML = 'Correctness is subjective here, so we can’t <em>prove</em> a win the way the <a href="/benchmark">public benchmark</a> does. You’d still get <strong>a model you own</strong> and a way to score it you both trust (a rubric, or one reviewer’s call you’d stand by), just not a single right/wrong test' +
-        (w ? ', with ' + w + ' as the driver' : '') + '. We scope it on a call, and <strong>you’ll see a fixed scope and price before you commit</strong>.';
-      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a call to scope it &rarr;') + '</p>';
+      title.textContent = 'We can build it, and de-risk it first.';
+      body.innerHTML = 'Correctness is subjective here, so we can’t <em>prove</em> a win with one right/wrong test like the <a href="/benchmark">benchmark</a> does. But you don’t commit blind: a <strong>$1,500 Scan</strong> pins down how we’d score it (a rubric, or one trusted reviewer) and tests it on a sample first' +
+        (w ? ', with ' + w + ' as the driver' : '') + '. You get <strong>a model you own</strong> and an agreed way to measure it, at a fixed scope and price <strong>you see before you commit</strong>.';
+      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a 20-minute call, no pitch, and we’ll line up the Scan &rarr;') + '</p>';
     } else if (verdict === 'notyet') {
       badge.textContent = 'Not yet';
       title.textContent = 'You’re close, you just need labelled data.';
@@ -779,13 +821,37 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       badge.textContent = 'Start with a Scan';
       title.textContent = 'First, let’s find out if it’s measurable.';
       body.innerHTML = 'Nothing can be built or proven until there’s a reliable way to tell right from wrong on your task. A <strong>$1,500 Scan</strong> settles exactly that: a quick read on whether it’s measurable and worth proving.';
-      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a call to start the Scan &rarr;') + '</p>';
+      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a 20-min call, no pitch, is it worth a Scan? &rarr;') + '</p>';
+    } else if (verdict === 'builder') {
+      badge.textContent = 'You already build this';
+      title.textContent = 'You’ve got a team for this. The question is own-vs-rent.';
+      body.innerHTML = 'Your team builds this, so <em>doable</em> isn’t the question, own-vs-rent is: is one more model worth your team’s quarter, and if you rent a frontier API here, could a smaller model you own run it cheaper at volume' +
+        (w ? ', where ' + w + ' bites' : '') + '? The <a href="/benchmark">benchmark</a> is public code and hashes, judge the method yourself. If it helps, we hand you the adapter and eval for one narrow task so your team skips the sprint.';
+      cta.innerHTML = '<a href="/benchmark" class="btn-primary">See the benchmark &rarr;</a><p class="fs-cta-sub" style="margin-top:14px;">Or ' + calLink('book a peer call to compare notes &rarr;') + '</p>';
+      capHeading.textContent = 'Want my read on the own-vs-rent math?';
+      capSub.textContent = 'Leave your email, I’ll send where owning beats building it yourself.';
     } else { // no
       badge.textContent = 'Probably not us';
       title.textContent = 'Honestly, keep your API.';
       body.innerHTML = 'You’re happy renting, and for this task that’s a fine call. Owning earns its keep when you can’t send data out, the bill is brutal at scale, quality isn’t there, or ownership matters. If that changes, come back.';
       cta.innerHTML = '<a href="/benchmark" class="btn-primary">See the public benchmark &rarr;</a>';
       capture.style.display = 'none';
+    }
+
+    // A rent-leaner reaches a non-'no' verdict only when a hard wedge overrode the rent answer
+    // (see compute); name that tension up front instead of the standard opener.
+    if (verdict !== 'no' && verdict !== 'builder' && v('q7_own') === 'rent') {
+      body.innerHTML = 'You leaned toward renting. Your answers point the other way on this one:<br><br>' + body.innerHTML;
+    }
+
+    // Not the budget owner: keep the task verdict (so they can judge fit), but make the primary
+    // action forwarding it up, and reframe the capture as a forwardable write-up. A task-owner
+    // without budget shouldn't dead-end on a call CTA they can't act on.
+    if (v('q7_own') === 'notmine' && verdict !== 'no' && verdict !== 'builder') {
+      body.innerHTML = 'The budget sits with someone else. Here&rsquo;s the read to hand them:<br><br>' + body.innerHTML;
+      cta.innerHTML = '<p class="fs-cta-sub">Forward this to whoever owns the budget, or ' + calLink('book a call with them &rarr;') + '</p>';
+      capHeading.textContent = 'Want a version to forward?';
+      capSub.textContent = 'Leave your email, I&rsquo;ll send a write-up to forward to the budget owner.';
     }
   }
 
