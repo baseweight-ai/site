@@ -1,7 +1,26 @@
 {
   "cleanUrls": true,
   "redirects": [
-    { "source": "/diagnostic", "destination": "/pilot", "permanent": true }
+    {
+      "source": "/diagnostic",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pilot",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/fit-score",
+      "destination": "/scope",
+      "permanent": true
+    },
+    {
+      "source": "/benchmark",
+      "destination": "/head-to-head",
+      "permanent": true
+    }
   ],
   "headers": [
     {

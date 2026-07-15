@@ -11,15 +11,16 @@ review only.
 Both site forms POST (via a hidden iframe) to the script's `/exec` URL, gated by
 the shared formkey (`k`):
 
-- `source=fit-score`: the Fit Score quiz (`fit-score.html`). Sends `email`,
+- `source=fit-score`: the fit check quiz (`scope.html`; the page moved to /scope
+  but keeps posting `source=fit-score` as the contract value). Sends `email`,
   `verdict`, `q1_task`, `answers` (a plain-text blob), `notify`, `ua`. Logs the
-  row, emails you the diagnosis, and sends the submitter a personal receipt with
-  their verdict and next step.
-- `source=about-page`: the benchmark opt-in (`about.html`). Sends `email`, `ua`.
+  row, emails you the lead, and sends the submitter a receipt with their result
+  and next step.
+- `source=about-page`: the head-to-head opt-in (`about.html`). Sends `email`, `ua`.
   Logs the row, marks `Notify=yes`, and sends a "you're on the list" confirmation.
 
 `CONFIG.SECRET_KEY` must equal the site's hidden `k`
-(`formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn`, in `about.html` and `fit-score.html`).
+(`formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn`, in `about.html` and `scope.html`).
 The endpoint the site posts to is
 `https://script.google.com/macros/s/AKfycbw…/exec`.
 

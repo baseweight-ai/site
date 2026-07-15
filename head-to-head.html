@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Benchmark: open model vs. the API you'd deploy | Baseweight</title>
-<meta name="description" content="On focused tasks like support triage and contract review, a small open model you fine-tune and own matches or beats the big-platform API you'd otherwise reach for, at a fraction of the cost per correct answer. Public data, every number re-runnable.">
+<title>Head-to-head: open model vs. the API you'd deploy | Baseweight</title>
+<meta name="description" content="On focused tasks like support triage and contract review, a small open model post-trained for the task matches or beats the big-platform API you'd otherwise reach for, at a lower cost per correct result. Public data, every number re-runnable.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
-<link rel="canonical" href="https://baseweight.co/benchmark">
+<link rel="canonical" href="https://baseweight.co/head-to-head">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://baseweight.co/benchmark">
-<meta property="og:title" content="A small model you own can beat the API you'd rent">
-<meta property="og:description" content="On focused tasks like support triage and contract review, a small open model you fine-tune and own matches or beats the big-platform API you'd otherwise reach for, at a fraction of the cost per correct answer. Public data, every number re-runnable.">
+<meta property="og:url" content="https://baseweight.co/head-to-head">
+<meta property="og:title" content="A specialist open model can beat the API tier you'd deploy">
+<meta property="og:description" content="On focused tasks like support triage and contract review, a small open model post-trained for the task matches or beats the big-platform API you'd otherwise reach for, at a lower cost per correct result. Public data, every number re-runnable.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="A small model you own can beat the API you'd rent">
-<meta name="twitter:description" content="On focused tasks like support triage and contract review, a small open model you fine-tune and own matches or beats the big-platform API you'd otherwise reach for, at a fraction of the cost per correct answer. Public data, every number re-runnable.">
+<meta name="twitter:title" content="A specialist open model can beat the API tier you'd deploy">
+<meta name="twitter:description" content="On focused tasks like support triage and contract review, a small open model post-trained for the task matches or beats the big-platform API you'd otherwise reach for, at a lower cost per correct result. Public data, every number re-runnable.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <link rel="stylesheet" href="/components.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -203,8 +203,6 @@ body::after {
 .tco-select:focus { outline: none; border-color: var(--accent); }
 
 /* DESIGN ELEVATION */
-.bench-section-num { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--accent); }
-.bench-section-num::after { content: ' /'; color: var(--text-muted); }
 
 .cell-metric .metric-val { display: inline-block; }
 .cell-metric .metric-bar { display: block; width: 88px; height: 3px; margin-top: 6px; background: rgba(255,255,255,0.06); }
@@ -269,6 +267,14 @@ body::after {
 .cta-points li { position: relative; padding-left: 22px; font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
 .cta-points li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 6px; height: 6px; background: var(--accent); }
 
+/* UPCOMING TASK (placeholder tab state: no results yet, status + Build pointer) */
+.task-tab-soon { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-left: 8px; padding: 2px 6px; border: 1px solid var(--border-accent); border-radius: 2px; vertical-align: middle; }
+.task-tab.active .task-tab-soon { color: var(--accent); border-color: rgba(220,184,117,0.4); }
+.upcoming-panel { margin-top: 40px; background: var(--bg-card); border: 1px solid var(--border-accent); padding: 24px; max-width: 760px; }
+.upcoming-status { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(220,184,117,0.4); padding: 3px 8px; margin-bottom: 14px; }
+.upcoming-panel p { font-size: 13.5px; line-height: 1.75; color: var(--text-secondary); }
+.upcoming-panel p + p { margin-top: 10px; }
+
 /* STICKY CTA */
 .sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
 .sticky-cta.visible { transform: none; opacity: 1; }
@@ -305,7 +311,6 @@ body::after {
 .task-tab:hover::before { transform: scale(1.5); }
 
 /* SECTION INDEX, larger instrument numeral */
-.bench-section-num { font-size: 13px; font-weight: 700; letter-spacing: 0.2em; }
 
 /* LEADERBOARD, a readout surface with one bold family edge per row */
 .leaderboard-wrap { border: 1px solid var(--border-accent); background: linear-gradient(180deg, rgba(255,255,255,0.014), transparent 38%); }
@@ -385,17 +390,6 @@ body::after {
 @media (max-width: 720px) { .bh-cards { grid-template-columns: 1fr; } .bh-bar-row { grid-template-columns: 104px 1fr auto; } }
 
 /* ── ENGINEER DETAIL (depth on tap) ───────────────────────────────────────── */
-.eng-details { margin-top: 56px; border: 1px solid var(--border); background: var(--bg-card); }
-.eng-details > summary { cursor: pointer; list-style: none; padding: 18px 24px; font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
-.eng-details > summary::-webkit-details-marker { display: none; }
-.eng-details > summary::before { content: '\25B8'; color: var(--accent); transition: transform 0.2s; display: inline-block; }
-.eng-details[open] > summary::before { transform: rotate(90deg); }
-.eng-details > summary .eng-sub { font-weight: 400; color: var(--text-muted); }
-.eng-details-body { padding: 4px 24px 28px; border-top: 1px solid var(--border); }
-.eng-block { margin-top: 32px; }
-.eng-block h3 { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; }
-.repro-pointer { margin-top: 26px; font-size: 13px; color: var(--text-muted); }
-.repro-pointer a { color: var(--accent); }
 </style>
 <meta name="author" content="Philip Stevens">
 <link rel="author" href="/about">
@@ -412,9 +406,9 @@ body::after {
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label bench-anim" style="animation-delay: 0s;">Benchmark</div>
-    <h1 class="bench-anim" style="animation-delay: 0.07s;">A specialist model beats the big platforms on the one task it&rsquo;s trained for, at a fraction of the cost.</h1>
-    <p class="subtitle bench-anim" style="animation-delay: 0.14s;">This is the open evidence for that claim. We put a model trained for one narrow job against the big-platform AI a team would otherwise reach for, score both on public data anyone can re-run, and publish all of it. A couple of tasks so far, with more underway. The same test runs on your task.</p>
+    <div class="section-label bench-anim" style="animation-delay: 0s;">Head-to-head</div>
+    <h1 class="bench-anim" style="animation-delay: 0.07s;">On its one task, a specialist model beats the API you&rsquo;d deploy.</h1>
+    <p class="subtitle bench-anim" style="animation-delay: 0.14s;">We put a model trained for one narrow job against the big-platform AI a team would reach for, score both on public data anyone can re-run, and publish all of it. The same test runs on your task.</p>
     <div class="hero-proof bench-anim" style="animation-delay: 0.21s;">
       <a href="/methodology">How it&rsquo;s tested &rarr;</a>
       <a href="https://github.com/baseweight-ai/benchmark" target="_blank" rel="noopener noreferrer">View the code &rarr;</a>
@@ -436,8 +430,12 @@ body::after {
     <!-- BUYER HEADLINE (plain comparison, built from the data) -->
     <div id="benchHeadline" class="bench-headline bench-reveal"></div>
 
+    <!-- UPCOMING TASK PANEL (shown instead of the data sections when the selected
+         task has no published run yet; content comes from TASKS[i].upcoming) -->
+    <div id="upcomingPanel" class="upcoming-panel" style="display:none;"></div>
+
     <!-- COST CALCULATOR (what it costs you to run) -->
-    <div class="bench-section bench-reveal">
+    <div class="bench-section bench-reveal" id="costSection">
       <div class="bench-section-header"><h2>What it costs to run</h2><span class="hdr-rule"></span></div>
       <div class="tco-calculator">
         <div class="tco-input-row">
@@ -466,20 +464,18 @@ body::after {
           </table>
         </div>
         <p class="tco-summary" id="tcoSummary" style="display:none;"></p>
+        <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted); line-height: 1.6;">Self-hosted figures assume the GPU stays busy. Bursty or low volume narrows the gap, and below a volume threshold the hosted API wins on cost; the calculator is for finding your side of that line.</p>
       </div>    </div>
 
-    <!-- ENGINEER DETAIL (depth on tap) -->
-    <details class="eng-details bench-reveal">
-      <summary>The full results &amp; how it&rsquo;s scored</summary>
-      <div class="eng-details-body">
-
-        <div class="eng-block">
-          <h3>Every model and method, scored</h3>
+    <!-- FULL RESULTS (leaderboard, error analysis, reproduction artifacts) -->
+    <div id="fullResults">
+        <div class="bench-section bench-reveal">
+          <div class="bench-section-header"><h2>Every model and method, scored</h2><span class="hdr-rule"></span></div>
           <div class="leaderboard-wrap">
             <table class="leaderboard-table" id="leaderboardTable">
               <thead>
                 <tr>
-                  <th data-col="model_label" data-tooltip="Open-source models are self-hosted and can be fine-tuned; the API baseline is a hosted, closed model accessed through a provider, here the cost-efficient tier a team would run at volume.">Model</th>
+                  <th data-col="model_label" data-tooltip="Open-weight models are self-hosted and can be fine-tuned; the API baseline is a hosted, closed model accessed through a provider, here the cost-efficient tier a team would run at volume.">Model</th>
                   <th data-col="condition_label" data-tooltip="How the model was set up for this task. Click to sort.">Method</th>
                   <th data-col="metric_value" class="sorted" data-tooltip="Primary quality metric for this task. Higher is better."><span id="metricColLabel">Metric</span> <span class="sort-indicator">↓</span></th>
                   <th class="th-expand" aria-label="Reproduction details"></th>
@@ -489,14 +485,14 @@ body::after {
             </table>
           </div>
           <div class="table-legend">
-            <div class="legend-item"><div class="legend-dot" style="background: var(--color-opensource);"></div> Open-source fine-tuned</div>
+            <div class="legend-item"><div class="legend-dot" style="background: var(--color-opensource);"></div> Open-weight, fine-tuned (Apache 2.0)</div>
             <div class="legend-item"><div class="legend-dot" style="background: var(--color-frontier);"></div> Hosted API (cost tier)</div>
           </div>
           <p class="lb-hint" style="font-size:12px; color: var(--text-muted); margin-top:14px;">Open any row&rsquo;s <b>Reproduce</b> panel for its exact data, recipe, training health, cost, and verification hashes.</p>
         </div>
 
-        <div class="eng-block" id="errorSection">
-          <h3>Where the errors go</h3>
+        <div class="bench-section bench-reveal" id="errorSection">
+          <div class="bench-section-header"><h2>Where the errors go</h2><span class="hdr-rule"></span></div>
           <div class="chart-container">
             <div class="chart-canvas-wrap" style="height: 420px;">
               <canvas id="errorChart"></canvas>
@@ -505,20 +501,20 @@ body::after {
           </div>
         </div>
 
-        <div class="eng-block">
-          <h3>Reproduce any number</h3>
-          <p class="repro-lead">Every result is reproducible from published artifacts, no access to our training code required. Run the released adapter on the eval data, or recompute the scores from the raw prediction logs.</p>
+        <div class="bench-section bench-reveal">
+          <div class="bench-section-header"><h2>Reproduce any number</h2><span class="hdr-rule"></span></div>
+          <p class="repro-lead">Every result is reproducible from published artifacts. Run the released adapter on the eval data, or recompute the scores from the raw prediction logs. The base model is Apache-2.0 licensed, and every artifact is revision-pinned and hash-verified.</p>
           <div class="repro-grid" id="reproArtifacts"></div>
           <p class="repro-prov" id="reproProvenance"></p>
         </div>
 
-      </div>
-    </details>
+    </div>
+
     <!-- CTA -->
     <div class="cta-block bench-reveal">
       <h2>These are public-data results. See if it holds for <em>your</em> task.</h2>
-      <a href="/fit-score" class="btn-primary">Score your task &rarr;</a>
-      <p style="font-size:13px; color: var(--text-secondary); margin-top: 16px;">Already know it fits? <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer">Book a free call &rarr;</a></p>
+      <a href="/scope" class="btn-primary">Scope your task &rarr;</a>
+      <p style="font-size:13px; color: var(--text-secondary); margin-top: 16px;">Prefer to talk? <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer">Book a free call &rarr;</a></p>
     </div>
 
   </div>
@@ -528,7 +524,7 @@ body::after {
 
 <div class="sticky-cta" id="stickyCta" aria-hidden="true">
   <span class="sticky-cta-text">See if it holds for your task</span>
-  <a href="/fit-score" class="sticky-cta-btn" tabindex="-1">Score your task</a>
+  <a href="/scope" class="sticky-cta-btn" tabindex="-1">Scope your task</a>
   <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" tabindex="-1" style="font-size:13px; color:var(--text-secondary); white-space:nowrap;">Book a free call</a>
 </div>
 
@@ -538,11 +534,40 @@ body::after {
 <script>
 
 // ── CONSTANTS ──────────────────────────────────────────────────────────────
+// The task portfolio is a SPANNING SET: each entry pairs a distinct task shape
+// with a distinct vertical, so any likely buyer finds their own work in one tab.
+// Before adding a task, check its `shape` and `vertical` against the list; a
+// duplicate on either axis needs a strong reason (the e2e suite asserts
+// uniqueness). Upcoming tasks appear as placeholder tabs: same harness, no
+// published run yet. A task goes live by deleting its `upcoming` block once its
+// results land in results.json. Statuses stay honest: what the pipeline is doing.
 const TASKS = [
   { id: 'cuad', name: 'Contract review', vertical: 'Legal',
-    blurb: "Find a specific clause in a full contract (governing law, IP ownership, a termination right) and return it exactly, or correctly say it isn't there. A confidently invented clause is worse than a missed one. Same shape as pulling a field off a supplier datasheet, a PO, or a customs entry: return it exactly, or say it isn't there." },
+    shape: 'find one field in a long document, or abstain',
+    blurb: "Find a specific clause in a full contract (governing law, IP ownership, a termination right) and return it exactly, or correctly say it isn't there. A confidently invented clause is worse than a missed one. Same shape as finding one term in a policy, a lease, or a filing." },
   { id: 'banking77', name: 'Support triage', vertical: 'Banking',
-    blurb: "Read a short customer message and route it to the right one of 77 intents (telling a cancelled payment apart from a failed transfer) so far fewer tickets get misrouted. Same shape as routing a part, a SKU, or a customs line to the right one of many categories." },
+    shape: 'route short text to one of many categories',
+    blurb: "Read a short customer message and route it to the right one of 77 intents, telling a cancelled payment apart from a failed transfer. Same shape as routing tickets, orders, or claims to the right queue." },
+  { id: 'hs6', name: 'HS-code classification', vertical: 'Customs / trade',
+    shape: 'classify into a large regulated code set, with escalation',
+    upcoming: { status: 'In build', note: 'Built on public customs rulings, scored at the full ~5,600-code label space with an escalate option for contested lines.' },
+    blurb: "Classify a messy product description to its HS subheading, or escalate the contested lines to your broker. Same shape as tariff, commodity, or safety-code assignment wherever the code set is large and regulated." },
+  { id: 'attr-extract', name: 'Spec &amp; attribute extraction', vertical: 'Distribution / e-commerce',
+    shape: 'normalize fields from varied documents into one schema',
+    upcoming: { status: 'Planned', note: 'Sources vary by supplier; the extracted schema is fixed.' },
+    blurb: "Pull structured attributes (pitch, plating, voltage, dimensions) off supplier datasheets, POs, and mill certs into one catalog schema, or mark a field as absent from the source." },
+  { id: 'part-match', name: 'Part &amp; product matching', vertical: 'Catalog ops / aftermarket',
+    shape: 'match and de-duplicate records across sources',
+    upcoming: { status: 'Planned', note: 'Scoring penalizes a wrong substitution more heavily than a missed match.' },
+    blurb: "Match the same item across differently formatted supplier feeds: part-number cross-references, de-duplication of a merged catalog, vehicle fitment." },
+  { id: 'rfq-extract', name: 'RFQ &amp; quote-line extraction', vertical: 'Manufacturing / MRO',
+    shape: 'turn an inbound request into structured lines',
+    upcoming: { status: 'Planned', note: 'Flags the lines that need an engineer to review.' },
+    blurb: "Parse an emailed RFQ, spec sheet, or drawing into structured lines your quoting desk can price." },
+  { id: 'doc-qa', name: 'Document Q&amp;A', vertical: 'Field service / ops',
+    shape: 'answer from your own documents, with citations',
+    upcoming: { status: 'Planned', note: 'Every response must cite the passage it came from; a question the documents do not settle must be flagged as such.' },
+    blurb: "Answer a working question from your own manuals, policies, or procedures, citing the passage it came from. Same shape as a technician querying equipment manuals or an agent checking policy terms." },
 ];
 
 const FAMILY_COLORS = { 'open-source': '#60a5fa', 'frontier': '#dcb875', 'api-finetuned': '#4ade80' };
@@ -594,7 +619,7 @@ const ERROR_COLORS = {
 const ERROR_DESCRIPTIONS = {
   correct: 'Output matched the expected result exactly or above the passing threshold.',
   pass: 'All test cases passed.',
-  not_applicable: 'Model returned "not found" or "not applicable." For clause extraction this is often the correct answer, since most clause types are absent from any given contract; it is an error only when the clause was actually present and should have been extracted.',
+  not_applicable: 'Returned "not found" or "not applicable" where that was right; an error only when the content was present and should have been extracted.',
   partial: 'Output partially overlapped the expected text (Token F1 between 0.5 and 0.9).',
   wrong_class: 'Model predicted the wrong category or intent.',
   logic_error: 'Output ran without error but produced wrong results.',
@@ -679,7 +704,8 @@ function buildTabs() {
   TASKS.forEach(t => {
     const btn = document.createElement('button');
     btn.className = 'task-tab' + (t.id === currentTask ? ' active' : '');
-    btn.innerHTML = (t.vertical ? '<span class="task-tab-vert">' + t.vertical + '</span>' : '') + t.name;
+    btn.innerHTML = (t.vertical ? '<span class="task-tab-vert">' + t.vertical + '</span>' : '') + t.name +
+      (t.upcoming ? ' <span class="task-tab-soon">' + t.upcoming.status + '</span>' : '');
     btn.setAttribute('role', 'tab');
     btn.setAttribute('aria-selected', t.id === currentTask ? 'true' : 'false');
     btn.addEventListener('click', () => selectTask(t.id));
@@ -697,6 +723,26 @@ function selectTask(taskId) {
     btn.classList.toggle('active', isActive);
     btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
+  const upcomingPanel = document.getElementById('upcomingPanel');
+  const costSection = document.getElementById('costSection');
+  const fullResults = document.getElementById('fullResults');
+  const headlineEl = document.getElementById('benchHeadline');
+  if (meta && meta.upcoming) {
+    if (upcomingPanel) {
+      upcomingPanel.style.display = '';
+      upcomingPanel.innerHTML =
+        '<span class="upcoming-status">' + meta.upcoming.status + '</span>' +
+        '<p>' + meta.upcoming.note + ' Results publish here when the run lands, scored the same way as every live task.</p>' +
+        '<p>If you run this task at volume, a Build opens with this same test on your data, ahead of the public version.</p>';
+    }
+    if (costSection) costSection.style.display = 'none';
+    if (fullResults) fullResults.style.display = 'none';
+    if (headlineEl) headlineEl.style.display = 'none';
+    return;
+  }
+  if (upcomingPanel) upcomingPanel.style.display = 'none';
+  if (costSection) costSection.style.display = '';
+  if (fullResults) fullResults.style.display = '';
   if (!benchData) return;
   const task = benchData.tasks[taskId];
   if (!task) {
@@ -718,19 +764,10 @@ function selectTask(taskId) {
 
 // Number the visible bench sections sequentially (the error-analysis section is
 // hidden for some tasks, so numbering can't be static).
-function renumberSections() {
-  let n = 0;
-  document.querySelectorAll('.bench-section').forEach(sec => {
-    if (sec.style.display === 'none') return;
-    n++;
-    const numEl = sec.querySelector('.bench-section-num');
-    if (numEl) numEl.textContent = String(n).padStart(2, '0');
-  });
-}
 
 // Buyer headline, built from the same rows the table shows: the fine-tuned model
 // you'd own vs the best-quality hosted-API baseline, in plain terms, how much less
-// often it was wrong, and how much cheaper per correct answer. Nothing hard-coded.
+// often it was wrong, and how much cheaper per correct result. Nothing hard-coded.
 function mistakeStats(r) {
   const ec = r.error_counts || {};
   const tot = Object.values(ec).reduce((a, b) => a + b, 0);
@@ -776,7 +813,7 @@ function renderHeadline(task, taskId) {
     const rstr = ratio >= 10 ? String(Math.round(ratio)) : ratio.toFixed(1);
     costCard =
       '<div class="bh-card"><div class="bh-stat">' + rstr + '× cheaper</div>' +
-      '<div class="bh-stat-cap">per correct answer, on hardware you control</div><div class="bh-bars">' +
+      '<div class="bh-stat-cap">per correct result, on hardware you control</div><div class="bh-bars">' +
       bar('Built for the task', Math.max(5, fine.cost_per_1k_correct / api.cost_per_1k_correct * 100), fmtCost(fine.cost_per_1k_correct) + ' / 1k', 'var(--color-opensource)') +
       bar('Big-platform AI', 100, fmtCost(api.cost_per_1k_correct) + ' / 1k', 'var(--color-frontier)') +
       '</div></div>';
@@ -1194,16 +1231,6 @@ document.getElementById('gpuRate').addEventListener('change', () => {
   });
 })();
 
-// Re-render the error chart when the engineer panel opens: a Chart.js canvas
-// created inside a collapsed <details> has zero dimensions, so it must be rebuilt
-// once the panel is visible and the canvas has a real size.
-(function () {
-  const det = document.querySelector('.eng-details');
-  if (!det) return;
-  det.addEventListener('toggle', () => {
-    if (det.open && benchData) renderErrors(benchData.tasks[currentTask]);
-  });
-})();
 
 // ── SCROLL REVEAL ──────────────────────────────────────────────────────────
 const revealObserver = new IntersectionObserver((entries) => {

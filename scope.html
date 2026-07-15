@@ -3,28 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fit check: when the big AI platforms aren't the answer | Baseweight</title>
-<meta name="description" content="A straight verdict on whether your task belongs on a model you own — candidate, not yet, or keep your API. With the reasoning. No email.">
+<title>Fit check: scope your task for a specialist model | Baseweight</title>
+<meta name="description" content="Scope your task for a specialist model: free, about two minutes, result on screen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
-<link rel="canonical" href="https://baseweight.co/fit-score">
+<link rel="canonical" href="https://baseweight.co/scope">
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <link rel="author" href="/about">
 <meta name="author" content="Philip Stevens">
 <link rel="stylesheet" href="/components.css">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://baseweight.co/fit-score">
-<meta property="og:title" content="Should this task run on AI built for it? (2-minute check)">
-<meta property="og:description" content="A straight verdict on whether your task belongs on a model you own — candidate, not yet, or keep your API. With the reasoning. No email.">
+<meta property="og:url" content="https://baseweight.co/scope">
+<meta property="og:title" content="Scope your task for a specialist model (2-minute check)">
+<meta property="og:description" content="Scope your task for a specialist model: free, about two minutes, result on screen.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Should this task run on AI built for it? (2-minute check)">
-<meta name="twitter:description" content="A straight verdict on whether your task belongs on a model you own — candidate, not yet, or keep your API. With the reasoning. No email.">
+<meta name="twitter:title" content="Scope your task for a specialist model (2-minute check)">
+<meta name="twitter:description" content="Scope your task for a specialist model: free, about two minutes, result on screen.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -74,7 +74,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-hero h1 { max-width: 760px; margin-bottom: 20px; }
 .fs-hero h1 .accent { color: var(--accent); }
 .fs-hero-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.85; max-width: 620px; margin-bottom: 16px; }
-.fs-hero-note { font-size: 13px; color: var(--text-muted); line-height: 1.7; max-width: 620px; }
 
 /* ======== QUIZ (one question per screen) ======== */
 .fs-quiz { padding: var(--section-pad) 0; }
@@ -98,12 +97,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-opt input { margin-top: 3px; flex-shrink: 0; accent-color: var(--accent); width: 16px; height: 16px; }
 .fs-opt:has(input:checked) { border-color: var(--accent); background: rgba(201,168,76,0.06); color: var(--text-primary); }
 
-.fs-input, .fs-textarea { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); font-family: var(--font-mono); font-size: 13.5px; padding: 13px 14px; transition: border-color 0.2s, box-shadow 0.2s; }
-.fs-input::placeholder, .fs-textarea::placeholder { color: var(--text-muted); }
-.fs-input:focus, .fs-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,168,76,0.18); }
-.fs-textarea { min-height: 84px; resize: vertical; line-height: 1.7; }
-.fs-row { display: flex; gap: 12px; flex-wrap: wrap; }
-.fs-row > * { flex: 1 1 180px; min-width: 0; }
+.fs-input { width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); font-family: var(--font-mono); font-size: 13.5px; padding: 13px 14px; transition: border-color 0.2s, box-shadow 0.2s; }
+.fs-input::placeholder { color: var(--text-muted); }
+.fs-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(201,168,76,0.18); }
 .fs-sublabel { font-size: 12px; color: var(--text-muted); margin: 18px 0 8px; }
 .fs-optional { color: var(--text-muted); font-weight: 400; font-size: 13px; }
 
@@ -123,10 +119,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-result-inner { max-width: 680px; }
 .fs-badge { display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; padding: 6px 12px; border: 1px solid currentColor; margin-bottom: 22px; }
 .fs-badge--candidate { color: var(--accent); }
-.fs-badge--build { color: var(--accent-cool); }
 .fs-badge--notyet { color: var(--text-secondary); }
 .fs-badge--no { color: var(--text-muted); }
-.fs-badge--scan { color: var(--accent-cool); }
+.fs-badge--notmeasurable { color: var(--accent-cool); }
 .fs-badge--builder { color: var(--accent-cool); }
 .fs-result h2 { margin-bottom: 18px; }
 .fs-verdict-body { font-size: 15px; color: var(--text-secondary); line-height: 1.85; margin-bottom: 28px; }
@@ -141,8 +136,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 .fs-capture { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--border); max-width: 560px; }
 .fs-capture h3 { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
 .fs-capture p.fs-capture-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.7; }
-.fs-cap-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
-.fs-capture .fs-textarea { margin-bottom: 14px; }
 .fs-capture-row { display: flex; gap: 12px; }
 .fs-capture-row .fs-input { flex: 1; }
 .fs-checkbox { display: flex; gap: 9px; align-items: flex-start; font-size: 12.5px; color: var(--text-secondary); line-height: 1.55; margin-top: 14px; cursor: pointer; }
@@ -161,10 +154,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
   "@graph": [
     {
       "@type": "WebPage",
-      "@id": "https://baseweight.co/fit-score#webpage",
-      "url": "https://baseweight.co/fit-score",
-      "name": "Fit check: when the big AI platforms aren't the answer",
-      "description": "A free, two-minute fit check that returns an instant verdict on whether a model you own could win on a task the big AI platforms can't.",
+      "@id": "https://baseweight.co/scope#webpage",
+      "url": "https://baseweight.co/scope",
+      "name": "Fit check: scope your task for a specialist model",
+      "description": "A free, two-minute check that scopes your task for a specialist model.",
       "author": { "@type": "Person", "name": "Philip Stevens", "url": "https://baseweight.co/about" },
       "inLanguage": "en-US",
       "isPartOf": { "@type": "WebSite", "@id": "https://baseweight.co/#website", "url": "https://baseweight.co/", "name": "Baseweight" }
@@ -191,9 +184,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 <!-- ======== HERO ======== -->
 <section class="fs-hero">
   <div class="container">
-    <div class="section-label">Score your task</div>
-    <h1>Should this task run on <span class="accent">AI built for it?</span></h1>
-    <p class="fs-hero-sub">Answer a few questions to find out. Takes about two minutes. You get a straight answer (candidate, not yet, or honestly-not-us) with the reasoning. No email required to see it.</p>
+    <div class="section-label">Scope your task</div>
+    <h1>Scope your task for <span class="accent">a specialist model.</span></h1>
+    <p class="fs-hero-sub">About two minutes.</p>
   </div>
 </section>
 
@@ -250,10 +243,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <div class="fs-q-head"><span class="fs-q-label" id="lbl-q2">How would you know if the task is done correctly? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
         <div class="fs-q-body">
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q2" aria-required="true">
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>There&rsquo;s an objective result, outcome, rule, or metric to check against, not a judgment call.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="exact"><span>There&rsquo;s an objective result, outcome, rule, or metric to check against.</span></label>
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="human"><span>It&rsquo;s a judgment call, but skilled reviewers usually agree.</span></label>
             <label class="fs-opt"><input type="radio" name="q2_correctness" value="subjective"><span>It&rsquo;s a judgment call, and even experts disagree on the same case.</span></label>
-            <label class="fs-opt"><input type="radio" name="q2_correctness" value="unsure"><span>We&rsquo;re not sure how we&rsquo;d measure it yet.</span></label>
+            <label class="fs-opt"><input type="radio" name="q2_correctness" value="unsure"><span>We haven&rsquo;t worked out how we&rsquo;d measure it yet.</span></label>
           </div>
         </div>
       </div>
@@ -291,21 +284,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Step 3b, data for subjective tasks: a judgment-based eval (rubric / reviewer
-           agreement) instead of a known correct result. Shown only when correctness is
-           subjective; gates Build (an eval is constructible) vs Scan (can't pin one down). -->
-      <div class="fs-q fs-step" id="fsq-q4_subjective">
-        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q4s">Even though it&rsquo;s subjective, could you judge it consistently, with a rubric or one trusted reviewer? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
-        <div class="fs-q-body">
-          <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q4s">
-            <label class="fs-opt"><input type="radio" name="q4_judge" value="have"><span>Yes, we already judge it that way</span></label>
-            <label class="fs-opt"><input type="radio" name="q4_judge" value="canget"><span>Not yet, but we could set that up</span></label>
-            <label class="fs-opt"><input type="radio" name="q4_judge" value="no"><span>No, it comes down to personal taste</span></label>
-            <label class="fs-opt"><input type="radio" name="q4_judge" value="unsure"><span>Not sure</span></label>
-          </div>
-        </div>
-      </div>
-
       <!-- Step 4, why not the big platforms (optional) -->
       <div class="fs-q fs-step" id="fsq-q5">
         <div class="fs-q-head"><span class="fs-q-label" id="lbl-q5"><span id="lbl-q5-text">What would stop you just using a big AI platform?</span> <span class="fs-optional">(optional)</span></span></div>
@@ -316,7 +294,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="cost"><span>Too costly at our volume.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="quality"><span>Not accurate enough on our task.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="latency"><span>It has to run fast, offline, or on our own hardware.</span></label>
-            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="ownership"><span>We&rsquo;d rather own it.</span></label>
+            <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="ownership"><span>We want to avoid depending on an outside AI vendor.</span></label>
             <label class="fs-opt"><input type="checkbox" name="q5_blockers" value="other"><span>Something else.</span></label>
           </div>
           <div id="q5Biggest" style="display:none;">
@@ -326,7 +304,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
               <label class="fs-opt"><input type="radio" name="q5_dealbreaker" value="cost"><span>Too costly at our volume.</span></label>
               <label class="fs-opt"><input type="radio" name="q5_dealbreaker" value="quality"><span>Not accurate enough on our task.</span></label>
               <label class="fs-opt"><input type="radio" name="q5_dealbreaker" value="latency"><span>It has to run fast, offline, or on our own hardware.</span></label>
-              <label class="fs-opt"><input type="radio" name="q5_dealbreaker" value="ownership"><span>We&rsquo;d rather own it.</span></label>
+              <label class="fs-opt"><input type="radio" name="q5_dealbreaker" value="ownership"><span>We want to avoid depending on an outside AI vendor.</span></label>
               <label class="fs-opt"><input type="radio" name="q5_dealbreaker" value="other"><span>Something else.</span></label>
             </div>
           </div>
@@ -346,14 +324,14 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         </div>
       </div>
 
-      <!-- Step 6, ownership (the qualifying question, last) -->
+      <!-- Step 6, deploy-vs-rent (the qualifying question, last; posted field stays q7_own) -->
       <div class="fs-q fs-step" id="fsq-q7_own">
-        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q7">Do you want to own it? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
-        <p class="fs-q-help" id="help-q7">Owning means the model is yours to keep, not a subscription. You don&rsquo;t have to run it, we can.</p>
+        <div class="fs-q-head"><span class="fs-q-label" id="lbl-q7">If the numbers show a specialist model wins, would you deploy one? <span class="fs-q-req" aria-hidden="true">*</span></span></div>
+        <p class="fs-q-help" id="help-q7">Deployed means it runs on infrastructure you control: no per-call fees, nothing sent out. You don&rsquo;t have to run it yourselves, we can.</p>
         <div class="fs-q-body">
           <div class="fs-opts" role="radiogroup" aria-labelledby="lbl-q7 help-q7" aria-required="true">
-            <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes, it should be ours to keep and control, even if someone else runs it.</span></label>
-            <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No, renting from a third-party API is the sensible call for this task.</span></label>
+            <label class="fs-opt"><input type="radio" name="q7_own" value="own"><span>Yes, if it wins on our data we&rsquo;d put it in production.</span></label>
+            <label class="fs-opt"><input type="radio" name="q7_own" value="rent"><span>No, paying per call on a third-party API is the sensible call for this task.</span></label>
             <label class="fs-opt"><input type="radio" name="q7_own" value="notmine"><span>It&rsquo;s not my call, I don&rsquo;t own the budget or decision here.</span></label>
           </div>
           <div id="q7Op" style="display:none;">
@@ -388,8 +366,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
            The task is captured up front (Q1); this step is just email, with a hidden
            mirror of the task (fs_field_task) so the lead row still carries it. -->
       <div class="fs-capture" id="fsCapture">
-        <h3 id="fsCaptureHeading">Want my personal read on this?</h3>
-        <p class="fs-capture-sub" id="fsCaptureSub">Leave your email, I&rsquo;ll review your answers and send the 2&ndash;3 things that make or break it.</p>
+        <h3 id="fsCaptureHeading">Want a human review of your answers?</h3>
+        <p class="fs-capture-sub" id="fsCaptureSub">Leave your email. I review the answers myself and reply with the two or three factors that decide it.</p>
         <form
           action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
           method="post"
@@ -401,7 +379,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
             <input class="fs-input" type="email" name="email" placeholder="you@company.com" required autocomplete="email" inputmode="email" aria-label="Email address" />
             <button type="submit" class="btn-primary">Send it to me</button>
           </div>
-          <label class="fs-checkbox"><input type="checkbox" name="notify" value="yes"> <span>Email me new benchmarks too.</span></label>
+          <label class="fs-checkbox"><input type="checkbox" name="notify" value="yes"> <span>Email me each new head-to-head too.</span></label>
           <input type="text" name="company" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" />
           <input type="hidden" name="k" value="formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn" />
           <input type="hidden" name="source" value="fit-score" />
@@ -414,7 +392,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         <div id="fs_capture_success" class="fs-success" style="display:none">
           <p><strong>Sent. I&rsquo;ll be in touch with your read and next step.</strong></p>
         </div>
-        <p class="fs-capture-note">No spam, no sequence. Under NDA, your answers come straight to me.</p>
+        <p class="fs-capture-note">One reply, written by me. Your answers are covered by NDA.</p>
       </div>
 
       <div class="fs-cta-row" id="fsCta"></div>
@@ -446,7 +424,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     { id: 'fsq-q1_task',        req: null },
     { id: 'fsq-q2_correctness', req: 'q2_correctness' },
     { id: 'fsq-q4_capture',     req: 'q4_data' },
-    { id: 'fsq-q4_subjective',  req: 'q4_judge' },
     { id: 'fsq-q3_today',       req: 'q3_today' },
     { id: 'fsq-q5',             req: null },
     { id: 'fsq-q6',             req: null },
@@ -464,11 +441,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     try { (window.va || function () { (window.vaq = window.vaq || []).push(arguments); })('event', { name: name, data: data || {} }); } catch (e) {}
   }
 
-  function esc(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-    });
-  }
   function v(name) {
     var el = FORM.elements[name];
     if (!el) return '';
@@ -485,13 +457,10 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     if (f && f.focus) { try { f.focus({ preventScroll: true }); } catch (e) { f.focus(); } }
   }
   // The data step presupposes a knowable correct result, so skip it when correctness is
-  // subjective or "not sure" (those route to Build / Scan before data is ever read).
+  // subjective or "not sure" (those route to "not measurable yet" before data is read).
   function shouldSkip(stepId) {
     var c = v('q2_correctness');
-    // standard data question needs a knowable correct result
     if (stepId === 'fsq-q4_capture') return c === 'subjective' || c === 'unsure';
-    // subjective gets the judgment-based data question instead of the standard one
-    if (stepId === 'fsq-q4_subjective') return c !== 'subjective';
     return false;
   }
   // The standard data step serves both objective and reliably-judged correctness; for the
@@ -556,7 +525,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     var counter = document.getElementById('fsStepCounter');
     if (counter) counter.textContent = 'Question ' + num + ' of ' + total;
     document.getElementById('fsBack').style.visibility = idx === 0 ? 'hidden' : 'visible';
-    document.getElementById('fsNext').innerHTML = (idx === STEPS.length - 1) ? 'Score my task &rarr;' : 'Next &rarr;';
+    document.getElementById('fsNext').innerHTML = (idx === STEPS.length - 1) ? 'Scope my task &rarr;' : 'Next &rarr;';
     focusFirst(document.getElementById(STEPS[idx].id));
   }
   function clearError() {
@@ -682,7 +651,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
   })();
 
   // Q3: if they're already on their own model/AI, ask whether their team builds it. A
-  // build-capable buyer gets the own-vs-rent verdict, not a naive Pilot pitch.
+  // build-capable buyer gets the cost-and-priority read instead of the candidate result.
   (function () {
     var builder = document.getElementById('q3Builder');
     if (!builder) return;
@@ -703,8 +672,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     var correctness = v('q2_correctness'); // exact | human | subjective | unsure
     var data = v('q4_data');               // have_get | have_noget | nohave_get | nohave_noget | unsure
     var dataOK;
-    if (data === 'have_get' || data === 'nohave_get') dataOK = true;       // can get more -> provable
-    else if (data === 'have_noget') dataOK = v('q4_amount') === 'enough' || v('q4_amount') === 'unsure'; // have but stuck: enough/not-sure -> Scan sizes it; only a clear "too few" is a no
+    if (data === 'have_get' || data === 'nohave_get') dataOK = true;       // can get more -> measurable
+    else if (data === 'have_noget') dataOK = v('q4_amount') === 'enough' || v('q4_amount') === 'unsure'; // have but stuck: only a clear "too few" is a no
     else dataOK = false;                                                   // nohave_noget, unsure -> not yet
 
     // A binding constraint renting can't satisfy: compliance (often no permitted API at all),
@@ -718,39 +687,38 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
     var verdict;
     if (own === 'rent' && !hardWedge) verdict = 'no';
-    else if (correctness === 'subjective') {
-      // judgment-based eval: can construct one (rubric / reviewer agreement) -> build;
-      // can't, or not sure -> a Scan settles whether it's measurable at all
-      var judge = v('q4_judge');
-      verdict = (judge === 'have' || judge === 'canget') ? 'build' : 'scan';
-    }
-    else if (correctness === 'unsure') verdict = 'scan';      // measurability unknown: a Scan settles it
+    // no consistent way to judge yet (expert disagreement, or unmeasured): the definition
+    // of correct comes before anything can be scoped
+    else if (correctness === 'subjective' || correctness === 'unsure') verdict = 'notmeasurable';
     else if (dataOK) verdict = 'candidate';
     else verdict = 'notyet';
-    // A build-capable buyer (their own team builds models) on a positive-fit task: reframe to
-    // own-vs-rent rather than over-call them as a naive Pilot candidate, they can build it.
+    // A build-capable buyer (their own team builds models) on a positive-fit task gets the
+    // cost-and-priority read; they can build it themselves.
     if (verdict === 'candidate' && v('q3_builtinhouse') === 'yes') verdict = 'builder';
     return verdict;
   }
+  // the explicitly chosen binding constraint, else the sole/first ticked blocker
+  function chosenBlocker() {
+    return v('q5_dealbreaker') || (FORM.querySelector('input[name="q5_blockers"]:checked') || {}).value || '';
+  }
   function wedge() {
-    // prefer the explicitly chosen binding constraint; fall back to the sole/first blocker
-    var pick = v('q5_dealbreaker') || (FORM.querySelector('input[name="q5_blockers"]:checked') || {}).value;
+    var pick = chosenBlocker();
     return {
-      compliance: 'not being able to send data out',
-      cost: 'the cost at your volume',
-      quality: 'not getting the accuracy you need',
-      latency: 'needing it to run on your own hardware'
+      compliance: 'the rule that your data stays inside',
+      cost: 'the per-call cost at your volume',
+      quality: 'the accuracy gap on your task',
+      latency: 'the need to run on your own hardware'
     }[pick] || '';
   }
   function volumeClause() {
-    // Cost only worth raising at high volume (below 100k/mo it's noise). With only a request count —
-    // no token size or tier — we can say "worth pricing", not which way it tips.
+    // Cost only worth raising at high volume (below 100k/mo it's noise). With only a request
+    // count, no token size or tier, we can say "worth pricing", not which way it tips.
     var label = {
       '100k-1M': '100,000–1M a month',
       '1Mplus': 'over 1M a month'
     }[v('q6_volume')];
     if (!label) return '';
-    return ' At <strong>' + esc(label) + '</strong>, the rent-vs-own cost gap is worth pricing.';
+    return '; at <strong>' + label + '</strong>, the per-call bill is worth pricing against a model you run';
   }
   function answersBlob(verdict) {
     var checked = function (name) {
@@ -765,19 +733,18 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
       'Task: ' + (v('q1_task') || '-') + ' | types: ' + (checked('q1_type') || '-'),
       'Handled today: ' + v('q3_today') + (v('q3_builtinhouse') ? ' (own team builds models: ' + v('q3_builtinhouse') + ')' : ''),
       'Correctness: ' + v('q2_correctness'),
-      (v('q2_correctness') === 'unsure'
-        ? 'Data: not probed (correctness was "not sure"), worth probing'
-        : 'Data: ' + (v('q4_data') || '-') + ' | amount ' + (v('q4_amount') || '-') + ' | ease ' + (v('q4_ease') || '-') + ' | judge ' + (v('q4_judge') || '-')),
+      (v('q2_correctness') === 'unsure' || v('q2_correctness') === 'subjective'
+        ? 'Data: not probed (correctness not measurable yet), worth probing'
+        : 'Data: ' + (v('q4_data') || '-') + ' | amount ' + (v('q4_amount') || '-') + ' | ease ' + (v('q4_ease') || '-')),
       'Blockers: ' + (blockers || '-') + ' | biggest: ' + (v('q5_dealbreaker') || '-'),
       'Volume: ' + (v('q6_volume') || '-'),
       'Own: ' + v('q7_own') + ' | operate: ' + (v('q7_operate') || '-'),
-      'VERDICT: ' + verdict
+      'RESULT: ' + verdict
     ].join('\n');
   }
 
   function render(verdict) {
     var w = wedge();
-    var managed = v('q7_operate') === 'managed';
     var badge = document.getElementById('fsBadge');
     var title = document.getElementById('fsTitle');
     var body = document.getElementById('fsBody');
@@ -788,53 +755,51 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
 
     badge.className = 'fs-badge fs-badge--' + verdict;
     capture.style.display = '';
-    capHeading.textContent = 'Want my personal read on this?';
-    capSub.textContent = 'Leave your email, I’ll review your answers and send the 2–3 things that make or break it.';
+    capHeading.textContent = 'Want a human review of your answers?';
+    capSub.textContent = 'Leave your email. I review the answers myself and reply with the two or three factors that decide it.';
 
     if (verdict === 'candidate') {
-      badge.textContent = 'Candidate → Pilot';
-      title.textContent = 'You’re a candidate.';
-      body.innerHTML = 'There’s a reliable way to tell right from wrong on your task, so an owned model can be tested head-to-head against your current option <strong>on your data</strong>' +
-        (w ? ', and ' + w + ' is where owning earns its keep' : '') + '.' + volumeClause() +
-        ' A <strong>$1,500 Scan</strong> checks it on a sample and sizes the labelled data you&rsquo;ll need; its fee credits toward the <a href="/pilot">Pilot</a>, the fixed-scope <strong>$6–9k</strong> proof on your full data.' +
-        (managed ? ' You own the result; we can run it for you.' : '');
-      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a 20-min call, no pitch, I&rsquo;ll say if it&rsquo;s worth a Scan &rarr;') + '</p>';
-    } else if (verdict === 'build') {
       badge.textContent = 'Candidate → Build';
-      title.textContent = 'We can build it, and de-risk it first.';
-      body.innerHTML = 'Correctness is subjective here, so we can’t <em>prove</em> a win with one right/wrong test like the <a href="/benchmark">benchmark</a> does. But you don’t commit blind: a <strong>$1,500 Scan</strong> pins down how we’d score it (a rubric, or one trusted reviewer) and tests it on a sample first' +
-        (w ? ', with ' + w + ' as the driver' : '') + '. You get <strong>a model you own</strong> and an agreed way to measure it, at a fixed scope and price <strong>you see before you commit</strong>.';
-      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a 20-minute call, no pitch, and we’ll line up the Scan &rarr;') + '</p>';
+      title.textContent = 'Start with the head-to-head.';
+      var d = v('q4_data');
+      var hasData = d === 'have_get' || (d === 'have_noget' && v('q4_amount') === 'enough');
+      var drivers = (hasData
+        ? 'labelled examples in hand put the head-to-head in the first week'
+        : 'capturing examples adds a step before the head-to-head') +
+        volumeClause() +
+        (chosenBlocker() === 'compliance' ? '; the rule that your data stays inside means everything runs inside your environment' : '');
+      body.innerHTML = 'Your task has a reliable way to tell right from wrong, so the Build can open on it directly: a specialist model against your current option, on a sample of your data, with a pass mark agreed up front.<br><br><em>What your answers change about the Build:</em> ' + drivers + '.';
+      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a 20-minute call; I&rsquo;ll walk you through what your Build would take &rarr;') + '</p>';
     } else if (verdict === 'notyet') {
       badge.textContent = 'Not yet';
-      title.textContent = 'You’re close, you just need labelled data.';
-      body.innerHTML = 'Your task is provable, you just don’t have enough labelled data to train and measure on yet. You need:' +
+      title.textContent = 'First, capture labelled examples.';
+      body.innerHTML = 'Your task is measurable; the labelled data isn&rsquo;t there yet. You need:' +
         '<ul class="fs-checklist" style="margin-top:18px;">' +
-        '<li>A few hundred real examples (more is better, especially with many categories).</li>' +
+        '<li>A few hundred real examples.</li>' +
         '<li>The correct result recorded for each.</li>' +
         '<li>A repeatable way to capture more.</li>' +
-        '</ul>Start now: record the correct result next to each new case, a spreadsheet is fine. At a few hundred, a cheap Scan settles it.';
+        '</ul>Start now, a spreadsheet is fine.<br><br><em>What this changes about a Build:</em> the capture period sets the start date; at a few hundred examples the head-to-head can run in the first week.';
       cta.innerHTML = '<p class="fs-cta-sub">Not sure how to start? ' + calLink('Book a quick call, I’ll help you set it up &rarr;') + '</p>';
       capHeading.textContent = 'Want this checklist emailed?';
       capSub.textContent = 'Leave your email, I’ll send the checklist and your answers.';
-    } else if (verdict === 'scan') {
-      badge.textContent = 'Start with a Scan';
-      title.textContent = 'First, let’s find out if it’s measurable.';
-      body.innerHTML = 'Nothing can be built or proven until there’s a reliable way to tell right from wrong on your task. A <strong>$1,500 Scan</strong> settles exactly that: a quick read on whether it’s measurable and worth proving.';
-      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a 20-min call, no pitch, is it worth a Scan? &rarr;') + '</p>';
+    } else if (verdict === 'notmeasurable') {
+      badge.textContent = 'Not measurable yet';
+      title.textContent = 'First, agree how you’d judge it.';
+      body.innerHTML = 'A specialist model is measured against your definition of right, and that doesn&rsquo;t exist yet. Write the rule you&rsquo;d accept (a rubric, or one designated reviewer) and judge a few dozen real cases against it; when the judgments hold steady, the head-to-head can run.<br><br><em>What this changes about a Build:</em> it can&rsquo;t be scoped until the rule exists; the rule is the pass mark the Build opens against.';
+      cta.innerHTML = '<p class="fs-cta-sub">' + calLink('Book a quick call and I&rsquo;ll help you set it up &rarr;') + '</p>';
     } else if (verdict === 'builder') {
       badge.textContent = 'You already build this';
-      title.textContent = 'You’ve got a team for this. The question is own-vs-rent.';
-      body.innerHTML = 'Your team builds this, so <em>doable</em> isn’t the question, own-vs-rent is: is one more model worth your team’s quarter, and if you rent a frontier API here, could a smaller model you own run it cheaper at volume' +
-        (w ? ', where ' + w + ' bites' : '') + '? The <a href="/benchmark">benchmark</a> is public code and hashes, judge the method yourself. If it helps, we hand you the adapter and eval for one narrow task so your team skips the sprint.';
-      cta.innerHTML = '<a href="/benchmark" class="btn-primary">See the benchmark &rarr;</a><p class="fs-cta-sub" style="margin-top:14px;">Or ' + calLink('book a peer call to compare notes &rarr;') + '</p>';
-      capHeading.textContent = 'Want my read on the own-vs-rent math?';
-      capSub.textContent = 'Leave your email, I’ll send where owning beats building it yourself.';
+      title.textContent = 'Run the numbers against your roadmap.';
+      body.innerHTML = 'Your team can build this. The open questions: is one more model worth your team’s quarter, and does a small post-trained model beat the rented API at your volume' +
+        (w ? ', given ' + w : '') + '? The <a href="/head-to-head">head-to-head</a> is public code and hashes, judge the method yourself.';
+      cta.innerHTML = '<a href="/head-to-head" class="btn-primary">See the head-to-head &rarr;</a><p class="fs-cta-sub" style="margin-top:14px;">Or ' + calLink('book a peer call to compare notes &rarr;') + '</p>';
+      capHeading.textContent = 'Want the API-vs-self-hosted numbers?';
+      capSub.textContent = 'Leave your email and I’ll send the cost comparison at your volume.';
     } else { // no
       badge.textContent = 'Probably not us';
-      title.textContent = 'Honestly, keep your API.';
-      body.innerHTML = 'You’re happy renting, and for this task that’s a fine call. Owning earns its keep when you can’t send data out, the bill is brutal at scale, quality isn’t there, or ownership matters. If that changes, come back.';
-      cta.innerHTML = '<a href="/benchmark" class="btn-primary">See the public benchmark &rarr;</a>';
+      title.textContent = 'Keep your API.';
+      body.innerHTML = 'Renting fits this task as you’ve described it. A specialist model pays off when data can’t go out, the per-call bill outgrows the budget, or the accuracy tops out below what you need. If that changes, come back.';
+      cta.innerHTML = '<a href="/head-to-head" class="btn-primary">See the public head-to-head &rarr;</a>';
       capture.style.display = 'none';
     }
 
@@ -848,7 +813,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     // action forwarding it up, and reframe the capture as a forwardable write-up. A task-owner
     // without budget shouldn't dead-end on a call CTA they can't act on.
     if (v('q7_own') === 'notmine' && verdict !== 'no' && verdict !== 'builder') {
-      body.innerHTML = 'The budget sits with someone else. Here&rsquo;s the read to hand them:<br><br>' + body.innerHTML;
+      body.innerHTML = 'The budget sits with someone else. Here&rsquo;s the summary to hand them:<br><br>' + body.innerHTML;
       cta.innerHTML = '<p class="fs-cta-sub">Forward this to whoever owns the budget, or ' + calLink('book a call with them &rarr;') + '</p>';
       capHeading.textContent = 'Want a version to forward?';
       capSub.textContent = 'Leave your email, I&rsquo;ll send a write-up to forward to the budget owner.';
@@ -879,8 +844,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Capture submit: refresh the answers blob (it now picks up the task entered here),
-  // record the event, then let the native submit post to the hidden iframe.
+  // Capture submit: mirror the task into the hidden field, record the event,
+  // then let the native submit post to the hidden iframe (the answers blob was
+  // already set at finish(); email-only capture can't change it).
   window.fsCaptureSubmit = function () {
     var taskField = document.getElementById('fs_field_task');
     if (taskField) {
@@ -888,7 +854,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); }
         .map(function (c) { return c.value; }).join(', ');
       taskField.value = v('q1_task') || types || '';
     }
-    document.getElementById('fs_field_answers').value = answersBlob(currentVerdict);
     track('fit_capture', { verdict: currentVerdict });
     var btn = document.querySelector('#fs_capture_form button[type="submit"]');
     if (btn) btn.textContent = 'Sending…';

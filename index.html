@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseweight: AI proven on your task, and yours to own</title>
-<meta name="description" content="When the big AI platforms are too risky, too costly, or just wrong for a task you can't afford to get wrong, Baseweight builds a custom open-source model calibrated to your data, proven against your current option with a test you own. No ML team required.">
+<title>Baseweight: automate your highest-volume task on your servers</title>
+<meta name="description" content="Teams come to us when the big AI platforms cost too much at their volume, make too many mistakes, or can't touch the data. We automate the task end to end: an open-source model post-trained on your data, run by your team or by us.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -15,14 +15,14 @@
 <link rel="stylesheet" href="/components.css">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/">
-<meta property="og:title" content="Baseweight: AI proven on your task, and yours to own">
-<meta property="og:description" content="A custom open-source model, calibrated to your data and proven against your current option with a test you own. For tasks too sensitive, too costly, or too important to leave to a rented API.">
+<meta property="og:title" content="Baseweight: automate your highest-volume task on your servers">
+<meta property="og:description" content="One high-volume task automated end to end: an open-source model post-trained on your data, the workflow around it, run by your team or by us.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Baseweight: AI proven on your task, and yours to own">
-<meta name="twitter:description" content="A custom open-source model, calibrated to your data and proven against your current option with a test you own. For tasks too sensitive, too costly, or too important to leave to a rented API.">
+<meta name="twitter:title" content="Baseweight: automate your highest-volume task on your servers">
+<meta name="twitter:description" content="One high-volume task automated end to end: an open-source model post-trained on your data, the workflow around it, run by your team or by us.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -234,102 +234,11 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   transform: translateY(-2px);
 }
 
-.hero-support {
-  font-size: 12px;
-  color: var(--text-muted);
-  line-height: 1.7;
-}
-
 .hero-credential {
   font-size: 11px;
   color: var(--text-secondary);
   letter-spacing: 0.04em;
   margin-bottom: 24px;
-}
-
-/* ========================================
-   PROBLEM SECTION
-   ======================================== */
-.problems-section {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.problems-header {
-  margin-bottom: 56px;
-}
-
-.problems-header h2 {
-  max-width: 600px;
-}
-
-.problems-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.problem-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 36px 32px;
-  position: relative;
-  transition: border-color 0.3s, background 0.3s;
-}
-
-.problem-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.problem-card:hover {
-  border-color: var(--border-accent);
-  background: var(--bg-card-hover);
-}
-
-.problem-card:hover::before {
-  opacity: 1;
-}
-
-.problem-number {
-  font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 800;
-  color: var(--accent-dim);
-  line-height: 1;
-  margin-bottom: 20px;
-  color: rgba(201, 168, 76, 0.15);
-}
-
-.problem-card h3 {
-  margin-bottom: 16px;
-  color: var(--text-primary);
-}
-
-.problem-card p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.75;
-}
-
-.problem-card .kicker {
-  margin-top: 24px;
-  padding: 12px 16px;
-  background: var(--accent-dim);
-  border-left: 2px solid var(--accent);
-  font-size: 12px;
-  color: var(--accent);
-  font-weight: 500;
-  font-style: italic;
-  line-height: 1.65;
 }
 
 /* ========================================
@@ -422,47 +331,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 }
 
 /* ========================================
-   DIFFERENTIATORS
-   ======================================== */
-.diff-section .diff-header {
-  margin-bottom: 56px;
-}
-
-.diff-section .diff-header h2 {
-  max-width: 700px;
-}
-
-.diff-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-}
-
-.diff-item {
-  padding: 32px 0;
-  border-top: 2px solid var(--border);
-  transition: border-color 0.3s;
-}
-
-.diff-item:hover {
-  border-top-color: var(--accent);
-}
-
-.diff-item h3 {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  color: var(--text-primary);
-}
-
-.diff-item p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.75;
-}
-
-/* ========================================
    WHO THIS IS FOR
    ======================================== */
 .audience-section {
@@ -475,36 +343,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   margin-bottom: 32px;
 }
 
-.audience-right {
-  padding: 36px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--accent);
-  max-width: 600px;
-}
-
-.audience-right .qualifier-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-
-.audience-right p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.75;
-  margin-bottom: 24px;
-}
-
-.audience-right .nda-note {
-  font-size: 12px;
-  color: var(--text-muted);
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
 
 /* ========================================
    PRICING
@@ -728,140 +566,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 .faq-answer ul li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 
 /* ========================================
-   CASES
-   ======================================== */
-.cases-section {
-  border-top: 1px solid var(--border);
-}
-
-.cases-header {
-  margin-bottom: 48px;
-}
-
-.cases-list {
-  max-width: 780px;
-}
-
-.case-item {
-  border-top: 1px solid var(--border);
-}
-
-.case-item:last-child {
-  border-bottom: 1px solid var(--border);
-}
-
-.case-question {
-  width: 100%;
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 500;
-  text-align: left;
-  padding: 24px 40px 24px 16px;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.2s, box-shadow 0.3s;
-  line-height: 1.6;
-  box-shadow: inset 2px 0 0 transparent;
-}
-
-.case-question:hover,
-.case-item.open .case-question {
-  color: var(--accent);
-  box-shadow: inset 2px 0 0 var(--accent);
-}
-
-.case-question::after {
-  content: '+';
-  position: absolute;
-  right: 0;
-  top: 24px;
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--accent);
-  transition: transform 0.3s;
-}
-
-.case-item.open .case-question::after {
-  transform: rotate(45deg);
-}
-
-.case-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 0;
-}
-
-.case-item.open .case-answer {
-  max-height: 700px;
-  padding: 0 0 32px;
-}
-
-.case-body {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding-left: 16px;
-}
-
-.case-block {
-  display: grid;
-  grid-template-columns: 100px 1fr;
-  gap: 16px;
-  align-items: start;
-}
-
-.case-block-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  padding-top: 2px;
-}
-
-.case-block p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.75;
-  margin: 0;
-}
-
-.case-outcome {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent);
-  padding: 16px 20px;
-  background: var(--accent-dim);
-  border-left: 2px solid var(--accent);
-  line-height: 1.6;
-  margin-left: 116px;
-}
-
-.case-kicker {
-  font-size: 12px;
-  color: var(--text-muted);
-  font-style: italic;
-  padding: 0 40px 12px 16px;
-  margin: 0;
-  line-height: 1.6;
-}
-
-@media (max-width: 640px) {
-  .case-block {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  .case-outcome {
-    margin-left: 0;
-  }
-}
-
-/* ========================================
    FINAL CTA
    ======================================== */
 .final-cta {
@@ -921,16 +625,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
    RESPONSIVE
    ======================================== */
 @media (max-width: 900px) {
-  .problems-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .diff-grid {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
   .step {
     grid-template-columns: 60px 1fr;
     gap: 24px;
@@ -1010,11 +704,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 
 
 
-/* --- Card hover glow --- */
-.problem-card:hover {
-  box-shadow: 0 0 48px rgba(201, 168, 76, 0.05);
-}
-
 /* --- FAQ left accent on active/hover --- */
 .faq-question {
   box-shadow: inset 2px 0 0 transparent;
@@ -1026,15 +715,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 .faq-item.open .faq-question {
   box-shadow: inset 2px 0 0 var(--accent);
   color: var(--accent);
-}
-
-/* --- Diff item hover indent --- */
-.diff-item {
-  transition: border-color 0.3s, padding-left 0.3s;
-}
-
-.diff-item:hover {
-  padding-left: 12px;
 }
 
 /* --- Step number brightens on hover --- */
@@ -1062,75 +742,12 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   }
 }
 
-/* ========================================
-   AUDIENCE FIT GRID
-   ======================================== */
-.audience-fit-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
-  margin-bottom: 40px;
-}
-
-.audience-fit-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-
-.audience-fit-label--yes { color: var(--accent); }
-.audience-fit-label--no  { color: var(--text-muted); }
-
-.audience-fit-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.audience-fit-list li {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  padding-left: 20px;
-  position: relative;
-}
-
-.audience-fit-list li::before {
-  content: '\2014';
-  position: absolute;
-  left: 0;
-  font-weight: 600;
-}
-
-.audience-fit-list--yes li::before { color: var(--accent); }
-.audience-fit-list--no  li::before { color: var(--text-muted); }
-
-@media (max-width: 640px) {
-  .audience-fit-grid { grid-template-columns: 1fr; gap: 24px; }
-}
 
 /* ======== TASK EXAMPLES STRIP ======== */
 .task-eg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 40px; max-width: 860px; }
 .task-eg { position: relative; padding-left: 22px; font-size: 13.5px; color: var(--text-primary); line-height: 1.6; }
 .task-eg::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
 @media (max-width: 640px) { .task-eg-grid { grid-template-columns: 1fr; } }
-
-/* ========================================
-   INLINE CTA INTERSTITIAL
-   ======================================== */
-.cta-interstitial {
-  text-align: center;
-  padding: 0 clamp(24px, 5vw, 48px) clamp(60px, 8vh, 100px);
-}
-
-.cta-interstitial p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-bottom: 18px;
-}
 
 /* ========================================
    PROOF STRIP
@@ -1169,35 +786,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 }
 @media (max-width: 760px) {
   .proof-strip-inner { grid-template-columns: 1fr; gap: 24px; }
-}
-
-/* ========================================
-   PROBLEMS EXTRA (greenfield + measurement gap)
-   ======================================== */
-.problems-extra {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 24px;
-}
-.problem-extra-item {
-  padding: 28px 32px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--text-muted);
-}
-.problem-extra-item h3 {
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  font-size: clamp(1rem, 1.6vw, 1.15rem);
-}
-.problem-extra-item p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-@media (max-width: 760px) {
-  .problems-extra { grid-template-columns: 1fr; }
 }
 
 /* ======== STICKY CTA (floating primary action) ======== */
@@ -1247,12 +835,12 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       "@type": "WebPage",
       "@id": "https://baseweight.co/#webpage",
       "url": "https://baseweight.co/",
-      "name": "Baseweight: AI proven on your task, and yours to own",
-      "description": "When the big AI platforms are too risky, too costly, or just wrong for a task you can't afford to get wrong, Baseweight builds a custom open-source model calibrated to your data, proven against your current option with a test you own. No ML team required.",
+      "name": "Baseweight: automate your highest-volume task on your servers",
+      "description": "Teams come to us when the big AI platforms cost too much at their volume, make too many mistakes, or can't touch the data. We automate the task end to end: an open-source model post-trained on your data, run by your team or by us.",
       "author": { "@id": "https://baseweight.co/#person" },
       "publisher": { "@id": "https://baseweight.co/#organization" },
       "datePublished": "2025-01-01",
-      "dateModified": "2026-03-02",
+      "dateModified": "2026-07-14",
       "inLanguage": "en-US"
     }
   ]
@@ -1276,40 +864,12 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 <section class="hero" id="hero">
   <div class="container">
     <div class="hero-content">
-      <h1 class="reveal">The big AI platforms can&rsquo;t do your most important task. <span class="accent">That doesn&rsquo;t mean it can&rsquo;t be done.</span></h1>
-      <p class="hero-sub reveal reveal-delay-1">When ChatGPT and the big platforms are off-limits, too costly, or just wrong for a task you can&rsquo;t get wrong, a smaller AI, built for that one job and yours to keep, can beat them. We prove it on your data first.</p>
+      <h1 class="reveal">Automate your highest-volume task with a specialist model <span class="accent">on your servers.</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">Teams come to us when the big AI platforms cost too much at their volume, make too many mistakes, or can&rsquo;t touch the data. We automate the task end to end: an open-source model post-trained on your data, the workflow around it, run by your team or by us.</p>
       <div class="hero-cta-group reveal reveal-delay-2">
-        <a href="/fit-score" class="btn-primary">Score your task</a>
-        <p class="hero-support">Free &middot; ~2 min &middot; no email to see it.</p>
+        <a href="/scope" class="btn-primary">Scope your task</a>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ======== TASKS LIKE THESE (concrete examples so an under-aware reader recognizes their own work) ======== -->
-<section style="border-bottom: 1px solid var(--border); padding: clamp(48px, 7vh, 80px) 0;">
-  <div class="container">
-    <div class="section-label reveal">Tasks like these</div>
-    <h2 class="reveal" style="max-width: 640px; margin-bottom: 16px;">The kind of narrow, repeatable job a specialist model does well.</h2>
-    <p class="reveal reveal-delay-1" style="max-width: 640px; font-size: 14px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 36px;">If your most important task looks like one of these, and runs at volume on data that has to be right, it&rsquo;s worth scoring.</p>
-    <div class="task-eg-grid reveal reveal-delay-1">
-      <div class="task-eg">Pull the details off a PO, invoice, or drawing</div>
-      <div class="task-eg">Sort or route each item into the right category</div>
-      <div class="task-eg">Match or de-duplicate records across systems</div>
-      <div class="task-eg">Check an entry against your rules or standards</div>
-      <div class="task-eg">Answer questions from your own documents</div>
-      <div class="task-eg">Flag the cases that need a person to look</div>
-    </div>
-    <p class="reveal reveal-delay-1" style="max-width: 640px; font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-top: 28px;">It handles the routine work and routes the hard cases to your experts.</p>
-  </div>
-</section>
-
-<!-- ======== WHY THIS WORKS (belief bridge, moved above the proof so the claim is believable before the numbers) ======== -->
-<section style="border-bottom: 1px solid var(--border); padding: clamp(56px, 8vh, 96px) 0;">
-  <div class="container" style="max-width: 840px; text-align: center;">
-    <div class="section-label reveal" style="justify-content: center;">Why this works</div>
-    <p class="reveal" style="font-family: var(--font-display); font-weight: 700; font-size: clamp(1.35rem, 3.2vw, 2.1rem); line-height: 1.3; letter-spacing: -0.015em; color: var(--text-primary); margin-bottom: 24px;">A specialist beats a brilliant generalist at the one thing it does all day.</p>
-    <p class="reveal reveal-delay-1" style="max-width: 680px; margin: 0 auto; font-size: 15px; line-height: 1.9; color: var(--text-secondary);">You&rsquo;d rather have the lawyer who reads <em>this kind of contract</em> all day than a brilliant generalist who also does your taxes. AI works the same way. The big platforms are generalists: they know a little about everything. Train a smaller model on your one task, with your data, and it can know that one thing better, and run for a fraction of the cost, because it&rsquo;s small. It&rsquo;s why a focused tool beats a general one, and our public benchmark shows it on real tasks.</p>
   </div>
 </section>
 
@@ -1322,75 +882,81 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
                                       LoRA non-correct 437/1500 (393 + 42 + 2) → 32% fewer errors.  Range 32–41% → "30–40%".
          footnote "nearly 3× at finding the right clause" = cuad AUPR LoRA 0.4519 / API 0.1577 = 2.87× (the metric the benchmark leads cuad with).
          footnote "~a quarter fewer made-up answers" = cuad hallucinations 531 → 393 = 26% fewer.
-       TILE 2, "28–138x cheaper" per correct answer: banking77 1.1589/0.0084 = 138x (vs 5-shot);
+       TILE 2, "28–138x cheaper" per correct result: banking77 1.1589/0.0084 = 138x (vs 5-shot);
                 cuad 10.8349/0.3869 = 28x (vs zero-shot). Assumes a well-utilised GPU at volume; bursty/low volume narrows it.
-       TILE 3, "Runs in your walls" = the ownership/compliance wedge, not a data-derived stat (replaced the old "Won on both" tile, which surfaced the small task count).
+       TILE 3, "Runs on your servers" = the compliance wedge (static copy, no derived stat) (replaced the old "Won on both" tile, which surfaced the small task count).
      NOTE: the contract footnote now uses cuad AUPR (LoRA 0.4519 / API 0.1577 ≈ 2.87×), the same metric the benchmark
            leads cuad with, translated to buyer language; "30–40% fewer mistakes" is the error-count framing shared with the benchmark's buyer band.
      RE-SYNC these tiles if the benchmark reruns (results.json generated_at changes). -->
 <section class="proof-strip" id="proof">
   <div class="container">
-    <div class="section-label reveal" style="justify-content: center; margin-bottom: 36px;">Proof, not promises</div>
+    <div class="section-label reveal" style="justify-content: center; margin-bottom: 20px;">From the public head-to-head</div>
+    <p class="reveal" style="text-align: center; max-width: 680px; margin: 0 auto 36px; font-size: 14px; color: var(--text-secondary); line-height: 1.8;">A small open-source model, post-trained for one task, measured against the big-platform API tier a team would deploy:</p>
     <div class="proof-strip-inner">
       <div class="reveal">
         <div class="proof-stat-num">30&ndash;40% fewer</div>
-        <div class="proof-stat-label">mistakes than the big-platform AI you&rsquo;d actually run for this, used as-is, on two public tasks: support routing and contract review.</div>
+        <div class="proof-stat-label">mistakes than the big-platform AI you&rsquo;d run for this, used as-is.</div>
       </div>
       <div class="reveal reveal-delay-1">
         <div class="proof-stat-num">28&ndash;138&times; cheaper</div>
-        <div class="proof-stat-label">per correct answer, run on hardware you control.</div>
+        <div class="proof-stat-label">per correct result, run on hardware you control.</div>
       </div>
       <div class="reveal reveal-delay-2">
-        <div class="proof-stat-num">Runs in your walls</div>
-        <div class="proof-stat-label">every result is from a model you own and host yourself, so your data never leaves your environment.</div>
+        <div class="proof-stat-num">Runs on your servers</div>
+        <div class="proof-stat-label">every result comes from a self-hosted open-source model; your data stays in your environment.</div>
       </div>
     </div>
-    <p class="reveal" style="text-align: center; max-width: 720px; margin: 32px auto 0; font-size: 13px; color: var(--text-secondary); line-height: 1.7;">Two public examples. The same test runs on your task: pull a spec off a datasheet, classify a part or customs line, match a record, check an entry.</p>
-    <a href="/benchmark" class="proof-link">See the benchmark &rarr;</a>
+    <p class="reveal" style="text-align: center; max-width: 720px; margin: 32px auto 0; font-size: 13px; color: var(--text-secondary); line-height: 1.7;">The same test runs on your task: pull a spec off a datasheet, classify a part or customs line, match a record, check an entry.</p>
+    <a href="/head-to-head" class="proof-link">See the head-to-head &rarr;</a>
   </div>
 </section>
 
 
-<!-- (Why-this-works belief bridge moved up, immediately under the hero, see above) -->
-
-<!-- ======== TESTIMONIAL ======== -->
-<!-- TODO: Replace with a real attributed quote when available -->
-<!--
-<section class="testimonial-strip">
+<!-- ======== TASKS LIKE THESE (concrete examples so an under-aware reader recognizes their own work) ======== -->
+<section style="border-bottom: 1px solid var(--border); padding: clamp(48px, 7vh, 80px) 0;">
   <div class="container">
-    <div class="testimonial-quote reveal">
-      <blockquote>Phil diagnosed in two weeks what we'd been calling an embeddings problem for six months. The actual fix took three days once we had the right technique.</blockquote>
-      <div class="testimonial-attribution">NAME, TITLE, COMPANY</div>
+    <div class="section-label reveal">Tasks like these</div>
+    <h2 class="reveal" style="max-width: 640px; margin-bottom: 36px;">The narrow, repeatable jobs a specialist model does well.</h2>
+    <div class="task-eg-grid reveal reveal-delay-1">
+      <div class="task-eg">Pull the details off a PO, invoice, datasheet, or drawing</div>
+      <div class="task-eg">Sort or route each item into the right category</div>
+      <div class="task-eg">Match or de-duplicate records across systems</div>
+      <div class="task-eg">Check an entry against your rules or standards</div>
+      <div class="task-eg">Answer questions from your own documents</div>
+      <div class="task-eg">Flag the cases that need a person to look</div>
     </div>
+    <p class="reveal reveal-delay-1" style="max-width: 640px; font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-top: 28px;">It takes the routine volume and routes the hard cases to your experts. Whatever else you use the big platforms for stays as it is.</p>
   </div>
 </section>
--->
 
-<!-- ======== WEDGES (why an owned model) ======== -->
-<section class="problems-section" id="why">
+<!-- ======== HOW WE WORK ======== -->
+<section class="how-section" id="how">
   <div class="container">
-    <div class="problems-header reveal">
-      <div class="section-label">Sound familiar?</div>
-      <h2>You have a task that has to be right, and the big platforms aren&rsquo;t the way to do it.</h2>
+    <div class="how-header reveal">
+      <div class="section-label">How it works</div>
+      <h2>Measure first, then build and run it.</h2>
     </div>
-    <div class="problems-grid">
-      <div class="problem-card reveal reveal-delay-1">
-        <div class="problem-number">01</div>
-        <h3>You&rsquo;re not allowed to use it</h3>
-        <p>Your data can&rsquo;t leave your walls, compliance, customer contracts, residency. The API everyone else reaches for is off the table for you.</p>
-        <div class="kicker">&ldquo;We&rsquo;re not allowed to use the big AI platforms everyone else uses.&rdquo;</div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div>
+          <h3>Measure it on your data</h3>
+          <p>Every Build opens with the head-to-head: a specialist model against whatever does the task today (an API, rules, or people), on a sample of your data, inside your environment. You see where it wins and where it fails, backed by a re-runnable test.</p>
+        </div>
       </div>
-      <div class="problem-card reveal reveal-delay-2">
-        <div class="problem-number">02</div>
-        <h3>You pay for every call, forever</h3>
-        <p>A rented API charges per call, so the bill climbs with your volume, forever. Poll two or three big models per item to push accuracy up, and you pay that premium several times over.</p>
-        <div class="kicker">&ldquo;AI is too expensive to run at our scale.&rdquo;</div>
+      <div class="step reveal reveal-delay-1">
+        <div class="step-num">02</div>
+        <div>
+          <h3>Build what measured best</h3>
+          <p>We build the workflow around what won on your data: the post-trained model plus retrieval, rules, guardrails, review routing, and audit logging.</p>
+        </div>
       </div>
-      <div class="problem-card reveal reveal-delay-3">
-        <div class="problem-number">03</div>
-        <h3>It&rsquo;s just wrong too often</h3>
-        <p>On your task, the general model is wrong too often, and you can&rsquo;t retrain what you don&rsquo;t own. Prompting only carries you so far.</p>
-        <div class="kicker">&ldquo;AI gets it wrong and we can&rsquo;t fix it.&rdquo;</div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-num">03</div>
+        <div>
+          <h3>Run it your way</h3>
+          <p>You choose the end state: a full handover (weights, inference code, runbook) run by your team, or we operate it and keep the test current as models and data drift. The weights are yours either way, and you can take the whole thing in-house at any time.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -1401,89 +967,10 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="reveal">
       <div class="section-label">Who it&rsquo;s for</div>
-      <h2>For teams with one high-stakes task the big platforms can&rsquo;t do.</h2>
+      <h2>For teams running one high-volume task without an ML bench.</h2>
     </div>
-    <div class="audience-fit-grid reveal">
-      <div>
-        <div class="audience-fit-label audience-fit-label--yes">Best fit</div>
-        <ul class="audience-fit-list audience-fit-list--yes">
-          <li>Getting the task wrong is expensive</li>
-          <li>You have representative data, or you can capture it</li>
-          <li>You don&rsquo;t have an ML team and don&rsquo;t want to build one, you want the result handed over to run</li>
-          <li>You&rsquo;re ready to invest once the win is proven on your data</li>
-        </ul>
-      </div>
-      <div>
-        <div class="audience-fit-label audience-fit-label--no">Probably not us</div>
-        <ul class="audience-fit-list audience-fit-list--no">
-          <li>Renting an API works fine for this, and you&rsquo;re happy to keep it that way</li>
-          <li>You won&rsquo;t invest even once the win is proven</li>
-        </ul>
-      </div>
-    </div>
-    <p class="reveal" style="margin-top: 28px; font-size: 12px; color: var(--text-muted);">Not you, but you know a team it fits? Send them <a href="/benchmark" style="color: var(--text-secondary); text-decoration: underline;">the benchmark</a>, or <a href="mailto:hello@baseweight.co?subject=Intro" style="color: var(--text-secondary); text-decoration: underline;">intro us</a>.</p>
-    <p class="nda-note reveal" style="margin-top: 32px; max-width: 600px;">We work under NDA; your data and architecture stay confidential.</p>
-  </div>
-</section>
-
-<!-- (worked example removed, homepage tightened) -->
-
-<!-- (inline CTA interstitials + "if you've already tried" pitfalls removed, homepage tightened) -->
-
-<!-- ======== HOW WE WORK ======== -->
-<section class="how-section" id="how">
-  <div class="container">
-    <div class="how-header reveal">
-      <div class="section-label">How it works</div>
-      <h2>Prove it first. Build second. Hand over everything.</h2>
-    </div>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-num">01</div>
-        <div>
-          <h3>Prove it on your data</h3>
-          <p>Before you commit to a build, we benchmark an owned model head-to-head against your current option (the big platforms, rules, or whatever runs the task today) on a sample of your real data, run in your walls or on a de-identified sample, so nothing sensitive has to leave. You get a go/no-go verdict and a reproducible test calibrated to your task. If an owned model won&rsquo;t win, we tell you, and you&rsquo;ve spent next to nothing to find out.</p>
-        </div>
-      </div>
-      <div class="step reveal reveal-delay-1">
-        <div class="step-num">02</div>
-        <div>
-          <h3>Build the solution</h3>
-          <p>You approve scope, target metric, and cost before any build work starts. We build what the benchmark prescribed (a fine-tuned adapter, a distilled model, a trained classifier, a retrieval stack, a composed pipeline) calibrated to your data, not to whatever&rsquo;s easiest to bill.</p>
-        </div>
-      </div>
-      <div class="step reveal reveal-delay-2">
-        <div class="step-num">03</div>
-        <div>
-          <h3>Hand over everything</h3>
-          <p>Weights, adapters, the test suite, training recipes, inference code: all yours, outright. No license, no hosted dependency, no call back to us before you ship a change. Your team runs it, and the test keeps proving it holds as models and data move.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======== DIFFERENTIATORS ======== -->
-<section class="diff-section" id="diff">
-  <div class="container">
-    <div class="diff-header reveal">
-      <div class="section-label">What&rsquo;s different</div>
-      <h2>No technique to sell you. No lock-in. Just what wins on your data.</h2>
-    </div>
-    <div class="diff-grid">
-      <div class="diff-item reveal reveal-delay-1">
-        <h3>We&rsquo;ve no technique to sell you</h3>
-        <p>Every AI shop has a house specialty (fine-tuning, RAG, a platform) and recommends the thing it sells. We don&rsquo;t have one. We pick the approach from what wins on your data, because we&rsquo;ve nothing else to push.</p>
-      </div>
-      <div class="diff-item reveal reveal-delay-2">
-        <h3>We get paid either way, so we can tell you no</h3>
-        <p>A platform earns when you train; an integrator earns when you build. Our paid step is the proof itself, so &ldquo;keep your API, an owned model won&rsquo;t beat it&rdquo; is a fine result for us to hand you. Nobody who only makes money on the build can afford to say that.</p>
-      </div>
-      <div class="diff-item reveal reveal-delay-3">
-        <h3>You own it; a platform would rent it back to you</h3>
-        <p>A fine-tuning platform&rsquo;s business is keeping your model behind their API, on their pricing. We hand the whole thing over to run on your own infrastructure, change without asking us, or take elsewhere. The asset is yours, and we&rsquo;re not a dependency.</p>
-      </div>
-    </div>
+    <p class="reveal" style="max-width: 680px; font-size: 14px; color: var(--text-secondary); line-height: 1.85; margin-top: 8px;">A queue of documents, records, or messages gets processed every day, at a volume where the errors and the bill both add up. The examples to learn from sit in that flow already, or a few weeks of capture would collect them. Nobody on staff post-trains and operates models, and one workflow doesn&rsquo;t justify the hire. You get the finished workflow, run by your team or by us.</p>
+    <p class="reveal" style="margin-top: 28px; font-size: 12px; color: var(--text-muted);">Know a team like this? Send them <a href="/head-to-head" style="color: var(--text-secondary); text-decoration: underline;">the head-to-head</a>, or <a href="mailto:hello@baseweight.co?subject=Intro" style="color: var(--text-secondary); text-decoration: underline;">intro us</a>.</p>
   </div>
 </section>
 
@@ -1493,7 +980,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     <div class="pricing-header reveal">
       <div class="section-label">Founding partners</div>
       <h2>First in your vertical, at founding rates.</h2>
-      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.85; max-width: 680px; margin-top: 16px;">You work directly with the person doing the build (Philip Stevens, 15 years in applied ML at Agoda and Quantcast) and help shape it. Proof does the talking instead of a logo wall: the public benchmark, plus a paid Pilot that proves it on your data. If it works out, we&rsquo;d share the result, anonymised and with your sign-off, so the next team has the reference you didn&rsquo;t.</p>
+      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.85; max-width: 680px; margin-top: 16px;">You work directly with the person doing the build (Philip Stevens, 15 years in applied ML at Agoda and Quantcast). The first customer in each vertical sets the reference case.</p>
     </div>
     <div class="pricing-table-wrap reveal reveal-delay-1">
       <table class="pricing-table">
@@ -1506,29 +993,19 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
         </thead>
         <tbody>
           <tr>
-            <td>Scan</td>
-            <td>A quick read on a sample of your data (we take it on only if it&rsquo;s a fit): hidden-failure check, self-host feasibility, rough cost break-even.</td>
-            <td style="white-space: normal;">$1,500, credited toward the Pilot</td>
-          </tr>
-          <tr>
-            <td><a href="/pilot" style="color: var(--accent);">Pilot &rarr;</a></td>
-            <td style="color: var(--accent); font-weight: 500;">A go/no-go verdict plus a re-runnable test you own that proves it, the public benchmark, run on a sample of your task. Yours to keep whatever you decide.</td>
-            <td>$6&ndash;9k</td>
-          </tr>
-          <tr>
             <td>Build</td>
-            <td>Done-for-you: the owned solution the Pilot prescribed (adapter or weights, classifier, retrieval stack, or pipeline) handed over outright.</td>
-            <td style="white-space: normal;">Scoped from the Pilot, founding-partner terms</td>
+            <td>One workflow automated end to end: the head-to-head on your data first, then the winning setup deployed with guardrails, review routing, and a runbook. Your team runs it, or we do.</td>
+            <td style="white-space: normal;">Fixed scope, founding-partner terms</td>
           </tr>
           <tr>
-            <td>Assurance</td>
-            <td>We keep proving it holds: re-run the test as models and data move, catch it when quality slips, extend coverage as new cases appear.</td>
-            <td>By arrangement</td>
+            <td>Operate</td>
+            <td>We operate the workflow and keep it above the agreed bar: re-running the test as models and data move, extending coverage as new cases appear.</td>
+            <td>Monthly retainer</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p class="pricing-note reveal reveal-delay-2">Start with the cheap Scan to confirm fit; its fee credits toward the Pilot. Founding partners get direct senior attention and preferential Build terms for going first, we&rsquo;ll be specific on a call.</p>
+    <p class="pricing-note reveal reveal-delay-2">We&rsquo;ll be specific about terms on a call.</p>
     <!-- (founding-partners CTA removed; the sticky bar and the final CTA below carry the action at this scroll depth) -->
   </div>
 </section>
@@ -1542,63 +1019,51 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     </div>
     <div class="faq-list">
       <div class="faq-item reveal">
-        <button class="faq-question">What&rsquo;s the cheapest way to find out if this is worth it?</button>
-        <div class="faq-answer">
-          <p>The fit check is free and takes about two minutes, a few quick questions about your task, an instant verdict, no email required to see it. If you&rsquo;re a candidate, the next step is a low-cost Scan on a sample of your data, and its fee is credited toward the Pilot. You never commit to a build before the win is proven.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
         <button class="faq-question">We can&rsquo;t send our data to an outside API. Can you still help?</button>
         <div class="faq-answer">
-          <p>That&rsquo;s one of the main reasons teams come to us. The whole point of an owned model is that it runs on your infrastructure, nothing has to leave your environment. We work under NDA and can operate inside your walls, including the proof step: the Scan and Pilot can run in your VPC or on-prem, so nothing sensitive leaves even during evaluation. Where a de-identified sample works, we use that. For compliance and data-residency cases there&rsquo;s often no big-platform API that&rsquo;s even permitted; owning the model is the only viable path.</p>
+          <p>Yes. The model runs on your infrastructure, and so can the head-to-head: in your VPC or on-prem, or on a de-identified sample. For strict residency policies, a self-hosted model is usually what passes review.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">What if an owned model won&rsquo;t beat our current setup?</button>
+        <button class="faq-question">Do we have to move off the big platforms?</button>
         <div class="faq-answer">
-          <p>Then we tell you, early and plainly, and you keep the test that proves it. The proof step exists precisely so nobody spends on a build that won&rsquo;t pay off.</p>
+          <p>No. The specialist model takes over one task; everything else stays where it is. The test scores anything that attempts the task, so unsure items can route to a platform model or a person.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">It wins on a sample, will it hold up on our real, messy data?</button>
+        <button class="faq-question">What if a specialist model won&rsquo;t beat our current setup?</button>
         <div class="faq-answer">
-          <p>That&rsquo;s exactly what the test you keep is for. The Pilot proves the win on a sample, but the test is built from <em>your</em> data and your definition of correct, so you re-run it on fresh, messy production data and see whether it still clears the bar, instead of hoping. New edge cases get added to the test; when a model or your data drifts, the test catches it before a customer does. The sample proves it can work; the test you own is how you keep it working. Assurance is the optional step where we keep that current for you.</p>
+          <p>Then the numbers show it, with the reason. The engagement ends before build spending starts, and you keep the model.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">We don&rsquo;t have an ML team. Is that a problem?</button>
+        <button class="faq-question">Our systems integrator could build this. What&rsquo;s different here?</button>
         <div class="faq-answer">
-          <p>No, that&rsquo;s who this is for. You get a runnable artifact (weights or adapter, a classifier, or a pipeline) plus the test and recipes, handed over so your existing engineers can deploy and re-run it. No ML hires required. If you&rsquo;d rather we keep it current as models and data move, that&rsquo;s the optional Assurance step.</p>
+          <p>The sequence and the aftercare. The build is measured before it starts. After delivery the workflow is kept above the agreed bar, by us or by your team with the runbook. The method is public; your integrator is welcome to check it.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">Who runs this once it&rsquo;s built, and what if it breaks?</button>
+        <button class="faq-question">Will our security and legal review pass this?</button>
         <div class="faq-answer">
-          <p>Your team, on your infrastructure. That&rsquo;s the point of owning it. Everything is handed over so any competent engineer can deploy and re-run it: the model, the test that proves it, the recipes, and the inference code, documented. Because you own the lot and nothing is locked behind us, you&rsquo;re never dependent on one person or vendor staying available; you can run it, fix it, or hand it to another team. And if you&rsquo;d rather not carry it, the optional Assurance step keeps us on the hook to watch for drift and extend coverage as your data shifts.</p>
+          <p>The review artifacts come with the work: Apache 2.0 or MIT base models (usage-capped or revocable licenses are screened out), every file revision-pinned and hash-verified, work under NDA, and for data that can&rsquo;t leave, inside your environment.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">What do we own at the end?</button>
+        <button class="faq-question">We&rsquo;ve never had an ML team. Who runs this, and what does it take?</button>
         <div class="faq-answer">
-          <p>Everything. Weights and adapters, the test suite, training recipes, inference code. No ongoing license, no hosted dependency, no permission needed before you ship a change. It&rsquo;s yours to run, modify, or take elsewhere.</p>
+          <p>That&rsquo;s who this is for. One GPU covers most volumes, and your engineers get the runbook and inference code at handover; or we operate it for you. Either way, the test flags the day quality moves.</p>
         </div>
       </div>
       <div class="faq-item reveal">
-        <button class="faq-question">How is this different from fine-tuning through a provider API?</button>
+        <button class="faq-question">What do we get at the end?</button>
         <div class="faq-answer">
-          <p>Two ways. First, what a provider hands back is a training loss curve, not proof the result is better on <em>your</em> task, we ship a test calibrated to your data that answers exactly that. Second, you don&rsquo;t own the result: it stays behind their API, on their pricing, subject to their changes. Here the model and the proof are yours outright.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">How is this different from a fine-tuning platform (OpenPipe, Predibase) plus an eval?</button>
-        <div class="faq-answer">
-          <p>Those platforms are self-serve: you bring the ML judgment, they run the fine-tune, and the result usually lives on their infrastructure and pricing. Three differences. <strong>Proof before build</strong> (we benchmark whether an owned model wins on your task at all, before anyone trains anything. <strong>Ownership</strong>) the weights, adapters, eval, and inference code are yours to run on your own infrastructure, which is the whole point when data can&rsquo;t leave your walls; a hosted platform is the opposite. <strong>The judgment</strong> (deciding what &ldquo;correct&rdquo; means, picking the approach (a classifier, retrieval, a decoder with adapters, or a pipeline) not just fine-tuning because that&rsquo;s the product), and building the eval that proves it. A platform plus an eval still needs someone to make those calls; that&rsquo;s what we supply.</p>
+          <p>Weights and adapters, inference code, and the runbook: yours to run, modify, or hand on. Run it yourselves and the recurring cost is your hardware, with the model version pinned until you change it; or we run it for you on a monthly retainer.</p>
         </div>
       </div>
       <div class="faq-item reveal">
         <button class="faq-question">Do we need labelled data?</button>
         <div class="faq-answer">
-          <p>It helps, and for some approaches it&rsquo;s decisive, but &ldquo;representative data exists or can be captured&rdquo; is enough to start. The fit check asks what you have and tells you straight whether it&rsquo;s sufficient, or what to capture first. If the data isn&rsquo;t there yet, we&rsquo;ll say so rather than take the work.</p>
+          <p>&ldquo;Representative data exists or can be captured&rdquo; is enough to start. The fit check tells you whether what you have is sufficient; if it isn&rsquo;t, you get a capture checklist to close the gap.</p>
         </div>
       </div>
     </div>
@@ -1612,12 +1077,11 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     <div class="final-cta-content">
       <div class="reveal">
         <div class="section-label" style="justify-content: center;">Start</div>
-        <h2>Find out if an owned model wins on your task.</h2>
+        <h2>See what automating your task would take.</h2>
       </div>
       <div class="reveal reveal-delay-1">
-        <a href="/fit-score" class="btn-primary">Score your task</a>
+        <a href="/scope" class="btn-primary">Scope your task</a>
         <p class="support-text" style="margin-top: 20px;">Prefer to talk it through? <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">Book a free call &rarr;</a></p>
-        <p class="support-text" style="margin-top: 14px; font-size: 12px; color: var(--text-muted);">No testimonials, every benchmark number is open code and hashes you can re-run yourself.</p>
       </div>
     </div>
   </div>
@@ -1632,8 +1096,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 
 <!-- ======== STICKY CTA (floating primary action) ======== -->
 <div class="sticky-cta" id="stickyCta" aria-hidden="true">
-  <span class="sticky-cta-text">See if an owned model wins on your task</span>
-  <a href="/fit-score" class="sticky-cta-btn" tabindex="-1">Score your task</a>
+  <span class="sticky-cta-text">See what automating your task would take</span>
+  <a href="/scope" class="sticky-cta-btn" tabindex="-1">Scope your task</a>
 </div>
 
 <!-- ======== FOOTER ======== -->
@@ -1673,12 +1137,6 @@ function initAccordion(btnSelector, itemSelector) {
 }
 
 initAccordion('.faq-question', '.faq-item');
-initAccordion('.case-question', '.case-item');
-// Default first case open
-const firstCase = document.querySelector('.case-item');
-if (firstCase) firstCase.classList.add('open');
-
-
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

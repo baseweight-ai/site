@@ -5,9 +5,12 @@
  * version is pasted/deployed by hand in the Google Apps Script console, bound to
  * the spreadsheet that stores leads. See README.md for deploy steps.
  *
- * Two POST sources from the site, both gated by the shared formkey:
- *   source = "fit-score"  -> Fit Score quiz (email, verdict, q1_task, answers, notify)
- *   source = "about-page" -> benchmark opt-in (email)
+ * Two POST sources from the site, both gated by the shared formkey. The posted
+ * field names and values (`source=fit-score`, `verdict`, `q1_task`, `answers`,
+ * `notify`, `ua`, `k`) are a contract with the site (CLAUDE.md, lead capture);
+ * the fit check page moved to /scope but keeps posting `source=fit-score`.
+ *   source = "fit-score"  -> fit check quiz, scope.html (email, verdict, q1_task, answers, notify)
+ *   source = "about-page" -> head-to-head opt-in, about.html (email)
  */
 const CONFIG = {
   SHEET_NAME: "Baseweight Leads",
@@ -16,34 +19,36 @@ const CONFIG = {
 
   FROM_NAME: "Philip Stevens",
   REPLY_TO:  "phil@baseweight.co",   // reply-to on auto-replies
-  NOTIFY_TO: "phil@baseweight.co",   // where YOU get pinged on a new lead (change to your Gmail if you prefer)
+  NOTIFY_TO: "phil@baseweight.co",   // where YOU get pinged on a new lead
   CAL_URL:   "https://cal.com/baseweight/intro",
   SITE_URL:  "https://baseweight.co",
-  BENCHMARK_URL: "https://baseweight.co/benchmark",
+  HEAD_TO_HEAD_URL: "https://baseweight.co/head-to-head",
   BRAND: "Baseweight"
 };
 
-// Fit Score verdict copy, kept consistent with the page.
-const VERDICTS = {
+// Fit check result copy, kept consistent with scope.html. Keys are the posted
+// `verdict` values (server contract). "no" (keep your API) never posts: the
+// capture form is hidden for it on the site.
+const RESULTS = {
   candidate: {
-    label: "Candidate",
-    line: "There's a reliable way to tell right from wrong on your task, so an owned model can be tested head-to-head against your current option, on your data.",
-    next: function (c) { return "A $1,500 Scan confirms it on a sample first; its fee credits toward the Pilot (fixed-scope $6–9k, on your full data). Book a call: " + c.CAL_URL + "."; }
-  },
-  build: {
-    label: "We can build it",
-    line: "Correctness is subjective here, so we can't prove a win the way the public benchmark does. You'd still own the model and get a way to score it you both trust (a rubric, or agreement with your reviewers), just not a single right/wrong test.",
-    next: function (c) { return "We scope it on a call, and you'll see a fixed scope and price before you commit. Book one: " + c.CAL_URL + "."; }
+    label: "Start with the head-to-head",
+    line: "Your task has a reliable way to tell right from wrong, so the Build can open on the head-to-head directly: a specialist model against your current option, on a sample of your data, with a pass mark agreed up front.",
+    next: function (c) { return "Book a 20-minute call and I'll walk you through what your Build would take: " + c.CAL_URL; }
   },
   notyet: {
-    label: "Not yet",
-    line: "Your task is provable, but you don't have enough labelled data yet. You need:\n  - A few hundred real examples (more is better).\n  - The correct result recorded for each.\n  - A repeatable way to capture more.",
-    next: function (c) { return "Start now: record the correct result next to each new case, a spreadsheet is fine. At a few hundred, a cheap Scan settles it. Not sure how? Book a quick call: " + c.CAL_URL + "."; }
+    label: "First, capture labelled examples",
+    line: "Your task is measurable; the labelled data isn't there yet. You need: a few hundred real examples, the correct result recorded for each, and a repeatable way to capture more. Start now, a spreadsheet is fine; at a few hundred, the head-to-head can run.",
+    next: function (c) { return "Not sure how to start? Book a quick call and I'll help you set it up: " + c.CAL_URL; }
   },
-  scan: {
-    label: "Start with a Scan",
-    line: "Before anything can be built or proven, there has to be a reliable way to tell right from wrong on your task. That's the first thing to pin down.",
-    next: function (c) { return "A $1,500 Scan reads exactly that: whether it's measurable and worth proving. If it is, you're likely a candidate; if it genuinely isn't, I'll tell you straight. Book a call: " + c.CAL_URL + "."; }
+  notmeasurable: {
+    label: "First, agree how you'd judge it",
+    line: "A specialist model is measured against your definition of right, and that doesn't exist yet. Write the rule you'd accept (a rubric, or one designated reviewer) and judge a few dozen real cases against it; when the judgments hold steady, the head-to-head can run.",
+    next: function (c) { return "Book a quick call and I'll help you set it up: " + c.CAL_URL; }
+  },
+  builder: {
+    label: "Run the numbers against your roadmap",
+    line: "Your team can build this. The open questions: is one more model worth your team's quarter, and does a small post-trained model beat the rented API at your volume? The head-to-head is public code and hashes, judge the method yourself: " + CONFIG.HEAD_TO_HEAD_URL,
+    next: function (c) { return "Want the API-vs-self-hosted numbers at your volume? Reply to this email and I'll send the comparison."; }
   }
 };
 
@@ -75,8 +80,8 @@ function doPost(e) {
   notifyOwner(email, source, verdict, task, answers, notify);
 
   try {
-    if (source === "fit-score") sendFitScoreReply(email, verdict);
-    else if (source === "about-page") sendBenchmarkReply(email);
+    if (source === "fit-score") sendFitCheckReply(email, verdict);
+    else if (source === "about-page") sendHeadToHeadReply(email);
     // other sources: store + notify only.
   } catch (err) { /* never fail the request on a mail hiccup */ }
 
@@ -101,46 +106,46 @@ function notifyOwner(email, source, verdict, task, answers, notify) {
     const lines = [
       "Source:  " + source,
       "Email:   " + email,
-      verdict ? "Verdict: " + verdict : null,
+      verdict ? "Result:  " + verdict : null,
       task ? "Task:    " + task : null,
       "Notify:  " + (notify ? "yes" : "no"),
       answers ? "\nAnswers:\n" + answers : null
     ].filter(function (x) { return x; });
     MailApp.sendEmail({
       to: CONFIG.NOTIFY_TO,
-      subject: "New " + (source === "fit-score" ? "Fit Score" : source) + " lead: " + email + (verdict ? " (" + verdict + ")" : ""),
+      subject: "New " + (source === "fit-score" ? "fit check" : source) + " lead: " + email + (verdict ? " (" + verdict + ")" : ""),
       body: lines.join("\n"),
       replyTo: email   // hit reply to answer the lead directly
     });
   } catch (err) {}
 }
 
-function sendFitScoreReply(email, verdict) {
-  const v = VERDICTS[verdict];
-  const verdictPara = v ? ("Your quick verdict: " + v.label + ".\n" + v.line + "\n\n" + v.next(CONFIG) + "\n\n") : "";
+function sendFitCheckReply(email, verdict) {
+  const r = RESULTS[verdict];
+  const resultPara = r ? (r.label + ".\n" + r.line + "\n\n" + r.next(CONFIG) + "\n\n") : "";
   const body =
     "Hi,\n\n" +
-    "Thanks for running the fit check. I'll personally review your answers and send back the two or three things that make or break it on your task, my real read.\n\n" +
-    verdictPara +
+    "Thanks for scoping your task. I review the answers myself and reply with the two or three factors that decide it.\n\n" +
+    resultPara +
     "Philip Stevens\n" + CONFIG.BRAND + " · " + CONFIG.SITE_URL;
   MailApp.sendEmail({
     to: email,
-    subject: v ? ("Your Baseweight fit check (" + v.label + ")") : "Your Baseweight fit check",
+    subject: r ? ("Your Baseweight fit check: " + r.label.toLowerCase()) : "Your Baseweight fit check",
     body: body,
     name: CONFIG.FROM_NAME,
     replyTo: CONFIG.REPLY_TO
   });
 }
 
-function sendBenchmarkReply(email) {
+function sendHeadToHeadReply(email) {
   const body =
     "Hi,\n\n" +
-    "You're on the list. I'll send the next public benchmark when it drops: methodology, failure analysis, and per-task numbers. Technical content only, no sequence.\n\n" +
-    "The current one is here: " + CONFIG.BENCHMARK_URL + "\n\n" +
+    "You're on the list. I'll send each new head-to-head when it publishes: methodology, failure analysis, per-task numbers. Technical content only.\n\n" +
+    "The current one is here: " + CONFIG.HEAD_TO_HEAD_URL + "\n\n" +
     "Philip Stevens\n" + CONFIG.BRAND + " · " + CONFIG.SITE_URL;
   MailApp.sendEmail({
     to: email,
-    subject: "You're on the list for the next Baseweight benchmark",
+    subject: "You're on the list for the next Baseweight head-to-head",
     body: body,
     name: CONFIG.FROM_NAME,
     replyTo: CONFIG.REPLY_TO

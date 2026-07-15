@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How it's tested | Baseweight Benchmark</title>
-<meta name="description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
+<title>How it's tested | Baseweight Head-to-head</title>
+<meta name="description" content="Full methodology for the Baseweight head-to-head: tasks, models, conditions, metrics, error analysis, and training configuration.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -13,12 +13,12 @@
 <link rel="canonical" href="https://baseweight.co/methodology">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/methodology">
-<meta property="og:title" content="How it's tested | Baseweight Benchmark">
-<meta property="og:description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
+<meta property="og:title" content="How it's tested | Baseweight Head-to-head">
+<meta property="og:description" content="Full methodology for the Baseweight head-to-head: tasks, models, conditions, metrics, error analysis, and training configuration.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="How it's tested | Baseweight Benchmark">
-<meta name="twitter:description" content="Full methodology for the Baseweight Benchmark: tasks, models, conditions, metrics, error analysis, and training configuration.">
+<meta name="twitter:title" content="How it's tested | Baseweight Head-to-head">
+<meta name="twitter:description" content="Full methodology for the Baseweight head-to-head: tasks, models, conditions, metrics, error analysis, and training configuration.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -268,9 +268,9 @@ body::after {
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label meth-anim" style="animation-delay: 0s;"><a href="/benchmark" style="color: var(--accent); text-decoration: none;">Benchmark</a> <span style="color: var(--text-muted);">/ How it&rsquo;s tested</span></div>
+    <div class="section-label meth-anim" style="animation-delay: 0s;"><a href="/head-to-head" style="color: var(--accent); text-decoration: none;">Head-to-head</a> <span style="color: var(--text-muted);">/ How it&rsquo;s tested</span></div>
     <h1 class="meth-anim" style="animation-delay: 0.07s;">How it&rsquo;s tested</h1>
-    <p class="subtitle meth-anim" style="animation-delay: 0.14s;">How the benchmark was designed, run, and measured.</p>
+    <p class="subtitle meth-anim" style="animation-delay: 0.14s;">How the head-to-head was designed, run, and measured.</p>
   </div>
 </section>
 
@@ -288,21 +288,11 @@ body::after {
       <article class="methodology-content" id="methodologyContent">
 
         <h2 id="what-this-measures">What this measures</h2>
-        <p class="lead">The benchmark compares Qwen3-8B with a task-specific LoRA adapter against a hosted API baseline (zero-shot and 5-shot) on two tasks representative of common production AI work. It measures accuracy on the task, total cost of ownership at production volume, and error composition.</p>
-        <p>Every result is reproducible. Training code, evaluation scripts, model weights, and prediction logs are public. The benchmark is ongoing; more tasks and model families will be added.</p>
-
-        <h2 id="independence">Independence &amp; funding</h2>
-        <p>The benchmark is self-funded and unsponsored today. Its credibility is the entire point, so the rules are fixed in advance and hold even once that changes:</p>
-        <ul>
-          <li><strong>Sponsors fund the work, never the conclusion.</strong> A model lab, inference host, or tooling vendor may underwrite a run, but gets no say over the method, the numbers, or how they read.</li>
-          <li><strong>Results are published regardless of outcome</strong>, including when an open model loses, or a sponsor&rsquo;s product comes out behind.</li>
-          <li><strong>Code and methodology stay public.</strong> Every result is reproducible from the released adapters, prediction logs, and pipeline, so anyone can check the numbers rather than take them on trust.</li>
-          <li><strong>Any sponsorship is disclosed</strong> on the run it applies to.</li>
-        </ul>
-        <p>If a result can&rsquo;t survive being reproduced by a skeptic, it doesn&rsquo;t ship.</p>
+        <p class="lead">The head-to-head compares Qwen3-8B with a task-specific LoRA adapter against a hosted API baseline (zero-shot and 5-shot) on tasks representative of common production AI work. It measures accuracy on the task, total cost of ownership at production volume, and error composition.</p>
+        <p>Every result is reproducible. Training code, evaluation scripts, model weights, and prediction logs are public. The head-to-head is ongoing: new tasks and model families are added as runs land.</p>
 
         <h2 id="tasks">Tasks</h2>
-        <p>Both datasets are public and version-pinned. Test sets are held out from all fine-tuning.</p>
+        <p>All datasets are public and version-pinned. Test sets are held out from all fine-tuning.</p>
         <div class="table-wrap">
         <table>
           <thead><tr><th>Task</th><th>Dataset</th><th>What it tests</th><th>Metric</th><th>Test size</th></tr></thead>
@@ -314,8 +304,8 @@ body::after {
         </div>
 
         <h2 id="models">Models</h2>
-        <p><strong>Open-source (QLoRA fine-tuned):</strong> Qwen3-8B (8B parameters, Apache 2.0 licence). Served with vLLM on a single NVIDIA RTX 3090.</p>
-        <p><strong>Hosted API (prompted):</strong> GPT-5.4 Mini (the cost-efficient API tier a team would actually deploy for a task at this volume, not the pricier flagship or a reasoning model) tested zero-shot and 5-shot at standard API pricing. Other vendors&rsquo; models, and flagship or reasoning tiers where a task&rsquo;s latency and cost budget justify them, are being added. The per-query cost reflects actual token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
+        <p><strong>Open-weight (QLoRA fine-tuned):</strong> Qwen3-8B (8B parameters, Apache 2.0 licence; open-weight rather than OSI-open-source, since the training data is closed). Model files are revision-pinned SafeTensors with published hashes. Served with vLLM on a single NVIDIA RTX 3090.</p>
+        <p><strong>Hosted API (prompted):</strong> GPT-5.4 Mini (the cost-efficient API tier a team would deploy for a task at this volume) tested zero-shot and 5-shot at standard API pricing. Other vendors&rsquo; models, and flagship or reasoning tiers where a task&rsquo;s latency and cost budget justify them, are being added. The per-query cost reflects measured token usage at the time of the run; it updates automatically when the head-to-head reruns.</p>
         <p><strong>Why a decoder for a classification task?</strong> For a single closed-set task like Banking77 in isolation, a small encoder classifier (a fine-tuned DeBERTa, or SetFit on a few hundred labels) is often the more accurate and cheaper-to-serve tool. Encoder and other non-decoder baselines are being added per task. We report a decoder here because most deployments run a <em>portfolio</em> of tasks: one open base model with per-task LoRA adapters, hot-swapped or served concurrently, covers classification, extraction, and generation on a single inference stack, frequently the better fleet-level trade even when an encoder wins a task on its own.</p>
 
         <h2 id="conditions">Conditions</h2>
@@ -332,10 +322,10 @@ body::after {
 
         <h2 id="metrics">Metrics</h2>
         <p><strong>Task accuracy.</strong> For extraction (CUAD), the primary metric is <strong>AUPR</strong>, area under the precision&ndash;recall curve for clause detection, the metric the CUAD authors report and the right one when most clause types are absent from any given contract. Token F1 (token-level overlap, partial credit for near-correct extractions) is reported alongside as a secondary, partial-credit check. Weighted F1 for classification (accounts for label imbalance across all categories).</p>
-        <p><strong>Deployment cost.</strong> Presented as an interactive total-cost-of-ownership calculator on the benchmark page, since real cost depends on query volume and the hardware you deploy on. The hosted API is usage-priced from measured input and output token counts at the published per-token rate. The self-hosted model is priced as a GPU reservation at a rate you choose (on-prem, A40, A10G, or H100), scaled to the number of GPUs your volume needs, plus one-time fine-tuning. The benchmark ran on an RTX 3090; the calculator lets you model your own setup.</p>
+        <p><strong>Deployment cost.</strong> Presented as an interactive total-cost-of-ownership calculator on the head-to-head page, since real cost depends on query volume and the hardware you deploy on. The hosted API is usage-priced from measured input and output token counts at the published per-token rate. The self-hosted model is priced as a GPU reservation at a rate you choose (on-prem, A40, A10G, or H100), scaled to the number of GPUs your volume needs, plus one-time fine-tuning. The head-to-head ran on an RTX 3090; the calculator lets you model your own setup.</p>
 
         <h2 id="error-analysis">Error analysis</h2>
-        <p>Every prediction is classified into one error category by deterministic rules, not by judgment.</p>
+        <p>Every prediction is classified into one error category by deterministic rules alone.</p>
         <p><strong>Clause extraction (CUAD)</strong> uses: correct (token F1 &ge; 0.9, including correctly reporting "not found" when the clause is absent), partial (F1 between 0.5 and 0.9), hallucinated (extracted text that does not appear in the source contract), and format violation.</p>
         <p><strong>Support routing (Banking77)</strong> uses: correct and wrong class. As a closed-vocabulary classification task, there are no other failure modes; every prediction maps to a valid label.</p>
 
@@ -414,7 +404,7 @@ body::after {
 <!-- ======== STICKY CTA (floating primary action) ======== -->
 <div class="sticky-cta" id="stickyCta" aria-hidden="true">
   <span class="sticky-cta-text">See if it holds for your task</span>
-  <a href="/fit-score" class="sticky-cta-btn" tabindex="-1">Score your task</a>
+  <a href="/scope" class="sticky-cta-btn" tabindex="-1">Scope your task</a>
 </div>
 
 <footer></footer>
