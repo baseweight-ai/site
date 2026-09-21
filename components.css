@@ -236,16 +236,42 @@ textarea:focus-visible,
    Hover lifts the button; active presses it back down.
    ======================================== */
 .btn-primary:active,
-.nav-cta:active,
-.sticky-cta-btn:active {
+.nav-cta:active {
   transform: translateY(0) !important;
+}
+
+/* ========================================
+   CLOSING CTA ROUTES  (homepage and /about)
+   Booking is the primary; the email route is a real button, outlined rather
+   than filled, so it never competes with it.
+   ======================================== */
+.cta-routes { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+.btn-ghost {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid rgba(220, 184, 117, 0.45);
+  padding: 15px 34px;   /* 1px less than btn-primary: the border makes up the rest */
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  display: inline-block;
+}
+.btn-ghost:hover {
+  background: rgba(220, 184, 117, 0.09);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
 }
 
 /* ========================================
    REDUCED MOTION / respect the user's system preference.
    Neutralises the decorative animation (radar rings, gold shimmer, CTA glow)
-   and the scroll-reveal slide; content simply appears. (index / fit-score /
-   pilot / about had no guard; benchmark / methodology already did.)
+   and the scroll-reveal slide; content simply appears. This is the only guard:
+   pages do not repeat it, because these rules are !important and win anyway.
    ======================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -259,5 +285,4 @@ textarea:focus-visible,
     opacity: 1 !important;
     transform: none !important;
   }
-  .hero-radar-ring { display: none !important; }
 }

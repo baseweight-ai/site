@@ -1,6 +1,6 @@
 # Head-to-head: asset doctrine and build plan
 
-The public head-to-head (at `/head-to-head`) is a sales/marketing asset: reason-to-believe for the buyer,
+The public head-to-head (at `/benchmark`) is a sales/marketing asset: reason-to-believe for the buyer,
 credibility for the technical reader. Its credibility is the whole asset: every public
 number is reproducible from open code and weights, nothing cherry-picked, caveats named
 before a critic does. The baseline is the cost-efficient API tier teams actually deploy

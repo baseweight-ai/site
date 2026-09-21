@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retrieval service | Baseweight</title>
+<meta name="description" content="A retrieval service in production: tracing, a failure-mode eval suite, and cost per request.">
+<!-- No content on it yet, so it stays out of search until there is some. Drop
+     this tag and add the sitemap entry when the page is written. -->
+<meta name="robots" content="noindex, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/icon.jpg">
+<link rel="canonical" href="https://baseweight.co/retrieval-service">
+<link rel="preload" href="/images/logo.png" as="image" type="image/png">
+<link rel="stylesheet" href="/components.css">
+<meta name="author" content="Baseweight">
+<link rel="author" href="/about">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://baseweight.co/retrieval-service">
+<meta property="og:title" content="Retrieval service: Baseweight">
+<meta property="og:description" content="A retrieval service in production: tracing, a failure-mode eval suite, and cost per request.">
+<meta property="og:image" content="https://baseweight.co/images/featured.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #080808;
+  --bg-secondary: #0d0d0d;
+  --bg-card: #111111;
+  --border: #1c1c1c;
+  --border-accent: #282828;
+  --text-primary: #e8e4de;
+  --text-secondary: #898580;
+  --text-muted: #807d76;
+  --accent: #dcb875;
+  --accent-hover: #dbb960;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max-width: 1120px;
+  --section-pad: clamp(80px, 12vh, 140px);
+}
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body { font-family: var(--font-mono); font-size: 15px; line-height: 1.75; color: var(--text-primary); background: var(--bg-primary); overflow-x: hidden; }
+
+::selection { background: var(--accent); color: var(--bg-primary); }
+
+a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--accent-hover); }
+
+.container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
+
+h1 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; font-size: clamp(2rem, 4.5vw, 3.2rem); }
+
+.section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+
+.case-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 40px; border-bottom: 1px solid var(--border); }
+.case-hero p { max-width: 62ch; margin-top: 18px; font-size: 15px; line-height: 1.8; color: var(--text-secondary); }
+
+.case-body { padding: var(--section-pad) 0; }
+.case-body a { border-bottom: 1px solid rgba(220, 184, 117, 0.3); }
+
+@media (max-width: 640px) {
+  .case-hero { padding-top: 120px; }
+}
+</style>
+<script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<!-- Vercel Speed Insights -->
+<script>
+  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+
+<!-- ======== NAV ======== -->
+<nav id="nav"></nav>
+
+<main id="main-content">
+
+<section class="case-hero">
+  <div class="container">
+    <div class="section-label">Build</div>
+    <h1>Retrieval service</h1>
+    <p>Deployed, with tracing, a failure-mode eval suite, and cost per request.</p>
+  </div>
+</section>
+
+<!-- Write-up goes here: the task, the system, the numbers, the handover. -->
+<section class="case-body">
+  <div class="container">
+    <p><a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer">Book a call</a> to go through this one.</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ======== FOOTER ======== -->
+<footer></footer>
+
+<script src="/components.js"></script>
+
+</body>
+</html>

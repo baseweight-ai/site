@@ -22,13 +22,12 @@ import fs from "fs";
 import { SITE_ROOT, sitePages, visibleWords } from "./copy-text";
 
 const BUDGETS: { page: string; words: number; note: string }[] = [
-  { page: "index.html",        words: 1100, note: "2026-07-14 baseline 997: hero, proof strip, tasks, how-it-works, who-it's-for, founding partners, 8 FAQs, final CTA" },
-  { page: "about.html",        words: 340,  note: "2026-07-14 baseline 301: identity, how-we-work cards, founder, head-to-head opt-in, CTA" },
-  { page: "head-to-head.html", words: 290,  note: "2026-07-14 baseline 261 (static shell; results and blurbs render from data)" },
-  { page: "scope.html",        words: 650,  note: "2026-07-14 baseline 582 (quiz questions; results render from JS)" },
-  { page: "methodology.html",  words: 1060, note: "2026-07-14 baseline 956 (technical spec; precision over brevity, but still bounded)" },
-  { page: "contact.html",      words: 30,   note: "2026-07-14 baseline 20: contact details only, per COPY-STYLE.md" },
-  { page: "privacy.html",      words: 460,  note: "2026-07-14 baseline 417 (legal text; exempt from lint, still bounded)" },
+  { page: "index.html",        words: 330,  note: "2026-09-20 baseline 298: hero, what we do, who we work with, offers carousel (four fields per card), published, final CTA" },
+  { page: "about.html",        words: 205,  note: "2026-09-20 baseline 183: the argument for measuring first in four paragraphs, founder, CTA. Raised from 140 because /about is now the one page that explains the thesis rather than stating it" },
+  { page: "benchmark.html",    words: 90,   note: "2026-09-20 baseline 75 (static shell; results, blurbs and the run stamp render from data): hero, results table, artifacts, CTA" },
+  { page: "methodology.html",  words: 1060, note: "2026-09-18 baseline 946 (technical spec; precision over brevity, but still bounded)" },
+  { page: "retrieval-service.html", words: 45, note: "2026-09-20 baseline 30: a stub. The write-up is not written; raise this when it is" },
+  { page: "privacy.html",      words: 370,  note: "2026-09-21 baseline 332 (legal text; exempt from lint, still bounded): what Cal.com and email hand over, and the rights over it" },
 ];
 
 test("every page has a copy budget", () => {

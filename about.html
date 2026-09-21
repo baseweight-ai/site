@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>About Baseweight: the method and the person behind it</title>
-<meta name="description" content="Baseweight automates one high-volume task end to end: candidate setups measured on your data, the best one built, then run for you or handed over, your choice.">
+<title>About Baseweight</title>
+<meta name="description" content="In classical ML you cannot ship without measurement. LLM features ship without any of it. Why Baseweight builds the measurement first.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -16,13 +16,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/about">
 <meta property="og:title" content="About: Baseweight">
-<meta property="og:description" content="Baseweight automates one high-volume task end to end: candidate setups measured on your data, the best one built, then run for you or handed over.">
+<meta property="og:description" content="In classical ML you cannot ship without measurement. LLM features ship without any of it. Why Baseweight builds the measurement first.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About: Baseweight">
-<meta name="twitter:description" content="Baseweight automates one high-volume task end to end: candidate setups measured on your data, the best one built, then run for you or handed over.">
+<meta name="twitter:description" content="In classical ML you cannot ship without measurement. LLM features ship without any of it. Why Baseweight builds the measurement first.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -144,9 +144,9 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
    ======================================== */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(16px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.visible {
@@ -154,10 +154,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   transform: translateY(0);
 }
 
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-
+.reveal-delay-1 { transition-delay: 0.06s; }
+.reveal-delay-2 { transition-delay: 0.12s; }
 
 /* ========================================
    ABOUT HERO
@@ -191,41 +189,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 }
 
 /* ========================================
-   WHAT WE BELIEVE
-   ======================================== */
-.beliefs-section {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.beliefs-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
-  max-width: 800px;
-}
-
-.belief-item {
-  padding-top: 24px;
-  border-top: 2px solid var(--border);
-}
-
-.belief-item h3 {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-
-.belief-item p {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.75;
-}
-
-/* ========================================
    FOUNDER
    ======================================== */
 .founder-section {
@@ -247,15 +210,9 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   margin-bottom: 16px;
 }
 
-.founder-credentials {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 24px;
+.founder-credential {
+  display: inline-block;
   margin-top: 20px;
-}
-
-.founder-credentials li {
   font-size: 12px;
   font-weight: 500;
   color: var(--text-primary);
@@ -264,91 +221,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   background: var(--bg-card);
 }
 
-/* ========================================
-   ABOUT LEAD CAPTURE
-   ======================================== */
-.about-lead {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.about-lead-inner {
-  max-width: 600px;
-}
-
-.about-lead-inner h2 {
-  margin-bottom: 10px;
-}
-
-.about-lead-inner .lead-sub {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 24px;
-}
-
-.about-lead-form-row {
-  display: flex;
-  gap: 12px;
-  max-width: 440px;
-}
-
-.about-lead-form-row input[type="email"] {
-  flex: 1;
-  min-width: 0;
-  padding: 14px 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--text-primary);
-}
-
-.about-lead-form-row input[type="email"]::placeholder {
-  color: var(--text-muted);
-}
-
-.about-lead-form-row input[type="email"]:focus {
-  outline: 2px solid transparent;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.2);
-}
-
-.about-lead-form-row button {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--bg-primary);
-  background: var(--accent);
-  border: none;
-  padding: 14px 24px;
-  cursor: pointer;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  transition: background 0.2s, transform 0.15s;
-}
-
-.about-lead-form-row button:hover {
-  background: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-.about-lead-success {
-  padding: 20px;
-  background: rgba(201, 168, 76, 0.08);
-  border: 1px solid rgba(201, 168, 76, 0.2);
-  max-width: 440px;
-}
-
-.about-lead-success p {
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.about-lead-note {
-  margin-top: 12px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
+.founder-link { border-bottom: 1px solid rgba(220, 184, 117, 0.35); transition: color 0.2s, border-color 0.2s; }
+.founder-link:hover { color: var(--accent-hover); border-bottom-color: var(--accent-hover); }
 
 /* ========================================
    ABOUT CTA
@@ -389,34 +263,14 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   transform: translateY(-2px);
 }
 
-
 /* ========================================
    RESPONSIVE
    ======================================== */
-@media (max-width: 900px) {
-  .beliefs-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-}
-
 @media (max-width: 640px) {
   .about-hero { padding-top: 120px; }
-
-  .about-lead-form-row {
-    flex-direction: column;
-  }
 }
-/* ── Sticky CTA (floating primary action) ───────────────────────────────── */
-.sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
-.sticky-cta.visible { transform: none; opacity: 1; }
-.sticky-cta-text { font-size: 13px; color: var(--text-secondary); }
-.sticky-cta-btn { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 10px 22px; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s; }
-.sticky-cta-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
-@media (max-width: 520px) { .sticky-cta { padding: 10px 16px; gap: 12px; } .sticky-cta-text { display: none; } .sticky-cta-btn { flex: 1; text-align: center; } }
-@media (prefers-reduced-motion: reduce) { .sticky-cta { transition: none; } }
 </style>
-<meta name="author" content="Philip Stevens">
+<meta name="author" content="Baseweight">
 <link rel="author" href="/about">
 <script type="application/ld+json">
 {
@@ -427,15 +281,15 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       "@id": "https://baseweight.co/about#webpage",
       "url": "https://baseweight.co/about",
       "name": "About: Baseweight",
-      "description": "Philip Stevens: 12 years in applied ML. Baseweight automates one high-volume task end to end with a specialist open-source model, run by your team or by us.",
+      "description": "In classical ML you cannot ship without measurement. LLM features ship without any of it. Why Baseweight builds the measurement first.",
       "author": {
-        "@type": "Person",
-        "name": "Philip Stevens",
-        "email": "phil@baseweight.co",
-        "url": "https://baseweight.co/about"
+        "@type": "Organization",
+        "name": "Baseweight",
+        "email": "hello@baseweight.co",
+        "url": "https://baseweight.co/"
       },
       "datePublished": "2025-01-01",
-      "dateModified": "2026-08-26",
+      "dateModified": "2026-09-18",
       "inLanguage": "en-US",
       "isPartOf": {
         "@type": "WebSite",
@@ -466,7 +320,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="reveal">
       <div class="section-label">About Baseweight</div>
-      <h1>We automate one high-volume task <span style="color: var(--accent);">end to end.</span></h1>
+      <h1>Why we measure first.</h1>
     </div>
   </div>
 </section>
@@ -476,34 +330,10 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   <div class="container">
     <div class="about-body-inner">
       <div class="reveal">
-        <p>We measure candidate setups on your data (which open-source base, what post-training, what retrieval or rules around it), build the one that scores best, then run it for you or hand it over, your choice.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======== WHAT WE BELIEVE ======== -->
-<section class="beliefs-section">
-  <div class="container">
-    <div class="reveal">
-      <h2 class="section-label">How we work</h2>
-    </div>
-    <div class="beliefs-grid">
-      <div class="belief-item reveal reveal-delay-1">
-        <h3>One task at a time</h3>
-        <p>Each engagement automates a single high-volume workflow end to end.</p>
-      </div>
-      <div class="belief-item reveal reveal-delay-2">
-        <h3>Handover or managed, your choice</h3>
-        <p>Run it with your team or have us operate it. You keep the weights, your data stays in your environment, and you can take the work in-house at any time.</p>
-      </div>
-      <div class="belief-item reveal reveal-delay-1">
-        <h3>A compounding pattern library</h3>
-        <p>Every engagement adds task and failure patterns we carry forward, so the work gets faster and better-grounded.</p>
-      </div>
-      <div class="belief-item reveal reveal-delay-2">
-        <h3>Re-runnable numbers</h3>
-        <p>Every number we publish comes with the data, the code, and the hashes to re-run it.</p>
+        <p>In classical ML you cannot ship without measurement. Every model that went live at Agoda or Quantcast had an offline eval set, an online experiment, and drift monitoring that fired when the world moved. None of it was optional.</p>
+        <p>LLM features ship without any of it. The demo works, the team ships, and then nobody can say whether last week&rsquo;s prompt change helped or hurt. The arguments are about taste, because there is no number to point at.</p>
+        <p>That gap is why Baseweight exists. We build the measurement first, fix what it surfaces, and leave the harness in your repo so the next change is a number rather than an argument.</p>
+        <p>The rest follows from it. Reliability, inference cost, a model of your own: each one starts from something measured.</p>
       </div>
     </div>
   </div>
@@ -515,61 +345,11 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     <div class="founder-inner">
       <div class="reveal">
         <div class="section-label">Founder</div>
-        <h2>Founded by <span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">Philip Stevens</span></span></h2>
+        <h2>Founded by <span itemprop="founder" itemscope itemtype="https://schema.org/Person"><span itemprop="name"><a class="founder-link" href="https://www.linkedin.com/in/philipcstevens/" target="_blank" rel="noopener noreferrer">Philip Stevens</a></span></span></h2>
       </div>
       <div class="reveal reveal-delay-1">
-        <p>12 years in applied ML. Production work at Agoda building personalization and recommendation systems at scale, and at Quantcast managing the end-to-end ML lifecycle for core targeting models: feature engineering, model architecture, and domain drift monitoring.</p>
-        <ul class="founder-credentials">
-          <li>Fine-tuning (LoRA, QLoRA, full)</li>
-          <li>Eval design &amp; regression harnesses</li>
-          <li>RAG pipeline hardening</li>
-          <li>DPO alignment</li>
-          <li>Agent workflow design</li>
-          <li>Inference optimization</li>
-          <li>MSc Computer Science, Univ. of Auckland</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======== ABOUT LEAD CAPTURE (secondary opt-in: new-benchmark notifications) ======== -->
-<section class="about-lead" id="contact">
-  <div class="container">
-    <div class="about-lead-inner">
-      <div class="reveal">
-        <h2>Get each new head-to-head when it publishes.</h2>
-        <p class="lead-sub">The <a href="/head-to-head">public head-to-head</a> is live and grows as new runs land. Leave your email and we&rsquo;ll send the next one: methodology, failure analysis, per-task numbers. Technical content only.</p>
-      </div>
-      <div class="reveal reveal-delay-1">
-        <form
-          action="https://script.google.com/macros/s/AKfycbwsGuKomWjQTU60wsHW2GAySY169c0TO--06edsSW4I3XUfwMopgdcYdj2X3wy9j73E/exec"
-          method="post"
-          id="about_lead_form"
-          target="about_lead_hidden_iframe"
-          onsubmit="aboutLeadCaptureSubmit(event)"
-        >
-          <div class="about-lead-form-row">
-            <input
-              type="email"
-              name="email"
-              placeholder="you@company.com"
-              required
-              autocomplete="email"
-              aria-label="Email address"
-            />
-            <button type="submit">Notify Me</button>
-          </div>
-          <input type="text" name="company" tabindex="-1" autocomplete="off" aria-label="Leave this field empty" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" />
-          <input type="hidden" name="k" value="formkey_QidffT6hpBTjEE38dkn2pbCvfCmebUJn" />
-          <input type="hidden" name="source" value="about-page" />
-          <input type="hidden" name="ua" id="about_lead_ua" />
-        </form>
-        <iframe name="about_lead_hidden_iframe" title="Form submission target" style="display:none"></iframe>
-        <div id="about_lead_success" class="about-lead-success" style="display:none">
-          <p><strong>Done. We&rsquo;ll notify you when the next head-to-head is published.</strong></p>
-        </div>
-        <p class="about-lead-note">Head-to-head releases only; unsubscribe anytime.</p>
+        <p>12 years in applied ML, now on LLM systems: evals, post-training, and inference cost.</p>
+        <div class="founder-credential">MSc Computer Science, Univ. of Auckland</div>
       </div>
     </div>
   </div>
@@ -579,25 +359,21 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 <section class="about-cta">
   <div class="container">
     <div class="reveal">
-      <h2>See what automating your task would take.</h2>      <a href="/scope" class="btn-primary">Scope your task</a>
-      <p style="font-size: 13px; color: var(--text-secondary); margin-top: 20px;">Prefer to talk? <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer">Book a free call &rarr;</a></p>
+      <h2>Tell us what you&rsquo;re building.</h2>
+      <div class="cta-routes">
+        <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call</a>
+        <a href="mailto:hello@baseweight.co" class="btn-ghost">Email us</a>
+      </div>
     </div>
   </div>
 </section>
 
 <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
-  <address itemscope itemtype="https://schema.org/Person">By <a href="/about" rel="author" itemprop="url" tabindex="-1"><span itemprop="name">Philip Stevens</span></a></address>
-  <time itemprop="datePublished" datetime="2025-01-01">January 2025</time>
-  <time itemprop="dateModified" datetime="2026-08-26">August 2026</time>
+  <span>Published <time itemprop="datePublished" datetime="[FOUNDED_DATE]">[FOUNDED_DATE]</time></span>
+  <span>Updated <time itemprop="dateModified" datetime="2026-09-18">September 2026</time></span>
 </div>
 
 </main>
-
-<!-- ======== STICKY CTA (floating primary action) ======== -->
-<div class="sticky-cta" id="stickyCta" aria-hidden="true">
-  <span class="sticky-cta-text">See what automating your task would take</span>
-  <a href="/scope" class="sticky-cta-btn" tabindex="-1">Scope your task</a>
-</div>
 
 <!-- ======== FOOTER ======== -->
 <footer></footer>
@@ -606,59 +382,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 
 <!-- ======== JS ======== -->
 <script>
-// Scroll reveal
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, {
-  threshold: 0.08,
-  rootMargin: '0px 0px -40px 0px'
-});
-
-document.querySelectorAll('.reveal').forEach(el => {
-  revealObserver.observe(el);
-});
-
-// About page lead capture
-(function() {
-  var uaField = document.getElementById('about_lead_ua');
-  if (uaField) uaField.value = navigator.userAgent;
-})();
-
-function aboutLeadCaptureSubmit(e) {
-  var form = document.getElementById('about_lead_form');
-  var success = document.getElementById('about_lead_success');
-  if (form) form.style.display = 'none';
-  if (success) success.style.display = 'block';
-}
-</script>
-
-<!-- Sticky CTA controller -->
-<script>
-(function () {
-  const bar = document.getElementById('stickyCta');
-  if (!bar) return;
-  const link = bar.querySelector('a');
-  const hero = document.querySelector('.about-hero');
-  const finalCta = document.querySelector('.about-cta');
-  let pastHero = false, finalVisible = false;
-  const update = () => {
-    const show = pastHero && !finalVisible;
-    bar.classList.toggle('visible', show);
-    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
-    if (link) link.tabIndex = show ? 0 : -1;
-  };
-  const observe = (el, cb) => {
-    if (!el) return;
-    new IntersectionObserver(es => { cb(es[0]); update(); }, { threshold: 0 }).observe(el);
-  };
-  if (hero) observe(hero, e => { pastHero = !e.isIntersecting; }); else pastHero = true;
-  observe(finalCta, e => { finalVisible = e.isIntersecting; });
-  update();
-})();
 </script>
 
 </body>

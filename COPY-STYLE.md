@@ -2,11 +2,11 @@
 
 This file governs every word a visitor can read: page copy, titles, meta/OG descriptions,
 JSON-LD, button labels, form microcopy, and copy strings inside inline `<script>` blocks
-(the fit-check result copy, the head-to-head task blurbs). It exists because marketing-speak
+(the head-to-head task blurbs). It exists because marketing-speak
 and AI-generated-sounding prose ("slop") measurably damage credibility with the buyers this
 site targets, and because these patterns creep back in one plausible-sounding line at a
-time. Business-model substance comes from `MVB.md`; if a drafted line breaks a rule here,
-rewrite the wording, never the decision. The privacy page is exempt as legal text.
+time. Offer substance comes from the homepage (`index.html`); if a drafted line breaks a
+rule here, rewrite the wording, never the decision. The privacy page is exempt as legal text.
 
 **Enforcement is automated.** `e2e/copy-lint.spec.ts` scans the visible text, meta content,
 and inline JS string literals of every marketing page for the patterns below and fails the
@@ -91,7 +91,7 @@ magical, "AI-powered" as a selling point. Fix: the concrete property with its nu
 - "-ing" analysis tails bolted onto sentences.
 - Elegant variation: repeat the plain term.
 - Rhetorical-question headers. Questions are allowed only where the question is the literal
-  input (a quiz step label) or a FAQ the reader would ask.
+  input (a form field label) or a question the reader would actually ask.
 - Staccato fragment chains as headlines.
 
 ## Banned: persona flexes
@@ -120,17 +120,24 @@ spend against it, rewrite.
 
 An offer, step, or deliverable is never named for the feeling it should produce or the
 stance we take: assurance, confidence, trust, care, excellence, peace of mind, and kin.
-Names come from the `MVB.md` revenue streams or a plain verb of the work (Build, Operate;
-sprint, retainer); the name alone must tell the buyer what happens.
+Names come from a plain verb of the work plus its shape (Eval Harness Sprint, Eval
+Retainer, Post-Training); the name alone must tell the buyer what happens.
 
 Test: does the name say what we do, or how to feel about us? Rename the latter.
 
 Names also import the market's frame. "Pilot" arrives carrying enterprise-AI pilot
 failure; "benchmark" arrives carrying vendor leaderboards nobody trusts; "score" arrives
 carrying grading. Test a name by what a stranger already believes the word means this
-year, not by the dictionary; when the market has soured a word, rename ours (Pilot became
-the Build's opening head-to-head, Benchmark became the head-to-head, Score your task
-became Scope your task).
+year, not by the dictionary; when the market has soured a word, rename ours (Benchmark
+became the head-to-head; the standalone Pilot was removed rather than renamed).
+
+Coined process nouns also stay home. A name like "the head-to-head" earns its meaning
+where the surface defines it (the offer table, the asset's own page); exported into
+running prose or compounded ("head-to-head test") it becomes branded jargon carrying
+emphasis it never earned, and the reader hears the company talking to itself. On any
+surface that has not defined the term, describe the mechanism with plain verbs ("we
+measure it against whatever does the task today"). The same goes for doctrine vocabulary
+("re-runnable"): plain words in prose; coined terms only where introduced.
 
 ## Banned: exit mechanics as reassurance
 
@@ -173,7 +180,7 @@ tests).
 ## Future-proof copy (no volatile anchors)
 
 - Never state counts of things that change as the business runs: benchmark tasks, models,
-  quiz questions, customers, verticals.
+  offers, customers, verticals.
 - Name the category, never the census.
 - No "so far", "for now", "currently": either it is true durably or it does not go in.
 - Volatile facts live in data (`results.json`-driven UI, placeholder tabs with a status
@@ -185,63 +192,71 @@ tests).
 
 Copy never collapses the engagement into one ending. Wherever the after-the-build state is
 described, both paths appear first-class: handover (the buyer's team runs the artifact on
-their infrastructure) and managed (we operate it and keep the test current). Constant
-across both, statable as fact: the buyer keeps the weights, and their data stays in their
-environment. The recipe and the evals stay with us (the `MVB.md` portability clause), so
-copy never promises the buyer keeps or runs the test itself, only that the test exists, is
-re-run for them, and its scored results are theirs.
+their infrastructure) and managed (we operate it and keep the suite current). Constant
+across both, statable as fact: the buyer keeps the weights and the eval harness, and their
+data stays in their environment.
 
-## Placement: measure-first is a sequence fact, not a message
+## Placement: measurement is sold as an offer, described once
 
-Measure-first appears in the how-it-works section (its heading included) and in FAQ answers
-to direct questions, nowhere else; the proof strip and the benchmark pages are the numbers'
-home, and other surfaces point to them. Heroes, identity headlines, CTA banners, sticky
-bars, and H2s outside the how-it-works section carry the automated outcome or the action
-("Scope your task"), never a measurement promise ("we measure first", "see if it wins",
-"tested on your data"). Re-promising measurement per section is the named creep pattern: it
-re-productizes measurement one plausible line at a time. The head-to-head is always
-described as the Build's opening phase, never as a freestanding step before the engagement;
-copy that reads as a free pre-check (measure, then approve price) re-creates the removed
-Pilot.
+Measurement is a priced offer (the Eval Harness Sprint and the Eval Retainer), so it is
+named in the offer carousel and in the "what we do" list, and nowhere else. `/benchmark` is
+the numbers' home; other surfaces point to it. `/about` is the one page that argues the
+thesis ("Why we measure first"), because a reason given once in its own place is not the
+re-promise this rule is about. Heroes,
+CTA banners, sticky bars, and H2s outside those places carry the work or the action ("Book a
+call"), never a measurement promise repeated as a differentiator ("we measure first", "see
+if it wins", "tested on your data"). Re-promising measurement per section is the named creep
+pattern: it turns a line item into a posture one plausible sentence at a time. Never offer
+free measurement as a pre-check before the paid work; that re-creates the removed Pilot.
 
 ## Qualification never happens in page copy
 
 No best-fit/weaker-fit lists, readiness or investment criteria, or stage-gating CTA
-qualifiers ("Already know it fits?"). Sections describe the buyer's situation so they
-recognize themselves (recognition before solution); the quiz routing and the call do the
-qualifying. CTA lines carry the action plus at most a channel-preference alternative
-("Prefer to talk?"); reassurance microcopy (free, time estimates, email-optional) lives on
-the tool's own page, never on buttons pointing to it. The fit check returns a next step
-plus what the answers change about a Build, never a grade of the visitor.
+qualifiers ("Already know it fits?"). The "who I work with" cards describe the buyer's
+situation so they recognize themselves (recognition before solution); the call does the
+qualifying. CTA lines carry the action and nothing else. Reassurance microcopy (free, time
+estimates, email-optional) never rides on buttons or cards. Convenience claims ("about two
+minutes") are falsifiable promises: state one only if it reliably holds.
+
+## Retired vocabulary
+
+"Forward-deployed" was dropped from every surface on 2026-09-20 and does not come back.
+The linter holds it, because retired names survive longest in meta and OG content where a
+page-level assertion cannot see them. Retire a name here and in `BANNED` together.
+
+## Headline length
+
+H1 is one sentence of at most 12 words, H2 at most 14. A heading over the limit gets
+rewritten; the limit is not raised and there is no exemption list.
 
 ## Fix the generator, not the sentence
 
 When a page keeps drifting back to a banned pattern through repeated rewrites, the words
-are not the problem; the thing they describe is. A paid-measurement product forces
-measurement-as-product copy; a grading quiz forces grades; results hidden behind a
+are not the problem; the thing they describe is. A free measurement gate on paid work
+forces measurement-as-product copy; a grading quiz forces grades; results hidden behind a
 disclosure force trust-me copy; a soured name forces defensive framing. Rewriting the
 sentence treats the symptom for one revision; the durable fix is structural: change the
 offer, the output, the layout, or the name, and the copy problem stops regenerating.
-Precedents: the standalone Pilot (removed; the head-to-head became the Build's opening
-phase), quiz verdicts (became next steps plus Build drivers), the collapsed results panel
-(opened as page sections), "Benchmark" and "Score your task" (renamed).
+Precedents: the standalone Pilot (removed), the fit-check quiz (removed; grading copy
+regenerated for as long as a grading quiz existed), the collapsed results panel (opened as
+page sections), "Benchmark" (renamed). Measurement sold as a fixed-price deliverable with a
+named artifact (the harness) does not regenerate measurement-as-posture copy; measurement
+sold as a free gate on other work does.
 
 ## Page and audience rules
 
-- Primary CTA is "Scope your task" → `/scope`; secondary is book a call
-  (cal.com/baseweight/intro).
+- The only CTA is "Book a call" → cal.com/baseweight/intro, on every page and in every
+  offer card. No form, no lead magnet, no secondary action.
 - Recognition before solution: lead with the buyer's problem in their words; they must feel
-  understood before being sold to (the buyer read lives in `MVB.md`).
-- Two registers, one story: buyer surfaces (`index`, `scope`, `about`, the plain band
+  understood before being sold to.
+- Two registers, one story: buyer surfaces (`index`, `about`, the plain band
   atop `head-to-head`) lead with outcomes and a mirror of the buyer; rigorous detail stays on
   `head-to-head`/`methodology` for the technical reader. On buyer pages say "the big AI
   platforms" / "a rented AI"; avoid practitioner jargon as lead terms (frontier, 8B, LoRA,
   open weights, fine-tuned). Buyer pages say "post-train"; the head-to-head and methodology
   pages use "fine-tuned"/"LoRA"; that register split is deliberate.
-- Ownership is NOT a messaging angle. It appears only as deliverable fact ("weights handed
-  over, no per-call fees, runs in your walls"), never as headline, value card, or identity
-  pitch. Keep the fit check's posted field names/values (`q7_own`, own/rent/notmine,
-  blocker value `ownership`); only visible wording changed.
+- Ownership is NOT a messaging angle. It appears only as deliverable fact ("the weights are
+  yours", "runs on your servers"), never as headline, value card, or identity pitch.
 - Never imply Baseweight builds models from scratch: the model work is adapting/tuning an
   existing open-source model to one workflow; use "tune" / "adapt" / "specialize" /
   "post-train" for the model, never "build". Applies to outreach copy too.
@@ -250,7 +265,9 @@ phase), quiz verdicts (became next steps plus Build drivers), the collapsed resu
 - Never "answer" / "right answer" / "correct answer" in buyer-facing copy (it shrinks the
   perceived task space): say result, outcome, a clear rule, tell right from wrong.
   Buyer-facing results are "mistakes avoided", wired to `results.json`; F1/points stay on
-  the technical pages. "eval" → "the re-runnable test" on buyer pages.
+  the technical pages. "Eval" is offer vocabulary (Eval Harness Sprint, Eval Retainer) and
+  reads plainly to the engineering buyers the page now addresses; keep it for the named
+  offers and for what they produce, not as a synonym for the head-to-head.
 - A question's label must BE the question, with no separate explainer; name the object and
   the scope in the label itself.
 - No social proof until real; never invent clients, logos, or testimonials. Use a clearly

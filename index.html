@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Baseweight: automate your highest-volume task on your servers</title>
-<meta name="description" content="Teams come to us when the big AI platforms cost too much at their volume, make too many mistakes, or can't touch the data. We automate the task end to end: an open-source model post-trained on your data, run by your team or by us.">
+<title>Baseweight: AI engineering consultancy</title>
+<meta name="description" content="Build, measure, and run AI systems in production. RAG and agents, evals, reliability, inference cost and latency, post-training on open-weight models, and deployment.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -15,14 +15,14 @@
 <link rel="stylesheet" href="/components.css">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/">
-<meta property="og:title" content="Baseweight: automate your highest-volume task on your servers">
-<meta property="og:description" content="One high-volume task automated end to end: an open-source model post-trained on your data, the workflow around it, run by your team or by us.">
+<meta property="og:title" content="Baseweight: AI engineering consultancy">
+<meta property="og:description" content="Build, measure, and run AI systems in production, for teams shipping with AI.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Baseweight: automate your highest-volume task on your servers">
-<meta name="twitter:description" content="One high-volume task automated end to end: an open-source model post-trained on your data, the workflow around it, run by your team or by us.">
+<meta name="twitter:title" content="Baseweight: AI engineering consultancy">
+<meta name="twitter:description" content="Build, measure, and run AI systems in production, for teams shipping with AI.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 /* ========================================
@@ -52,6 +52,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 96px;   /* the fixed nav is 72px tall plus its shadow */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -139,21 +140,14 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   background: var(--accent);
 }
 
-.section-divider {
-  border: none;
-  height: 1px;
-  background: var(--border);
-  margin: 0;
-}
-
 /* ========================================
    SCROLL ANIMATIONS
    ======================================== */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(16px);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.visible {
@@ -161,22 +155,18 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   transform: translateY(0);
 }
 
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-
-/* ========================================
-   NAV
-   ======================================== */
+.reveal-delay-1 { transition-delay: 0.06s; }
+.reveal-delay-2 { transition-delay: 0.12s; }
+.reveal-delay-3 { transition-delay: 0.18s; }
 
 /* ========================================
    HERO
    ======================================== */
 .hero {
-  min-height: 100vh;
+  min-height: min(70vh, 660px);
   display: flex;
   align-items: center;
-  padding-top: 72px;
+  padding: 140px 0 var(--section-pad);
   position: relative;
   overflow: hidden;
 }
@@ -200,7 +190,7 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 }
 
 .hero-sub {
-  font-size: clamp(14px, 1.6vw, 16px);
+  font-size: clamp(15px, 1.8vw, 18px);
   color: var(--text-secondary);
   line-height: 1.8;
   max-width: 620px;
@@ -234,336 +224,320 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   transform: translateY(-2px);
 }
 
-.hero-credential {
-  font-size: 11px;
+/* ========================================
+   WHAT WE DO
+   ======================================== */
+.do-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.do-header { margin-bottom: 56px; }
+
+.do-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 56px;
+  max-width: 920px;
+}
+
+.do-item {
+  position: relative;
+  padding-left: 24px;
+}
+
+.do-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 11px;
+  width: 12px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.do-term {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+  margin-bottom: 6px;
+}
+
+.do-item p {
+  font-size: 13.5px;
   color: var(--text-secondary);
-  letter-spacing: 0.04em;
-  margin-bottom: 24px;
+  line-height: 1.75;
+}
+
+@media (max-width: 760px) {
+  .do-grid { grid-template-columns: 1fr; gap: 28px; }
 }
 
 /* ========================================
-   TRANSITION / HAMMER SECTION
+   OFFERS CAROUSEL
    ======================================== */
-.transition-section {
-  text-align: center;
+.offers-header { margin-bottom: 48px; }
+
+.offer-viewport { position: relative; }
+
+/* A fade on an edge says the row continues that way: it dissolves the card's
+   outer edge into the page. Its width is the card's own side padding and it is
+   clear by 26px, so it reaches no letter of the card it sits on. */
+.offer-viewport::before,
+.offer-viewport::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 4px;              /* clears the track's padding-bottom */
+  width: 28px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.offer-viewport::before {
+  left: 0;
+  background: linear-gradient(to right, var(--band) 0, var(--band) 7px, transparent 26px);
+}
+.offer-viewport::after {
+  right: 0;
+  background: linear-gradient(to left, var(--band) 0, var(--band) 7px, transparent 26px);
+}
+.offer-viewport.has-prev::before,
+.offer-viewport.has-next::after { opacity: 1; }
+
+.offer-track {
+  /* Whole cards only: the width is derived from the track so a card is never
+     cut mid-sentence. The fades, arrows and rail carry the "there is more" signal. */
+  --gap: 20px;
+  --per-view: 3;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - (var(--per-view) - 1) * var(--gap)) / var(--per-view));
+  gap: var(--gap);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.offer-track::-webkit-scrollbar { display: none; }
+
+.offer-card {
+  /* Column so the terms sit on the card's bottom edge: cards stretch to the
+     tallest, and a spec line left floating mid-card reads as a gap. */
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 26px 26px 24px;
+  transition: border-color 0.25s, background 0.25s, transform 0.25s;
 }
 
-.transition-section h2 {
-  margin-bottom: 28px;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
+.offer-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-card-hover);
+  transform: translateY(-3px);
 }
 
-.transition-section .body-text {
-  max-width: 640px;
-  margin: 0 auto;
+.offer-index {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.offer-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.15rem;
+}
+
+.offer-card p {
+  font-size: 13.5px;
   color: var(--text-secondary);
-  font-size: 14px;
+  line-height: 1.75;
 }
 
-.transition-section .body-text p {
-  margin-bottom: 20px;
-}
-
-.transition-section .punch {
-  color: var(--accent);
+/* The terms, after the work. Price and duration carry the same weight: a price
+   without a duration is not something anyone can decide on. */
+.offer-spec {
+  margin-top: auto;
+  padding-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
   font-weight: 600;
-  font-size: 15px;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-top: 32px;
 }
 
+.carousel-btn {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  /* Dim accent, not --border-accent: at #282828 the controls read as decoration
+     and the offers past the third get missed. */
+  border: 1px solid rgba(220, 184, 117, 0.34);
+  color: var(--accent);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, opacity 0.2s;
+}
+
+.carousel-btn:not(:disabled) { background: rgba(220, 184, 117, 0.08); border-color: rgba(220, 184, 117, 0.55); }
+.carousel-btn:hover:not(:disabled) { background: var(--accent); color: var(--bg-primary); }
+.carousel-btn:disabled { opacity: 0.28; cursor: default; }
+
+/* A rail, not dots. Dots say "there are four of these"; a thumb that fills part
+   of a rail says "you are looking at part of a row", which is the thing that
+   was getting missed. Width and offset are the track's own scroll ratios. */
+.carousel-rail {
+  flex: 1;
+  height: 3px;
+  margin-left: 8px;
+  background: rgba(220, 184, 117, 0.14);
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-rail-thumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 25%;
+  background: var(--accent);
+  transition: transform 0.15s linear;
+  will-change: transform;
+}
+
+@media (max-width: 900px) { .offer-track { --per-view: 2; } }
+@media (max-width: 620px) { .offer-track { --per-view: 1; } }
+
 /* ========================================
-   HOW WE WORK
+   PUBLISHED WORK
    ======================================== */
-.how-section {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
+/* A short list, so each row is a block with weight rather than a line in a
+   table, and the section is shorter than a full one. */
+#published { padding: clamp(56px, 8vh, 88px) 0; }
 
-.how-header {
-  margin-bottom: 64px;
-}
+.published-header { margin-bottom: 32px; }
 
-.steps {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
+.published-list { display: grid; gap: 12px; }
 
-.step {
+.published-row {
   display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 40px;
-  padding: 48px 0;
-  border-top: 1px solid var(--border);
-  align-items: start;
-}
-
-.step:last-child {
-  border-bottom: 1px solid var(--border);
-}
-
-.step-num {
-  font-family: var(--font-display);
-  font-size: 56px;
-  font-weight: 800;
-  color: rgba(201, 168, 76, 0.12);
-  line-height: 1;
-  padding-top: 4px;
-}
-
-.step h3 {
-  margin-bottom: 14px;
-  color: var(--accent);
-}
-
-.step p {
-  font-size: 14px;
-  color: var(--text-secondary);
-  max-width: 620px;
-}
-
-.how-cta {
-  margin-top: 56px;
-  text-align: center;
-}
-
-/* ========================================
-   WHO THIS IS FOR
-   ======================================== */
-.audience-section {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.audience-section h2 {
-  margin-bottom: 32px;
-}
-
-
-/* ========================================
-   PRICING
-   ======================================== */
-.pricing-section .pricing-header {
-  margin-bottom: 48px;
-}
-
-.pricing-table-wrap {
-  overflow-x: auto;
-}
-
-.pricing-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.pricing-table th {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  text-align: left;
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border-accent);
-  background: var(--bg-card);
-}
-
-.pricing-table td {
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-secondary);
-  vertical-align: top;
-}
-
-.pricing-table tr:hover td {
-  background: var(--bg-card);
-}
-
-.pricing-table td:first-child {
-  color: var(--text-primary);
-  font-weight: 500;
-}
-
-.pricing-table td:last-child {
-  color: var(--accent);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.pricing-note {
-  margin-top: 24px;
-  font-size: 13px;
-  color: var(--text-muted);
-}
-
-/* ========================================
-   STANDALONE DIAGNOSTIC
-   ======================================== */
-.diagnostic-section {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.diagnostic-inner {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 64px;
-  align-items: start;
-}
-
-.diagnostic-price {
-  font-size: 13px;
-  color: var(--accent);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  margin-bottom: 28px;
-  margin-top: 8px;
-}
-
-.diagnostic-left p {
-  font-size: 14px;
-  color: var(--text-secondary);
-  line-height: 1.85;
-  margin-bottom: 20px;
-}
-
-.diagnostic-deliverables {
-  padding: 32px;
+  grid-template-columns: minmax(140px, 170px) 1fr auto;
+  align-items: center;
+  column-gap: 32px;
+  padding: 30px 32px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-left: 2px solid var(--accent);
+  color: var(--text-secondary);
+  transition: border-color 0.25s, background 0.25s, color 0.25s;
+}
+a.published-row:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-accent);
+  border-left-color: var(--accent);
+  color: var(--text-primary);
 }
 
-.diagnostic-deliverables-label {
-  font-size: 11px;
+.published-name {
+  font-family: var(--font-mono);
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 12px;
 }
+.published-what { font-size: 14px; line-height: 1.7; max-width: 64ch; }
+.published-go { color: var(--accent); font-size: 16px; transition: transform 0.2s; }
+a.published-row:hover .published-go { transform: translateX(4px); }
 
-.diagnostic-deliverables-sub {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
-}
-
-.diagnostic-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.diagnostic-list li {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  padding-left: 22px;
-  position: relative;
-}
-
-.diagnostic-list li::before {
-  content: '\2014';
-  position: absolute;
-  left: 0;
-  color: var(--accent);
-  font-weight: 600;
-}
-
-@media (max-width: 860px) {
-  .diagnostic-inner {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
+@media (max-width: 700px) {
+  .published-row { grid-template-columns: 1fr auto; row-gap: 10px; padding: 26px 24px; }
+  .published-name { grid-column: 1 / -1; }
 }
 
 /* ========================================
-   FAQ
+   WHO WE WORK WITH
    ======================================== */
-.faq-section .faq-header {
-  margin-bottom: 48px;
-}
-
-.faq-list {
-  max-width: 780px;
-}
-
-.faq-item {
-  border-top: 1px solid var(--border);
-}
-
-.faq-item:last-child {
+/* Sections alternate plain / banded down the page. "What we do" and "Who we
+   work with" are now neighbours, so the band moves to the offers below them;
+   two banded sections in a row read as one. */
+.who-section {
   border-bottom: 1px solid var(--border);
 }
 
-.faq-question {
-  width: 100%;
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 14px;
-  font-weight: 500;
-  text-align: left;
-  padding: 24px 40px 24px 0;
-  cursor: pointer;
-  position: relative;
-  transition: color 0.2s;
-  line-height: 1.6;
+#offers {
+  /* One token so the carousel's edge fades cannot drift from the band they
+     sit on: change the band here and the fades follow. */
+  --band: var(--bg-secondary);
+  background: var(--band);
+  border-bottom: 1px solid var(--border);
 }
 
-.faq-question:hover { color: var(--accent); }
+.who-header { margin-bottom: 48px; }
 
-.faq-question::after {
-  content: '+';
-  position: absolute;
-  right: 0;
-  top: 24px;
-  font-size: 20px;
-  font-weight: 400;
-  color: var(--accent);
-  transition: transform 0.3s;
+.who-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
 }
 
-.faq-item.open .faq-question::after {
-  transform: rotate(45deg);
+.who-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px 28px;
+  transition: border-color 0.25s, background 0.25s;
 }
 
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 0 0;
-}
+.who-card:hover { border-color: var(--border-accent); background: var(--bg-card-hover); }
 
-.faq-item.open .faq-answer {
-  max-height: 600px;
-  padding: 0 0 24px;
-}
+.who-card h3 { color: var(--accent); margin-bottom: 14px; font-size: 1.1rem; }
 
-.faq-answer p {
-  font-size: 13px;
+.who-card p {
+  font-size: 13.5px;
   color: var(--text-secondary);
-  line-height: 1.8;
-  max-width: 640px;
+  line-height: 1.75;
 }
 
-.faq-answer ul { margin-bottom: 16px; padding-left: 20px; list-style: none; }
-.faq-answer ul li { font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 8px; padding-left: 16px; position: relative; max-width: 640px; }
-.faq-answer ul li::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
+/* A text link, not a button: white-label work starts in a mail thread more
+   often than on a call, so the route sits in the card that needs it. */
+.who-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid rgba(220, 184, 117, 0.4);
+  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.who-link:hover { color: var(--accent-hover); border-bottom-color: var(--accent-hover); }
+
+@media (max-width: 860px) {
+  .who-grid { grid-template-columns: 1fr; }
+}
 
 /* ========================================
    FINAL CTA
@@ -595,92 +569,21 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 
 .final-cta h2 {
   font-size: clamp(2rem, 4vw, 3rem);
-  margin-bottom: 24px;
-}
-
-.final-cta .body-text {
-  max-width: 620px;
-  margin: 0 auto 40px;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
-.final-cta .body-text p {
-  margin-bottom: 16px;
-}
-
-.final-cta .support-text {
-  margin-top: 20px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-/* ========================================
-   FOOTER
-   ======================================== */
-
-
-
-/* ========================================
-   RESPONSIVE
-   ======================================== */
-@media (max-width: 900px) {
-  .step {
-    grid-template-columns: 60px 1fr;
-    gap: 24px;
-  }
-
-  .step-num { font-size: 40px; }
-
+  margin-bottom: 32px;
 }
 
 /* ========================================
    DESIGN ENHANCEMENTS
    ======================================== */
-
-/* --- Keyframes --- */
-@keyframes radar-pulse {
-  0%   { transform: translate(-50%, -50%) scale(0.15); opacity: 0.7; }
-  100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
-}
-
 @keyframes accent-shimmer {
   0%, 100% { background-position: 0% 50%; }
   50%       { background-position: 100% 50%; }
 }
 
-
 @keyframes hero-cta-glow {
   0%, 100% { box-shadow: 0 4px 20px rgba(201, 168, 76, 0.1); }
   50%       { box-shadow: 0 4px 40px rgba(201, 168, 76, 0.3), 0 0 0 1px rgba(201, 168, 76, 0.12); }
 }
-
-@keyframes stat-underline-in {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-
-/* --- Hero radar rings --- */
-.hero-radar-wrap {
-  position: absolute;
-  top: 42%;
-  left: 66%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.hero-radar-ring {
-  position: absolute;
-  width: 640px;
-  height: 640px;
-  border-radius: 50%;
-  border: 1px solid rgba(201, 168, 76, 0.18);
-  opacity: 0;
-  animation: radar-pulse 7s ease-out infinite;
-}
-
-.hero-radar-ring:nth-child(2) { animation-delay: 2.33s; }
-.hero-radar-ring:nth-child(3) { animation-delay: 4.67s; }
 
 /* --- Accent gradient shimmer --- */
 .hero h1 .accent {
@@ -702,102 +605,12 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   box-shadow: 0 8px 32px rgba(201, 168, 76, 0.28);
 }
 
-
-
-/* --- FAQ left accent on active/hover --- */
-.faq-question {
-  box-shadow: inset 2px 0 0 transparent;
-  transition: color 0.2s, box-shadow 0.3s;
-  padding-left: 16px;
-}
-
-.faq-question:hover,
-.faq-item.open .faq-question {
-  box-shadow: inset 2px 0 0 var(--accent);
-  color: var(--accent);
-}
-
-/* --- Step number brightens on hover --- */
-.step {
-  transition: background 0.3s;
-}
-
-.step:hover .step-num {
-  color: rgba(201, 168, 76, 0.24);
-  transition: color 0.4s;
-}
-
-
-
 @media (max-width: 640px) {
   .hero { min-height: auto; padding: 120px 0 80px; }
-
-  .step {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .step-num {
-    font-size: 32px;
-  }
 }
-
-
-/* ======== TASK EXAMPLES STRIP ======== */
-.task-eg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 40px; max-width: 860px; }
-.task-eg { position: relative; padding-left: 22px; font-size: 13.5px; color: var(--text-primary); line-height: 1.6; }
-.task-eg::before { content: '\2014'; position: absolute; left: 0; color: var(--accent); font-weight: 600; }
-@media (max-width: 640px) { .task-eg-grid { grid-template-columns: 1fr; } }
-
-/* ========================================
-   PROOF STRIP
-   ======================================== */
-.proof-strip {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: clamp(40px, 6vh, 64px) 0;
-}
-.proof-strip-inner {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
-}
-.proof-stat-num {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.6rem, 3.2vw, 2.3rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--accent);
-  margin-bottom: 10px;
-}
-.proof-stat-label {
-  font-size: 12.5px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-.proof-link {
-  display: inline-block;
-  margin-top: 28px;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-@media (max-width: 760px) {
-  .proof-strip-inner { grid-template-columns: 1fr; gap: 24px; }
-}
-
-/* ======== STICKY CTA (floating primary action) ======== */
-.sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
-.sticky-cta.visible { transform: none; opacity: 1; }
-.sticky-cta-text { font-size: 13px; color: var(--text-secondary); }
-.sticky-cta-btn { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 10px 22px; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s; }
-.sticky-cta-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
-@media (max-width: 520px) { .sticky-cta { padding: 10px 16px; gap: 12px; } .sticky-cta-text { display: none; } .sticky-cta-btn { flex: 1; text-align: center; } }
 
 </style>
-<meta name="author" content="Philip Stevens">
+<meta name="author" content="Baseweight">
 <link rel="author" href="/about">
 <script type="application/ld+json">
 {
@@ -821,7 +634,8 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
         "email": "hello@baseweight.co",
         "contactType": "customer support",
         "availableLanguage": "English"
-      }
+      },
+      "founder": { "@id": "https://baseweight.co/#person" }
     },
     {
       "@type": "Person",
@@ -835,12 +649,12 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
       "@type": "WebPage",
       "@id": "https://baseweight.co/#webpage",
       "url": "https://baseweight.co/",
-      "name": "Baseweight: automate your highest-volume task on your servers",
-      "description": "Teams come to us when the big AI platforms cost too much at their volume, make too many mistakes, or can't touch the data. We automate the task end to end: an open-source model post-trained on your data, run by your team or by us.",
-      "author": { "@id": "https://baseweight.co/#person" },
+      "name": "Baseweight: AI engineering consultancy",
+      "description": "Build, measure, and run AI systems in production. RAG and agents, evals, reliability, inference cost and latency, post-training on open-weight models, and deployment.",
+      "author": { "@id": "https://baseweight.co/#organization" },
       "publisher": { "@id": "https://baseweight.co/#organization" },
       "datePublished": "2025-01-01",
-      "dateModified": "2026-07-14",
+      "dateModified": "2026-09-18",
       "inLanguage": "en-US"
     }
   ]
@@ -864,212 +678,153 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 <section class="hero" id="hero">
   <div class="container">
     <div class="hero-content">
-      <h1 class="reveal">Automate your highest-volume task with a specialist model <span class="accent">on your servers.</span></h1>
-      <p class="hero-sub reveal reveal-delay-1">Teams come to us when the big AI platforms cost too much at their volume, make too many mistakes, or can&rsquo;t touch the data. We automate the task end to end: an open-source model post-trained on your data, the workflow around it, run by your team or by us.</p>
+      <h1 class="reveal">We make AI systems work <span class="accent">after the demo.</span></h1>
+      <p class="hero-sub reveal reveal-delay-1">Baseweight is an AI engineering consultancy. We build, measure, harden and optimize LLM systems in production.</p>
       <div class="hero-cta-group reveal reveal-delay-2">
-        <a href="/scope" class="btn-primary">Scope your task</a>
+        <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ======== PROOF STRIP ======== -->
-<!-- DATA PROVENANCE: stats below are a hardcoded, buyer-framed snapshot derived from
-     data/benchmark/results.json, generated_at 2026-05-26. Raw rows + derivation:
-       TILE 1, "30–40% fewer mistakes" vs the zero-shot API (buyer-framed as "the big-platform AI you'd run for this, used as-is"):
-         banking77 (support routing): API zero-shot wrong_class 315/1500; LoRA wrong_class 185/1500 → 41% fewer errors ("~40% fewer misroutes").
-         cuad (contract review):      API zero-shot non-correct 645/1500 (hallucinated 531 + partial 84 + format 30);
-                                      LoRA non-correct 437/1500 (393 + 42 + 2) → 32% fewer errors.  Range 32–41% → "30–40%".
-         footnote "nearly 3× at finding the right clause" = cuad AUPR LoRA 0.4519 / API 0.1577 = 2.87× (the metric the benchmark leads cuad with).
-         footnote "~a quarter fewer made-up answers" = cuad hallucinations 531 → 393 = 26% fewer.
-       TILE 2, "28–138x cheaper" per correct result: banking77 1.1589/0.0084 = 138x (vs 5-shot);
-                cuad 10.8349/0.3869 = 28x (vs zero-shot). Assumes a well-utilised GPU at volume; bursty/low volume narrows it.
-       TILE 3, "Runs on your servers" = the compliance wedge (static copy, no derived stat) (replaced the old "Won on both" tile, which surfaced the small task count).
-     NOTE: the contract footnote now uses cuad AUPR (LoRA 0.4519 / API 0.1577 ≈ 2.87×), the same metric the benchmark
-           leads cuad with, translated to buyer language; "30–40% fewer mistakes" is the error-count framing shared with the benchmark's buyer band.
-     RE-SYNC these tiles if the benchmark reruns (results.json generated_at changes). -->
-<section class="proof-strip" id="proof">
+<!-- ======== WHAT WE DO ======== -->
+<section class="do-section" id="what-we-do">
   <div class="container">
-    <div class="section-label reveal" style="justify-content: center; margin-bottom: 20px;">From the public head-to-head</div>
-    <p class="reveal" style="text-align: center; max-width: 680px; margin: 0 auto 36px; font-size: 14px; color: var(--text-secondary); line-height: 1.8;">A small open-source model, post-trained for one task, measured against the big-platform API tier a team would deploy:</p>
-    <div class="proof-strip-inner">
-      <div class="reveal">
-        <div class="proof-stat-num">30&ndash;40% fewer</div>
-        <div class="proof-stat-label">mistakes than the big-platform AI you&rsquo;d run for this, used as-is.</div>
+    <div class="do-header reveal">
+      <div class="section-label">Work</div>
+      <h2>What we do</h2>
+    </div>
+    <div class="do-grid">
+      <div class="do-item reveal">
+        <div class="do-term">Build AI systems</div>
+        <p>RAG, agents, document processing, and AI features inside your product.</p>
       </div>
-      <div class="reveal reveal-delay-1">
-        <div class="proof-stat-num">28&ndash;138&times; cheaper</div>
-        <div class="proof-stat-label">per correct result, run on hardware you control.</div>
+      <div class="do-item reveal reveal-delay-1">
+        <div class="do-term">Measure them</div>
+        <p>Evals that tell you what works and where it fails.</p>
       </div>
-      <div class="reveal reveal-delay-2">
-        <div class="proof-stat-num">Runs on your servers</div>
-        <div class="proof-stat-label">every result comes from a self-hosted open-source model; your data stays in your environment.</div>
+      <div class="do-item reveal">
+        <div class="do-term">Harden them</div>
+        <p>Grounding, guardrails, tracing, fallbacks, recovery.</p>
+      </div>
+      <div class="do-item reveal reveal-delay-1">
+        <div class="do-term">Optimize them</div>
+        <p>Inference cost and latency, without losing quality.</p>
+      </div>
+      <div class="do-item reveal">
+        <div class="do-term">Train your own models</div>
+        <p>Open-weight models tuned to one task. The weights are yours.</p>
+      </div>
+      <div class="do-item reveal reveal-delay-1">
+        <div class="do-term">Run them in production</div>
+        <p>Deployment, serving, monitoring, handover.</p>
       </div>
     </div>
-    <p class="reveal" style="text-align: center; max-width: 720px; margin: 32px auto 0; font-size: 13px; color: var(--text-secondary); line-height: 1.7;">The same test runs on your task: pull a spec off a datasheet, classify a part or customs line, match a record, check an entry.</p>
-    <a href="/head-to-head" class="proof-link">See the head-to-head &rarr;</a>
   </div>
 </section>
 
-
-<!-- ======== TASKS LIKE THESE (concrete examples so an under-aware reader recognizes their own work) ======== -->
-<section style="border-bottom: 1px solid var(--border); padding: clamp(48px, 7vh, 80px) 0;">
+<!-- ======== WHO WE WORK WITH ======== -->
+<section class="who-section" id="who">
   <div class="container">
-    <div class="section-label reveal">Tasks like these</div>
-    <h2 class="reveal" style="max-width: 640px; margin-bottom: 36px;">The narrow, repeatable jobs a specialist model does well.</h2>
-    <div class="task-eg-grid reveal reveal-delay-1">
-      <div class="task-eg">Pull the details off a PO, invoice, datasheet, or drawing</div>
-      <div class="task-eg">Sort or route each item into the right category</div>
-      <div class="task-eg">Match or de-duplicate records across systems</div>
-      <div class="task-eg">Check an entry against your rules or standards</div>
-      <div class="task-eg">Answer questions from your own documents</div>
-      <div class="task-eg">Flag the cases that need a person to look</div>
+    <div class="who-header reveal">
+      <div class="section-label">Clients</div>
+      <h2>Who we work with</h2>
     </div>
-    <p class="reveal reveal-delay-1" style="max-width: 640px; font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-top: 28px;">It takes the routine volume and routes the hard cases to your experts. Whatever else you use the big platforms for stays as it is.</p>
+    <div class="who-grid">
+      <div class="who-card reveal">
+        <h3>Startups</h3>
+        <p>You&rsquo;re shipping an AI product and need senior ML depth for a few weeks rather than a hire. Evals, reliability, cost, or a build.</p>
+      </div>
+      <div class="who-card reveal reveal-delay-1">
+        <h3>Agencies</h3>
+        <p>You&rsquo;ve sold AI work and don&rsquo;t have an ML engineer. White-label, your brand, day rate or fixed scope, IP yours on payment.</p>
+        <a class="who-link" href="mailto:hello@baseweight.co">Email us</a>
+      </div>
+      <div class="who-card reveal reveal-delay-2">
+        <h3>Operators</h3>
+        <p>You run one high-volume task on people or an expensive API. We train a model you own to do it, on your servers.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ======== HOW WE WORK ======== -->
-<section class="how-section" id="how">
+<!-- ======== OFFERS (carousel) ======== -->
+<section id="offers">
   <div class="container">
-    <div class="how-header reveal">
-      <div class="section-label">How it works</div>
-      <h2>Measure first, then build and run it.</h2>
+    <div class="offers-header reveal">
+      <div class="section-label">Offers</div>
+      <h2>What we sell</h2>
     </div>
-    <div class="steps">
-      <div class="step reveal">
-        <div class="step-num">01</div>
-        <div>
-          <h3>Measure it on your data</h3>
-          <p>Every Build opens with the head-to-head: a specialist model against whatever does the task today (an API, rules, or people), on a sample of your data, inside your environment. You see where it wins and where it fails, backed by a re-runnable test.</p>
+
+    <div class="reveal reveal-delay-1" role="group" aria-roledescription="carousel" aria-label="Offers">
+      <!-- The fade on an edge means there are more cards that way. It starts on
+           the right so the signal is right with JS off; JS then keeps both sides
+           in step with the scroll position. -->
+      <div class="offer-viewport has-next" id="offerViewport">
+        <div class="offer-track" id="offerTrack" tabindex="0" aria-label="Offers, scrollable">
+
+          <article class="offer-card">
+            <div class="offer-index">01</div>
+            <h3>Production Diagnostic</h3>
+            <p>Where your LLM feature fails in production, what it costs per request, and what to fix first.</p>
+            <div class="offer-spec">[PRICE] &middot; [DURATION]</div>
+          </article>
+
+          <article class="offer-card">
+            <div class="offer-index">02</div>
+            <h3>Eval Harness Sprint</h3>
+            <p>A scored baseline for your AI feature, broken down by failure mode, running in CI.</p>
+            <div class="offer-spec">[PRICE] &middot; [DURATION]</div>
+          </article>
+
+          <article class="offer-card">
+            <div class="offer-index">03</div>
+            <h3>Eval Retainer</h3>
+            <p>Monthly re-run, new cases as you ship, the suite kept green.</p>
+            <div class="offer-spec">[PRICE]/month</div>
+          </article>
+
+          <article class="offer-card">
+            <div class="offer-index">04</div>
+            <h3>Post-Training</h3>
+            <p>One narrow high-volume task tuned on an open-weight model. The weights are yours.</p>
+            <div class="offer-spec">[PRICE] &middot; [DURATION]</div>
+          </article>
+
         </div>
       </div>
-      <div class="step reveal reveal-delay-1">
-        <div class="step-num">02</div>
-        <div>
-          <h3>Build what measured best</h3>
-          <p>We build the workflow around what won on your data: the post-trained model plus retrieval, rules, guardrails, review routing, and audit logging.</p>
-        </div>
-      </div>
-      <div class="step reveal reveal-delay-2">
-        <div class="step-num">03</div>
-        <div>
-          <h3>Run it your way</h3>
-          <p>You choose the end state: a full handover (weights, inference code, runbook) run by your team, or we operate it and keep the test current as models and data drift. The weights are yours either way, and you can take the whole thing in-house at any time.</p>
-        </div>
+
+      <div class="carousel-controls">
+        <button class="carousel-btn" id="offerPrev" type="button" aria-label="Previous offer" aria-controls="offerTrack">&larr;</button>
+        <button class="carousel-btn" id="offerNext" type="button" aria-label="Next offer" aria-controls="offerTrack">&rarr;</button>
+        <div class="carousel-rail" id="offerRail" aria-hidden="true"><div class="carousel-rail-thumb" id="offerRailThumb"></div></div>
       </div>
     </div>
+
   </div>
 </section>
 
-<!-- ======== WHO THIS IS FOR ======== -->
-<section class="audience-section" id="audience">
+<!-- ======== PUBLISHED WORK ======== -->
+<section id="published">
   <div class="container">
-    <div class="reveal">
-      <div class="section-label">Who it&rsquo;s for</div>
-      <h2>For teams running one high-volume task without an ML bench.</h2>
+    <div class="published-header reveal">
+      <div class="section-label">Proof</div>
+      <h2>What we&rsquo;ve built.</h2>
     </div>
-    <p class="reveal" style="max-width: 680px; font-size: 14px; color: var(--text-secondary); line-height: 1.85; margin-top: 8px;">A queue of documents, records, or messages gets processed every day, at a volume where the errors and the bill both add up. The examples to learn from sit in that flow already, or a few weeks of capture would collect them. Nobody on staff post-trains and operates models, and one workflow doesn&rsquo;t justify the hire. You get the finished workflow, run by your team or by us.</p>
-    <p class="reveal" style="margin-top: 28px; font-size: 12px; color: var(--text-muted);">Know a team like this? Send them <a href="/head-to-head" style="color: var(--text-secondary); text-decoration: underline;">the head-to-head</a>, or <a href="mailto:hello@baseweight.co?subject=Intro" style="color: var(--text-secondary); text-decoration: underline;">intro us</a>.</p>
-  </div>
-</section>
-
-<!-- ======== FOUNDING PARTNERS (pricing + design-partner, merged) ======== -->
-<section class="pricing-section" id="pricing">
-  <div class="container">
-    <div class="pricing-header reveal">
-      <div class="section-label">Founding partners</div>
-      <h2>First in your vertical, at founding rates.</h2>
-      <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.85; max-width: 680px; margin-top: 16px;">You work directly with the person doing the build (Philip Stevens, 12 years in applied ML at Agoda and Quantcast). The first customer in each vertical sets the reference case.</p>
-    </div>
-    <div class="pricing-table-wrap reveal reveal-delay-1">
-      <table class="pricing-table">
-        <thead>
-          <tr>
-            <th>Step</th>
-            <th>What you get</th>
-            <th>Founding rate</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Build</td>
-            <td>One workflow automated end to end: the head-to-head on your data first, then the winning setup deployed with guardrails, review routing, and a runbook. Your team runs it, or we do.</td>
-            <td style="white-space: normal;">Fixed scope, founding-partner terms</td>
-          </tr>
-          <tr>
-            <td>Operate</td>
-            <td>We operate the workflow and keep it above the agreed bar: re-running the test as models and data move, extending coverage as new cases appear.</td>
-            <td>Monthly retainer</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="pricing-note reveal reveal-delay-2">We&rsquo;ll be specific about terms on a call.</p>
-    <!-- (founding-partners CTA removed; the sticky bar and the final CTA below carry the action at this scroll depth) -->
-  </div>
-</section>
-
-<!-- ======== FAQ ======== -->
-<section class="faq-section" id="faq">
-  <div class="container">
-    <div class="faq-header reveal">
-      <div class="section-label">FAQ</div>
-      <h2>Common questions</h2>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item reveal">
-        <button class="faq-question">We can&rsquo;t send our data to an outside API. Can you still help?</button>
-        <div class="faq-answer">
-          <p>Yes. The model runs on your infrastructure, and so can the head-to-head: in your VPC or on-prem, or on a de-identified sample. For strict residency policies, a self-hosted model is usually what passes review.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">Do we have to move off the big platforms?</button>
-        <div class="faq-answer">
-          <p>No. The specialist model takes over one task; everything else stays where it is. The test scores anything that attempts the task, so unsure items can route to a platform model or a person.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">What if a specialist model won&rsquo;t beat our current setup?</button>
-        <div class="faq-answer">
-          <p>Then the numbers show it, with the reason. The engagement ends before build spending starts, and you keep the model.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">Our systems integrator could build this. What&rsquo;s different here?</button>
-        <div class="faq-answer">
-          <p>The sequence and the aftercare. The build is measured before it starts. After delivery the workflow is kept above the agreed bar, by us or by your team with the runbook. The method is public; your integrator is welcome to check it.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">Will our security and legal review pass this?</button>
-        <div class="faq-answer">
-          <p>The review artifacts come with the work: Apache 2.0 or MIT base models (usage-capped or revocable licenses are screened out), every file revision-pinned and hash-verified, work under NDA, and for data that can&rsquo;t leave, inside your environment.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">We&rsquo;ve never had an ML team. Who runs this, and what does it take?</button>
-        <div class="faq-answer">
-          <p>That&rsquo;s who this is for. One GPU covers most volumes, and your engineers get the runbook and inference code at handover; or we operate it for you. Either way, the test flags the day quality moves.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">What do we get at the end?</button>
-        <div class="faq-answer">
-          <p>Weights and adapters, inference code, and the runbook: yours to run, modify, or hand on. Run it yourselves and the recurring cost is your hardware, with the model version pinned until you change it; or we run it for you on a monthly retainer.</p>
-        </div>
-      </div>
-      <div class="faq-item reveal">
-        <button class="faq-question">Do we need labelled data?</button>
-        <div class="faq-answer">
-          <p>&ldquo;Representative data exists or can be captured&rdquo; is enough to start. The fit check tells you whether what you have is sufficient; if it isn&rsquo;t, you get a capture checklist to close the gap.</p>
-        </div>
-      </div>
+    <div class="published-list">
+      <a class="published-row reveal" href="/benchmark">
+        <span class="published-name">Benchmark</span>
+        <span class="published-what">Fine-tuned open models against a frontier API on two vertical tasks, with hash-verified results.</span>
+        <span class="published-go" aria-hidden="true">&rarr;</span>
+      </a>
+      <a class="published-row reveal reveal-delay-1" href="/retrieval-service">
+        <span class="published-name">Retrieval service</span>
+        <span class="published-what">Deployed, with tracing, a failure-mode eval suite, and cost per request.</span>
+        <span class="published-go" aria-hidden="true">&rarr;</span>
+      </a>
     </div>
   </div>
 </section>
-
 
 <!-- ======== FINAL CTA ======== -->
 <section class="final-cta" id="cta">
@@ -1077,28 +832,19 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
     <div class="final-cta-content">
       <div class="reveal">
         <div class="section-label" style="justify-content: center;">Start</div>
-        <h2>See what automating your task would take.</h2>
+        <h2>Tell us what you&rsquo;re building.</h2>
       </div>
       <div class="reveal reveal-delay-1">
-        <a href="/scope" class="btn-primary">Scope your task</a>
-        <p class="support-text" style="margin-top: 20px;">Prefer to talk it through? <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" style="color: var(--text-secondary);">Book a free call &rarr;</a></p>
+        <div class="cta-routes">
+          <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call</a>
+          <a href="mailto:hello@baseweight.co" class="btn-ghost">Email us</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
-  <address itemscope itemtype="https://schema.org/Person">By <a href="/about" rel="author" itemprop="url" tabindex="-1"><span itemprop="name">Philip Stevens</span></a></address>
-  <time itemprop="datePublished" datetime="2026-03-01">March 2026</time>
-</div>
-
 </main>
-
-<!-- ======== STICKY CTA (floating primary action) ======== -->
-<div class="sticky-cta" id="stickyCta" aria-hidden="true">
-  <span class="sticky-cta-text">See what automating your task would take</span>
-  <a href="/scope" class="sticky-cta-btn" tabindex="-1">Scope your task</a>
-</div>
 
 <!-- ======== FOOTER ======== -->
 <footer></footer>
@@ -1107,36 +853,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 
 <!-- ======== JS ======== -->
 <script>
-// Scroll reveal
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, {
-  threshold: 0.08,
-  rootMargin: '0px 0px -40px 0px'
-});
-
-document.querySelectorAll('.reveal').forEach(el => {
-  revealObserver.observe(el);
-});
-
-function initAccordion(btnSelector, itemSelector) {
-  document.querySelectorAll(btnSelector).forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = btn.parentElement;
-      const wasOpen = item.classList.contains('open');
-      document.querySelectorAll(itemSelector + '.open').forEach(openItem => {
-        openItem.classList.remove('open');
-      });
-      if (!wasOpen) item.classList.add('open');
-    });
-  });
-}
-
-initAccordion('.faq-question', '.faq-item');
 
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1151,28 +867,54 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// Sticky CTA, show once past the hero, hide when the final CTA is on screen.
+// Offers carousel: arrows + a scroll rail over a scroll-snap track. The track is a plain
+// scroller, so touch/trackpad swipe and keyboard scrolling work without JS.
 (function () {
-  const bar = document.getElementById('stickyCta');
-  if (!bar) return;
-  const link = bar.querySelector('a');
-  const hero = document.querySelector('.hero');
-  const finalCta = document.querySelector('.final-cta');
-  let pastHero = false, finalVisible = false;
-  function update() {
-    const show = pastHero && !finalVisible;
-    bar.classList.toggle('visible', show);
-    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
-    if (link) link.tabIndex = show ? 0 : -1;
+  const track = document.getElementById('offerTrack');
+  if (!track) return;
+  const prev = document.getElementById('offerPrev');
+  const next = document.getElementById('offerNext');
+  const thumb = document.getElementById('offerRailThumb');
+  const viewport = document.getElementById('offerViewport');
+  const controls = document.querySelector('.carousel-controls');
+  const cards = [...track.querySelectorAll('.offer-card')];
+  if (!cards.length) return;
+
+  function step() {
+    return cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth;
   }
-  function obs(el, cb) {
-    if (!el) return;
-    new IntersectionObserver(es => { cb(es[0]); update(); }, { threshold: 0 }).observe(el);
+
+  // Read the three layout values once, then write. Interleaving reads and
+  // writes forces a reflow per write, every frame of a swipe.
+  function sync() {
+    const { scrollLeft, clientWidth, scrollWidth } = track;
+    const max = scrollWidth - clientWidth;
+    const scrollable = max > 1;
+    controls.hidden = !scrollable;   // every card already on screen: nothing to drive
+    viewport.classList.toggle('has-prev', scrollable && scrollLeft > 1);
+    viewport.classList.toggle('has-next', scrollable && scrollLeft < max - 1);
+    if (!scrollable) return;
+    // Thumb covers the visible fraction of the row and sits at the same
+    // fraction along the rail: the gap on either side is the off-screen part.
+    thumb.style.width = (clientWidth / scrollWidth * 100).toFixed(2) + '%';
+    thumb.style.transform = 'translateX(' + (scrollLeft / clientWidth * 100).toFixed(2) + '%)';
+    prev.disabled = scrollLeft <= 1;
+    next.disabled = scrollLeft >= max - 1;
   }
-  if (hero) obs(hero, e => { pastHero = !e.isIntersecting; }); else pastHero = true;
-  obs(finalCta, e => { finalVisible = e.isIntersecting; });
-  update();
+
+  prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+
+  let raf;
+  const schedule = () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(sync);
+  };
+  track.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);   // resize fires as fast as scroll
+  sync();
 })();
+
 </script>
 
 </body>

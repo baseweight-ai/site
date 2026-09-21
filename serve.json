@@ -1,0 +1,11 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/diagnostic", "destination": "/" },
+    { "source": "/pilot", "destination": "/" },
+    { "source": "/scope", "destination": "/" },
+    { "source": "/fit-score", "destination": "/" },
+    { "source": "/head-to-head", "destination": "/benchmark" },
+    { "source": "/contact", "destination": "/#cta" }
+  ]
+}

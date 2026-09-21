@@ -16,18 +16,13 @@
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://baseweight.co/contact</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://baseweight.co/head-to-head</loc>
+    <loc>https://baseweight.co/benchmark</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://baseweight.co/scope</loc>
+    <loc>https://baseweight.co/methodology</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
 </urlset>

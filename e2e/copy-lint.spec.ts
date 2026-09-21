@@ -36,6 +36,12 @@ const BANNED: { name: string; re: RegExp }[] = [
   { name: "anti-positioning dig", re: /\b(unlike (other|most)|not another|every ai (shop|vendor|consultancy)|nobody (else|who))\b/i },
   { name: "negative promise", re: /\bno (spam|pitch|fluff|bs|strings|jargon|sales pitch|lock-?in|email|commitment|obligation|ml (team|hires?))\b/i },
   { name: "possessive flourish", re: /\byours to (keep|own)\b/i },
+  // ── Retired names (COPY-STYLE.md "Retired vocabulary") ────────────────────
+  // Dropped from every surface on 2026-09-20. The linter is the enforcement
+  // point because these hide in meta and OG content, not just visible copy:
+  // the /benchmark rename left "Head-to-head" in two of methodology's meta
+  // titles, where a page-level text assertion could never have seen it.
+  { name: "retired name: forward-deployed", re: /forward[- ]deployed/i },
   // ── Self-praise buzzwords ──────────────────────────────────────────────────
   { name: "buzzword", re: /\b(seamless|effortless|frictionless|robust|cutting[- ]edge|state[- ]of[- ]the[- ]art|world[- ]class|best[- ]in[- ]class|next[- ]level|game[- ]?chang\w*|revolutioni[sz]\w*|transformative|holistic|turnkey|synerg\w*|supercharge\w*|unleash\w*|empower\w*|delightful|magical)\b/i },
   { name: "buzz-verb", re: /\b(unlock|elevate|leverage)\b/i },
@@ -63,8 +69,8 @@ const BANNED: { name: string; re: RegExp }[] = [
   // Contract terms live in the SOW and on the call, never in page copy.
   { name: "exit mechanics", re: /\b(stop clause|refunds?|make-?goods?|money[- ]back|cancel (at )?any ?time|measured phase)\b/i },
   // ── Visitor grading / qualification (COPY-STYLE.md) ─────────────────────────
-  // Results are next steps, never grades; qualification happens in the quiz
-  // routing and on the call, never in page copy.
+  // Results are next steps, never grades; qualification happens on the call,
+  // never in page copy.
   { name: "visitor grading", re: /\b(you'?re a candidate|best fit|weaker fit|good fit|already know it fits|score (your|my) task)\b/i },
   // ── Task-output vocabulary ──────────────────────────────────────────────────
   // "answer" shrinks the perceived task space; say result or outcome.
@@ -118,9 +124,30 @@ function headlineViolations(html: string): string[] {
 
 // Exact substrings that are permitted despite matching a pattern. Keep rare;
 // every entry needs a reason.
-const ALLOWLIST: { page: string; snippet: string; reason: string }[] = [
-  // (empty: add entries only for genuine terms-of-art, with the justification
-  //  here; protocol strings belong out of copy vocabulary, not on this list)
+// `pattern` is the BANNED rule name this entry excuses. Without it an entry
+// switched off every rule within ~120 characters of its snippet, so excusing
+// one word silently disarmed the linter around it.
+const ALLOWLIST: { page: string; pattern: string; snippet: string; reason: string }[] = [
+  // (add entries only for genuine terms-of-art or an owner decision, with the
+  //  justification here; protocol strings belong out of copy vocabulary, not
+  //  on this list)
+  {
+    page: "index.html",
+    pattern: "trust word: proof lexeme",
+    snippet: "Proof",
+    reason:
+      "Owner-chosen eyebrow for the published section (2026-09-20), matched on the word " +
+      "alone so a heading edit does not silently re-break the lint. The trust-word ban " +
+      "stands everywhere else: this labels a link to the artifact, never a claim in a sentence.",
+  },
+  {
+    page: "index.html",
+    pattern: "volatile count anchor",
+    snippet: "two vertical tasks",
+    reason:
+      "Owner-written published-row copy (2026-09-20). It is a census of the current run, " +
+      "so it goes stale the moment a third task publishes: re-check it with the benchmark rerun.",
+  },
 ];
 
 // Precompiled once: findViolations runs every pattern over every scanned text.
@@ -135,8 +162,8 @@ const FREQUENCY_CAPS: { name: string; re: RegExp; max: number }[] = [
   { name: "trust/trusted/trustworthy", re: /\btrust\w*\b/gi, max: 1 },
 ];
 
-function allowed(page: string, context: string): boolean {
-  return ALLOWLIST.some((a) => a.page === page && context.includes(a.snippet));
+function allowed(page: string, rule: string, context: string): boolean {
+  return ALLOWLIST.some((a) => a.page === page && a.pattern === rule && context.includes(a.snippet));
 }
 
 function findViolations(page: string, texts: { label: string; text: string }[]): string[] {
@@ -148,7 +175,7 @@ function findViolations(page: string, texts: { label: string; text: string }[]):
       while ((m = re.exec(text)) !== null) {
         const start = Math.max(0, m.index - 60);
         const context = text.slice(start, m.index + m[0].length + 60).trim();
-        if (!allowed(page, context)) hits.push(`[${name}] ${label}: …${context}…`);
+        if (!allowed(page, name, context)) hits.push(`[${name}] ${label}: …${context}…`);
       }
     }
   }

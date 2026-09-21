@@ -6,6 +6,7 @@
  */
 import fs from "fs";
 import path from "path";
+import { expect, type Page } from "@playwright/test";
 
 export const SITE_ROOT = path.join(__dirname, "..");
 
@@ -17,6 +18,21 @@ export function sitePages(): string[] {
     .readdirSync(SITE_ROOT)
     .filter((f) => f.endsWith(".html") && !PAGE_EXEMPT.has(f))
     .sort();
+}
+
+// Every CTA on every page points here (CLAUDE.md). One literal, not four.
+export const CAL_URL = "https://cal.com/baseweight/intro";
+
+// Assert a page's sections appear in this order. Reading position beats
+// pinning markup: it survives a refactor and still catches a section moving.
+export async function expectSectionOrder(page: Page, selectors: string[]): Promise<void> {
+  const tops: number[] = [];
+  for (const sel of selectors) {
+    tops.push((await page.locator(sel).first().boundingBox())!.y);
+  }
+  for (let i = 1; i < tops.length; i++) {
+    expect(tops[i], `${selectors[i]} after ${selectors[i - 1]}`).toBeGreaterThan(tops[i - 1]);
+  }
 }
 
 export function stripBlocks(html: string): { visible: string; scripts: string[]; metas: string[] } {

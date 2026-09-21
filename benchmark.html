@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Head-to-head: open model vs. the API you'd deploy | Baseweight</title>
-<meta name="description" content="On focused tasks like support triage and contract review, a small open model post-trained for the task matches or beats the big-platform API you'd otherwise reach for, at a lower cost per correct result. Public data, every number re-runnable.">
+<title>Benchmark: how we measure | Baseweight</title>
+<meta name="description" content="A dated, reproducible comparison of a fine-tuned open model against a hosted API on contract review and support triage.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/images/icon.jpg">
-<link rel="canonical" href="https://baseweight.co/head-to-head">
+<link rel="canonical" href="https://baseweight.co/benchmark">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://baseweight.co/head-to-head">
+<meta property="og:url" content="https://baseweight.co/benchmark">
 <meta property="og:title" content="A specialist open model can beat the API tier you'd deploy">
-<meta property="og:description" content="On focused tasks like support triage and contract review, a small open model post-trained for the task matches or beats the big-platform API you'd otherwise reach for, at a lower cost per correct result. Public data, every number re-runnable.">
+<meta property="og:description" content="A dated, reproducible comparison of a fine-tuned open model against a hosted API on contract review and support triage.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A specialist open model can beat the API tier you'd deploy">
-<meta name="twitter:description" content="On focused tasks like support triage and contract review, a small open model post-trained for the task matches or beats the big-platform API you'd otherwise reach for, at a lower cost per correct result. Public data, every number re-runnable.">
+<meta name="twitter:description" content="A dated, reproducible comparison of a fine-tuned open model against a hosted API on contract review and support triage.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <link rel="stylesheet" href="/components.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -94,7 +94,6 @@ body::after {
 
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
 
-
 /* PAGE HERO */
 .page-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 56px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
 .page-hero::before { content: ''; position: absolute; top: -32%; left: -10%; width: 60%; height: 175%; background: radial-gradient(ellipse at center, var(--glow-gold), transparent 66%); pointer-events: none; z-index: 0; }
@@ -105,6 +104,10 @@ body::after {
 .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
 .page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; }
 .page-hero .subtitle { font-size: 15px; color: var(--text-secondary); max-width: 58ch; line-height: 1.8; }
+/* When the run happened and what it ran against, at the top: a reader meets the
+   date before the numbers. Filled from results.json, never typed by hand. */
+.bench-stamp { margin-top: 18px; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--text-muted); }
+.bench-stamp:empty { display: none; }
 
 /* ERROR LEGEND */
 .error-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 9px 24px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
@@ -164,27 +167,7 @@ body::after {
 .chart-container { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; margin-top: 0; }
 .chart-canvas-wrap { position: relative; }
 
-/* TCO CALCULATOR */
-.tco-calculator { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; }
-.tco-input-row { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
-.tco-input-label { font-size: 13px; color: var(--text-secondary); }
-.tco-input {
-  font-family: var(--font-mono); font-size: 14px; font-weight: 600;
-  color: var(--text-primary); background: var(--bg-secondary);
-  border: 1px solid var(--border); padding: 10px 14px; width: 140px;
-  transition: border-color 0.2s;
-}
-.tco-input:focus { outline: none; border-color: var(--accent); }
-.tco-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tco-table th { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-.tco-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
-.tco-table tr:last-child td { border-bottom: none; }
-.tco-table tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
-.tco-table .tco-model { font-weight: 600; color: var(--text-primary); }
-.tco-null { color: var(--text-muted); }
-
 /* TASK NOTES */
-.bench-note { max-width: 680px; margin: 28px 0 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary); }
 .task-blurb { max-width: 640px; margin: 18px 0 0; font-size: 14px; line-height: 1.8; color: var(--text-secondary); text-align: left; }
 
 /* CTA BLOCK */
@@ -194,13 +177,8 @@ body::after {
 .btn-primary { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 16px 36px; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s, transform 0.15s; display: inline-block; }
 .btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-2px); }
 
-
 /* TOOLTIP - positioned via JS to escape overflow containers */
 [data-tooltip] { cursor: help; border-bottom: 1px dotted var(--text-muted); }
-
-/* TCO SELECT */
-.tco-select { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--text-primary); background: var(--bg-secondary); border: 1px solid var(--border); padding: 10px 14px; cursor: pointer; transition: border-color 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23555' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; max-width: 100%; }
-.tco-select:focus { outline: none; border-color: var(--accent); }
 
 /* DESIGN ELEVATION */
 
@@ -210,8 +188,8 @@ body::after {
 .leaderboard-table tr.is-winner td { background: rgba(220,184,117,0.07); }
 .leaderboard-table tr.is-winner .metric-val { color: var(--accent); }
 .leaderboard-table tr.is-winner .cell-model::after { content: 'BEST'; margin-left: 8px; font-size: 9px; letter-spacing: 0.1em; color: var(--accent); border: 1px solid rgba(220,184,117,0.4); padding: 1px 5px; }
-.leaderboard-table td, .tco-table td { transition: background 0.15s; }
-.leaderboard-table tbody tr:hover td, .tco-table tbody tr:hover td { background: rgba(255,255,255,0.04); }
+.leaderboard-table td { transition: background 0.15s; }
+.leaderboard-table tbody tr:hover td { background: rgba(255,255,255,0.04); }
 
 @keyframes benchRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @keyframes benchFade { from { opacity: 0; } to { opacity: 1; } }
@@ -221,7 +199,6 @@ body::after {
 .bench-reveal.in-view { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .bench-anim, .bench-fade, .bench-reveal { opacity: 1; transform: none; animation: none; transition: none; }
-  .sticky-cta { transition: none; }
 }
 
 /* HERO PROOF MARKERS */
@@ -232,15 +209,7 @@ body::after {
 .hero-proof a:hover { color: var(--text-primary); gap: 13px; }
 .hero-proof a:hover::before { transform: scale(1.5); }
 
-/* KEY RESULT CALLOUT */
-.bench-keyresult { position: relative; margin: 30px 0 0; padding: 20px 22px 20px 26px; background: linear-gradient(90deg, rgba(220,184,117,0.08), rgba(220,184,117,0.015) 58%, transparent); font-size: 15px; line-height: 1.65; color: var(--text-primary); max-width: 840px; overflow: hidden; }
-.bench-keyresult::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, var(--accent-cool), var(--accent)); }
-
 /* INLINE MID-PAGE CTA */
-
-/* TCO SUMMARY LINE */
-.tco-summary { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
-.tco-summary strong { color: var(--text-primary); font-weight: 600; font-variant-numeric: tabular-nums; }
 
 /* REPRODUCE, per-row panel (expanded inline from a leaderboard row) */
 .repro-panel { padding: 2px 16px 14px; border-top: 1px solid var(--border); }
@@ -254,7 +223,6 @@ body::after {
 
 /* REPRODUCE, global block */
 .repro-block { background: var(--bg-card); border: 1px solid var(--border); padding: 24px; }
-.repro-lead { font-size: 14px; color: var(--text-secondary); line-height: 1.8; max-width: 760px; margin-bottom: 20px; }
 .repro-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
 .repro-art { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; background: var(--bg-card); transition: background 0.15s; }
 .repro-art:hover { background: var(--bg-card-hover); }
@@ -267,29 +235,13 @@ body::after {
 .cta-points li { position: relative; padding-left: 22px; font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 8px; }
 .cta-points li::before { content: ''; position: absolute; left: 0; top: 0.72em; width: 6px; height: 6px; background: var(--accent); }
 
-/* UPCOMING TASK (placeholder tab state: no results yet, status + Build pointer) */
-.task-tab-soon { display: inline-block; font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-left: 8px; padding: 2px 6px; border: 1px solid var(--border-accent); border-radius: 2px; vertical-align: middle; }
-.task-tab.active .task-tab-soon { color: var(--accent); border-color: rgba(220,184,117,0.4); }
-.upcoming-panel { margin-top: 40px; background: var(--bg-card); border: 1px solid var(--border-accent); padding: 24px; max-width: 760px; }
-.upcoming-status { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(220,184,117,0.4); padding: 3px 8px; margin-bottom: 14px; }
-.upcoming-panel p { font-size: 13.5px; line-height: 1.75; color: var(--text-secondary); }
-.upcoming-panel p + p { margin-top: 10px; }
-
 /* STICKY CTA */
-.sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 200; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 12px 24px; background: rgba(13,13,13,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid var(--border-accent); transform: translateY(110%); opacity: 0; transition: transform 0.3s cubic-bezier(0.16,0.84,0.44,1), opacity 0.3s; }
-.sticky-cta.visible { transform: none; opacity: 1; }
-.sticky-cta-text { font-size: 13px; color: var(--text-secondary); }
-.sticky-cta-btn { font-family: var(--font-mono); font-size: 13px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 10px 22px; letter-spacing: 0.03em; white-space: nowrap; transition: background 0.2s; }
-.sticky-cta-btn:hover { background: var(--accent-hover); color: var(--bg-primary); }
 
 /* RESPONSIVE */
 @media (max-width: 640px) {
   .cta-block { padding: 40px 24px; }
 }
 @media (max-width: 520px) {
-  .sticky-cta { padding: 10px 16px; gap: 12px; }
-  .sticky-cta-text { display: none; }
-  .sticky-cta-btn { flex: 1; text-align: center; }
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -303,7 +255,7 @@ body::after {
 .bench-note { position: relative; padding-left: 18px; }
 .bench-note::before { content: ''; position: absolute; left: 0; top: 5px; bottom: 5px; width: 2px; background: linear-gradient(180deg, var(--accent-cool), transparent); }
 
-/* TASK TABS, bolder, with a status dot per tab */
+/* TASK TABS, bolder, with a dot marking the active tab */
 .task-selector-wrap { padding: 44px 0 0; }
 .task-tab { font-size: 12.5px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 13px 22px; }
 .task-tab::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: 9px; background: var(--text-muted); vertical-align: middle; transition: background 0.2s, transform 0.2s; }
@@ -341,23 +293,16 @@ body::after {
 .lb-detail.open { display: table-row; }
 .lb-detail > td { padding: 0; border-bottom: 1px solid var(--border-accent); }
 .lb-detail .repro-panel { border-top: none; background: rgba(0,0,0,0.22); padding: 8px 18px 16px; }
-.lb-hint { font-size: 12px; letter-spacing: 0.02em; color: var(--text-secondary); margin: 2px 0 18px; max-width: 760px; line-height: 1.6; }
-.lb-hint b { color: var(--accent); font-weight: 600; }
 
-/* CARDS, chart / calculator / reproduce share an instrument frame + label tab */
-.chart-container, .tco-calculator, .repro-block { position: relative; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border-color: var(--border-accent); }
-.chart-container::before, .tco-calculator::before, .repro-block::before { content: ''; position: absolute; top: -1px; left: 22px; width: 42px; height: 2px; background: var(--accent); }
-
-/* COST CALCULATOR, focus glow + cheapest marker (rows sort ascending) */
-.tco-input:focus, .tco-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-.tco-table tbody tr:first-child td { color: var(--text-primary); }
-.tco-table tbody tr:first-child .tco-model::after { content: 'CHEAPEST'; margin-left: 8px; font-size: 9px; letter-spacing: 0.1em; color: var(--accent-cool); border: 1px solid rgba(106,166,234,0.45); padding: 1px 5px; }
+/* CARDS, chart and reproduce share an instrument frame + label tab */
+.chart-container, .repro-block { position: relative; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border-color: var(--border-accent); }
+.chart-container::before, .repro-block::before { content: ''; position: absolute; top: -1px; left: 22px; width: 42px; height: 2px; background: var(--accent); }
 
 /* REPRODUCE, provenance artifact cards */
 .repro-art:hover .repro-art-t { color: var(--accent); }
 
 /* CTAs, sharper, with a lift glow */
-.btn-primary:hover, .sticky-cta-btn:hover { box-shadow: 0 8px 24px -10px var(--accent); }
+.btn-primary:hover { box-shadow: 0 8px 24px -10px var(--accent); }
 .cta-block { position: relative; overflow: hidden; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border-color: var(--border-accent); }
 .cta-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 92% at 50% 0%, var(--glow-gold), transparent 58%); pointer-events: none; }
 .cta-block > * { position: relative; z-index: 1; }
@@ -374,24 +319,9 @@ body::after {
 .task-tab.active .task-tab-vert { color: var(--accent); border-color: rgba(220,184,117,0.4); }
 
 /* ── BUYER HEADLINE (plain comparison built from the data) ────────────────── */
-.bench-headline { margin: 40px 0 0; }
-.bh-intro { font-size: 14px; color: var(--text-secondary); margin-bottom: 18px; }
-.bh-intro strong { color: var(--text-primary); font-weight: 600; }
-.bh-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: var(--border); border: 1px solid var(--border); }
-.bh-card { background: var(--bg-card); padding: 28px 28px 30px; }
-.bh-stat { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 4.4vw, 2.9rem); line-height: 1; letter-spacing: -0.02em; color: var(--accent); }
-.bh-stat-cap { font-size: 13px; color: var(--text-secondary); margin: 8px 0 22px; max-width: 34ch; line-height: 1.5; }
-.bh-bar-row { display: grid; grid-template-columns: 124px 1fr auto; align-items: center; gap: 12px; margin-bottom: 12px; }
-.bh-bar-lab { font-size: 12px; color: var(--text-secondary); }
-.bh-bar { height: 12px; background: rgba(255,255,255,0.05); }
-.bh-bar i { display: block; height: 100%; }
-.bh-bar-val { font-size: 12px; color: var(--text-primary); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.bh-cost-note { font-size: 12px; color: var(--text-muted); margin-top: 14px; line-height: 1.6; }
-@media (max-width: 720px) { .bh-cards { grid-template-columns: 1fr; } .bh-bar-row { grid-template-columns: 104px 1fr auto; } }
-
 /* ── ENGINEER DETAIL (depth on tap) ───────────────────────────────────────── */
 </style>
-<meta name="author" content="Philip Stevens">
+<meta name="author" content="Baseweight">
 <link rel="author" href="/about">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
 <script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
@@ -406,17 +336,16 @@ body::after {
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label bench-anim" style="animation-delay: 0s;">Head-to-head</div>
-    <h1 class="bench-anim" style="animation-delay: 0.07s;">On its one task, a specialist model beats the API you&rsquo;d deploy.</h1>
-    <p class="subtitle bench-anim" style="animation-delay: 0.14s;">We put a model trained for one narrow job against the big-platform AI a team would reach for, score both on public data anyone can re-run, and publish all of it. The same test runs on your task.</p>
+    <div class="section-label bench-anim" style="animation-delay: 0s;">Benchmark</div>
+    <h1 class="bench-anim" style="animation-delay: 0.07s;">Open models, fine-tuned, against a frontier API.</h1>
+    <p class="subtitle bench-anim" style="animation-delay: 0.14s;">Narrow, high-volume tasks, across zero-shot, few-shot and fine-tuned conditions.</p>
+    <p class="bench-stamp bench-anim" id="benchStamp" style="animation-delay: 0.18s;"></p>
     <div class="hero-proof bench-anim" style="animation-delay: 0.21s;">
       <a href="/methodology">How it&rsquo;s tested &rarr;</a>
       <a href="https://github.com/baseweight-ai/benchmark" target="_blank" rel="noopener noreferrer">View the code &rarr;</a>
     </div>
   </div>
 </section>
-
-<!-- (buyer "plain version" band removed: the hero carries the thesis; the per-task headline viz below carries the numbers in plain language) -->
 
 <section style="padding-bottom: var(--section-pad);">
   <div class="container">
@@ -427,106 +356,54 @@ body::after {
     </div>
     <p id="taskBlurb" class="task-blurb bench-fade" style="animation-delay: 0.28s;"></p>
 
-    <!-- BUYER HEADLINE (plain comparison, built from the data) -->
-    <div id="benchHeadline" class="bench-headline bench-reveal"></div>
-
-    <!-- UPCOMING TASK PANEL (shown instead of the data sections when the selected
-         task has no published run yet; content comes from TASKS[i].upcoming) -->
-    <div id="upcomingPanel" class="upcoming-panel" style="display:none;"></div>
-
-    <!-- COST CALCULATOR (what it costs you to run) -->
-    <div class="bench-section bench-reveal" id="costSection">
-      <div class="bench-section-header"><h2>What it costs to run</h2><span class="hdr-rule"></span></div>
-      <div class="tco-calculator">
-        <div class="tco-input-row">
-          <span class="tco-input-label">Daily queries:</span>
-          <input type="number" class="tco-input" id="tcoVolume" value="50000" min="1" max="10000000">
-        </div>
-        <div class="tco-input-row" style="margin-bottom: 24px;">
-          <span class="tco-input-label">Hosting scenario:</span>
-          <select id="gpuRate" class="tco-select">
-            <option value="0.35">On-prem hardware, amortised over 3 years (~$0.35/hr)</option>
-            <option value="0.44" selected>Budget cloud GPU, e.g. A40 (~$0.44/hr)</option>
-            <option value="1.00">Standard cloud GPU, e.g. A10G (~$1.00/hr)</option>
-            <option value="2.89">Premium cloud GPU, e.g. H100 (~$2.90/hr)</option>
-          </select>
-        </div>
-        <div style="overflow-x: auto;">
-          <table class="tco-table">
-            <thead>
-              <tr>
-                <th>Model</th>
-                <th>Monthly cost</th>
-                <th>Annual cost</th>
-              </tr>
-            </thead>
-            <tbody id="tcoBody"></tbody>
-          </table>
-        </div>
-        <p class="tco-summary" id="tcoSummary" style="display:none;"></p>
-        <p style="margin-top: 12px; font-size: 12px; color: var(--text-muted); line-height: 1.6;">Self-hosted figures assume the GPU stays busy. Bursty or low volume narrows the gap, and below a volume threshold the hosted API wins on cost; the calculator is for finding your side of that line.</p>
-      </div>    </div>
-
     <!-- FULL RESULTS (leaderboard, error analysis, reproduction artifacts) -->
-    <div id="fullResults">
-        <div class="bench-section bench-reveal">
-          <div class="bench-section-header"><h2>Every model and method, scored</h2><span class="hdr-rule"></span></div>
-          <div class="leaderboard-wrap">
-            <table class="leaderboard-table" id="leaderboardTable">
-              <thead>
-                <tr>
-                  <th data-col="model_label" data-tooltip="Open-weight models are self-hosted and can be fine-tuned; the API baseline is a hosted, closed model accessed through a provider, here the cost-efficient tier a team would run at volume.">Model</th>
-                  <th data-col="condition_label" data-tooltip="How the model was set up for this task. Click to sort.">Method</th>
-                  <th data-col="metric_value" class="sorted" data-tooltip="Primary quality metric for this task. Higher is better."><span id="metricColLabel">Metric</span> <span class="sort-indicator">↓</span></th>
-                  <th class="th-expand" aria-label="Reproduction details"></th>
-                </tr>
-              </thead>
-              <tbody id="leaderboardBody"></tbody>
-            </table>
-          </div>
-          <div class="table-legend">
-            <div class="legend-item"><div class="legend-dot" style="background: var(--color-opensource);"></div> Open-weight, fine-tuned (Apache 2.0)</div>
-            <div class="legend-item"><div class="legend-dot" style="background: var(--color-frontier);"></div> Hosted API (cost tier)</div>
-          </div>
-          <p class="lb-hint" style="font-size:12px; color: var(--text-muted); margin-top:14px;">Open any row&rsquo;s <b>Reproduce</b> panel for its exact data, recipe, training health, cost, and verification hashes.</p>
-        </div>
+    <div class="bench-section bench-reveal">
+      <div class="bench-section-header"><h2>Every model and method, scored</h2><span class="hdr-rule"></span></div>
+      <div class="leaderboard-wrap">
+        <table class="leaderboard-table" id="leaderboardTable">
+          <thead>
+            <tr>
+              <th data-col="model_label" data-tooltip="Open-weight models are self-hosted and can be fine-tuned; the API baseline is a hosted, closed model accessed through a provider, here the cost-efficient tier a team would run at volume.">Model</th>
+              <th data-col="condition_label" data-tooltip="How the model was set up for this task. Click to sort.">Method</th>
+              <th data-col="metric_value" class="sorted" data-tooltip="Primary quality metric for this task. Higher is better."><span id="metricColLabel">Metric</span> <span class="sort-indicator">↓</span></th>
+              <th class="th-expand" aria-label="Reproduction details"></th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+      <div class="table-legend">
+        <div class="legend-item"><div class="legend-dot" style="background: var(--color-opensource);"></div> Open-weight, fine-tuned (Apache 2.0)</div>
+        <div class="legend-item"><div class="legend-dot" style="background: var(--color-frontier);"></div> Hosted API, cost tier</div>
+      </div>
+    </div>
 
-        <div class="bench-section bench-reveal" id="errorSection">
-          <div class="bench-section-header"><h2>Where the errors go</h2><span class="hdr-rule"></span></div>
-          <div class="chart-container">
-            <div class="chart-canvas-wrap" style="height: 420px;">
-              <canvas id="errorChart"></canvas>
-            </div>
-            <div class="error-legend" id="errorLegend"></div>
-          </div>
+    <div class="bench-section bench-reveal" id="errorSection">
+      <div class="bench-section-header"><h2>Where the errors go</h2><span class="hdr-rule"></span></div>
+      <div class="chart-container">
+        <div class="chart-canvas-wrap" style="height: 420px;">
+          <canvas id="errorChart"></canvas>
         </div>
+        <div class="error-legend" id="errorLegend"></div>
+      </div>
+    </div>
 
-        <div class="bench-section bench-reveal">
-          <div class="bench-section-header"><h2>Reproduce any number</h2><span class="hdr-rule"></span></div>
-          <p class="repro-lead">Every result is reproducible from published artifacts. Run the released adapter on the eval data, or recompute the scores from the raw prediction logs. The base model is Apache-2.0 licensed, and every artifact is revision-pinned and hash-verified.</p>
-          <div class="repro-grid" id="reproArtifacts"></div>
-          <p class="repro-prov" id="reproProvenance"></p>
-        </div>
-
+    <div class="bench-section bench-reveal">
+      <div class="bench-section-header"><h2>Reproduce any number</h2><span class="hdr-rule"></span></div>
+      <div class="repro-grid" id="reproArtifacts"></div>
+      <p class="repro-prov" id="reproProvenance"></p>
     </div>
 
     <!-- CTA -->
     <div class="cta-block bench-reveal">
       <h2>These are public-data results. See if it holds for <em>your</em> task.</h2>
-      <a href="/scope" class="btn-primary">Scope your task &rarr;</a>
-      <p style="font-size:13px; color: var(--text-secondary); margin-top: 16px;">Prefer to talk? <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer">Book a free call &rarr;</a></p>
+      <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call &rarr;</a>
     </div>
 
   </div>
 </section>
 
 </main>
-
-<div class="sticky-cta" id="stickyCta" aria-hidden="true">
-  <span class="sticky-cta-text">See if it holds for your task</span>
-  <a href="/scope" class="sticky-cta-btn" tabindex="-1">Scope your task</a>
-  <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" tabindex="-1" style="font-size:13px; color:var(--text-secondary); white-space:nowrap;">Book a free call</a>
-</div>
 
 <footer></footer>
 
@@ -538,36 +415,15 @@ body::after {
 // with a distinct vertical, so any likely buyer finds their own work in one tab.
 // Before adding a task, check its `shape` and `vertical` against the list; a
 // duplicate on either axis needs a strong reason (the e2e suite asserts
-// uniqueness). Upcoming tasks appear as placeholder tabs: same harness, no
-// published run yet. A task goes live by deleting its `upcoming` block once its
-// results land in results.json. Statuses stay honest: what the pipeline is doing.
+// uniqueness). A task earns a tab once its run is published in results.json:
+// every tab on this page opens onto numbers. Work in progress gets no tab.
 const TASKS = [
   { id: 'cuad', name: 'Contract review', vertical: 'Legal',
     shape: 'find one field in a long document, or abstain',
-    blurb: "Find a specific clause in a full contract (governing law, IP ownership, a termination right) and return it exactly, or correctly say it isn't there. A confidently invented clause is worse than a missed one. Same shape as finding one term in a policy, a lease, or a filing." },
+    blurb: "Find a specific clause in a full contract (governing law, IP ownership, a termination right) and return it exactly, or correctly say it isn't there." },
   { id: 'banking77', name: 'Support triage', vertical: 'Banking',
     shape: 'route short text to one of many categories',
-    blurb: "Read a short customer message and route it to the right one of 77 intents, telling a cancelled payment apart from a failed transfer. Same shape as routing tickets, orders, or claims to the right queue." },
-  { id: 'hs6', name: 'HS-code classification', vertical: 'Customs / trade',
-    shape: 'classify into a large regulated code set, with escalation',
-    upcoming: { status: 'In build', note: 'Built on public customs rulings, scored at the full ~5,600-code label space with an escalate option for contested lines.' },
-    blurb: "Classify a messy product description to its HS subheading, or escalate the contested lines to your broker. Same shape as tariff, commodity, or safety-code assignment wherever the code set is large and regulated." },
-  { id: 'attr-extract', name: 'Spec &amp; attribute extraction', vertical: 'Distribution / e-commerce',
-    shape: 'normalize fields from varied documents into one schema',
-    upcoming: { status: 'Planned', note: 'Sources vary by supplier; the extracted schema is fixed.' },
-    blurb: "Pull structured attributes (pitch, plating, voltage, dimensions) off supplier datasheets, POs, and mill certs into one catalog schema, or mark a field as absent from the source." },
-  { id: 'part-match', name: 'Part &amp; product matching', vertical: 'Catalog ops / aftermarket',
-    shape: 'match and de-duplicate records across sources',
-    upcoming: { status: 'Planned', note: 'Scoring penalizes a wrong substitution more heavily than a missed match.' },
-    blurb: "Match the same item across differently formatted supplier feeds: part-number cross-references, de-duplication of a merged catalog, vehicle fitment." },
-  { id: 'rfq-extract', name: 'RFQ &amp; quote-line extraction', vertical: 'Manufacturing / MRO',
-    shape: 'turn an inbound request into structured lines',
-    upcoming: { status: 'Planned', note: 'Flags the lines that need an engineer to review.' },
-    blurb: "Parse an emailed RFQ, spec sheet, or drawing into structured lines your quoting desk can price." },
-  { id: 'doc-qa', name: 'Document Q&amp;A', vertical: 'Field service / ops',
-    shape: 'answer from your own documents, with citations',
-    upcoming: { status: 'Planned', note: 'Every response must cite the passage it came from; a question the documents do not settle must be flagged as such.' },
-    blurb: "Answer a working question from your own manuals, policies, or procedures, citing the passage it came from. Same shape as a technician querying equipment manuals or an agent checking policy terms." },
+    blurb: "Read a short customer message and route it to the right one of 77 intents, telling a cancelled payment apart from a failed transfer." },
 ];
 
 const FAMILY_COLORS = { 'open-source': '#60a5fa', 'frontier': '#dcb875', 'api-finetuned': '#4ade80' };
@@ -616,23 +472,6 @@ const ERROR_COLORS = {
   hallucinated: '#ef4444',
 };
 
-const ERROR_DESCRIPTIONS = {
-  correct: 'Output matched the expected result exactly or above the passing threshold.',
-  pass: 'All test cases passed.',
-  not_applicable: 'Returned "not found" or "not applicable" where that was right; an error only when the content was present and should have been extracted.',
-  partial: 'Output partially overlapped the expected text (Token F1 between 0.5 and 0.9).',
-  wrong_class: 'Model predicted the wrong category or intent.',
-  logic_error: 'Output ran without error but produced wrong results.',
-  format_violation: 'Output did not conform to the required format or label vocabulary.',
-  missed: 'Content was present in the source but the model did not extract it.',
-  hallucinated: 'Output contained text not present in the source.',
-  runtime_error: 'Generated code raised an exception at runtime.',
-  syntax_error: 'Generated code had a syntax error and could not run.',
-  refusal: 'Model refused to produce an answer.',
-  incomplete: 'Output was truncated before finishing.',
-  empty: 'Model returned an empty response.',
-};
-
 // Natural-language labels for the error chart (legend + tooltip).
 const ERROR_LABELS = {
   correct: 'Correct', pass: 'Pass', not_applicable: 'Correct (abstained)',
@@ -643,10 +482,6 @@ const ERROR_LABELS = {
 };
 
 const FAMILY_CLASSES = { 'open-source': 'opensource', 'frontier': 'frontier', 'api-finetuned': 'apift' };
-
-const GPU_HOURLY = 0.44;
-const SELF_HOST_ANNUAL = GPU_HOURLY * 24 * 365; // ~3,854
-const QUERIES_PER_GPU_DAY = 500000; // ~6 queries/sec; conservative for an 8B model on one A40 with vLLM continuous batching
 
 // ── REPRODUCIBILITY ARTIFACTS ────────────────────────────────────────────────
 // No-code reproduction targets. Adapter & prediction repos are published by the
@@ -693,8 +528,32 @@ async function loadData() {
     buildTabs();
     selectTask(currentTask);
     renderProvenance();
+    renderRunDate(raw);
   } catch(e) {
     console.error('Failed to load benchmark data', e);
+  }
+}
+
+// ── RUN DATE ───────────────────────────────────────────────────────────────
+// A hosted API's cost tier moves; the model measured here is the one that was
+// current on the run date. The hero stamp carries that date, read from the data
+// so a rerun moves it on its own.
+function runDate(raw) {
+  if (!raw || !raw.generated_at) return null;
+  const d = new Date(raw.generated_at);
+  if (isNaN(d)) return null;
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
+function renderRunDate(raw) {
+  const when = runDate(raw);
+  if (!when) return;
+  const hosted = [...new Set((raw.results || [])
+    .filter(r => r.family === 'frontier')
+    .map(r => r.display_name))];
+  const stamp = document.getElementById('benchStamp');
+  if (stamp) {
+    stamp.textContent = 'Run ' + when + (hosted.length ? '. Hosted baseline ' + hosted.join(' and ') + ', on its pricing that day.' : '.');
   }
 }
 
@@ -704,8 +563,7 @@ function buildTabs() {
   TASKS.forEach(t => {
     const btn = document.createElement('button');
     btn.className = 'task-tab' + (t.id === currentTask ? ' active' : '');
-    btn.innerHTML = (t.vertical ? '<span class="task-tab-vert">' + t.vertical + '</span>' : '') + t.name +
-      (t.upcoming ? ' <span class="task-tab-soon">' + t.upcoming.status + '</span>' : '');
+    btn.innerHTML = (t.vertical ? '<span class="task-tab-vert">' + t.vertical + '</span>' : '') + t.name;
     btn.setAttribute('role', 'tab');
     btn.setAttribute('aria-selected', t.id === currentTask ? 'true' : 'false');
     btn.addEventListener('click', () => selectTask(t.id));
@@ -723,26 +581,6 @@ function selectTask(taskId) {
     btn.classList.toggle('active', isActive);
     btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
-  const upcomingPanel = document.getElementById('upcomingPanel');
-  const costSection = document.getElementById('costSection');
-  const fullResults = document.getElementById('fullResults');
-  const headlineEl = document.getElementById('benchHeadline');
-  if (meta && meta.upcoming) {
-    if (upcomingPanel) {
-      upcomingPanel.style.display = '';
-      upcomingPanel.innerHTML =
-        '<span class="upcoming-status">' + meta.upcoming.status + '</span>' +
-        '<p>' + meta.upcoming.note + ' Results publish here when the run lands, scored the same way as every live task.</p>' +
-        '<p>If you run this task at volume, a Build opens with this same test on your data, ahead of the public version.</p>';
-    }
-    if (costSection) costSection.style.display = 'none';
-    if (fullResults) fullResults.style.display = 'none';
-    if (headlineEl) headlineEl.style.display = 'none';
-    return;
-  }
-  if (upcomingPanel) upcomingPanel.style.display = 'none';
-  if (costSection) costSection.style.display = '';
-  if (fullResults) fullResults.style.display = '';
   if (!benchData) return;
   const task = benchData.tasks[taskId];
   if (!task) {
@@ -756,71 +594,12 @@ function selectTask(taskId) {
     const base = METRIC_DESCRIPTIONS[task.metric_label] || 'Primary quality metric for this task. Higher is better.';
     metricTh.dataset.tooltip = base + ' Values are the mean across 3 seeds; hover a score for its 95% CI where available.';
   }
-  renderHeadline(task, taskId);
   renderLeaderboard(task, taskId);
   renderErrors(task);
-  renderTCO(task);
 }
 
 // Number the visible bench sections sequentially (the error-analysis section is
 // hidden for some tasks, so numbering can't be static).
-
-// Buyer headline, built from the same rows the table shows: the fine-tuned model
-// you'd own vs the best-quality hosted-API baseline, in plain terms, how much less
-// often it was wrong, and how much cheaper per correct result. Nothing hard-coded.
-function mistakeStats(r) {
-  const ec = r.error_counts || {};
-  const tot = Object.values(ec).reduce((a, b) => a + b, 0);
-  if (!tot) return null;
-  const right = (ec.correct || 0) + (ec.not_applicable || 0) + (ec.pass || 0);
-  return { rate: (tot - right) / tot, tot };
-}
-
-function renderHeadline(task, taskId) {
-  const el = document.getElementById('benchHeadline');
-  if (!el) return;
-  const fine = task.results
-    .filter(r => r.model_family === 'open-source' && /^LoRA/.test(r.condition || '') && r.metric_value != null)
-    .sort((a, b) => b.metric_value - a.metric_value)[0];
-  const api = task.results
-    .filter(r => r.model_family === 'frontier' && r.metric_value != null)
-    .sort((a, b) => b.metric_value - a.metric_value)[0];
-  if (!fine || !api) { el.innerHTML = ''; el.style.display = 'none'; return; }
-  el.style.display = '';
-
-  const fmtCost = v => v < 0.1 ? '$' + v.toFixed(3) : '$' + v.toFixed(2);
-  const bar = (lab, widthPct, val, color) =>
-    '<div class="bh-bar-row"><span class="bh-bar-lab">' + lab + '</span>' +
-    '<span class="bh-bar"><i style="width:' + widthPct.toFixed(0) + '%;background:' + color + '"></i></span>' +
-    '<span class="bh-bar-val">' + val + '</span></div>';
-
-  let mistakesCard = '';
-  const ms = mistakeStats(fine), ma = mistakeStats(api);
-  if (ms && ma && ma.rate > 0) {
-    const fewer = Math.round((ma.rate - ms.rate) / ma.rate * 100);
-    const om = Math.round(ms.rate * 100), am = Math.round(ma.rate * 100);
-    mistakesCard =
-      '<div class="bh-card"><div class="bh-stat">' + fewer + '% fewer</div>' +
-      '<div class="bh-stat-cap">mistakes than the big-platform AI, used as-is</div><div class="bh-bars">' +
-      bar('Built for the task', Math.max(5, ms.rate / ma.rate * 100), om + ' in 100 wrong', 'var(--color-opensource)') +
-      bar('Big-platform AI', 100, am + ' in 100 wrong', 'var(--color-frontier)') +
-      '</div></div>';
-  }
-
-  let costCard = '';
-  if (fine.cost_per_1k_correct > 0 && api.cost_per_1k_correct != null) {
-    const ratio = api.cost_per_1k_correct / fine.cost_per_1k_correct;
-    const rstr = ratio >= 10 ? String(Math.round(ratio)) : ratio.toFixed(1);
-    costCard =
-      '<div class="bh-card"><div class="bh-stat">' + rstr + '× cheaper</div>' +
-      '<div class="bh-stat-cap">per correct result, on hardware you control</div><div class="bh-bars">' +
-      bar('Built for the task', Math.max(5, fine.cost_per_1k_correct / api.cost_per_1k_correct * 100), fmtCost(fine.cost_per_1k_correct) + ' / 1k', 'var(--color-opensource)') +
-      bar('Big-platform AI', 100, fmtCost(api.cost_per_1k_correct) + ' / 1k', 'var(--color-frontier)') +
-      '</div></div>';
-  }
-
-  el.innerHTML = '<div class="bh-cards">' + mistakesCard + costCard + '</div>';
-}
 
 // ── REPRODUCE (per-row panel, expanded inline from a leaderboard row) ────────
 function reproLine(label, html) {
@@ -1128,78 +907,10 @@ function renderErrors(task) {
   if (legendEl) {
     legendEl.innerHTML = orderedCats.map(cat => {
       const label = ERROR_LABELS[cat] || cat.replace(/_/g, ' ');
-      const desc = ERROR_DESCRIPTIONS[cat] || '';
-      return `<div class="error-legend-item"><span class="error-legend-dot" style="background:${ERROR_COLORS[cat] || '#666'};"></span><span class="error-legend-text"><b>${label}</b>${desc ? ', ' + desc : ''}</span></div>`;
+      return `<div class="error-legend-item"><span class="error-legend-dot" style="background:${ERROR_COLORS[cat] || '#666'};"></span><span class="error-legend-text"><b>${label}</b></span></div>`;
     }).join('');
   }
 }
-
-// ── TCO CALCULATOR ─────────────────────────────────────────────────────────
-function renderTCO(task) {
-  const vol = parseInt(document.getElementById('tcoVolume').value, 10) || 50000;
-  const gpuHourly = parseFloat(document.getElementById('gpuRate').value) || GPU_HOURLY;
-  const selfHostAnnual = gpuHourly * 24 * 365;
-  const body = document.getElementById('tcoBody');
-
-  // One row per model, costed at the model's best-performing (deployment) condition
-  const byModel = {};
-  task.results.forEach(r => {
-    const cur = byModel[r.model_label];
-    if (!cur || (r.metric_value || 0) > (cur.metric_value || 0)) byModel[r.model_label] = r;
-  });
-
-  const rows = Object.values(byModel).map(r => {
-    let annual = null;
-    if (r.model_family === 'open-source') {
-      // Self-hosted cost is the GPU reservation at the chosen scenario rate plus
-      // one-time training. Per-query GPU time is already covered by the 24/7
-      // reservation, so there is no separate inference charge.
-      const hosting = selfHostAnnual * Math.max(1, Math.ceil(vol / QUERIES_PER_GPU_DAY));
-      annual = (r.training_cost || 0) + hosting;
-    } else if (r.cost_per_query != null) {
-      // API: usage-priced per token, no fixed hosting.
-      annual = r.cost_per_query * vol * 365;
-    }
-    return { ...r, annual };
-  }).sort((a, b) => {
-    if (a.annual === null && b.annual === null) return 0;
-    if (a.annual === null) return 1;
-    if (b.annual === null) return -1;
-    return a.annual - b.annual;
-  });
-
-  body.innerHTML = '';
-  rows.forEach(r => {
-    const tr = document.createElement('tr');
-    const annual = r.annual !== null ? '$' + Math.round(r.annual).toLocaleString() : '<span class="tco-null">-</span>';
-    const monthly = r.annual !== null ? '$' + Math.round(r.annual / 12).toLocaleString() : '<span class="tco-null">-</span>';
-    tr.innerHTML = `<td class="tco-model">${r.model_label}</td><td>${monthly}</td><td>${annual}</td>`;
-    body.appendChild(tr);
-  });
-
-  // Plain-language summary of the modelled numbers at the current inputs.
-  const sumEl = document.getElementById('tcoSummary');
-  if (sumEl) {
-    const ossRow = rows.find(r => r.model_family === 'open-source' && r.annual !== null);
-    const apiRow = rows.find(r => r.model_family === 'frontier' && r.annual !== null);
-    if (ossRow && apiRow) {
-      const fmt = v => '$' + Math.round(v).toLocaleString();
-      sumEl.innerHTML = 'At <strong>' + vol.toLocaleString() + '</strong> queries/day, you are modelling about <strong>' + fmt(ossRow.annual) + '/yr</strong> self-hosted versus <strong>' + fmt(apiRow.annual) + '/yr</strong> on the hosted API. Your own task and data will shift these numbers.';
-      sumEl.style.display = '';
-    } else {
-      sumEl.style.display = 'none';
-    }
-  }
-}
-
-let tcoTimer;
-document.getElementById('tcoVolume').addEventListener('input', () => {
-  clearTimeout(tcoTimer);
-  tcoTimer = setTimeout(() => { if (benchData) renderTCO(benchData.tasks[currentTask]); }, 150);
-});
-document.getElementById('gpuRate').addEventListener('change', () => {
-  if (benchData) renderTCO(benchData.tasks[currentTask]);
-});
 
 // JS tooltip - uses position:fixed to work inside overflow containers
 (function() {
@@ -1231,7 +942,6 @@ document.getElementById('gpuRate').addEventListener('change', () => {
   });
 })();
 
-
 // ── SCROLL REVEAL ──────────────────────────────────────────────────────────
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(e => {
@@ -1239,36 +949,6 @@ const revealObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.bench-reveal').forEach(el => revealObserver.observe(el));
-
-// ── STICKY CTA ─────────────────────────────────────────────────────────────
-// Show the sticky bar once the hero is scrolled past, but suppress it whenever
-// an in-page CTA (the inline one or the final block) is on screen, so the page
-// never shows two competing calls to action at once.
-(function() {
-  const bar = document.getElementById('stickyCta');
-  if (!bar) return;
-  const links = bar.querySelectorAll('a');
-  const hero = document.querySelector('.page-hero');
-  const finalCta = document.querySelector('.cta-block');
-  let pastHero = false, finalVisible = false;
-  const update = () => {
-    const show = pastHero && !finalVisible;
-    bar.classList.toggle('visible', show);
-    bar.setAttribute('aria-hidden', show ? 'false' : 'true');
-    links.forEach(l => { l.tabIndex = show ? 0 : -1; });
-  };
-  const observe = (el, cb) => {
-    if (!el) return;
-    new IntersectionObserver(es => { cb(es[0]); update(); }, { threshold: 0 }).observe(el);
-  };
-  if (hero) observe(hero, e => { pastHero = !e.isIntersecting; }); else pastHero = true;
-  // Defer to the destination CTA when any of it is on screen; otherwise the bar
-  // rides along through the proof sections. Its copy (low-friction offer) is
-  // distinct from the inline CTA (relevance to your data), so brief overlap reads
-  // as two angles, not the same line twice.
-  observe(finalCta, e => { finalVisible = e.isIntersecting; });
-  update();
-})();
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 loadData();
