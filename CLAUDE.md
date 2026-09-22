@@ -20,9 +20,8 @@ lives in `components.css`.
   `/head-to-head` 301s to `/benchmark`.
 - Memory files are advisory.
 - **Numbers.** Head-to-head figures (28–138×, the $0.46 GPU rate) come from
-  `data/benchmark/results.json`. Offer prices are placeholder tokens in the homepage
-  carousel until the owner sets them; anything beyond list price (discounts, payment terms,
-  SOW scope) belongs on the call.
+  `data/benchmark/results.json`. Offer prices live in the homepage carousel; anything
+  beyond list price (discounts, payment terms, SOW scope) belongs on the call.
 
 ## Offers
 
@@ -34,10 +33,12 @@ engagement, with no trailing qualifier:
 3. **Eval Retainer**.
 4. **Post-Training** (feasibility, then a build).
 
-- **Prices are unset.** Every card's spec line carries literal `[PRICE]` and `[DURATION]`
-  tokens (card 4 adds `build from [BUILD_PRICE]`) for the owner to fill. Filling one is a
-  pricing decision, not a copy edit: keep the shape, price and duration co-equal on one
-  line separated by a middle dot, because a price without a duration is not decidable.
+- **Prices are published** (set 2026-09-22): Production Diagnostic $7,500 / 2 weeks, Eval
+  Harness Sprint from $24,000 / 3 weeks, Eval Retainer from $5,000/month, Post-Training
+  from $45,000 / 6 weeks. Each card's spec line keeps price and duration co-equal on one
+  line separated by a middle dot, because a price without a duration is not decidable; the
+  retainer carries no duration. `e2e/home.spec.ts` asserts each spec line, so a change is a
+  reviewed pricing decision rather than a copy edit.
 - Every card renders exactly four elements and nothing else: `.offer-index`, `h3`, `p`,
   `.offer-spec`, in that order, asserted in `e2e/home.spec.ts`. Outcome, fee-credit and
   findings lines were tried on the diagnostic cards and cut on 2026-09-20; a seven-field

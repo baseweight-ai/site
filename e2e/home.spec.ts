@@ -9,14 +9,14 @@
 import { test, expect } from "@playwright/test";
 import { CAL_URL, expectSectionOrder } from "./copy-text";
 
-// Four cards, in this order. Prices are placeholder tokens until the owner
-// fills them; the spec shape (price, then duration, co-equal) is the decision
-// under test, so a filled-in price must keep that shape.
+// Four cards, in this order. Prices are published terms, so they are asserted:
+// a silent edit is a pricing change nobody reviewed. Price and duration stay
+// co-equal on one line, since a price without a duration is not decidable.
 const OFFERS = [
-  { name: "Production Diagnostic", spec: "[PRICE] · [DURATION]" },
-  { name: "Eval Harness Sprint", spec: "[PRICE] · [DURATION]" },
-  { name: "Eval Retainer", spec: "[PRICE]/month" },
-  { name: "Post-Training", spec: "[PRICE] · [DURATION]" },
+  { name: "Production Diagnostic", spec: "$7,500 · 2 weeks" },
+  { name: "Eval Harness Sprint", spec: "From $24,000 · 3 weeks" },
+  { name: "Eval Retainer", spec: "From $5,000/month" },
+  { name: "Post-Training", spec: "From $45,000 · 6 weeks" },
 ];
 
 test.beforeEach(async ({ page }) => {
