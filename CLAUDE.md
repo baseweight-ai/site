@@ -179,3 +179,46 @@ engagement, with no trailing qualifier:
   or reviewing, quick tweaks included) runs through the `connection-note` skill.
 - Prospect-list building, coverage passes, owner identification, and contact validation run
   through `icp-to-outreach` (it chains prospecting / account-research / icp-discovery itself).
+
+## Agent operating rules
+
+Read this file and `docs/INTEGRATION-BRIEF.md` before your first edit.
+
+## Repo boundary
+You are in `~/projects/baseweight/site`, the live codebase behind https://www.baseweight.co. The sibling `~/projects/baseweight/service` is out of bounds: never edit it, build it, or add a dependency to it. Data crosses between repos as a file a human copies. If a task appears to require touching the sibling, stop and say so.
+
+Host is Windows with WSL; repos are on the WSL side. Run the entire toolchain inside WSL.
+
+## Session
+- One task per session. Do the task you were given and stop.
+- Before your first edit, write a plan of ten lines or fewer: files you will touch, tests you will write, order. If it does not fit the task's blast radius, stop and say so.
+- Blast radius is binding. Touching an unlisted path requires stopping and asking. This includes reformatting, import reordering, typo fixes, dependency bumps.
+- If your diff will exceed ~400 changed lines excluding lockfiles and fixtures, stop and propose a split.
+
+## No scope creep
+- No new dependencies. No new framework, styling system, state library or component kit. No version bumps. If a task appears to need one, stop and say so.
+- Do not refactor shared components, restyle existing pages, or touch routes unrelated to this feature.
+- If something unrelated is broken, note it. Do not fix it.
+- Follow the conventions already in this repo. Do not introduce your own.
+
+## Invariants
+Do not change the gated-versus-advisory metric distinction described in `docs/INTEGRATION-BRIEF.md`, or the results-snapshot schema. If you believe one is wrong, say so in one paragraph and stop.
+
+## Honesty
+- Every figure, label, confidence interval, sample size, date and model name on the page comes from the committed results snapshot or from a live service response: `/v1/meta` for models, corpus, attribution and limits; each answer for its own index version and latency; `/v1/health` for the deployed commit. Never type a metric value into markup. Do not round, clean up, or select favourable numbers.
+- If the results snapshot is absent, the page ships with an explicit "measurement pending" state and no figures. Not example values, not placeholder charts, not illustrative figures.
+- Never claim a test passed, a build succeeded or the demo works without executing it. If you did not run it, write "not run".
+- No secret reaches the browser. Any upstream key is injected server-side. Never in client code, never in a publicly-prefixed environment variable, never in a committed file.
+
+## Copy
+Load the `baseweight-site-copy` skill before writing any user-facing prose, including legends, error states and UI strings. Where it contradicts wording suggested in a task, the skill wins.
+
+## Blocked
+State the blocker in one sentence, give two options with trade-offs, wait. If a gate fails and the cause is not obvious within two attempts, `git restore` to the last commit and re-plan.
+
+## Commits
+You do not commit. Propose the message. Do not run `git commit`, `git push`, `git rebase`, or `git reset --hard`.
+Conventional Commits: `type(scope): subject`, types `feat fix chore ci docs test refactor data`.
+The existing history predates this rule.
+Subject line only. Add a body only if one line is genuinely needed, never more. No lists. No summary of what you verified or did not verify. No commands, output, metrics, reasoning or diff summary. No trailers of any kind, no `Co-Authored-By`.
+Code and committed data go in separate commits.
