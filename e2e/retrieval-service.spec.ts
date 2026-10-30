@@ -164,7 +164,7 @@ test("with no snapshot, results show the pending state and no figures", async ({
   await page.goto(PAGE);
   await read;
   await expect(page.locator("#results")).toContainText("Measurement pending.");
-  await expect(page.locator("#resultsMount")).toBeEmpty();
+  await expect(page.locator("#resultsMount")).toHaveText("Measurement pending.");
   await expect(page.locator("#limitations")).toBeHidden();
   await expect(page.locator("#reproduce")).toBeHidden();
   // The attribution carries the dump date and the licence version; nothing

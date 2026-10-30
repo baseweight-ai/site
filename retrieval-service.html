@@ -155,6 +155,46 @@ a:hover { color: var(--accent-hover); }
 .pins dt { color: var(--text-muted); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding-top: 1px; }
 .pins dd { color: var(--text-primary); overflow-wrap: anywhere; }
 
+/* RESULTS: methodology.html's table, its row headers styled as that table's
+   first column. Gated and advisory differ in the caption and in the rule above
+   each table, solid or dashed, never in colour alone; the legend repeats it. */
+.methodology-content .table-wrap { overflow-x: auto; margin-bottom: 24px; }
+.methodology-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 500px;
+}
+.methodology-content caption { text-align: left; font-weight: 600; color: var(--text-primary); padding-bottom: 10px; }
+.methodology-content table.gated { border-top: 2px solid var(--text-secondary); }
+.methodology-content table.advisory { border-top: 2px dashed var(--text-secondary); }
+/* Headers keep their case, unlike methodology's: n is sample size, and N reads
+   as a population. */
+.methodology-content thead th {
+  font-weight: 600; font-size: 11px; letter-spacing: 0.05em;
+  color: var(--text-muted); padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  white-space: nowrap;
+}
+.methodology-content tbody :is(th, td) {
+  white-space: nowrap;
+  padding: 10px 14px; color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.15s;
+}
+.methodology-content tbody th { color: var(--text-primary); font-weight: 400; text-align: left; }
+.methodology-content tbody tr:last-child :is(th, td) { border-bottom: none; }
+.methodology-content tbody tr:nth-child(even) :is(th, td) { background: rgba(255,255,255,0.01); }
+.methodology-content tbody tr:hover :is(th, td) { background: rgba(255,255,255,0.04); }
+.table-legend { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; font-size: 13px; line-height: 1.6; margin-bottom: 28px; }
+.table-legend dt { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--text-primary); }
+.table-legend dt::before { content: ''; width: 24px; border-top: 2px solid var(--text-secondary); }
+.table-legend dt.advisory::before { border-top-style: dashed; }
+.table-legend dd { color: var(--text-secondary); }
+
 /* CTA BLOCK */
 .cta-block { position: relative; overflow: hidden; margin-top: 80px; padding: 64px; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border: 1px solid var(--border-accent); text-align: center; }
 .cta-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 92% at 50% 0%, rgba(220,184,117,0.11), transparent 58%); pointer-events: none; }
@@ -214,18 +254,21 @@ a:hover { color: var(--accent-hover); }
       <section id="how-its-measured">
         <h2>How it&rsquo;s measured</h2>
         <p class="lead">Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
-        <ul>
-          <li><strong>Gated:</strong> retrieval scores that block a merge when a change regresses them.</li>
-          <li><strong>Advisory:</strong> scores that are reported and block nothing. The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</li>
-        </ul>
+        <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
         <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
       </section>
 
       <section id="results">
         <h2>Results</h2>
-        <!-- Mount point for the results component. -->
+        <dl class="table-legend">
+          <dt class="gated">Gated</dt>
+          <dd>A change that regresses the score cannot merge.</dd>
+          <dt class="advisory">Advisory</dt>
+          <dd>A change that regresses the score can still merge.</dd>
+        </dl>
+        <!-- retrieval-results.js renders the pending state or the tables here. -->
         <div id="resultsMount"></div>
-        <p class="state-note">Measurement pending.</p>
+        <p class="state-note" id="resultsFailed" hidden>The results could not be loaded.</p>
       </section>
 
       <section id="limitations" hidden>
@@ -256,11 +299,12 @@ a:hover { color: var(--accent-hover); }
 <footer></footer>
 
 <script src="/components.js"></script>
+<script src="/retrieval-results.js"></script>
 <script>
 // ── RESULTS SNAPSHOT ───────────────────────────────────────────────────────
 // The service's results file, copied in by hand (INTEGRATION-BRIEF.md §4) and
 // read same-origin. A 404 means no measured run is committed: Limitations and
-// Reproduce stay hidden and Results keeps its pending state. Any other failure
+// Reproduce stay hidden and Results shows its pending state. Any other failure
 // is stated on the page.
 const SNAPSHOT_URL = '/data/retrieval-service/results.json';
 
@@ -291,6 +335,19 @@ async function readSnapshot() {
     return renderable(doc) ? { state: 'ready', doc } : { state: 'failed' };
   } catch (e) {
     return { state: 'failed' };
+  }
+}
+
+// ── RESULTS ────────────────────────────────────────────────────────────────
+// retrieval-results.js renders the pending state or the tables. A snapshot
+// that cannot be read, or that the component refuses, shows the failure note
+// instead of a blank section.
+function renderResultsSection({ state, doc }) {
+  try {
+    if (state === 'failed') throw new Error('results snapshot could not be read');
+    renderResults(document.getElementById('resultsMount'), state === 'ready' ? doc : null);
+  } catch (e) {
+    document.getElementById('resultsFailed').hidden = false;
   }
 }
 
@@ -326,6 +383,7 @@ function renderPins({ state, doc }) {
 }
 
 readSnapshot().then(snapshot => {
+  renderResultsSection(snapshot);
   renderLimitations(snapshot);
   renderPins(snapshot);
 });
