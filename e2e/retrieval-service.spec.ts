@@ -141,7 +141,7 @@ function serveSnapshot(page: Page, status: number, body = "") {
   );
 }
 
-// Shown beside the demo before anyone types.
+// Shown beside the demo before anyone types, so held with it until it ships.
 const CORPUS_BOUNDARY =
   "The index holds a capped subset of English Wikipedia, frozen at one past dump. " +
   "Anything newer, this week’s news included, is outside it.";
@@ -187,11 +187,11 @@ test("the pipeline diagram carries its text alternative", async ({ page }) => {
   await expect(page.getByRole("img", { name: PIPELINE, exact: true })).toBeVisible();
 });
 
-test("the demo says what the corpus covers before anyone types", async ({ page }) => {
+test("the demo section is held hidden, with its corpus note and an empty mount", async ({ page }) => {
   await serveSnapshot(page, 404);
   await page.goto(PAGE);
   const note = page.locator("#demo .demo-note");
-  await expect(note).toBeVisible();
+  await expect(page.locator("#demo")).toBeHidden();
   await expect(note).toContainText(CORPUS_BOUNDARY);
   await expect(note).toContainText(ANECDOTE);
   await expect(page.locator("#demoMount")).toBeEmpty();

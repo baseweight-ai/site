@@ -1,6 +1,6 @@
 # ADR-0001: Retrieval service page, route and composition
 
-Status: Proposed 2026-10-30, awaiting owner approval.
+Status: Accepted 2026-10-30.
 Inputs: `docs/INTEGRATION-BRIEF.md`, `docs/DISCOVERY.md`, `CLAUDE.md`.
 
 ## Context
@@ -17,8 +17,9 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 
 ### Route
 
-- Path `/retrieval-service`, file `retrieval-service.html`. The entry point is the homepage
-  published row (`index.html:820`); the nav stays Home, Benchmark, About.
+- Path `/retrieval-service`, file `retrieval-service.html`. The entry points are the homepage
+  published row (`index.html:820`) and the nav, which carries Home, Benchmark, Retrieval
+  service and About, and collapses to the menu button at ≤800px (`components.css`).
 - Pass 1 removes the `noindex` meta tag and adds `https://baseweight.co/retrieval-service` to
   `sitemap.xml`, with the expected list at `e2e/site.spec.ts:153-161` updated in the same
   change.
