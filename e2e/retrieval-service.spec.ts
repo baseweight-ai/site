@@ -147,6 +147,12 @@ const CORPUS_BOUNDARY =
 const ANECDOTE =
   "One question is an anecdote. The results below measure the service over its test set.";
 
+// The img role hides the diagram's labels from screen readers, so its title
+// carries the whole pipeline.
+const PIPELINE =
+  "Ingest, chunk, embed, Postgres with pgvector and BM25, hybrid retrieve, rerank, " +
+  "generate with citations, verify. Every stage sends OpenTelemetry spans to a tracing backend.";
+
 test("every limitations entry renders verbatim and in full", async ({ page }) => {
   // The fixture's own entry, then two that a summary, a cap or an innerHTML
   // insert would each change.
@@ -167,11 +173,17 @@ test("with no snapshot, results show the pending state and no figures", async ({
   await expect(page.locator("#resultsMount")).toHaveText("Measurement pending.");
   await expect(page.locator("#limitations")).toBeHidden();
   await expect(page.locator("#reproduce")).toBeHidden();
-  // The attribution carries the dump date and the licence version; nothing
-  // else on the page may show a digit.
+  // The attribution carries the dump date and the licence version, and the
+  // pipeline diagram names BM25; nothing else on the page may show a digit.
   const notice = await page.locator(".attribution").innerText();
-  const rest = (await page.locator("main").innerText()).replace(notice, "");
+  const rest = (await page.locator("main").innerText()).replace(notice, "").replace(/BM25/g, "");
   expect(rest).not.toMatch(/\d/);
+});
+
+test("the pipeline diagram carries its text alternative", async ({ page }) => {
+  await serveSnapshot(page, 404);
+  await page.goto(PAGE);
+  await expect(page.getByRole("img", { name: PIPELINE, exact: true })).toBeVisible();
 });
 
 test("the demo says what the corpus covers before anyone types", async ({ page }) => {

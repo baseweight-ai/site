@@ -147,6 +147,23 @@ a:hover { color: var(--accent-hover); }
 .demo-note { border-left: 2px solid var(--accent); padding-left: 18px; margin-bottom: 28px; }
 .demo-note p:last-child { margin-bottom: 0; }
 
+/* PIPELINE: one inline SVG. x is in percent and y in px, so the two columns
+   follow the width while the text keeps its size. Lines, arrowheads and the
+   span label draw in currentColor, which forced colours repaint; each box
+   keeps its own fill and text colour. */
+.pipeline { max-width: 560px; }
+.pipeline svg { display: block; width: 100%; height: 370px; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+.pipeline text { text-anchor: middle; }
+.pipeline .nodes rect { fill: var(--bg-card); stroke: var(--border-accent); }
+.pipeline .nodes text { fill: var(--text-primary); }
+.pipeline .nodes .sub { fill: var(--text-secondary); font-size: 11px; }
+.pipeline .flow, #pipeline-arrow { color: var(--accent); }
+.pipeline line { stroke: currentColor; }
+.pipeline .flow line { stroke-width: 1.5; stroke-linecap: square; }
+.pipeline .spans line { stroke-dasharray: 3 3; }
+.pipeline .spans text, .pipeline marker path { fill: currentColor; }
+.pipeline .spans text { font-size: 11px; }
+
 /* STATE NOTES: results pending, snapshot unreadable */
 .methodology-content p.state-note { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px 20px; }
 
@@ -249,6 +266,58 @@ a:hover { color: var(--accent-hover); }
         </div>
         <!-- Mount point for the demo component. -->
         <div id="demoMount"></div>
+      </section>
+
+      <section id="how-its-built">
+        <h2>How it&rsquo;s built</h2>
+        <figure class="pipeline">
+          <svg role="img" aria-labelledby="pipeline-title">
+            <title id="pipeline-title">Ingest, chunk, embed, Postgres with pgvector and BM25, hybrid retrieve, rerank, generate with citations, verify. Every stage sends OpenTelemetry spans to a tracing backend.</title>
+            <defs>
+              <marker id="pipeline-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L8,4 L0,8 z"/></marker>
+              <marker id="pipeline-arrow-span" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L8,4 L0,8 z"/></marker>
+            </defs>
+            <!-- A tick from every stage to a rail; the rails meet in the bus to the tracing backend. -->
+            <g class="spans">
+              <line x1="1%" y1="28" x2="4%" y2="28"/>
+              <line x1="1%" y1="100" x2="4%" y2="100"/>
+              <line x1="1%" y1="172" x2="4%" y2="172"/>
+              <line x1="1%" y1="244" x2="4%" y2="244"/>
+              <line x1="96%" y1="28" x2="99%" y2="28"/>
+              <line x1="96%" y1="100" x2="99%" y2="100"/>
+              <line x1="96%" y1="172" x2="99%" y2="172"/>
+              <line x1="96%" y1="244" x2="99%" y2="244"/>
+              <line x1="1%" y1="28" x2="1%" y2="296"/>
+              <line x1="99%" y1="28" x2="99%" y2="296"/>
+              <line x1="1%" y1="296" x2="99%" y2="296"/>
+              <line x1="50%" y1="296" x2="50%" y2="325" marker-end="url(#pipeline-arrow-span)"/>
+              <text x="50%" y="288">OpenTelemetry spans</text>
+            </g>
+            <!-- Down each column, with the elbow from Postgres to hybrid retrieval. -->
+            <g class="flow">
+              <line x1="25%" y1="52" x2="25%" y2="75" marker-end="url(#pipeline-arrow)"/>
+              <line x1="25%" y1="124" x2="25%" y2="147" marker-end="url(#pipeline-arrow)"/>
+              <line x1="25%" y1="196" x2="25%" y2="219" marker-end="url(#pipeline-arrow)"/>
+              <line x1="46%" y1="244" x2="50%" y2="244"/>
+              <line x1="50%" y1="244" x2="50%" y2="28"/>
+              <line x1="50%" y1="28" x2="54%" y2="28" marker-end="url(#pipeline-arrow)"/>
+              <line x1="75%" y1="52" x2="75%" y2="75" marker-end="url(#pipeline-arrow)"/>
+              <line x1="75%" y1="124" x2="75%" y2="147" marker-end="url(#pipeline-arrow)"/>
+              <line x1="75%" y1="196" x2="75%" y2="219" marker-end="url(#pipeline-arrow)"/>
+            </g>
+            <g class="nodes">
+              <rect x="4%" y="4" width="42%" height="48"/><text x="25%" y="32">Ingest</text>
+              <rect x="4%" y="76" width="42%" height="48"/><text x="25%" y="104">Chunk</text>
+              <rect x="4%" y="148" width="42%" height="48"/><text x="25%" y="176">Embed</text>
+              <rect x="4%" y="220" width="42%" height="48"/><text x="25%" y="240">Postgres</text><text class="sub" x="25%" y="256">pgvector &middot; BM25</text>
+              <rect x="54%" y="4" width="42%" height="48"/><text x="75%" y="24">Hybrid</text><text x="75%" y="40">retrieve</text>
+              <rect x="54%" y="76" width="42%" height="48"/><text x="75%" y="104">Rerank</text>
+              <rect x="54%" y="148" width="42%" height="48"/><text x="75%" y="168">Generate</text><text x="75%" y="184">with citations</text>
+              <rect x="54%" y="220" width="42%" height="48"/><text x="75%" y="248">Verify</text>
+              <rect x="25%" y="326" width="50%" height="40"/><text x="50%" y="350">Tracing backend</text>
+            </g>
+          </svg>
+        </figure>
       </section>
 
       <section id="how-its-measured">

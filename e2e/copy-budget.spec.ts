@@ -26,7 +26,7 @@ const BUDGETS: { page: string; words: number; note: string }[] = [
   { page: "about.html",          words: 205,  note: "2026-09-22 baseline 180: the argument for measuring first in four paragraphs, founder, CTA" },
   { page: "benchmark.html",    words: 90,   note: "2026-09-20 baseline 75 (static shell; results, blurbs and the run stamp render from data): hero, results table, artifacts, CTA" },
   { page: "methodology.html",  words: 1060, note: "2026-09-18 baseline 946 (technical spec; precision over brevity, but still bounded)" },
-  { page: "retrieval-service.html", words: 275, note: "2026-10-30 baseline 246 (static shell; limitations and pinned revisions render from the snapshot): what this is, demo note, method, pending results, CTA, verbatim CC BY-SA attribution (42)" },
+  { page: "retrieval-service.html", words: 325, note: "2026-10-30 baseline 294 (static shell; limitations and pinned revisions render from the snapshot): what this is, demo note, pipeline diagram and its text alternative (45), method, pending results, CTA, verbatim CC BY-SA attribution (42)" },
   { page: "privacy.html",        words: 370,  note: "2026-09-22 baseline 331 (legal text; exempt from lint, still bounded): what Cal.com and email hand over, and the rights over it" },
 ];
 
