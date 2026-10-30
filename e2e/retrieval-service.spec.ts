@@ -1,10 +1,10 @@
 /**
- * Retrieval service results snapshot (INTEGRATION-BRIEF.md §4). The site has
- * no build step, so this spec is the gate: it holds the committed snapshot to
- * the schema, and a malformed or truncated file fails the suite instead of
- * rendering blanks. The fixture tests pin what the schema rejects.
+ * Retrieval service page and its results snapshot (INTEGRATION-BRIEF.md §4).
+ * The site has no build step, so this spec is the gate: it holds the committed
+ * snapshot to the schema, and a malformed or truncated file fails the suite
+ * instead of rendering blanks. The fixture tests pin what the schema rejects.
  */
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import fs from "fs";
 import path from "path";
 import { SITE_ROOT } from "./copy-text";
@@ -126,4 +126,78 @@ test("no other metric may be null", () => {
     doc.metrics[0].value = null;
   });
   expect(() => parseSnapshot(json)).toThrow("metrics[0].value: expected a number");
+});
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+// Each test serves the snapshot itself, so none depends on whether one is
+// committed.
+
+const PAGE = "/retrieval-service.html";
+
+function serveSnapshot(page: Page, status: number, body = "") {
+  return page.route("**/data/retrieval-service/results.json", (route) =>
+    route.fulfill({ status, contentType: "application/json", body })
+  );
+}
+
+// Shown beside the demo before anyone types.
+const CORPUS_BOUNDARY =
+  "The index holds a capped subset of English Wikipedia, frozen at one past dump. " +
+  "Anything newer, this week’s news included, is outside it.";
+const ANECDOTE =
+  "One question is an anecdote. The results below measure the service over its test set.";
+
+test("every limitations entry renders verbatim and in full", async ({ page }) => {
+  // The fixture's own entry, then two that a summary, a cap or an innerHTML
+  // insert would each change.
+  const json = fixtureWith((doc) => {
+    doc.limitations.push("A second entry, kept in order.", "Markup stays text: <b>bold</b> & <i>em</i>.");
+  });
+  await serveSnapshot(page, 200, json);
+  await page.goto(PAGE);
+  await expect(page.locator("#limitations li")).toHaveText(JSON.parse(json).limitations);
+});
+
+test("with no snapshot, results show the pending state and no figures", async ({ page }) => {
+  await serveSnapshot(page, 404);
+  const read = page.waitForResponse("**/data/retrieval-service/results.json");
+  await page.goto(PAGE);
+  await read;
+  await expect(page.locator("#results")).toContainText("Measurement pending.");
+  await expect(page.locator("#resultsMount")).toBeEmpty();
+  await expect(page.locator("#limitations")).toBeHidden();
+  await expect(page.locator("#reproduce")).toBeHidden();
+  // The attribution carries the dump date and the licence version; nothing
+  // else on the page may show a digit.
+  const notice = await page.locator(".attribution").innerText();
+  const rest = (await page.locator("main").innerText()).replace(notice, "");
+  expect(rest).not.toMatch(/\d/);
+});
+
+test("the demo says what the corpus covers before anyone types", async ({ page }) => {
+  await serveSnapshot(page, 404);
+  await page.goto(PAGE);
+  const note = page.locator("#demo .demo-note");
+  await expect(note).toBeVisible();
+  await expect(note).toContainText(CORPUS_BOUNDARY);
+  await expect(note).toContainText(ANECDOTE);
+  await expect(page.locator("#demoMount")).toBeEmpty();
+});
+
+test("a snapshot that cannot be read says so", async ({ page }) => {
+  await serveSnapshot(page, 200, FIXTURE.slice(0, 200));
+  await page.goto(PAGE);
+  await expect(page.locator("#limitations")).toContainText("The limitations could not be loaded.");
+  await expect(page.locator("#limitations li")).toHaveCount(0);
+  await expect(page.locator("#reproduce")).toBeHidden();
+});
+
+test("the pinned revisions render from the snapshot", async ({ page }) => {
+  const pins = ["pin-dataset", "pin-revision", "pin-generator", "pin-embedder", "pin-reranker", "pin-judge"];
+  const json = fixtureWith((doc) => {
+    [doc.dataset.repo, doc.dataset.revision, doc.system.generator, doc.system.embedder, doc.system.reranker, doc.judge.model] = pins;
+  });
+  await serveSnapshot(page, 200, json);
+  await page.goto(PAGE);
+  await expect(page.locator("#reproduce dd")).toHaveText(pins);
 });

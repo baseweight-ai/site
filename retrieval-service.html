@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Retrieval service | Baseweight</title>
-<meta name="description" content="A retrieval service in production: tracing, a failure-mode eval suite, and cost per request.">
-<!-- No content on it yet, so it stays out of search until there is some. Drop
-     this tag and add the sitemap entry when the page is written. -->
+<meta name="description" content="Retrieval-augmented question answering over English Wikipedia, and how it is measured.">
+<!-- Out of search until the owner sets the timing (ADR-0001). Drop this tag
+     and add the sitemap entry in the same change. -->
 <meta name="robots" content="noindex, follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,16 +15,17 @@
 <link rel="apple-touch-icon" href="/images/icon.jpg">
 <link rel="canonical" href="https://baseweight.co/retrieval-service">
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
-<link rel="stylesheet" href="/components.css">
-<meta name="author" content="Baseweight">
-<link rel="author" href="/about">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/retrieval-service">
 <meta property="og:title" content="Retrieval service: Baseweight">
-<meta property="og:description" content="A retrieval service in production: tracing, a failure-mode eval suite, and cost per request.">
+<meta property="og:description" content="Retrieval-augmented question answering over English Wikipedia, and how it is measured.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Retrieval service: Baseweight">
+<meta name="twitter:description" content="Retrieval-augmented question answering over English Wikipedia, and how it is measured.">
+<meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -32,6 +33,7 @@
   --bg-primary: #080808;
   --bg-secondary: #0d0d0d;
   --bg-card: #111111;
+  --bg-card-hover: #161616;
   --border: #1c1c1c;
   --border-accent: #282828;
   --text-primary: #e8e4de;
@@ -39,15 +41,24 @@
   --text-muted: #807d76;
   --accent: #dcb875;
   --accent-hover: #dbb960;
+  --accent-dim: rgba(201, 168, 76, 0.1);
+  --accent-glow: rgba(201, 168, 76, 0.06);
   --font-display: 'Syne', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --max-width: 1120px;
-  --section-pad: clamp(80px, 12vh, 140px);
+  --section-pad: clamp(60px, 8vh, 100px);
 }
 
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; -webkit-font-smoothing: antialiased; }
 
-body { font-family: var(--font-mono); font-size: 15px; line-height: 1.75; color: var(--text-primary); background: var(--bg-primary); overflow-x: hidden; }
+body {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  overflow-x: hidden;
+}
 
 ::selection { background: var(--accent); color: var(--bg-primary); }
 
@@ -56,57 +67,268 @@ a:hover { color: var(--accent-hover); }
 
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
 
-h1 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; font-size: clamp(2rem, 4.5vw, 3.2rem); }
 
-.section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-.section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+/* PAGE HERO */
+.page-hero {
+  padding-top: calc(72px + var(--section-pad));
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: ''; position: absolute; top: -30%; left: -6%;
+  width: 56%; height: 160%;
+  background: radial-gradient(ellipse at center, rgba(220,184,117,0.10), transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.page-hero .container { position: relative; z-index: 1; }
+.page-hero .section-label {
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.page-hero .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+.page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1.15; }
 
-.case-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 40px; border-bottom: 1px solid var(--border); }
-.case-hero p { max-width: 62ch; margin-top: 18px; font-size: 15px; line-height: 1.8; color: var(--text-secondary); }
+/* ENTRY MOTION */
+@keyframes methRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.meth-anim { opacity: 0; animation: methRise 0.6s cubic-bezier(0.16,0.84,0.44,1) forwards; }
 
-.case-body { padding: var(--section-pad) 0; }
-.case-body a { border-bottom: 1px solid rgba(220, 184, 117, 0.3); }
+/* MAIN CONTENT: one column, so the demo and the results get the full width */
+.page-body { padding: var(--section-pad) 0; }
+.methodology-content { counter-reset: method-section; min-width: 0; }
+.methodology-content h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+  color: var(--text-primary);
+  margin-top: 56px; margin-bottom: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  counter-increment: method-section;
+}
+.methodology-content h2::before {
+  content: counter(method-section, decimal-leading-zero) ' /';
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.methodology-content > section:first-child h2 { margin-top: 0; border-top: none; padding-top: 0; }
+
+.methodology-content :is(p, ul, dl) { max-width: 740px; }
+.methodology-content p {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.85;
+  margin-bottom: 16px;
+}
+.methodology-content p.lead {
+  font-size: 16px; line-height: 1.8; color: var(--text-primary);
+  margin-bottom: 18px;
+}
+
+.methodology-content strong { color: var(--text-primary); font-weight: 600; }
+
+.methodology-content ul {
+  list-style: none; margin: 0 0 16px 0; padding: 0;
+}
+.methodology-content ul li {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.85;
+  padding-left: 20px; position: relative; margin-bottom: 4px;
+}
+.methodology-content ul li::before {
+  content: ''; position: absolute; left: 0; top: 0.75em;
+  width: 5px; height: 5px; background: var(--accent);
+}
+
+/* DEMO NOTE: what the index holds, read before the question box */
+.demo-note { border-left: 2px solid var(--accent); padding-left: 18px; margin-bottom: 28px; }
+.demo-note p:last-child { margin-bottom: 0; }
+
+/* STATE NOTES: results pending, snapshot unreadable */
+.methodology-content p.state-note { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px 20px; }
+
+/* PINNED REVISIONS, filled from the snapshot */
+.pins { display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; font-size: 13px; line-height: 1.6; }
+.pins dt { color: var(--text-muted); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding-top: 1px; }
+.pins dd { color: var(--text-primary); overflow-wrap: anywhere; }
+
+/* CTA BLOCK */
+.cta-block { position: relative; overflow: hidden; margin-top: 80px; padding: 64px; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border: 1px solid var(--border-accent); text-align: center; }
+.cta-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 92% at 50% 0%, rgba(220,184,117,0.11), transparent 58%); pointer-events: none; }
+.cta-block > * { position: relative; z-index: 1; }
+.cta-block h2 { font-family: var(--font-display); font-size: clamp(1.55rem, 3.2vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 28px; }
+.btn-primary { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 16px 36px; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s, transform 0.15s; display: inline-block; }
+.btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-2px); box-shadow: 0 8px 24px -10px var(--accent); }
+
+/* ATTRIBUTION: the corpus licence notice, small print above the footer */
+.attribution { max-width: 740px; margin: 48px auto 0; font-size: 12px; line-height: 1.7; color: var(--text-muted); text-align: center; }
+.attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
 
 @media (max-width: 640px) {
-  .case-hero { padding-top: 120px; }
+  .cta-block { padding: 40px 24px; }
 }
 </style>
+<meta name="author" content="Baseweight">
+<link rel="author" href="/about">
+<link rel="stylesheet" href="/components.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
-<!-- Vercel Speed Insights -->
-<script>
-  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-</script>
+<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 <body>
 <a href="#main-content" class="skip-nav">Skip to main content</a>
 
-<!-- ======== NAV ======== -->
 <nav id="nav"></nav>
 
 <main id="main-content">
 
-<section class="case-hero">
+<section class="page-hero">
   <div class="container">
-    <div class="section-label">Build</div>
-    <h1>Retrieval service</h1>
-    <p>Deployed, with tracing, a failure-mode eval suite, and cost per request.</p>
+    <div class="section-label meth-anim" style="animation-delay: 0s;">Build</div>
+    <h1 class="meth-anim" style="animation-delay: 0.07s;">Retrieval service</h1>
   </div>
 </section>
 
-<!-- Write-up goes here: the task, the system, the numbers, the handover. -->
-<section class="case-body">
+<section class="page-body">
   <div class="container">
-    <p><a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer">Book a call</a> to go through this one.</p>
+    <article class="methodology-content">
+
+      <section id="what-this-is">
+        <h2>What this is</h2>
+        <p class="lead">A retrieval-augmented question-answering service over English Wikipedia. It retrieves passages, answers from them, and cites the passages it used. An eval harness in its repository scores each change against a fixed test set.</p>
+      </section>
+
+      <section id="demo">
+        <h2>Demo</h2>
+        <div class="demo-note">
+          <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
+          <p>One question is an anecdote. The results below measure the service over its test set.</p>
+        </div>
+        <!-- Mount point for the demo component. -->
+        <div id="demoMount"></div>
+      </section>
+
+      <section id="how-its-measured">
+        <h2>How it&rsquo;s measured</h2>
+        <p class="lead">Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
+        <ul>
+          <li><strong>Gated:</strong> retrieval scores that block a merge when a change regresses them.</li>
+          <li><strong>Advisory:</strong> scores that are reported and block nothing. The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</li>
+        </ul>
+        <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
+      </section>
+
+      <section id="results">
+        <h2>Results</h2>
+        <!-- Mount point for the results component. -->
+        <div id="resultsMount"></div>
+        <p class="state-note">Measurement pending.</p>
+      </section>
+
+      <section id="limitations" hidden>
+        <h2>Limitations</h2>
+        <ul id="limitationsList"></ul>
+        <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
+      </section>
+
+      <section id="reproduce" hidden>
+        <h2>Reproduce it</h2>
+        <dl class="pins" id="pinsList"></dl>
+      </section>
+
+    </article>
+
+    <div class="cta-block">
+      <h2>Tell us what you&rsquo;re building.</h2>
+      <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call</a>
+    </div>
+
+    <!-- The deployed GET /v1/meta `attribution` field, verbatim (INTEGRATION-BRIEF.md §3). -->
+    <p class="attribution">Passages are excerpts from English Wikipedia articles by Wikipedia contributors, as of the 2019-08-01 dump in the KILT knowledge source, split into chunks with wiki markup removed. They are licensed under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a>. Each citation links to its article.</p>
   </div>
 </section>
 
 </main>
 
-<!-- ======== FOOTER ======== -->
 <footer></footer>
 
 <script src="/components.js"></script>
+<script>
+// ── RESULTS SNAPSHOT ───────────────────────────────────────────────────────
+// The service's results file, copied in by hand (INTEGRATION-BRIEF.md §4) and
+// read same-origin. A 404 means no measured run is committed: Limitations and
+// Reproduce stay hidden and Results keeps its pending state. Any other failure
+// is stated on the page.
+const SNAPSHOT_URL = '/data/retrieval-service/results.json';
 
+// The revisions a rerun pins, as the snapshot names them.
+const PINS = [
+  ['Dataset', d => d.dataset?.repo],
+  ['Dataset revision', d => d.dataset?.revision],
+  ['Generator', d => d.system?.generator],
+  ['Embedder', d => d.system?.embedder],
+  ['Reranker', d => d.system?.reranker],
+  ['Judge', d => d.judge?.model],
+];
+
+const isText = v => typeof v === 'string' && v.trim() !== '';
+
+// Checks only what this page renders; the e2e suite holds the whole file to
+// its schema.
+function renderable(doc) {
+  return Array.isArray(doc?.limitations) && doc.limitations.length > 0 &&
+    doc.limitations.every(isText) && PINS.every(([, read]) => isText(read(doc)));
+}
+
+async function readSnapshot() {
+  try {
+    const res = await fetch(SNAPSHOT_URL);
+    if (res.status === 404) return { state: 'absent' };
+    const doc = res.ok ? await res.json() : null;
+    return renderable(doc) ? { state: 'ready', doc } : { state: 'failed' };
+  } catch (e) {
+    return { state: 'failed' };
+  }
+}
+
+// ── LIMITATIONS ────────────────────────────────────────────────────────────
+// Every entry, verbatim, inserted as text.
+function renderLimitations({ state, doc }) {
+  if (state === 'absent') return;
+  document.getElementById('limitations').hidden = false;
+  if (state === 'failed') {
+    document.getElementById('limitationsFailed').hidden = false;
+    return;
+  }
+  const list = document.getElementById('limitationsList');
+  doc.limitations.forEach(entry => {
+    const li = document.createElement('li');
+    li.textContent = entry;
+    list.appendChild(li);
+  });
+}
+
+// ── REPRODUCE ──────────────────────────────────────────────────────────────
+function renderPins({ state, doc }) {
+  if (state !== 'ready') return;
+  const list = document.getElementById('pinsList');
+  PINS.forEach(([label, read]) => {
+    const dt = document.createElement('dt');
+    dt.textContent = label;
+    const dd = document.createElement('dd');
+    dd.textContent = read(doc);
+    list.append(dt, dd);
+  });
+  document.getElementById('reproduce').hidden = false;
+}
+
+readSnapshot().then(snapshot => {
+  renderLimitations(snapshot);
+  renderPins(snapshot);
+});
+</script>
 </body>
 </html>
