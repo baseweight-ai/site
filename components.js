@@ -5,6 +5,7 @@
   const LINKS = [
     { href: '/', label: 'Home' },
     { href: '/benchmark', label: 'Benchmark' },
+    { href: '/retrieval-service', label: 'Retrieval service' },
     { href: '/about', label: 'About' },
   ];
 

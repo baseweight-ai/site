@@ -3,6 +3,11 @@
 CLAUDE.md
 STRATEGY.md
 COMPETITIVE-ANALYSIS.md
+docs/
 
 # Backend (Google Apps Script) reference copy, deployed by hand, not part of the site.
 apps-script/
+
+# Repo dotfiles, which the build output (the root) would otherwise serve.
+.gitignore
+.vercelignore

@@ -87,7 +87,7 @@ Required on every metric row: `n`, `ci_low`, `ci_high`, `gated`. Required on the
 
 `config` names which configuration of the service produced the row. `delta_vs_baseline` and its bounds are set only on rows from the deployed configuration, so treat them as optional. `ablations` compares one configuration against another and never belongs in a metric row.
 
-This site has no build step, so validation lives where the repo already runs checks: a spec in the e2e suite (`npm run test:e2e`) reads the committed snapshot and fails on a malformed or truncated file. The page never renders blanks or invented figures: when the fetch or the parse fails, it renders an explicit failure state. Follow `/benchmark`'s read, not its catch, which only logs to the console.
+One parser, `e2e/retrieval-service-schema.ts`, validates the committed snapshot in two places: a spec in the e2e suite (`npm run test:e2e`) fails on a malformed or truncated file, and the `vercel.json` build command runs the same check, so such a file also fails the deploy. The page never renders blanks or invented figures: when the fetch or the parse fails, it renders an explicit failure state. Follow `/benchmark`'s read, not its catch, which only logs to the console.
 
 The `limitations` array renders verbatim and in full. Do not soften, summarise or omit entries.
 

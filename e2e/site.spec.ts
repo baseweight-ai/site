@@ -54,16 +54,25 @@ for (const { path } of PAGES) {
   });
 }
 
-// Home, Benchmark, About, then the Book a call button. Contact was removed with
-// its page on 2026-09-20.
-test("nav carries exactly Home, Benchmark, About and the call button", async ({ page }) => {
+// Home, Benchmark, Retrieval service, About, then the Book a call button.
+// Contact was removed with its page on 2026-09-20.
+test("nav carries exactly Home, Benchmark, Retrieval service, About and the call button", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator("nav#nav a").first()).toBeVisible();
   const nav = page.locator("nav#nav");
-  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText(["Home", "Benchmark", "About"]);
+  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText([
+    "Home",
+    "Benchmark",
+    "Retrieval service",
+    "About",
+  ]);
   await expect(nav.getByRole("link", { name: "Benchmark", exact: true })).toHaveAttribute(
     "href",
     "/benchmark"
+  );
+  await expect(nav.getByRole("link", { name: "Retrieval service", exact: true })).toHaveAttribute(
+    "href",
+    "/retrieval-service"
   );
   await expect(nav.getByRole("link", { name: /Contact/i })).toHaveCount(0);
   await expect(nav.locator("a.nav-cta")).toHaveAttribute("href", CAL_URL);
@@ -157,6 +166,7 @@ test("the sitemap lists the live pages", () => {
       "https://baseweight.co/benchmark",
       "https://baseweight.co/methodology",
       "https://baseweight.co/privacy",
+      "https://baseweight.co/retrieval-service",
     ].sort()
   );
   // A redirected or noindexed path in the sitemap is a crawl error. Derived, so

@@ -1,8 +1,9 @@
 /**
  * Retrieval service page and its results snapshot (INTEGRATION-BRIEF.md §4).
- * The site has no build step, so this spec is the gate: it holds the committed
- * snapshot to the schema, and a malformed or truncated file fails the suite
- * instead of rendering blanks. The fixture tests pin what the schema rejects.
+ * This spec holds the committed snapshot to the schema, and a malformed or
+ * truncated file fails the suite. The vercel.json build command runs the same
+ * parser, so that file fails the deploy too. The fixture tests pin what the
+ * schema rejects.
  */
 import { test, expect, type Page } from "@playwright/test";
 import fs from "fs";

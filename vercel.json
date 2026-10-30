@@ -1,4 +1,7 @@
 {
+  "installCommand": "",
+  "outputDirectory": ".",
+  "buildCommand": "node --no-warnings --input-type=module -e \"import * as fs from 'fs'; import {parseSnapshot} from './e2e/retrieval-service-schema.ts'; const f = 'data/retrieval-service/results.json'; if (fs.existsSync(f)) parseSnapshot(fs.readFileSync(f, 'utf8'))\"",
   "cleanUrls": true,
   "redirects": [
     {
