@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Retrieval service | Baseweight</title>
-<meta name="description" content="Retrieval-augmented question answering over English Wikipedia, and how it is measured.">
+<title>Retrieval | Baseweight</title>
+<meta name="description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -14,14 +14,14 @@
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/retrieval-service">
-<meta property="og:title" content="Retrieval service: Baseweight">
-<meta property="og:description" content="Retrieval-augmented question answering over English Wikipedia, and how it is measured.">
+<meta property="og:title" content="Retrieval: Baseweight">
+<meta property="og:description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Retrieval service: Baseweight">
-<meta name="twitter:description" content="Retrieval-augmented question answering over English Wikipedia, and how it is measured.">
+<meta name="twitter:title" content="Retrieval: Baseweight">
+<meta name="twitter:description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -87,7 +87,8 @@ a:hover { color: var(--accent-hover); }
   display: flex; align-items: center; gap: 12px;
 }
 .page-hero .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-.page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1.15; }
+.page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 16px; }
+.page-hero .lead { max-width: 740px; font-size: 16px; line-height: 1.8; color: var(--text-primary); }
 
 /* ENTRY MOTION */
 @keyframes methRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
@@ -114,7 +115,10 @@ a:hover { color: var(--accent-hover); }
   color: var(--accent);
   margin-bottom: 12px;
 }
-.methodology-content > section:first-child h2 { margin-top: 0; border-top: none; padding-top: 0; }
+/* Until it ships, the demo is a hidden first section, so the one after it
+   opens the article. */
+.methodology-content > section:first-child h2,
+.methodology-content > section[hidden]:first-child + section h2 { margin-top: 0; border-top: none; padding-top: 0; }
 
 .methodology-content :is(p, ul, dl) { max-width: 740px; }
 .methodology-content p {
@@ -143,6 +147,10 @@ a:hover { color: var(--accent-hover); }
 /* DEMO NOTE: what the index holds, read before the question box */
 .demo-note { border-left: 2px solid var(--accent); padding-left: 18px; margin-bottom: 28px; }
 .demo-note p:last-child { margin-bottom: 0; }
+
+/* ATTRIBUTION: the corpus licence notice, small print between the note and the demo */
+.methodology-content p.attribution { font-size: 12px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
+.attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
 
 /* PIPELINE: one inline SVG. x is in percent and y in px, so the two columns
    follow the width while the text keeps its size. Lines, arrowheads and the
@@ -217,10 +225,6 @@ a:hover { color: var(--accent-hover); }
 .btn-primary { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 16px 36px; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s, transform 0.15s; display: inline-block; }
 .btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-2px); box-shadow: 0 8px 24px -10px var(--accent); }
 
-/* ATTRIBUTION: the corpus licence notice, small print above the footer */
-.attribution { max-width: 740px; margin: 48px auto 0; font-size: 12px; line-height: 1.7; color: var(--text-muted); text-align: center; }
-.attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
-
 @media (max-width: 640px) {
   .cta-block { padding: 40px 24px; }
 }
@@ -242,7 +246,8 @@ a:hover { color: var(--accent-hover); }
 <section class="page-hero">
   <div class="container">
     <div class="section-label meth-anim" style="animation-delay: 0s;">Build</div>
-    <h1 class="meth-anim" style="animation-delay: 0.07s;">Retrieval service</h1>
+    <h1 class="meth-anim" style="animation-delay: 0.07s;">Retrieval</h1>
+    <p class="lead meth-anim" style="animation-delay: 0.14s;">An eval harness runs a fixed test set on every change to the question-answering service we built.</p>
   </div>
 </section>
 
@@ -250,18 +255,17 @@ a:hover { color: var(--accent-hover); }
   <div class="container">
     <article class="methodology-content">
 
-      <section id="what-this-is">
-        <h2>What this is</h2>
-        <p class="lead">A retrieval-augmented question-answering service over English Wikipedia. It retrieves passages, answers from them, and cites the passages it used. An eval harness in its repository scores each change against a fixed test set.</p>
-      </section>
-
-      <!-- Held until the demo ships: removing hidden restores the heading, the corpus note and the mount point. -->
+      <!-- Held until the demo ships: removing hidden restores the heading, the corpus note, the attribution and the mount point. -->
       <section id="demo" hidden>
         <h2>Demo</h2>
         <div class="demo-note">
           <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
           <p>One question is an anecdote. The results below measure the service over its test set.</p>
         </div>
+        <!-- The licence notice for the passages the demo shows, so it ships with the demo: the
+             deployed GET /v1/meta `attribution` field, verbatim as of 2026-10-28 (INTEGRATION-BRIEF.md §3).
+             Once /v1/meta answers, the demo replaces this text with the live field, before any rung output. -->
+        <p class="attribution" id="demoAttribution">Passages are excerpts from English Wikipedia articles by Wikipedia contributors, as of the 2019-08-01 dump in the KILT knowledge source, split into chunks with wiki markup removed. They are licensed under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a>. Each citation links to its article.</p>
         <!-- Mount point for the demo component. -->
         <div id="demoMount"></div>
       </section>
@@ -355,9 +359,6 @@ a:hover { color: var(--accent-hover); }
       <h2>Tell us what you&rsquo;re building.</h2>
       <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call</a>
     </div>
-
-    <!-- The deployed GET /v1/meta `attribution` field, verbatim (INTEGRATION-BRIEF.md §3). -->
-    <p class="attribution">Passages are excerpts from English Wikipedia articles by Wikipedia contributors, as of the 2019-08-01 dump in the KILT knowledge source, split into chunks with wiki markup removed. They are licensed under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a>. Each citation links to its article.</p>
   </div>
 </section>
 

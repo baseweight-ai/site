@@ -1,5 +1,5 @@
 /**
- * Retrieval service page and its results snapshot (INTEGRATION-BRIEF.md §4).
+ * The Retrieval page and its results snapshot (INTEGRATION-BRIEF.md §4).
  * This spec holds the committed snapshot to the schema, and a malformed or
  * truncated file fails the suite. The vercel.json build command runs the same
  * parser, so that file fails the deploy too. The fixture tests pin what the
@@ -8,7 +8,7 @@
 import { test, expect, type Page } from "@playwright/test";
 import fs from "fs";
 import path from "path";
-import { SITE_ROOT } from "./copy-text";
+import { SITE_ROOT, expectSectionOrder } from "./copy-text";
 import { parseSnapshot } from "./retrieval-service-schema";
 
 // Copied by hand from the service repo once a measured run exists (brief §4).
@@ -147,12 +147,38 @@ const CORPUS_BOUNDARY =
   "Anything newer, this week’s news included, is outside it.";
 const ANECDOTE =
   "One question is an anecdote. The results below measure the service over its test set.";
+// The deployed GET /v1/meta attribution, verbatim (brief §3). The page shows no
+// corpus text until the demo renders a passage, so it ships with the demo.
+const ATTRIBUTION =
+  "Passages are excerpts from English Wikipedia articles by Wikipedia contributors, as of the " +
+  "2019-08-01 dump in the KILT knowledge source, split into chunks with wiki markup removed. " +
+  "They are licensed under CC BY-SA 3.0: https://creativecommons.org/licenses/by-sa/3.0/. " +
+  "Each citation links to its article.";
 
 // The img role hides the diagram's labels from screen readers, so its title
 // carries the whole pipeline.
 const PIPELINE =
   "Ingest, chunk, embed, Postgres with pgvector and BM25, hybrid retrieve, rerank, " +
   "generate with citations, verify. Every stage sends OpenTelemetry spans to a tracing backend.";
+
+// A reader deciding whether to care reads the top and stops; one checking the
+// work scrolls. So the claim leads the first screen, the demo goes directly
+// under it, and the diagram, the method and the results follow, in that order.
+test("the page runs claim, demo, diagram, method, results in that order", async ({ page }) => {
+  await serveSnapshot(page, 404);
+  await page.goto(PAGE);
+  await expect(page.locator(".page-hero .lead")).toBeInViewport({ ratio: 1 });
+  await expect(page.locator(".methodology-content > :first-child")).toHaveId("demo");
+  // Unhidden as it will be when it ships, so its slot is measured, not assumed.
+  await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
+  await expectSectionOrder(page, [
+    ".page-hero .lead",
+    "#demo",
+    "#how-its-built",
+    "#how-its-measured",
+    "#results",
+  ]);
+});
 
 test("every limitations entry renders verbatim and in full", async ({ page }) => {
   // The fixture's own entry, then two that a summary, a cap or an innerHTML
@@ -174,10 +200,8 @@ test("with no snapshot, results show the pending state and no figures", async ({
   await expect(page.locator("#resultsMount")).toHaveText("Measurement pending.");
   await expect(page.locator("#limitations")).toBeHidden();
   await expect(page.locator("#reproduce")).toBeHidden();
-  // The attribution carries the dump date and the licence version, and the
-  // pipeline diagram names BM25; nothing else on the page may show a digit.
-  const notice = await page.locator(".attribution").innerText();
-  const rest = (await page.locator("main").innerText()).replace(notice, "").replace(/BM25/g, "");
+  // The pipeline diagram names BM25; nothing else on the page may show a digit.
+  const rest = (await page.locator("main").innerText()).replace(/BM25/g, "");
   expect(rest).not.toMatch(/\d/);
 });
 
@@ -187,13 +211,16 @@ test("the pipeline diagram carries its text alternative", async ({ page }) => {
   await expect(page.getByRole("img", { name: PIPELINE, exact: true })).toBeVisible();
 });
 
-test("the demo section is held hidden, with its corpus note and an empty mount", async ({ page }) => {
+test("the demo section is held hidden, with its corpus note, the attribution and an empty mount", async ({ page }) => {
   await serveSnapshot(page, 404);
   await page.goto(PAGE);
   const note = page.locator("#demo .demo-note");
   await expect(page.locator("#demo")).toBeHidden();
   await expect(note).toContainText(CORPUS_BOUNDARY);
   await expect(note).toContainText(ANECDOTE);
+  // The only copy on the page, so it shows with the demo and not before.
+  await expect(page.locator(".attribution")).toHaveCount(1);
+  await expect(page.locator("#demo #demoAttribution")).toHaveText(ATTRIBUTION);
   await expect(page.locator("#demoMount")).toBeEmpty();
 });
 

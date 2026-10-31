@@ -195,8 +195,8 @@ html { overflow-x: clip; }
 /* ========================================
    RESPONSIVE / NAV
    ======================================== */
-/* The full row needs about 780px; 800 leaves slack for text rendering. */
-@media (max-width: 800px) {
+/* The full row needs about 710px; 730 leaves slack for text rendering. */
+@media (max-width: 730px) {
   .nav-links { display: none; }
 
   .nav-links.open {

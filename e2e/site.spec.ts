@@ -18,7 +18,7 @@ const TITLES: Record<string, RegExp> = {
   "about.html": /About/,
   "benchmark.html": /Benchmark/i,
   "methodology.html": /How it.s tested/i,
-  "retrieval-service.html": /Retrieval service/,
+  "retrieval-service.html": /^Retrieval \|/,
   "privacy.html": /Privacy/,
 };
 
@@ -54,23 +54,23 @@ for (const { path } of PAGES) {
   });
 }
 
-// Home, Benchmark, Retrieval service, About, then the Book a call button.
+// Home, Benchmark, Retrieval, About, then the Book a call button.
 // Contact was removed with its page on 2026-09-20.
-test("nav carries exactly Home, Benchmark, Retrieval service, About and the call button", async ({ page }) => {
+test("nav carries exactly Home, Benchmark, Retrieval, About and the call button", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator("nav#nav a").first()).toBeVisible();
   const nav = page.locator("nav#nav");
   await expect(nav.locator("li a:not(.nav-cta)")).toHaveText([
     "Home",
     "Benchmark",
-    "Retrieval service",
+    "Retrieval",
     "About",
   ]);
   await expect(nav.getByRole("link", { name: "Benchmark", exact: true })).toHaveAttribute(
     "href",
     "/benchmark"
   );
-  await expect(nav.getByRole("link", { name: "Retrieval service", exact: true })).toHaveAttribute(
+  await expect(nav.getByRole("link", { name: "Retrieval", exact: true })).toHaveAttribute(
     "href",
     "/retrieval-service"
   );

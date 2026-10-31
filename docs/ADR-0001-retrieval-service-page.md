@@ -1,4 +1,4 @@
-# ADR-0001: Retrieval service page, route and composition
+# ADR-0001: Retrieval page, route and composition
 
 Status: Accepted 2026-10-30.
 Inputs: `docs/INTEGRATION-BRIEF.md`, `docs/DISCOVERY.md`, `CLAUDE.md`.
@@ -7,7 +7,7 @@ Inputs: `docs/INTEGRATION-BRIEF.md`, `docs/DISCOVERY.md`, `CLAUDE.md`.
 
 The feature is one page carrying a live demo of the RAG service and its measured results,
 shipped in three passes: the page with results pending, then the demo, then the figures. The
-demo leads the layout (brief §1). The site is static HTML on Vercel with no server runtime, and
+demo leads the layout (brief §1), directly under the page's claim. The site is static HTML on Vercel with no server runtime, and
 the service takes no credential, so the browser calls it directly (DISCOVERY §9, brief §5a).
 `/retrieval-service` already exists as a noindexed stub that the homepage links to; the served
 HTML matched the file at HEAD on 2026-10-30 (DISCOVERY §6). `methodology.html` is the layout
@@ -17,9 +17,11 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 
 ### Route
 
-- Path `/retrieval-service`, file `retrieval-service.html`. The entry points are the homepage
-  published row (`index.html:820`) and the nav, which carries Home, Benchmark, Retrieval
-  service and About, and collapses to the menu button at ≤800px (`components.css`).
+- Path `/retrieval-service`, file `retrieval-service.html`. The page is named Retrieval in the
+  nav, the title, the h1 and the homepage published row; the path keeps the longer name,
+  since renaming it would cost a redirect and buy nothing. The entry points are the homepage
+  published row (`index.html:820`) and the nav, which carries Home, Benchmark, Retrieval and
+  About, and collapses to the menu button at ≤730px (`components.css`).
 - Pass 1 removes the `noindex` meta tag and adds `https://baseweight.co/retrieval-service` to
   `sitemap.xml`, with the expected list at `e2e/site.spec.ts:153-161` updated in the same
   change.
@@ -37,11 +39,15 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 
 ### Sections, in this order
 
-Pass 1 ships sections 1, 3 (pending), 4 and 5. Pass 2 inserts section 2. Pass 3 fills
-section 3.
+The page has two readers: one reads the top to decide whether to care, and stops; the other
+scrolls to check the work. The claim, and from pass 2 the demo, sit above everything that
+explains method. Pass 1 ships sections 1, 3, 4, 5 (pending) and 8, with 2, 6 and 7 hidden.
+Pass 2 shows section 2. Pass 3 fills section 5 and shows 6 and 7.
 
-1. **Hero**: eyebrow, h1, one-line subtitle.
-2. **Demo**, on `POST /v1/compare`:
+1. **Hero**: eyebrow, h1 "Retrieval", then the claim in one sentence: the measurement that sets
+   the service apart from a demo first, the service second. Mechanism sits with the diagram,
+   and the corpus beside the demo's input.
+2. **Demo**, directly under the hero, on `POST /v1/compare`:
    - A labelled `<input>` and a `<button>`; a click handler submits, and script handles Enter.
    - One column per rung in `COMPARE_RUNGS` order (`closed_book`, `bm25`, `hybrid`, `full`):
      four across, two below 860px, one below 640px. Each column shows its rung's label,
@@ -56,12 +62,22 @@ section 3.
      spend limit told apart by `message`; unavailable, covering network errors, CORS refusals,
      timeouts and any response outside the error envelope.
    - `GET /v1/meta` is first sent when the question box or its button takes focus, and a
-     question is sent only after it has answered. Its `attribution` string renders inside the
-     demo section before any rung output. Model names, limits and the corpus name in the
-     section come from that response; each answer's `index_version` and latency come from the
-     answer.
+     question is sent only after it has answered. Model names, limits and the corpus name in
+     the section come from that response; each answer's `index_version` and latency come from
+     the answer.
+   - The attribution ships with the demo, since the page shows no corpus text until the demo
+     renders a passage. `#demoAttribution`, between the corpus note and `#demoMount`, holds the
+     deployed `attribution` verbatim as of 2026-10-28 (brief §3) and shows when the section
+     does. Once `GET /v1/meta` answers, the demo replaces its text with the response's
+     `attribution`, before any rung output.
    - One polite live region announces state changes.
-3. **Results**:
+3. **How it's built**: the pipeline diagram, one inline SVG whose title carries the whole
+   pipeline as its text alternative.
+4. **How it's measured**: gold ids taken from the corpus's provenance data; the two kinds of
+   metric and which one gates CI; the clustered, paired bootstrap, clustered by source page.
+   Mechanism only: every figure, `n`, metric name, model name and corpus name on the page
+   renders from the snapshot or a live response.
+5. **Results**:
    - Source: `data/retrieval-service/results.json`, the service's `results/latest.json` copied
      verbatim by a human, read with a same-origin `fetch`.
    - States: "measurement pending" when the fetch returns 404; failure when the fetch, the
@@ -72,15 +88,12 @@ section 3.
      into two tables, each with a `<caption>` naming its category, ruled solid for gated and
      dashed for advisory; per row `name`, `config`, `tier`, `slice`, `n`, `value`, `ci_low` to
      `ci_high`, and the delta with its bounds where set; an operational line
-     (`p50_latency_ms`, `p95_latency_ms`, `cost_usd_total`); a provenance line from `dataset`,
-     `system` and `judge`; `limitations` as a list, every entry verbatim.
+     (`p50_latency_ms`, `p95_latency_ms`, `cost_usd_total`).
    - The page relates the demo's index to the measured index only after the handoff confirms
      they match (brief §5).
-4. **Method**: gold ids taken from the corpus's provenance data; the two kinds of metric and
-   which one gates CI; the clustered, paired bootstrap, clustered by source page. Mechanism
-   only: every figure, `n`, metric name, model name and corpus name on the page renders from
-   the snapshot or a live response.
-5. **Closing CTA**: `.cta-block` with a `.btn-primary` "Book a call" to
+6. **Limitations**: `limitations` as a list, every entry verbatim.
+7. **Reproduce it**: a provenance line from `dataset`, `system` and `judge`.
+8. **Closing CTA**: `.cta-block` with a `.btn-primary` "Book a call" to
    `https://cal.com/baseweight/intro`, as at `benchmark.html:398-401`. It is the body's only
    CTA.
 
@@ -104,8 +117,8 @@ section 3.
 
 - `e2e/retrieval-service.spec.ts` validates the committed snapshot from disk when present
   (every metric row carries `n`, `ci_low`, `ci_high`, `gated`; `limitations` is non-empty),
-  drives the three results states with `page.route`, and drives each demo state against a
-  mocked service whose payloads follow the deployed `openapi.json`.
+  drives the three results states with `page.route`, pins the section order, and drives each
+  demo state against a mocked service whose payloads follow the deployed `openapi.json`.
 
 ## Consequences
 
@@ -116,6 +129,8 @@ section 3.
 - A visitor who never touches the demo sends nothing to the service, and crawlers do not start
   the Fly Machine.
 - The demo is first exercised for real in production (Risk 1).
+- The page reads as a report while its demo is hidden: everything under the claim explains
+  method or waits on results. The balance is not fixable with copy.
 
 ## Risks
 
