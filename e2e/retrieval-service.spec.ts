@@ -150,10 +150,8 @@ const ANECDOTE =
 // The deployed GET /v1/meta attribution, verbatim (brief §3). The page shows no
 // corpus text until the demo renders a passage, so it ships with the demo.
 const ATTRIBUTION =
-  "Passages are excerpts from English Wikipedia articles by Wikipedia contributors, as of the " +
-  "2019-08-01 dump in the KILT knowledge source, split into chunks with wiki markup removed. " +
-  "They are licensed under CC BY-SA 3.0: https://creativecommons.org/licenses/by-sa/3.0/. " +
-  "Each citation links to its article.";
+  "Modified passages from Wikipedia articles, under CC BY-SA 3.0: " +
+  "https://creativecommons.org/licenses/by-sa/3.0/";
 
 // The img role hides the diagram's labels from screen readers, so its title
 // carries the whole pipeline.

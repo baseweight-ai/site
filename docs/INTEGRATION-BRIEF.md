@@ -25,18 +25,23 @@ The gated/advisory distinction must be visually **and** semantically distinct (c
 
 Filled from `~/projects/baseweight/service/HANDOFF.md`, which exists. Copy each value from it rather than retyping one. Where that file marks a field `UNKNOWN` or says a value was read from the service's code rather than from a call against the deployed service, carry that qualification across; do not drop it, and never guess a URL or a contract. If a field below has no counterpart in that file, leave it blank and say which.
 
-HANDOFF.md was read against the deployed service on 2026-10-28, at deployed commit `5eedbfd`.
+HANDOFF.md was read against the deployed service on 2026-10-28 between 23:42 and 23:49 UTC, at commit `5eedbfd`. The allowed origins and the retry window were read again, and the compare limit observed, on 2026-11-01 from release v4 (`flyctl releases`), the service answering between 19:03 and 19:05 UTC, and the attribution read again that day from release v6, the service answering at 20:34 UTC. Release v6 is what is deployed: it was built from commit `3acf6d5` with no uncommitted change, and its health reported `git_sha` `3acf6d50902fa82ba7ba70ff392c614c47b81829`. Between `5eedbfd` and `3acf6d5`, `git diff` changes in the served code only the check of the origin list in `app/api.py`, the list itself in `fly.toml`, which v6's deployed configuration gives as v4's did, and the attribution string read from v6, so what HANDOFF.md reads from the earlier releases holds for v6.
 
 - **BASE_URL** = `https://baseweight-service.fly.dev`
 - **AUTH** = none
-- **ALLOWED_ORIGIN** = `https://www.baseweight.co`, and no other. The apex, `https://baseweight.co`, is not listed, and its preflight for `POST /v1/chat` was refused `403`.
+- **ALLOWED_ORIGIN** = `https://www.baseweight.co` and `http://127.0.0.1:8080`, and no other, from `flyctl config show`.
+  - `http://127.0.0.1:8080` is a developer's copy of the site, served on that machine as `python3 -m http.server 8080` serves it and opened at that address. `http://localhost:8080` is a different origin and is not listed, though the same server answers both, so a page opened at `localhost` is refused. By `Settings` in `app/api.py` at the deployed commit, release v4 refuses a plain `http` entry unless its host is a loopback address written as an IP, so `http://localhost:8080` cannot be listed.
+  - The apex, `https://baseweight.co`, is not listed and needs no entry: on 2026-11-01 it answered `307` to the same path on `https://www.baseweight.co` before any page loads. Its preflights were refused `403`: for `POST /v1/chat` on 2026-10-28, for `POST /v1/compare` on 2026-11-01.
+  - Preview deployments are not listed, and the list cannot cover them: each has a host generated per deployment, and the list matches whole origins with no wildcard. `https://baseweight.vercel.app`, which serves production with no login, is not listed either (ADR 0065).
 - **STREAMING** = not implemented
-- **RATE_LIMITS** = `/v1/chat`: 20 per client per hour, from a call to `/v1/meta` | `/v1/compare`: 7 per client per hour, counted apart from chats. **The compare limit is from the code at the deployed commit, not from a call against the deployed service.** Past either limit the answer is `429` `rate_limited`. The deployed `openapi.json` describes its `Retry-After` header, an integer of seconds, as sent "always for this client's own limit, for the provider's when it gave them". A `429` can therefore come without one.
+- **RATE_LIMITS** = `/v1/chat`: 20 per client per hour, from a call to `/v1/meta` | `/v1/compare`: 7 per client per hour, counted apart from chats, from calls on 2026-11-01, when one client's first 7 comparisons were admitted and its 8th was refused. Past either limit the answer is `429` `rate_limited`. The deployed `openapi.json` describes its `Retry-After` header, an integer of seconds, as sent "always for this client's own limit, for the provider's when it gave them". A `429` can therefore come without one.
+  - A client is the address Fly's proxy puts in `Fly-Client-IP`, with an IPv6 address counted by its /64. The hour is any 3,600 s window. These come from `CLIENT_HEADER` and `CLIENT_PREFIX` in `app/api.py` and `HOUR_S` in `app/budget.py`, all at the deployed commit.
+  - Script on a listed origin can read a `429`'s `Retry-After`, and it is the only header the service exposes. Every answer to a listed origin but a preflight carries `access-control-expose-headers: Retry-After`, and that header names nothing else. Read on 2026-11-01 by a page's script in Chromium 147.0.7727.15 and Firefox 148.0.2 (ADR 0065).
 - **COMPARE_RUNGS** = `closed_book`, `bm25`, `hybrid` and `full`, in that order
 - **DAILY_CAP_BEHAVIOUR** = $0.15 a day from midnight UTC, shared by both endpoints. 503 body: not observed. **The cap and both 503 bodies are from the code at the deployed commit, not from a call against the deployed service.** Both bodies carry code `budget_exhausted`, with no `Retry-After`, so only `message` tells them apart:
   - The service's own daily cap: `{"error":{"code":"budget_exhausted","message":"the service's daily spend cap is reached","request_id":"…"}}`
   - The model provider's spend limit: `{"error":{"code":"budget_exhausted","message":"the model provider's spend limit is reached","request_id":"…"}}`
-- **OPENAPI** = `GET https://baseweight-service.fly.dev/openapi.json`, from a call. OpenAPI 3.1.0, generated 2026-10-28, served by deployed commit `5eedbfd95342d767daf06977a8c8e8cba012cd67`. The same schema is also committed as `openapi.json` at the service repository's root.
+- **OPENAPI** = `GET https://baseweight-service.fly.dev/openapi.json`, from a call. OpenAPI 3.1.0, generated 2026-10-28, between 23:43:41.978Z and 23:43:59Z, by the process whose `GET /v1/health` reported `git_sha` `5eedbfd95342d767daf06977a8c8e8cba012cd67`, with no `-dirty` suffix; that read holds for v6, as above. The same schema is also committed as `openapi.json` at the service repository's root.
 - **RESULTS_JSON** = ABSENT. No measured evaluation run has finished, so no `results/latest.json` exists to read.
 - **SCORECARD_MD** = blank: HANDOFF.md has no scorecard field.
 - **EVAL_RUN_DATE/GIT_SHA** = blank: HANDOFF.md records that no measured evaluation run has finished. The deployed commit is not an evaluation run.
@@ -44,15 +49,17 @@ HANDOFF.md was read against the deployed service on 2026-10-28, at deployed comm
   - Gated: `recall_at_20`, `ndcg_at_10`.
   - Advisory: `recall_at_5`, `recall_at_50`, `mrr`, `answer_correct`, `faithfulness`, `citation_precision`, `citation_recall`, `abstention_correct`, `injection_asr`.
   - Each row's own `gated` field decides, not its name: whether a row gates depends on its tier and configuration too.
-- **ATTRIBUTION_STRING** = the deployed `GET /v1/meta` response's `attribution` field, verbatim:
+- **ATTRIBUTION_STRING** = the deployed `GET /v1/meta` response's `attribution` field, verbatim, read from release v6 at 2026-11-01T20:34:16.463Z:
 
   ```text
-  Passages are excerpts from English Wikipedia articles by Wikipedia contributors, as of the 2019-08-01 dump in the KILT knowledge source, split into chunks with wiki markup removed. They are licensed under CC BY-SA 3.0: https://creativecommons.org/licenses/by-sa/3.0/. Each citation links to its article.
+  Modified passages from Wikipedia articles, under CC BY-SA 3.0: https://creativecommons.org/licenses/by-sa/3.0/
   ```
+
+  The passages' authors are credited only by each citation's link, the credit Wikipedia's terms of use let them be given, which the string no longer describes. Wherever the site shows a passage, it shows that citation's `page_title` and links its `url`, the article whose history lists them (ADR 0066).
 
 - **KNOWN GAPS** = HANDOFF.md's Known gaps, verbatim:
   - No `503` was drawn. The two bodies under Daily cap are **from the code at the deployed commit, not from a call against the deployed service**.
-  - No `429` was drawn in this check. The one on record, from ADR 0064, is from `/v1/chat`. None is on record for `/v1/compare`, whose limit of 7 is **from the code at the deployed commit, not from a call against the deployed service**.
+  - No `429` was drawn in the check of 2026-10-28. On record are ADR 0064's, from `/v1/chat`, and 2026-11-01's, from `/v1/compare`, under Retry window.
   - The daily cap of $0.15 is **from the code at the deployed commit, not from a call against the deployed service**: no endpoint reports it, and no request here reached it.
   - No `500`, `502` or `413` was drawn, and no rung failed, so a failed rung's `error` object and its `null` `answer` were not seen.
   - The deployed code keeps the daily cap's and the hourly limits' counts in the process's memory, so each start begins them at zero. On the trial that happens on the first request after each 5-minute run. Not exercised here.
