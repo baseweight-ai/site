@@ -212,3 +212,61 @@ test("retired paths still redirect", () => {
   expect(map["/head-to-head"]).toBe("/benchmark");
   expect(map["/contact"]).toBe("/#cta");
 });
+
+// ── Content-Security-Policy ─────────────────────────────────────────────────
+// Vercel sends the policy in production and the dev static server sends none,
+// so it is read from vercel.json. The Retrieval page calls the service from the
+// browser (INTEGRATION-BRIEF.md §5), so connect-src names the service's origin.
+
+const SERVICE_ORIGIN = "https://baseweight-service.fly.dev";
+
+type HeaderRule = { source: string; headers: { key: string; value: string }[] };
+
+function sitePolicy(): string {
+  const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
+  const site = (vercel.headers as HeaderRule[]).find((r) => r.source === "/(.*)")!;
+  return site.headers.find((h) => h.key === "Content-Security-Policy")!.value;
+}
+
+test("the site policy opens connect-src to the service's origin and nothing else", () => {
+  const directives = sitePolicy().split(";").map((d) => d.trim().split(/\s+/));
+  const connect = directives.find(([name]) => name === "connect-src")!;
+  expect(connect.slice(1)).toEqual([
+    "'self'",
+    "https://va.vercel-scripts.com",
+    "https://vitals.vercel-insights.com",
+    SERVICE_ORIGIN,
+  ]);
+  const others = directives.filter(([name]) => name !== "connect-src").flat();
+  expect(others, "the service's origin belongs in connect-src only").not.toContain(SERVICE_ORIGIN);
+});
+
+// The browser is what enforces the policy, so a browser is asked. Both origins
+// are stubbed: a call the policy lets out is answered here, and the suite
+// spends none of the service's hourly allowance.
+test("the site policy lets page script call the service and refuses other origins", async ({ page }) => {
+  await page.route("**/retrieval-service.html", async (route) => {
+    const response = await route.fetch();
+    await route.fulfill({
+      response,
+      headers: { ...response.headers(), "content-security-policy": sitePolicy() },
+    });
+  });
+  const elsewhere = "https://elsewhere.fly.dev";
+  for (const origin of [SERVICE_ORIGIN, elsewhere]) {
+    await page.route(`${origin}/**`, (route) =>
+      route.fulfill({ headers: { "access-control-allow-origin": "*" }, json: {} })
+    );
+  }
+  await page.goto("/retrieval-service.html");
+  const outcome = await page.evaluate(async ([allowed, refused]) => {
+    const violation = new Promise((resolve) =>
+      document.addEventListener("securitypolicyviolation", (e) => resolve(e.effectiveDirective))
+    );
+    const call = (url: string) => fetch(url).then((r) => r.status, () => "refused");
+    const statuses = [await call(allowed), await call(refused)];
+    const none = new Promise((resolve) => setTimeout(() => resolve("none"), 2000));
+    return { statuses, violated: await Promise.race([violation, none]) };
+  }, [`${SERVICE_ORIGIN}/v1/health`, `${elsewhere}/v1/health`]);
+  expect(outcome).toEqual({ statuses: [200, "refused"], violated: "connect-src" });
+});
