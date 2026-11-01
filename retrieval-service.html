@@ -151,6 +151,48 @@ a:hover { color: var(--accent-hover); }
 /* ATTRIBUTION: the corpus licence notice, small print between the note and the demo */
 .methodology-content p.attribution { font-size: 12px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
 .attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
+/* DEMO: retrieval-demo.js, mounted at #demoMount. One column per rung: four
+   across, two below 860px, one below 640px. Ids, titles and passages wrap
+   inside their column, so nothing widens the page. The Compare button is
+   outlined, so the nav keeps the only gold button in view. */
+#demoMount p { font-size: 13px; line-height: 1.7; margin-bottom: 10px; }
+#demoMount .demo-limits { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+.demo-ask label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.demo-row { display: flex; gap: 8px; max-width: 740px; }
+.demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-accent); padding: 12px 14px; }
+.demo-row input:read-only { color: var(--text-secondary); }
+.demo-go { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 12px 20px; cursor: pointer; }
+.demo-go:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
+#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 24px; }
+#demoMount ul.demo-prepared li { padding: 0; margin: 0; }
+#demoMount ul.demo-prepared li::before { content: none; }
+.demo-prepared button { font: inherit; font-size: 12px; line-height: 1.5; text-align: left; color: var(--text-secondary); background: transparent; border: 1px solid var(--border-accent); padding: 6px 12px; cursor: pointer; }
+.demo-prepared button:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+#demoMount [aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.demo-service:not([hidden]) { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; margin-bottom: 16px; }
+.demo-service dt { color: var(--text-muted); }
+.demo-service dd { color: var(--text-secondary); overflow-wrap: anywhere; }
+#demoMount .demo-status { color: var(--text-primary); margin-bottom: 4px; }
+#demoMount .demo-elapsed { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.demo-rung { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px; overflow-wrap: anywhere; }
+.demo-rung h3 { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 8px; }
+#demoMount .demo-rung-label { font-size: 12px; color: var(--text-muted); }
+#demoMount .demo-answer { color: var(--text-primary); }
+#demoMount .demo-pending { color: var(--text-muted); }
+#demoMount .demo-error { color: var(--text-primary); border-left: 2px solid var(--text-secondary); padding-left: 10px; }
+.demo-marker { font: inherit; color: var(--accent); background: none; border: none; padding: 0 1px; cursor: pointer; }
+.demo-cites, .demo-passages ol { list-style: none; margin: 0 0 12px; padding: 0; font-size: 12px; line-height: 1.6; }
+.demo-cite summary { cursor: pointer; color: var(--text-secondary); }
+.demo-cite[open] summary { color: var(--text-primary); }
+.demo-cite summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#demoMount .demo-snippet { white-space: pre-line; font-size: 12px; color: var(--text-secondary); border-left: 2px solid var(--border-accent); padding-left: 10px; margin: 8px 0; }
+.demo-cite a { font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); }
+.demo-passages h4 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 12px 0 6px; }
+.demo-passages li { color: var(--text-secondary); }
+#demoMount .demo-latency { font-size: 12px; color: var(--text-muted); margin: 12px 0 0; }
+@media (max-width: 860px) { .demo-rungs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .demo-rungs { grid-template-columns: minmax(0, 1fr); } }
 
 /* PIPELINE: one inline SVG. x is in percent and y in px, so the two columns
    follow the width while the text keeps its size. Lines, arrowheads and the
@@ -255,7 +297,7 @@ a:hover { color: var(--accent-hover); }
   <div class="container">
     <article class="methodology-content">
 
-      <!-- Held until the demo ships: removing hidden restores the heading, the corpus note, the attribution and the mount point. -->
+      <!-- Held until the demo is public: removing hidden shows the heading, the corpus note, the attribution and the demo. -->
       <section id="demo" hidden>
         <h2>Demo</h2>
         <div class="demo-note">
@@ -266,7 +308,7 @@ a:hover { color: var(--accent-hover); }
              deployed GET /v1/meta `attribution` field, verbatim as of 2026-11-01 (INTEGRATION-BRIEF.md §3).
              Once /v1/meta answers, the demo replaces this text with the live field, before any rung output. -->
         <p class="attribution" id="demoAttribution">Modified passages from Wikipedia articles, under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a></p>
-        <!-- Mount point for the demo component. -->
+        <!-- retrieval-demo.js mounts the demo here. -->
         <div id="demoMount"></div>
       </section>
 
@@ -368,6 +410,7 @@ a:hover { color: var(--accent-hover); }
 
 <script src="/components.js"></script>
 <script src="/retrieval-results.js"></script>
+<script src="/retrieval-demo.js"></script>
 <script>
 // ── RESULTS SNAPSHOT ───────────────────────────────────────────────────────
 // The service's results file, copied in by hand (INTEGRATION-BRIEF.md §4) and
@@ -455,6 +498,11 @@ readSnapshot().then(snapshot => {
   renderLimitations(snapshot);
   renderPins(snapshot);
 });
+
+// ── DEMO ───────────────────────────────────────────────────────────────────
+// retrieval-demo.js builds the question box and the rung columns. It sends
+// nothing until a visitor focuses the question box or a prepared question.
+mountDemo(document.getElementById('demoMount'), document.getElementById('demoAttribution'));
 </script>
 </body>
 </html>

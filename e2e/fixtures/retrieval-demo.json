@@ -1,0 +1,120 @@
+{
+  "about": "Synthetic payloads in the shapes of the deployed openapi.json (Meta, Health, CompareResponse). Nothing in this file came from the service or its corpus.",
+  "meta": {
+    "models": {
+      "generator": { "id": "synthetic/generator", "license": "Apache-2.0" },
+      "judge": { "id": "synthetic/judge", "license": "Apache-2.0" },
+      "embedding": { "id": "synthetic/embedding", "license": null },
+      "reranker": { "id": "synthetic/reranker", "license": null }
+    },
+    "corpus": "synthetic-corpus",
+    "attribution": "Synthetic attribution, as GET /v1/meta would return it.",
+    "pipeline": "full",
+    "limits": { "max_turns_per_hour": 99, "max_output_tokens": 999, "max_steps": 9 },
+    "public_mode": "read_only"
+  },
+  "health": {
+    "status": "ok",
+    "git_sha": "0123456789abcdef0123456789abcdef01234567",
+    "index_version": "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210",
+    "generator_model": "synthetic/generator",
+    "embedding_model": "synthetic/embedding",
+    "reranker_model": "synthetic/reranker",
+    "corpus": "synthetic-corpus",
+    "doc_count": 11,
+    "chunk_count": 22
+  },
+  "compare": {
+    "rungs": [
+      {
+        "name": "closed_book",
+        "label": "Synthetic label for the first rung.",
+        "answer": "Synthetic first answer, citing nothing.",
+        "citations": [],
+        "passage_titles": [],
+        "latency_ms": 101,
+        "usage": { "input_tokens": 1, "output_tokens": 2, "cost_usd": 0.0001 },
+        "error": null,
+        "charged_usd": 0.0001
+      },
+      {
+        "name": "bm25",
+        "label": "Synthetic label for the second rung.",
+        "answer": "Synthetic second answer.[c1]",
+        "citations": [
+          {
+            "marker": "c1",
+            "chunk_id": "1",
+            "source_doc_id": "10",
+            "page_title": "Synthetic Article A",
+            "url": "https://en.wikipedia.org/wiki/Synthetic_Article_A",
+            "snippet": "Synthetic Article A\nThe first line of synthetic passage A.\nIts second line.",
+            "score": 61.5,
+            "supported": true
+          }
+        ],
+        "passage_titles": ["Synthetic Article A", "Synthetic Article B", "Synthetic Article A"],
+        "latency_ms": 202,
+        "usage": { "input_tokens": 3, "output_tokens": 4, "cost_usd": 0.0002 },
+        "error": null,
+        "charged_usd": 0.0002
+      },
+      {
+        "name": "hybrid",
+        "label": "Synthetic label for the third rung.",
+        "answer": "Synthetic third answer cites A[c1] and B.[c2]",
+        "citations": [
+          {
+            "marker": "c1",
+            "chunk_id": "1",
+            "source_doc_id": "10",
+            "page_title": "Synthetic Article A",
+            "url": "https://en.wikipedia.org/wiki/Synthetic_Article_A",
+            "snippet": "Synthetic Article A\nThe first line of synthetic passage A.\nIts second line.",
+            "score": 0.031,
+            "supported": true
+          },
+          {
+            "marker": "c2",
+            "chunk_id": "2",
+            "source_doc_id": "20",
+            "page_title": "Synthetic Article B",
+            "url": "https://en.wikipedia.org/wiki/Synthetic_Article_B",
+            "snippet": "Synthetic Article B\nSynthetic passage B, which does not bear out the claim.",
+            "score": 0.029,
+            "supported": false
+          }
+        ],
+        "passage_titles": ["Synthetic Article B", "Synthetic Article A"],
+        "latency_ms": 303,
+        "usage": { "input_tokens": 5, "output_tokens": 6, "cost_usd": 0.0003 },
+        "error": null,
+        "charged_usd": 0.0003
+      },
+      {
+        "name": "full",
+        "label": "Synthetic label for the fourth rung.",
+        "answer": "Synthetic fourth answer.[c1]",
+        "citations": [
+          {
+            "marker": "c1",
+            "chunk_id": "1",
+            "source_doc_id": "10",
+            "page_title": "Synthetic Article A",
+            "url": "https://en.wikipedia.org/wiki/Synthetic_Article_A",
+            "snippet": "Synthetic Article A\nThe first line of synthetic passage A.\nIts second line.",
+            "score": 0.998,
+            "supported": true
+          }
+        ],
+        "passage_titles": ["Synthetic Article A", "Synthetic Article A", "Synthetic Article C"],
+        "latency_ms": 404,
+        "usage": { "input_tokens": 7, "output_tokens": 8, "cost_usd": 0.0004 },
+        "error": null,
+        "charged_usd": 0.0004
+      }
+    ],
+    "trace_id": "00000000000000000000000000000000",
+    "latency_ms": 505
+  }
+}

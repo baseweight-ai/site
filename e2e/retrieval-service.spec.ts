@@ -209,7 +209,7 @@ test("the pipeline diagram carries its text alternative", async ({ page }) => {
   await expect(page.getByRole("img", { name: PIPELINE, exact: true })).toBeVisible();
 });
 
-test("the demo section is held hidden, with its corpus note, the attribution and an empty mount", async ({ page }) => {
+test("the demo section is held hidden, with its corpus note, the attribution and the demo mounted", async ({ page }) => {
   await serveSnapshot(page, 404);
   await page.goto(PAGE);
   const note = page.locator("#demo .demo-note");
@@ -219,7 +219,8 @@ test("the demo section is held hidden, with its corpus note, the attribution and
   // The only copy on the page, so it shows with the demo and not before.
   await expect(page.locator(".attribution")).toHaveCount(1);
   await expect(page.locator("#demo #demoAttribution")).toHaveText(ATTRIBUTION);
-  await expect(page.locator("#demoMount")).toBeEmpty();
+  // retrieval-demo.js, mounted by the page, holds the question box.
+  await expect(page.locator("#demoMount input#demoQuestion")).toHaveCount(1);
 });
 
 test("a snapshot that cannot be read says so", async ({ page }) => {
