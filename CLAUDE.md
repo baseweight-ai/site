@@ -1,10 +1,10 @@
 # Baseweight site: agent guide
 
 Static marketing site. No framework, no bundler: the repo root deploys as is, and the one
-build step only validates the retrieval-service results snapshot. Each page is a standalone
-HTML file with an inline `<style>` block (design tokens are duplicated per page under
-`:root`). Shared nav + footer are injected at runtime by `components.js`; their styling
-lives in `components.css`.
+build step, `build.mjs`, validates the retrieval-service results snapshot and applies the
+Retrieval demo's flag. Each page is a standalone HTML file with an inline `<style>` block
+(design tokens are duplicated per page under `:root`). Shared nav + footer are injected at
+runtime by `components.js`; their styling lives in `components.css`.
 
 ## Authority order
 
@@ -117,10 +117,16 @@ engagement, with no trailing qualifier:
   restraint. Page order is hero, tasks, results table, error analysis, artifacts, CTA.
 - `/about` is one screen: the lead, the founder, the CTA. Anything about how the work is
   done or what is offered is homepage territory and belongs there instead.
-- `/retrieval-service` is published: indexed, in the sitemap and in the nav. The
-  `vercel.json` build command runs `parseSnapshot` from `e2e/retrieval-service-schema.ts`
-  on `data/retrieval-service/results.json`, so a malformed snapshot fails the deploy, and
-  moving that parser breaks every deploy. With no snapshot the page shows its pending state.
+- `/retrieval-service` is published: indexed, in the sitemap and in the nav. With no snapshot
+  the page shows its pending state.
+- The `vercel.json` build command runs `build.mjs`; Vercel refuses a build command over 256
+  characters, so build logic goes in that file, never inline. It runs `parseSnapshot` from
+  `e2e/retrieval-service-schema.ts` on `data/retrieval-service/results.json`, so a malformed
+  snapshot fails the deploy, and moving that parser breaks every deploy. It also holds the
+  Retrieval demo's flag: the page ships `<section id="demo" hidden>`, and the build drops
+  `hidden` only when the Vercel environment variable `RETRIEVAL_DEMO` is `on` (declared `off`
+  for Production and Preview), failing if the page stops holding that tag exactly once.
+  Switching the demo is that variable and a redeploy, with no commit.
 - Scroll-reveal is 0.4s and pre-triggers 25% below the viewport, with a 1.5s failsafe that
   reveals everything. Slower or later-triggering values leave fast scrollers on a blank
   viewport. `html { scroll-padding-top: 96px }` keeps scrolled-to targets clear of the

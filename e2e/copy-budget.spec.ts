@@ -27,7 +27,7 @@ const BUDGETS: { page: string; words: number; note: string }[] = [
   { page: "benchmark.html",    words: 90,   note: "2026-09-20 baseline 75 (static shell; results, blurbs and the run stamp render from data): hero, results table, artifacts, CTA" },
   { page: "methodology.html",  words: 1060, note: "2026-09-18 baseline 946 (technical spec; precision over brevity, but still bounded)" },
   { page: "retrieval-service.html", words: 265, note: "2026-11-01 baseline 239 (static shell; the demo, limitations and pinned revisions render from script): the sentence above the demo, verbatim CC BY-SA attribution (10), demo notes, results legend and failure notes, method, pipeline diagram and its text alternative (45), CTA" },
-  { page: "privacy.html",        words: 370,  note: "2026-09-22 baseline 331 (legal text; exempt from lint, still bounded): what Cal.com and email hand over, and the rights over it" },
+  { page: "privacy.html",        words: 430,  note: "2026-11-01 baseline 389 (legal text; exempt from lint, still bounded): what Cal.com and email hand over, where the retrieval demo sends a question and an IP address and what is kept, and the rights over it" },
 ];
 
 test("every page has a copy budget", () => {

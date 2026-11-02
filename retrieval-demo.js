@@ -18,6 +18,8 @@
     'Who won the 2022 FIFA World Cup?',
   ];
   const LABEL = 'Read-only. Comparisons are rate-limited, and the demo has a daily budget.';
+  // Under the box, what leaves the browser; privacy.html names the providers.
+  const PRIVACY = 'Your question and IP address go to our service, which passes the question to its providers.';
   const MARKER = /\[(c\d+)\]/g;
   // A cold start alone took 15 to 19 s (brief §3); this bounds a request the
   // service never answers.
@@ -204,8 +206,12 @@
       list.append(item);
       return ask;
     });
+    const privacy = el('p', `${PRIVACY} `);
+    const policy = el('a', 'Privacy policy');
+    policy.href = '/privacy';
+    privacy.append(policy);
     const controls = el('div', null, 'demo-ask');
-    controls.append(label, row, list);
+    controls.append(label, row, privacy, list);
     const service = el('dl', null, 'demo-service');
     service.hidden = true;
     const status = el('p', null, 'demo-status');

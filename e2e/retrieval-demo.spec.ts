@@ -17,6 +17,7 @@ const FIXTURE = fs.readFileSync(path.join(__dirname, "fixtures/retrieval-demo.js
 // Rung.name in the deployed openapi.json, in the order the service answers.
 const RUNGS = ["closed_book", "bm25", "hybrid", "full"];
 const LABEL = "Read-only. Comparisons are rate-limited, and the demo has a daily budget.";
+const PRIVACY = "Your question and IP address go to our service, which passes the question to its providers. Privacy policy";
 
 type Payloads = { meta: any; health: any; compare: any };
 
@@ -239,8 +240,9 @@ test("model output stays text, and only citation urls become links", async ({ pa
   const wikipedia = doc.compare.rungs
     .flatMap((r: any) => r.citations.map((c: any) => c.url))
     .filter((u: string) => u.startsWith("https://en.wikipedia.org/"));
+  // The one link the demo writes itself is the privacy policy's.
   const hrefs = await demo.locator("a").evaluateAll((links) => links.map((a) => a.getAttribute("href")));
-  expect(hrefs.sort()).toEqual(wikipedia.sort());
+  expect(hrefs.sort()).toEqual([...wikipedia, "/privacy"].sort());
 });
 
 // ── The label and the service line ──────────────────────────────────────────
@@ -249,6 +251,16 @@ test("the demo says it is read-only and limited before anything is sent", async 
   const { sent } = await mockService(page);
   const demo = await load(page);
   await expect(demo).toContainText(LABEL);
+  expect(sent).toEqual([]);
+});
+
+// privacy.html names the providers and says what the service keeps.
+test("under the question box, the demo says what leaves the browser and links the privacy policy", async ({ page }) => {
+  const { sent } = await mockService(page);
+  const demo = await load(page);
+  const line = demo.locator(".demo-row + p");
+  await expect(line).toHaveText(PRIVACY);
+  await expect(line.getByRole("link", { name: "Privacy policy" })).toHaveAttribute("href", "/privacy");
   expect(sent).toEqual([]);
 });
 
@@ -409,8 +421,9 @@ test("when /v1/health fails, the comparison still goes and the service line stay
 });
 
 // ── On the page ─────────────────────────────────────────────────────────────
-// retrieval-service.html mounts the demo at #demoMount. The section is held
-// hidden until the demo is public, so these unhide it as that will.
+// retrieval-service.html mounts the demo at #demoMount. The section ships
+// hidden and the build opens it when RETRIEVAL_DEMO is on (vercel.json), so
+// these unhide it as the build does.
 
 const PAGE = "/retrieval-service.html";
 

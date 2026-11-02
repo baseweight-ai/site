@@ -153,9 +153,10 @@ and 6.
    page can read it only if the service sends `Access-Control-Expose-Headers: Retry-After`.
    Error bodies are readable only if non-2xx responses carry `Access-Control-Allow-Origin`.
    The brief records neither.
-3. **CSP unverified until deploy.** No headers apply locally (DISCOVERY §10), and whether
-   Vercel sends both matching CSP headers or one is undetermined. The repeated full policy
-   holds either way; `curl -I` after deploy confirms it.
+3. **The page's CSP stands alone.** No headers apply locally (DISCOVERY §10). On two previews
+   on 2026-11-01, Firefox received one `Content-Security-Policy` header on
+   `/retrieval-service`, the page rule's, and the site rule's on `/`. So the page rule
+   repeats the whole site policy, which `e2e/site.spec.ts` asserts.
 4. **Precedent code that does not transfer.** `benchmark.html` renders through `innerHTML`,
    barred for model output (brief §5b). The `data:` grain overlay (`methodology.html:62-71`) is
    blocked by the page's `img-src`. Gold and blue mean hosted API and open-weight on
@@ -199,8 +200,6 @@ and 6.
 - The `/v1/compare` request and rung shapes. Source: the deployed `openapi.json`, pass 2.
 - Whether the service exposes `Retry-After` and sends CORS headers on errors (Risk 2). Source:
   a request carrying `Origin: https://www.baseweight.co`, pass 2.
-- Whether Vercel sends one or both CSP headers for `/retrieval-service` (Risk 3). Source:
-  `curl -I` after deploy.
 - Whether the snapshot will carry `ablations` whose configs map to the rungs, and whether the
   page shows them. Pass 3, owner.
 - The confidence level the page may state, and display precision (Risks 8, 12). Owner.
