@@ -31,28 +31,37 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 
 ### Layout
 
-- One column at full container width. Hero, prose, headings and tables take
-  `methodology.html`'s `.page-hero`, `.section-label`, `.methodology-content` and `.table-wrap`
-  rules, copied into the page `<style>` with the `:root` tokens.
+- One column at full container width. Prose, headings and tables take `methodology.html`'s
+  `.methodology-content` and `.table-wrap` rules, copied into the page `<style>` with the
+  `:root` tokens. No heading carries a section number.
 - `html { scroll-padding-top: 96px }`, as at `index.html:55`. Every image and background loads
   from the site's own origin.
 
 ### Sections, in this order
 
 The page has two readers: one reads the top to decide whether to care, and stops; the other
-scrolls to check the work. The claim, and from pass 2 the demo, sit above everything that
-explains method. Pass 1 ships sections 1, 3, 4, 5 (pending) and 8, with 2, 6 and 7 hidden.
-Pass 2 shows section 2. Pass 3 fills section 5 and shows 6 and 7.
+scrolls to check the work. One sentence and the demo sit above everything that explains, and
+the explanation runs in the order a check runs: the figures, the method behind them, where they
+stop holding, what to pin to re-run them, then the build. Pass 1 ships sections 1, 3 (pending),
+4, 7 and 8, with 2, 5 and 6 hidden. Pass 2 shows section 2. Pass 3 fills section 3 and shows 5
+and 6.
 
-1. **Hero**: eyebrow, h1 "Retrieval", then the claim in one sentence: the measurement that sets
-   the service apart from a demo first, the service second. Mechanism sits with the diagram,
-   and the corpus beside the demo's input.
-2. **Demo**, directly under the hero, on `POST /v1/compare`:
+1. **Hero**: the claim in one sentence, and nothing else visible: the measurement that sets the
+   service apart from a demo first, the service second. The h1 "Retrieval" is there for screen
+   readers and search, visually hidden. Mechanism sits with the diagram, and the corpus under
+   the demo.
+2. **Demo**, directly under the sentence with no heading of its own, on `POST /v1/compare`. At
+   390px and at 1280px wide, the question box and at least one answer show before any
+   scrolling.
    - A labelled `<input>` and a `<button>`; a click handler submits, and script handles Enter.
-   - One column per rung in `COMPARE_RUNGS` order (`closed_book`, `bm25`, `hybrid`, `full`):
-     four across, two below 860px, one below 640px. Each column shows its rung's label,
-     answer, citations, retrieved passage titles, latency, charged amount and
-     `citation_supported_ratio`, or that rung's own error.
+   - One column per rung, headed by its name as an `h2`, in the order the response lists them
+     (`COMPARE_RUNGS`: `closed_book`, `bm25`, `hybrid`, `full`): four across, two below 860px,
+     one below 640px. Each column shows its rung's label, its answer, the citations its `[cN]`
+     markers open (each to its passage, the service's `supported` flag and its title linked to
+     its `url`), the passage titles it retrieved, in order with repeats, and its latency, or
+     that rung's own error. Rungs carry no `citation_supported_ratio`, so each citation's
+     `supported` flag shows instead. No charged amount shows until display precision has a
+     rule (Risk 12).
    - Answer, snippet and title strings enter the DOM as text (`textContent` and
      `createElement`, as at `methodology.html:401-417`). A citation's link is built from its
      `url` alone; `[cN]` markers attach citations and do nothing else.
@@ -61,23 +70,20 @@ Pass 2 shows section 2. Pass 3 fills section 5 and shows 6 and 7.
      not; `503 budget_exhausted` as a spent budget, the service's daily cap and the provider's
      spend limit told apart by `message`; unavailable, covering network errors, CORS refusals,
      timeouts and any response outside the error envelope.
-   - `GET /v1/meta` is first sent when the question box or its button takes focus, and a
-     question is sent only after it has answered. Model names, limits and the corpus name in
-     the section come from that response; each answer's `index_version` and latency come from
-     the answer.
+   - `GET /v1/meta` and `GET /v1/health` are first sent when the question box or a prepared
+     question takes focus, and a question is sent only once `/v1/meta` has answered. From it the
+     demo takes the attribution and checks that `public_mode` is `read_only`, which the demo's
+     label states beside the rate limit and the daily budget, with no figures: no endpoint
+     reports the compare limit. Comparison answers carry no `index_version`, so the deployed
+     commit and index version come from `/v1/health`; each rung's latency comes from the answer.
    - The attribution ships with the demo, since the page shows no corpus text until the demo
-     renders a passage. `#demoAttribution`, between the corpus note and `#demoMount`, holds the
-     deployed `attribution` verbatim as of 2026-10-28 (brief §3) and shows when the section
-     does. Once `GET /v1/meta` answers, the demo replaces its text with the response's
-     `attribution`, before any rung output.
+     renders a passage. `#demoAttribution` sits directly under the rung columns, where the
+     passages appear, ahead of the service line and the corpus note. It holds the deployed
+     `attribution` verbatim as of 2026-11-01 (brief §3) and shows when the section does. Once
+     `GET /v1/meta` answers, the demo replaces its text with the response's `attribution`,
+     before any rung output.
    - One polite live region announces state changes.
-3. **How it's built**: the pipeline diagram, one inline SVG whose title carries the whole
-   pipeline as its text alternative.
-4. **How it's measured**: gold ids taken from the corpus's provenance data; the two kinds of
-   metric and which one gates CI; the clustered, paired bootstrap, clustered by source page.
-   Mechanism only: every figure, `n`, metric name, model name and corpus name on the page
-   renders from the snapshot or a live response.
-5. **Results**:
+3. **Results**:
    - Source: `data/retrieval-service/results.json`, the service's `results/latest.json` copied
      verbatim by a human, read with a same-origin `fetch`.
    - States: "measurement pending" when the fetch returns 404; failure when the fetch, the
@@ -91,8 +97,14 @@ Pass 2 shows section 2. Pass 3 fills section 5 and shows 6 and 7.
      (`p50_latency_ms`, `p95_latency_ms`, `cost_usd_total`).
    - The page relates the demo's index to the measured index only after the handoff confirms
      they match (brief §5).
-6. **Limitations**: `limitations` as a list, every entry verbatim.
-7. **Reproduce it**: a provenance line from `dataset`, `system` and `judge`.
+4. **How it's measured**: gold ids taken from the corpus's provenance data; the two kinds of
+   metric and which one gates CI; the clustered, paired bootstrap, clustered by source page.
+   Mechanism only: every figure, `n`, metric name, model name and corpus name on the page
+   renders from the snapshot or a live response.
+5. **Limitations**: `limitations` as a list, every entry verbatim.
+6. **Reproduce it**: a provenance line from `dataset`, `system` and `judge`.
+7. **How it's built**: the pipeline diagram, one inline SVG whose title carries the whole
+   pipeline as its text alternative.
 8. **Closing CTA**: `.cta-block` with a `.btn-primary` "Book a call" to
    `https://cal.com/baseweight/intro`, as at `benchmark.html:398-401`. It is the body's only
    CTA.
@@ -184,8 +196,7 @@ Pass 2 shows section 2. Pass 3 fills section 5 and shows 6 and 7.
 
 ## Not determined
 
-- The `/v1/compare` request and rung shapes; whether rungs carry `citation_supported_ratio`;
-  whether `/v1/meta` reports the compare limit. Source: the deployed `openapi.json`, pass 2.
+- The `/v1/compare` request and rung shapes. Source: the deployed `openapi.json`, pass 2.
 - Whether the service exposes `Retry-After` and sends CORS headers on errors (Risk 2). Source:
   a request carrying `Origin: https://www.baseweight.co`, pass 2.
 - Whether Vercel sends one or both CSP headers for `/retrieval-service` (Risk 3). Source:

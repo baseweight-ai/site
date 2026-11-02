@@ -136,14 +136,14 @@
 
   function column(name, ...content) {
     const col = el('section', null, 'demo-rung');
-    col.append(el('h3', name), ...content);
+    col.append(el('h2', name), ...content);
     return col;
   }
 
   // Every title the rung retrieved, in its order, repeats included.
   function passages(titles) {
     const wrap = el('div', null, 'demo-passages');
-    wrap.append(el('h4', 'Passages retrieved'));
+    wrap.append(el('h3', 'Passages retrieved'));
     if (!titles.length) {
       wrap.append(el('p', 'None'));
       return wrap;

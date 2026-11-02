@@ -7,7 +7,7 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 import fs from "fs";
 import path from "path";
-import { SITE_ROOT } from "./copy-text";
+import { SITE_ROOT, expectSectionOrder } from "./copy-text";
 
 const COMPONENT = path.join(SITE_ROOT, "retrieval-demo.js");
 const SERVICE = "https://baseweight-service.fly.dev";
@@ -186,7 +186,7 @@ test("each rung answers in its own column, with its label, answer, passages and 
   await mockService(page, doc);
   const demo = await load(page);
   await prepared(demo).first().click();
-  await expect(demo.locator(".demo-rung h3")).toHaveText(doc.compare.rungs.map((r: any) => r.name));
+  await expect(demo.locator(".demo-rung h2")).toHaveText(doc.compare.rungs.map((r: any) => r.name));
   for (const rung of doc.compare.rungs) {
     const col = column(demo, rung.name);
     await expect(col).toContainText(rung.label);
@@ -414,8 +414,8 @@ test("when /v1/health fails, the comparison still goes and the service line stay
 
 const PAGE = "/retrieval-service.html";
 
-async function openPage(page: Page, width = 1280): Promise<Locator> {
-  await page.setViewportSize({ width, height: 900 });
+async function openPage(page: Page, width = 1280, height = 900): Promise<Locator> {
+  await page.setViewportSize({ width, height });
   await page.route("**/data/retrieval-service/results.json", (route) => route.fulfill({ status: 404 }));
   await page.goto(PAGE);
   await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
@@ -474,4 +474,59 @@ test("at phone width nothing in the demo reaches past the viewport, long ids and
     window.innerWidth,
   ]);
   expect(right).toBeLessThanOrEqual(width);
+});
+
+// The demo is the page: before any scrolling a visitor sees the question box
+// and at least one whole answer, with labels and answers as long as live ones.
+for (const [width, height] of [[390, 844], [1280, 720]] as const) {
+  test(`at ${width}x${height} the question box and an answer show without scrolling`, async ({ page }) => {
+    const doc = payloads((d) => {
+      for (const rung of d.compare.rungs) {
+        rung.label = "A synthetic label as long as a live one, which says what the rung searches and how.";
+        rung.answer =
+          "A synthetic answer as long as a live one: it names a work, its catalogue number, " +
+          "its nickname, the year it was published and its dedicatee.";
+      }
+    });
+    await mockService(page, doc);
+    const demo = await openPage(page, width, height);
+    await prepared(demo).first().click();
+    await expect(answers(demo)).toHaveCount(RUNGS.length);
+    const seen = await page.evaluate(() => ({
+      scrolled: window.scrollY,
+      nav: document.querySelector("nav")!.getBoundingClientRect().bottom,
+      box: document.getElementById("demoQuestion")!.getBoundingClientRect().top,
+      answer: document.querySelector(".demo-answer")!.getBoundingClientRect().bottom,
+      height: window.innerHeight,
+    }));
+    expect(seen.scrolled).toBe(0);
+    expect(seen.box).toBeGreaterThanOrEqual(seen.nav);
+    expect(seen.answer).toBeLessThanOrEqual(seen.height);
+  });
+}
+
+// The attribution sits where the corpus text appears: under the rung columns,
+// before the service line and the notes.
+test("on the page, the attribution sits directly under the rung columns", async ({ page }) => {
+  await mockService(page);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expect(demo.locator(".demo-service")).toBeVisible();
+  await expectSectionOrder(page, [".demo-rungs", "#demoAttribution", ".demo-service", "#demo .demo-note"]);
+});
+
+// Headings step down one level at a time: the page's h1, each rung's h2 and
+// its passages' h3, then the sections below.
+test("on the page, no heading skips a level, the rung columns' included", async ({ page }) => {
+  await mockService(page);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  const levels = await page
+    .locator("main :is(h1, h2, h3, h4, h5, h6)")
+    .evaluateAll((hs) => hs.map((h) => Number(h.tagName[1])));
+  expect(levels[0]).toBe(1);
+  const skips = levels.flatMap((level, i) => (i && level > levels[i - 1] + 1 ? [`h${levels[i - 1]} to h${level}`] : []));
+  expect(skips).toEqual([]);
 });

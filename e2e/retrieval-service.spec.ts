@@ -141,7 +141,9 @@ function serveSnapshot(page: Page, status: number, body = "") {
   );
 }
 
-// Shown beside the demo before anyone types, so held with it until it ships.
+// The one sentence above the demo.
+const LEAD = "An eval harness runs a fixed test set on every change to the question-answering service we built.";
+// Shown under the demo, so held with it until it ships.
 const CORPUS_BOUNDARY =
   "The index holds a capped subset of English Wikipedia, frozen at one past dump. " +
   "Anything newer, this week’s news included, is outside it.";
@@ -160,22 +162,60 @@ const PIPELINE =
   "generate with citations, verify. Every stage sends OpenTelemetry spans to a tracing backend.";
 
 // A reader deciding whether to care reads the top and stops; one checking the
-// work scrolls. So the claim leads the first screen, the demo goes directly
-// under it, and the diagram, the method and the results follow, in that order.
-test("the page runs claim, demo, diagram, method, results in that order", async ({ page }) => {
-  await serveSnapshot(page, 404);
+// work scrolls. So one sentence leads, the demo sits directly under it, and the
+// explanation follows in the order a check runs: the figures, the method behind
+// them, where they stop holding, what to pin to re-run them, then the build.
+// The ids pin the sequence, so a section moved, added or dropped fails here.
+const SECTIONS = ["demo", "results", "how-its-measured", "limitations", "reproduce", "how-its-built"];
+
+test("one sentence, the demo, then results, method, limitations, reproduction and build, in that order", async ({ page }) => {
+  // A valid snapshot shows every section, so each slot is measured, not assumed.
+  await serveSnapshot(page, 200, FIXTURE);
   await page.goto(PAGE);
   await expect(page.locator(".page-hero .lead")).toBeInViewport({ ratio: 1 });
-  await expect(page.locator(".methodology-content > :first-child")).toHaveId("demo");
-  // Unhidden as it will be when it ships, so its slot is measured, not assumed.
+  const ids = await page.locator(".methodology-content > section").evaluateAll((s) => s.map((e) => e.id));
+  expect(ids).toEqual(SECTIONS);
+  // Unhidden as it will be when it ships.
   await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
-  await expectSectionOrder(page, [
-    ".page-hero .lead",
-    "#demo",
-    "#how-its-built",
-    "#how-its-measured",
-    "#results",
-  ]);
+  await expect(page.locator("#reproduce")).toBeVisible();
+  await expectSectionOrder(page, [".page-hero .lead", ...SECTIONS.map((id) => `#${id}`), ".cta-block"]);
+});
+
+// The demo is the page: above it, only the sentence. The h1 stays for screen
+// readers and search, visually hidden.
+test("only one sentence, and no visible heading, sits above the demo", async ({ page }) => {
+  await serveSnapshot(page, 404);
+  await page.goto(PAGE);
+  await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
+  const above = await page.evaluate(() => {
+    const top = document.getElementById("demo")!.getBoundingClientRect().top;
+    const shown = (e: Element) => {
+      const r = e.getBoundingClientRect();
+      return r.width > 1 && r.height > 1 && r.bottom <= top;
+    };
+    return {
+      headings: [...document.querySelectorAll("main :is(h1, h2, h3, h4)")].filter(shown).map((e) => e.textContent),
+      text: [...document.querySelectorAll("main :is(p, div, span)")]
+        .filter((e) => shown(e) && !e.children.length)
+        .map((e) => e.textContent),
+    };
+  });
+  expect(above).toEqual({ headings: [], text: [LEAD] });
+  expect(LEAD.match(/[.!?]/g)).toHaveLength(1);
+  await expect(page.getByRole("heading", { level: 1, name: "Retrieval" })).toHaveCount(1);
+  await expect(page.locator("#demo h2")).toHaveCount(0);
+});
+
+test("no heading carries a section number", async ({ page }) => {
+  await serveSnapshot(page, 200, FIXTURE);
+  await page.goto(PAGE);
+  await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
+  const numbered = await page.locator("main :is(h1, h2, h3, h4)").evaluateAll((hs) =>
+    hs
+      .filter((h) => !["none", "normal"].includes(getComputedStyle(h, "::before").content) || /^\s*\d/.test(h.textContent!))
+      .map((h) => h.textContent)
+  );
+  expect(numbered).toEqual([]);
 });
 
 test("every limitations entry renders verbatim and in full", async ({ page }) => {
@@ -209,18 +249,19 @@ test("the pipeline diagram carries its text alternative", async ({ page }) => {
   await expect(page.getByRole("img", { name: PIPELINE, exact: true })).toBeVisible();
 });
 
-test("the demo section is held hidden, with its corpus note, the attribution and the demo mounted", async ({ page }) => {
+test("the demo section is held hidden: the demo mounted, the attribution after it, then the corpus note", async ({ page }) => {
   await serveSnapshot(page, 404);
   await page.goto(PAGE);
   const note = page.locator("#demo .demo-note");
   await expect(page.locator("#demo")).toBeHidden();
-  await expect(note).toContainText(CORPUS_BOUNDARY);
-  await expect(note).toContainText(ANECDOTE);
-  // The only copy on the page, so it shows with the demo and not before.
-  await expect(page.locator(".attribution")).toHaveCount(1);
-  await expect(page.locator("#demo #demoAttribution")).toHaveText(ATTRIBUTION);
   // retrieval-demo.js, mounted by the page, holds the question box.
   await expect(page.locator("#demoMount input#demoQuestion")).toHaveCount(1);
+  // The only copy on the page, so it shows with the demo and not before.
+  await expect(page.locator(".attribution")).toHaveCount(1);
+  await expect(page.locator("#demoMount + #demoAttribution")).toHaveText(ATTRIBUTION);
+  await expect(page.locator("#demoAttribution + .demo-note")).toHaveCount(1);
+  await expect(note).toContainText(CORPUS_BOUNDARY);
+  await expect(note).toContainText(ANECDOTE);
 });
 
 test("a snapshot that cannot be read says so", async ({ page }) => {

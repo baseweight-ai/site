@@ -65,11 +65,11 @@ a:hover { color: var(--accent-hover); }
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
 
 
-/* PAGE HERO */
+/* PAGE HERO: one sentence, then the demo. The h1 is for screen readers and
+   search, so it is visually hidden. */
 .page-hero {
-  padding-top: calc(72px + var(--section-pad));
-  padding-bottom: 48px;
-  border-bottom: 1px solid var(--border);
+  padding-top: calc(72px + 20px);
+  padding-bottom: 12px;
   position: relative;
   overflow: hidden;
 }
@@ -80,23 +80,16 @@ a:hover { color: var(--accent-hover); }
   pointer-events: none; z-index: 0;
 }
 .page-hero .container { position: relative; z-index: 1; }
-.page-hero .section-label {
-  font-family: var(--font-mono);
-  font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
-  color: var(--accent); margin-bottom: 16px;
-  display: flex; align-items: center; gap: 12px;
-}
-.page-hero .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
-.page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 16px; }
-.page-hero .lead { max-width: 740px; font-size: 16px; line-height: 1.8; color: var(--text-primary); }
+.page-hero .lead { max-width: 960px; font-size: 16px; line-height: 1.6; color: var(--text-primary); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ENTRY MOTION */
 @keyframes methRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .meth-anim { opacity: 0; animation: methRise 0.6s cubic-bezier(0.16,0.84,0.44,1) forwards; }
 
 /* MAIN CONTENT: one column, so the demo and the results get the full width */
-.page-body { padding: var(--section-pad) 0; }
-.methodology-content { counter-reset: method-section; min-width: 0; }
+.page-body { padding: 8px 0 var(--section-pad); }
+.methodology-content { min-width: 0; }
 .methodology-content h2 {
   font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.5vw, 1.7rem);
@@ -105,20 +98,7 @@ a:hover { color: var(--accent-hover); }
   margin-top: 56px; margin-bottom: 20px;
   padding-top: 20px;
   border-top: 1px solid var(--border);
-  counter-increment: method-section;
 }
-.methodology-content h2::before {
-  content: counter(method-section, decimal-leading-zero) ' /';
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
-  color: var(--accent);
-  margin-bottom: 12px;
-}
-/* Until it ships, the demo is a hidden first section, so the one after it
-   opens the article. */
-.methodology-content > section:first-child h2,
-.methodology-content > section[hidden]:first-child + section h2 { margin-top: 0; border-top: none; padding-top: 0; }
 
 .methodology-content :is(p, ul, dl) { max-width: 740px; }
 .methodology-content p {
@@ -144,26 +124,36 @@ a:hover { color: var(--accent-hover); }
   width: 5px; height: 5px; background: var(--accent);
 }
 
-/* DEMO NOTE: what the index holds, read before the question box */
+/* DEMO NOTE: what the index holds and what one question shows, under the demo */
 .demo-note { border-left: 2px solid var(--accent); padding-left: 18px; margin-bottom: 28px; }
 .demo-note p:last-child { margin-bottom: 0; }
 
-/* ATTRIBUTION: the corpus licence notice, small print between the note and the demo */
+/* ATTRIBUTION: the corpus licence notice, small print under the rung columns, where the passages appear */
 .methodology-content p.attribution { font-size: 12px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
 .attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
 /* DEMO: retrieval-demo.js, mounted at #demoMount. One column per rung: four
    across, two below 860px, one below 640px. Ids, titles and passages wrap
    inside their column, so nothing widens the page. The Compare button is
    outlined, so the nav keeps the only gold button in view. */
-#demoMount p { font-size: 13px; line-height: 1.7; margin-bottom: 10px; }
-#demoMount .demo-limits { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+/* The demo opens the page. #demoMount's own box drops out of the flow, so the
+   attribution sits right under the rung columns, ahead of the service line and
+   the notes, and the status and the elapsed time share a row. */
+#demo:not([hidden]) { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; }
+#demoMount { display: contents; }
+#demo > *, #demoMount > * { flex: 0 0 100%; min-width: 0; }
+#demoMount .demo-status, #demoMount .demo-elapsed { flex: 0 1 auto; }
+#demo #demoAttribution { order: 1; margin: 12px 0; }
+.demo-service { order: 2; }
+#demo .demo-note { order: 3; margin-bottom: 0; }
+#demoMount p { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+#demoMount .demo-limits { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
 .demo-ask label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
 .demo-row { display: flex; gap: 8px; max-width: 740px; }
-.demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-accent); padding: 12px 14px; }
+.demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-accent); padding: 10px 14px; }
 .demo-row input:read-only { color: var(--text-secondary); }
-.demo-go { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 12px 20px; cursor: pointer; }
+.demo-go { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 10px 20px; cursor: pointer; }
 .demo-go:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
-#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 24px; }
+#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px; }
 #demoMount ul.demo-prepared li { padding: 0; margin: 0; }
 #demoMount ul.demo-prepared li::before { content: none; }
 .demo-prepared button { font: inherit; font-size: 12px; line-height: 1.5; text-align: left; color: var(--text-secondary); background: transparent; border: 1px solid var(--border-accent); padding: 6px 12px; cursor: pointer; }
@@ -172,12 +162,13 @@ a:hover { color: var(--accent-hover); }
 .demo-service:not([hidden]) { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; margin-bottom: 16px; }
 .demo-service dt { color: var(--text-muted); }
 .demo-service dd { color: var(--text-secondary); overflow-wrap: anywhere; }
-#demoMount .demo-status { color: var(--text-primary); margin-bottom: 4px; }
+#demoMount .demo-status { color: var(--text-primary); margin-bottom: 0; }
 #demoMount .demo-elapsed { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
 .demo-rung { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px; overflow-wrap: anywhere; }
-.demo-rung h3 { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 8px; }
-#demoMount .demo-rung-label { font-size: 12px; color: var(--text-muted); }
+/* The rung headings are h2s under the page's h1, so the article's section h2 rules are set back here. */
+.methodology-content .demo-rung h2 { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; line-height: 1.75; color: var(--accent); margin: 0 0 8px; padding: 0; border: 0; }
+#demoMount .demo-rung-label { font-size: 12px; line-height: 1.5; color: var(--text-muted); }
 #demoMount .demo-answer { color: var(--text-primary); }
 #demoMount .demo-pending { color: var(--text-muted); }
 #demoMount .demo-error { color: var(--text-primary); border-left: 2px solid var(--text-secondary); padding-left: 10px; }
@@ -188,11 +179,16 @@ a:hover { color: var(--accent-hover); }
 .demo-cite summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #demoMount .demo-snippet { white-space: pre-line; font-size: 12px; color: var(--text-secondary); border-left: 2px solid var(--border-accent); padding-left: 10px; margin: 8px 0; }
 .demo-cite a { font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); }
-.demo-passages h4 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 12px 0 6px; }
+.demo-passages h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 12px 0 6px; }
 .demo-passages li { color: var(--text-secondary); }
 #demoMount .demo-latency { font-size: 12px; color: var(--text-muted); margin: 12px 0 0; }
 @media (max-width: 860px) { .demo-rungs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .demo-rungs { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 640px) {
+  .page-hero .lead { font-size: 15px; }
+  .demo-rungs { grid-template-columns: minmax(0, 1fr); }
+  #demoMount ul.demo-prepared { gap: 6px; }
+  .demo-prepared button { padding: 4px 10px; line-height: 1.4; }
+}
 
 /* PIPELINE: one inline SVG. x is in percent and y in px, so the two columns
    follow the width while the text keeps its size. Lines, arrowheads and the
@@ -287,9 +283,8 @@ a:hover { color: var(--accent-hover); }
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label meth-anim" style="animation-delay: 0s;">Build</div>
-    <h1 class="meth-anim" style="animation-delay: 0.07s;">Retrieval</h1>
-    <p class="lead meth-anim" style="animation-delay: 0.14s;">An eval harness runs a fixed test set on every change to the question-answering service we built.</p>
+    <h1 class="visually-hidden">Retrieval</h1>
+    <p class="lead meth-anim" style="animation-delay: 0s;">An eval harness runs a fixed test set on every change to the question-answering service we built.</p>
   </div>
 </section>
 
@@ -297,19 +292,50 @@ a:hover { color: var(--accent-hover); }
   <div class="container">
     <article class="methodology-content">
 
-      <!-- Held until the demo is public: removing hidden shows the heading, the corpus note, the attribution and the demo. -->
+      <!-- Held until the demo is public: removing hidden shows the demo, the attribution and the corpus note. -->
       <section id="demo" hidden>
-        <h2>Demo</h2>
+        <!-- retrieval-demo.js mounts the demo here. -->
+        <div id="demoMount"></div>
+        <!-- The licence notice for the passages the demo shows, under the rung columns where they
+             appear: the deployed GET /v1/meta `attribution` field, verbatim as of 2026-11-01
+             (INTEGRATION-BRIEF.md §3). Once /v1/meta answers, the demo replaces this text with the
+             live field, before any rung output. -->
+        <p class="attribution" id="demoAttribution">Modified passages from Wikipedia articles, under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a></p>
         <div class="demo-note">
           <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
           <p>One question is an anecdote. The results below measure the service over its test set.</p>
         </div>
-        <!-- The licence notice for the passages the demo shows, so it ships with the demo: the
-             deployed GET /v1/meta `attribution` field, verbatim as of 2026-11-01 (INTEGRATION-BRIEF.md §3).
-             Once /v1/meta answers, the demo replaces this text with the live field, before any rung output. -->
-        <p class="attribution" id="demoAttribution">Modified passages from Wikipedia articles, under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a></p>
-        <!-- retrieval-demo.js mounts the demo here. -->
-        <div id="demoMount"></div>
+      </section>
+
+      <section id="results">
+        <h2>Results</h2>
+        <dl class="table-legend">
+          <dt class="gated">Gated</dt>
+          <dd>A change that regresses the score cannot merge.</dd>
+          <dt class="advisory">Advisory</dt>
+          <dd>A change that regresses the score can still merge.</dd>
+        </dl>
+        <!-- retrieval-results.js renders the pending state or the tables here. -->
+        <div id="resultsMount"></div>
+        <p class="state-note" id="resultsFailed" hidden>The results could not be loaded.</p>
+      </section>
+
+      <section id="how-its-measured">
+        <h2>How it&rsquo;s measured</h2>
+        <p class="lead">Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
+        <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
+        <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
+      </section>
+
+      <section id="limitations" hidden>
+        <h2>Limitations</h2>
+        <ul id="limitationsList"></ul>
+        <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
+      </section>
+
+      <section id="reproduce" hidden>
+        <h2>Reproduce it</h2>
+        <dl class="pins" id="pinsList"></dl>
       </section>
 
       <section id="how-its-built">
@@ -362,37 +388,6 @@ a:hover { color: var(--accent-hover); }
             </g>
           </svg>
         </figure>
-      </section>
-
-      <section id="how-its-measured">
-        <h2>How it&rsquo;s measured</h2>
-        <p class="lead">Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
-        <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
-        <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
-      </section>
-
-      <section id="results">
-        <h2>Results</h2>
-        <dl class="table-legend">
-          <dt class="gated">Gated</dt>
-          <dd>A change that regresses the score cannot merge.</dd>
-          <dt class="advisory">Advisory</dt>
-          <dd>A change that regresses the score can still merge.</dd>
-        </dl>
-        <!-- retrieval-results.js renders the pending state or the tables here. -->
-        <div id="resultsMount"></div>
-        <p class="state-note" id="resultsFailed" hidden>The results could not be loaded.</p>
-      </section>
-
-      <section id="limitations" hidden>
-        <h2>Limitations</h2>
-        <ul id="limitationsList"></ul>
-        <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
-      </section>
-
-      <section id="reproduce" hidden>
-        <h2>Reproduce it</h2>
-        <dl class="pins" id="pinsList"></dl>
       </section>
 
     </article>
