@@ -1,12 +1,20 @@
-# Private strategy / agent docs — versioned in the (private) repo, never deployed.
-# These are intentionally kept off the public site (baseweight.co/<file>).
-CLAUDE.md
-STRATEGY.md
-COMPETITIVE-ANALYSIS.md
+# Private docs (strategy, agent rules, specs, records), versioned in the (private) repo and
+# never deployed: kept off the public site (baseweight.co/<file>). No page loads Markdown.
+*.md
 docs/
 
 # Backend (Google Apps Script) reference copy, deployed by hand, not part of the site.
 apps-script/
+
+# Tests and local tooling. Of e2e/, the build reads only the results-snapshot schema.
+e2e/*.spec.ts
+e2e/copy-text.ts
+e2e/fixtures/
+package.json
+package-lock.json
+playwright.config.ts
+serve.json
+squirrel.toml
 
 # Repo dotfiles, which the build output (the root) would otherwise serve.
 .gitignore

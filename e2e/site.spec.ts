@@ -362,3 +362,65 @@ test("the build command fits the 256 characters Vercel allows it", () => {
   const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
   expect(vercel.buildCommand.length).toBeLessThanOrEqual(256);
 });
+
+// ── What deploys ────────────────────────────────────────────────────────────
+// The build output is the repo root, so every tracked file .vercelignore lets
+// through is public. Through go the pages, what they load, what the build
+// reads and the crawler files; every other tracked file stays off. Patterns are
+// read by git's own matcher: .vercelignore takes .gitignore's syntax.
+
+const BUILD_READS = ["vercel.json", "build.mjs", "e2e/retrieval-service-schema.ts", "data/retrieval-service/results.json"];
+const FOR_CRAWLERS = ["robots.txt", "sitemap.xml"];
+// A same-site path a page or script names in quotes, origin optional.
+const NAMED = /["'`](?:https:\/\/(?:www\.)?baseweight\.co)?(\/[\w./-]+\.\w{2,5})["'`]/g;
+
+const trackedFiles = () =>
+  spawnSync("git", ["ls-files"], { cwd: SITE_ROOT, encoding: "utf-8" }).stdout.split("\n").filter(Boolean);
+
+function keptOffDeploy(paths: string[]): Set<string> {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "vercelignore-"));
+  try {
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    fs.copyFileSync(path.join(SITE_ROOT, ".vercelignore"), path.join(dir, ".gitignore"));
+    const run = spawnSync("git", ["check-ignore", "--no-index", "--stdin"], { cwd: dir, input: paths.join("\n"), encoding: "utf-8" });
+    return new Set(run.stdout.split("\n").filter(Boolean));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+// The file that serves a site path; a clean URL is its page.
+function fileFor(urlPath: string): string {
+  const file = decodeURIComponent(urlPath).replace(/^\//, "");
+  if (!file) return "index.html";
+  return path.extname(file) ? file : `${file}.html`;
+}
+
+test("the deploy carries the pages, what they load and what the build reads, and no other tracked file", async ({ page, baseURL }) => {
+  const tracked = trackedFiles();
+  const pages = tracked.filter((f) => !f.includes("/") && f.endsWith(".html"));
+  const needed = new Set([...pages, ...BUILD_READS, ...FOR_CRAWLERS]);
+  const origin = new URL(baseURL!).origin;
+  page.on("request", (r) => {
+    const url = new URL(r.url());
+    if (url.origin === origin) needed.add(fileFor(url.pathname));
+  });
+  for (const file of pages) {
+    await page.goto(`/${file}`);
+    await page.waitForLoadState("networkidle");
+  }
+  // What a browser does not request on load: icons, social images, later fetches.
+  const sources = [...needed].filter((f) => /\.(html|js|css)$/.test(f) && fs.existsSync(path.join(SITE_ROOT, f)));
+  for (const source of sources) {
+    for (const m of fs.readFileSync(path.join(SITE_ROOT, source), "utf-8").matchAll(NAMED)) needed.add(fileFor(m[1]));
+  }
+  // Vercel serves its own /_vercel/ paths.
+  for (const file of needed) if (file.startsWith("_vercel/")) needed.delete(file);
+
+  const off = keptOffDeploy([...new Set([...tracked, ...needed])]);
+  expect([...needed].filter((f) => off.has(f)), "needed by a page or the build, but kept off the deploy").toEqual([]);
+  expect(tracked.filter((f) => !needed.has(f) && !off.has(f)), "needed by nothing, but deployed and public").toEqual([]);
+  for (const file of ["COPY-STYLE.md", "data/benchmark/hs-benchmark-spec.md", "data/benchmark/hs-benchmark-issue.md"]) {
+    expect(off.has(file), `${file} stays off the deploy`).toBe(true);
+  }
+});
