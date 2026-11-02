@@ -7,7 +7,9 @@
  */
 import { test, expect } from "@playwright/test";
 import fs from "fs";
+import os from "os";
 import path from "path";
+import { spawnSync } from "child_process";
 import { CAL_URL, SITE_ROOT, sitePages } from "./copy-text";
 
 // Titles are decisions, so they stay written down. The page list is not: it
@@ -18,7 +20,7 @@ const TITLES: Record<string, RegExp> = {
   "about.html": /About/,
   "benchmark.html": /Benchmark/i,
   "methodology.html": /How it.s tested/i,
-  "retrieval-service.html": /Retrieval service/,
+  "retrieval-service.html": /^Retrieval \|/,
   "privacy.html": /Privacy/,
 };
 
@@ -54,16 +56,25 @@ for (const { path } of PAGES) {
   });
 }
 
-// Home, Benchmark, About, then the Book a call button. Contact was removed with
-// its page on 2026-09-20.
-test("nav carries exactly Home, Benchmark, About and the call button", async ({ page }) => {
+// Home, Benchmark, Retrieval, About, then the Book a call button.
+// Contact was removed with its page on 2026-09-20.
+test("nav carries exactly Home, Benchmark, Retrieval, About and the call button", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator("nav#nav a").first()).toBeVisible();
   const nav = page.locator("nav#nav");
-  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText(["Home", "Benchmark", "About"]);
+  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText([
+    "Home",
+    "Benchmark",
+    "Retrieval",
+    "About",
+  ]);
   await expect(nav.getByRole("link", { name: "Benchmark", exact: true })).toHaveAttribute(
     "href",
     "/benchmark"
+  );
+  await expect(nav.getByRole("link", { name: "Retrieval", exact: true })).toHaveAttribute(
+    "href",
+    "/retrieval-service"
   );
   await expect(nav.getByRole("link", { name: /Contact/i })).toHaveCount(0);
   await expect(nav.locator("a.nav-cta")).toHaveAttribute("href", CAL_URL);
@@ -157,6 +168,7 @@ test("the sitemap lists the live pages", () => {
       "https://baseweight.co/benchmark",
       "https://baseweight.co/methodology",
       "https://baseweight.co/privacy",
+      "https://baseweight.co/retrieval-service",
     ].sort()
   );
   // A redirected or noindexed path in the sitemap is a crawl error. Derived, so
@@ -201,4 +213,214 @@ test("retired paths still redirect", () => {
   }
   expect(map["/head-to-head"]).toBe("/benchmark");
   expect(map["/contact"]).toBe("/#cta");
+});
+
+// ── Content-Security-Policy ─────────────────────────────────────────────────
+// Vercel sends the policy in production and the dev static server sends none,
+// so it is read from vercel.json. The Retrieval page calls the service from the
+// browser (INTEGRATION-BRIEF.md §5), so connect-src names the service's origin.
+
+const SERVICE_ORIGIN = "https://baseweight-service.fly.dev";
+
+type HeaderRule = { source: string; headers: { key: string; value: string }[] };
+
+function sitePolicy(): string {
+  const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
+  const site = (vercel.headers as HeaderRule[]).find((r) => r.source === "/(.*)")!;
+  return site.headers.find((h) => h.key === "Content-Security-Policy")!.value;
+}
+
+test("the site policy opens connect-src to the service's origin and nothing else", () => {
+  const directives = sitePolicy().split(";").map((d) => d.trim().split(/\s+/));
+  const connect = directives.find(([name]) => name === "connect-src")!;
+  expect(connect.slice(1)).toEqual([
+    "'self'",
+    "https://va.vercel-scripts.com",
+    "https://vitals.vercel-insights.com",
+    SERVICE_ORIGIN,
+  ]);
+  const others = directives.filter(([name]) => name !== "connect-src").flat();
+  expect(others, "the service's origin belongs in connect-src only").not.toContain(SERVICE_ORIGIN);
+});
+
+// The browser is what enforces the policy, so a browser is asked. Both origins
+// are stubbed: a call the policy lets out is answered here, and the suite
+// spends none of the service's hourly allowance.
+test("the site policy lets page script call the service and refuses other origins", async ({ page }) => {
+  await page.route("**/retrieval-service.html", async (route) => {
+    const response = await route.fetch();
+    await route.fulfill({
+      response,
+      headers: { ...response.headers(), "content-security-policy": sitePolicy() },
+    });
+  });
+  const elsewhere = "https://elsewhere.fly.dev";
+  for (const origin of [SERVICE_ORIGIN, elsewhere]) {
+    await page.route(`${origin}/**`, (route) =>
+      route.fulfill({ headers: { "access-control-allow-origin": "*" }, json: {} })
+    );
+  }
+  await page.goto("/retrieval-service.html");
+  const outcome = await page.evaluate(async ([allowed, refused]) => {
+    const violation = new Promise((resolve) =>
+      document.addEventListener("securitypolicyviolation", (e) => resolve(e.effectiveDirective))
+    );
+    const call = (url: string) => fetch(url).then((r) => r.status, () => "refused");
+    const statuses = [await call(allowed), await call(refused)];
+    const none = new Promise((resolve) => setTimeout(() => resolve("none"), 2000));
+    return { statuses, violated: await Promise.race([violation, none]) };
+  }, [`${SERVICE_ORIGIN}/v1/health`, `${elsewhere}/v1/health`]);
+  expect(outcome).toEqual({ statuses: [200, "refused"], violated: "connect-src" });
+});
+
+// The Retrieval page's own rule (brief §5b): the site policy repeated, with
+// img-src narrowed to this site and the service, so a rendering mistake still
+// loads no image from elsewhere. Repeated whole, it covers the page whether
+// Vercel sends both policies or only the page's, and it comes after the site
+// rule, so it is the last rule that matches the page.
+test("the Retrieval page's policy is the site policy with img-src narrowed to the site and the service", () => {
+  const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
+  const rules = vercel.headers as HeaderRule[];
+  const pages = rules.filter((r) => r.source === "/retrieval-service");
+  expect(pages).toHaveLength(1);
+  expect(rules.indexOf(pages[0])).toBeGreaterThan(rules.findIndex((r) => r.source === "/(.*)"));
+  expect(pages[0].headers).toEqual([
+    {
+      key: "Content-Security-Policy",
+      value: sitePolicy().replace(/img-src [^;]*/, `img-src 'self' ${SERVICE_ORIGIN}`),
+    },
+  ]);
+  expect(sitePolicy(), "every other page keeps its images").toContain("img-src 'self' data: https:");
+});
+
+// ── The demo flag ───────────────────────────────────────────────────────────
+// retrieval-service.html ships the demo section hidden, and the build opens it
+// only when RETRIEVAL_DEMO is `on`, so the demo is switched in Vercel's
+// environment and a redeploy, with no code change (build.mjs). The build
+// command runs as vercel.json gives it, in a copy of what it reads, so the tree
+// is not written.
+
+const DEMO_HELD = '<section id="demo" hidden>';
+const DEMO_OPEN = '<section id="demo">';
+const PAGE_SOURCE = fs.readFileSync(path.join(SITE_ROOT, "retrieval-service.html"), "utf-8");
+
+function runBuild(flag: string | undefined, source = PAGE_SOURCE, snapshot?: string) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "site-build-"));
+  try {
+    fs.mkdirSync(path.join(dir, "e2e"));
+    for (const file of ["build.mjs", "e2e/retrieval-service-schema.ts"]) {
+      fs.copyFileSync(path.join(SITE_ROOT, file), path.join(dir, file));
+    }
+    fs.writeFileSync(path.join(dir, "retrieval-service.html"), source);
+    if (snapshot !== undefined) {
+      fs.mkdirSync(path.join(dir, "data/retrieval-service"), { recursive: true });
+      fs.writeFileSync(path.join(dir, "data/retrieval-service/results.json"), snapshot);
+    }
+    const env = { ...process.env };
+    delete env.RETRIEVAL_DEMO;
+    if (flag !== undefined) env.RETRIEVAL_DEMO = flag;
+    const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
+    const run = spawnSync(vercel.buildCommand, { cwd: dir, env, shell: true, encoding: "utf-8" });
+    const page = fs.readFileSync(path.join(dir, "retrieval-service.html"), "utf-8");
+    return { status: run.status, stderr: run.stderr, page };
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+test("the build leaves the demo hidden unless RETRIEVAL_DEMO is on", () => {
+  for (const flag of [undefined, "", "off", "true"]) {
+    const built = runBuild(flag);
+    expect(built.status, built.stderr).toBe(0);
+    expect(built.page, `RETRIEVAL_DEMO=${flag}`).toBe(PAGE_SOURCE);
+  }
+});
+
+test("RETRIEVAL_DEMO=on makes the build open the demo and change nothing else", () => {
+  for (const flag of ["on", " ON\n"]) {
+    const built = runBuild(flag);
+    expect(built.status, built.stderr).toBe(0);
+    expect(built.page).toBe(PAGE_SOURCE.replace(DEMO_HELD, DEMO_OPEN));
+  }
+});
+
+test("the build fails once the page no longer holds the demo hidden exactly once", () => {
+  for (const source of [PAGE_SOURCE.replace(DEMO_HELD, DEMO_OPEN), PAGE_SOURCE.replace(DEMO_HELD, DEMO_HELD + DEMO_HELD)]) {
+    for (const flag of [undefined, "on"]) {
+      expect(runBuild(flag, source).status, `RETRIEVAL_DEMO=${flag}`).not.toBe(0);
+    }
+  }
+});
+
+test("the build still fails on a malformed results snapshot", () => {
+  const built = runBuild(undefined, PAGE_SOURCE, "{}");
+  expect(built.status).not.toBe(0);
+  expect(built.stderr).toContain("results snapshot fails its schema");
+});
+
+test("the build command fits the 256 characters Vercel allows it", () => {
+  const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
+  expect(vercel.buildCommand.length).toBeLessThanOrEqual(256);
+});
+
+// ── What deploys ────────────────────────────────────────────────────────────
+// The build output is the repo root, so every tracked file .vercelignore lets
+// through is public. Through go the pages, what they load, what the build
+// reads and the crawler files; every other tracked file stays off. Patterns are
+// read by git's own matcher: .vercelignore takes .gitignore's syntax.
+
+const BUILD_READS = ["vercel.json", "build.mjs", "e2e/retrieval-service-schema.ts", "data/retrieval-service/results.json"];
+const FOR_CRAWLERS = ["robots.txt", "sitemap.xml"];
+// A same-site path a page or script names in quotes, origin optional.
+const NAMED = /["'`](?:https:\/\/(?:www\.)?baseweight\.co)?(\/[\w./-]+\.\w{2,5})["'`]/g;
+
+const trackedFiles = () =>
+  spawnSync("git", ["ls-files"], { cwd: SITE_ROOT, encoding: "utf-8" }).stdout.split("\n").filter(Boolean);
+
+function keptOffDeploy(paths: string[]): Set<string> {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "vercelignore-"));
+  try {
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    fs.copyFileSync(path.join(SITE_ROOT, ".vercelignore"), path.join(dir, ".gitignore"));
+    const run = spawnSync("git", ["check-ignore", "--no-index", "--stdin"], { cwd: dir, input: paths.join("\n"), encoding: "utf-8" });
+    return new Set(run.stdout.split("\n").filter(Boolean));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+// The file that serves a site path; a clean URL is its page.
+function fileFor(urlPath: string): string {
+  const file = decodeURIComponent(urlPath).replace(/^\//, "");
+  if (!file) return "index.html";
+  return path.extname(file) ? file : `${file}.html`;
+}
+
+test("the deploy carries the pages, what they load and what the build reads, and no other tracked file", async ({ page, baseURL }) => {
+  const tracked = trackedFiles();
+  const pages = tracked.filter((f) => !f.includes("/") && f.endsWith(".html"));
+  const needed = new Set([...pages, ...BUILD_READS, ...FOR_CRAWLERS]);
+  const origin = new URL(baseURL!).origin;
+  page.on("request", (r) => {
+    const url = new URL(r.url());
+    if (url.origin === origin) needed.add(fileFor(url.pathname));
+  });
+  for (const file of pages) {
+    await page.goto(`/${file}`);
+    await page.waitForLoadState("networkidle");
+  }
+  // What a browser does not request on load: icons, social images, later fetches.
+  const sources = [...needed].filter((f) => /\.(html|js|css)$/.test(f) && fs.existsSync(path.join(SITE_ROOT, f)));
+  for (const source of sources) {
+    for (const m of fs.readFileSync(path.join(SITE_ROOT, source), "utf-8").matchAll(NAMED)) needed.add(fileFor(m[1]));
+  }
+  // Vercel serves its own /_vercel/ paths.
+  for (const file of needed) if (file.startsWith("_vercel/")) needed.delete(file);
+
+  const off = keptOffDeploy([...new Set([...tracked, ...needed])]);
+  expect([...needed].filter((f) => off.has(f)), "needed by a page or the build, but kept off the deploy").toEqual([]);
+  expect(tracked.filter((f) => !needed.has(f) && !off.has(f)), "needed by nothing, but deployed and public").toEqual([]);
+  for (const file of ["COPY-STYLE.md", "data/benchmark/hs-benchmark-spec.md", "data/benchmark/hs-benchmark-issue.md"]) {
+    expect(off.has(file), `${file} stays off the deploy`).toBe(true);
+  }
 });

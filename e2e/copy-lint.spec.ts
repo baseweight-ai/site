@@ -24,8 +24,10 @@ const LINT_EXEMPT = new Set(["privacy.html"]);
 const PAGES = sitePages().filter((p) => !LINT_EXEMPT.has(p));
 
 // Copy injected at runtime is copy too: components.js carries the nav labels
-// and footer strings every page renders.
-const SCRIPT_FILES = ["components.js"];
+// and footer strings every page renders, retrieval-results.js the results
+// tables' labels and pending note, retrieval-demo.js the demo's labels, states
+// and prepared questions.
+const SCRIPT_FILES = ["components.js", "retrieval-results.js", "retrieval-demo.js"];
 
 const BANNED: { name: string; re: RegExp }[] = [
   // ── Contrast / negation rhetoric ("this, not that") ────────────────────────

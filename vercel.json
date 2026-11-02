@@ -1,4 +1,7 @@
 {
+  "installCommand": "",
+  "outputDirectory": ".",
+  "buildCommand": "node --no-warnings build.mjs",
   "cleanUrls": true,
   "redirects": [
     {
@@ -54,7 +57,16 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.vercel-insights.com https://*.vercel-scripts.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'none'; form-action 'none'; connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.vercel-insights.com https://*.vercel-scripts.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'none'; form-action 'none'; connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://baseweight-service.fly.dev"
+        }
+      ]
+    },
+    {
+      "source": "/retrieval-service",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.vercel-insights.com https://*.vercel-scripts.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://baseweight-service.fly.dev; frame-src 'none'; form-action 'none'; connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://baseweight-service.fly.dev"
         }
       ]
     }

@@ -1,0 +1,109 @@
+{
+  "generated_at": "2000-01-01T00:00:00Z",
+  "git_sha": "0000000000000000000000000000000000000000",
+  "dataset": {
+    "repo": "fixture",
+    "revision": "fixture",
+    "tiers": {
+      "fixture": {
+        "n": 10
+      }
+    }
+  },
+  "system": {
+    "generator": "fixture",
+    "embedder": "fixture",
+    "reranker": "fixture",
+    "index_version": "fixture"
+  },
+  "judge": {
+    "model": "fixture",
+    "prompt_version": "fixture",
+    "swap_order": true
+  },
+  "metrics": [
+    {
+      "name": "recall_at_20",
+      "config": "deployed",
+      "tier": "fixture",
+      "slice": "all",
+      "n": 10,
+      "value": 0.5,
+      "ci_low": 0.4,
+      "ci_high": 0.6,
+      "gated": true,
+      "delta_vs_baseline": 0.1,
+      "delta_ci_low": 0.0,
+      "delta_ci_high": 0.2
+    },
+    {
+      "name": "ndcg_at_10",
+      "config": "baseline",
+      "tier": "fixture",
+      "slice": "all",
+      "n": 10,
+      "value": 0.5,
+      "ci_low": 0.4,
+      "ci_high": 0.6,
+      "gated": false
+    },
+    {
+      "name": "faithfulness",
+      "config": "baseline",
+      "tier": "fixture",
+      "slice": "all",
+      "n": 10,
+      "value": 0.5,
+      "ci_low": 0.4,
+      "ci_high": 0.6,
+      "gated": false,
+      "delta_vs_baseline": null,
+      "delta_ci_low": null,
+      "delta_ci_high": null
+    },
+    {
+      "name": "answer_correct",
+      "config": "deployed",
+      "tier": "fixture",
+      "slice": "all",
+      "n": 10,
+      "value": 0.5,
+      "ci_low": 0.4,
+      "ci_high": 0.6,
+      "gated": false,
+      "delta_vs_baseline": 0.1,
+      "delta_ci_low": 0.0,
+      "delta_ci_high": 0.2
+    },
+    {
+      "name": "injection_asr",
+      "config": "deployed",
+      "tier": "adversarial",
+      "slice": "all",
+      "n": 0,
+      "value": null,
+      "ci_low": null,
+      "ci_high": null,
+      "gated": false
+    }
+  ],
+  "ablations": [
+    {
+      "metric": "recall_at_20",
+      "tier": "fixture",
+      "from_config": "baseline",
+      "to_config": "deployed",
+      "delta": 0.1,
+      "delta_ci_low": 0.0,
+      "delta_ci_high": 0.2
+    }
+  ],
+  "operational": {
+    "p50_latency_ms": 1000,
+    "p95_latency_ms": 2000,
+    "cost_usd_total": 0.01
+  },
+  "limitations": [
+    "Synthetic test fixture: no value in this file was measured."
+  ]
+}

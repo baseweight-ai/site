@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Retrieval service | Baseweight</title>
-<meta name="description" content="A retrieval service in production: tracing, a failure-mode eval suite, and cost per request.">
-<!-- No content on it yet, so it stays out of search until there is some. Drop
-     this tag and add the sitemap entry when the page is written. -->
-<meta name="robots" content="noindex, follow">
+<title>Retrieval | Baseweight</title>
+<meta name="description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -15,16 +12,17 @@
 <link rel="apple-touch-icon" href="/images/icon.jpg">
 <link rel="canonical" href="https://baseweight.co/retrieval-service">
 <link rel="preload" href="/images/logo.png" as="image" type="image/png">
-<link rel="stylesheet" href="/components.css">
-<meta name="author" content="Baseweight">
-<link rel="author" href="/about">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/retrieval-service">
-<meta property="og:title" content="Retrieval service: Baseweight">
-<meta property="og:description" content="A retrieval service in production: tracing, a failure-mode eval suite, and cost per request.">
+<meta property="og:title" content="Retrieval: Baseweight">
+<meta property="og:description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Retrieval: Baseweight">
+<meta name="twitter:description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
+<meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -32,6 +30,7 @@
   --bg-primary: #080808;
   --bg-secondary: #0d0d0d;
   --bg-card: #111111;
+  --bg-card-hover: #161616;
   --border: #1c1c1c;
   --border-accent: #282828;
   --text-primary: #e8e4de;
@@ -39,15 +38,24 @@
   --text-muted: #807d76;
   --accent: #dcb875;
   --accent-hover: #dbb960;
+  --accent-dim: rgba(201, 168, 76, 0.1);
+  --accent-glow: rgba(201, 168, 76, 0.06);
   --font-display: 'Syne', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --max-width: 1120px;
-  --section-pad: clamp(80px, 12vh, 140px);
+  --section-pad: clamp(60px, 8vh, 100px);
 }
 
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html { scroll-behavior: smooth; scroll-padding-top: 96px; -webkit-font-smoothing: antialiased; }
 
-body { font-family: var(--font-mono); font-size: 15px; line-height: 1.75; color: var(--text-primary); background: var(--bg-primary); overflow-x: hidden; }
+body {
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  overflow-x: hidden;
+}
 
 ::selection { background: var(--accent); color: var(--bg-primary); }
 
@@ -56,57 +64,440 @@ a:hover { color: var(--accent-hover); }
 
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
 
-h1 { font-family: var(--font-display); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; font-size: clamp(2rem, 4.5vw, 3.2rem); }
 
-.section-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
-.section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+/* PAGE HERO: one sentence, then the demo. The h1 is for screen readers and
+   search, so it is visually hidden. */
+.page-hero {
+  padding-top: calc(72px + 20px);
+  padding-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero::before {
+  content: ''; position: absolute; top: -30%; left: -6%;
+  width: 56%; height: 160%;
+  background: radial-gradient(ellipse at center, rgba(220,184,117,0.10), transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.page-hero .container { position: relative; z-index: 1; }
+.page-hero .lead { max-width: 960px; font-size: 16px; line-height: 1.6; color: var(--text-primary); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-.case-hero { padding-top: calc(72px + var(--section-pad)); padding-bottom: 40px; border-bottom: 1px solid var(--border); }
-.case-hero p { max-width: 62ch; margin-top: 18px; font-size: 15px; line-height: 1.8; color: var(--text-secondary); }
+/* ENTRY MOTION */
+@keyframes methRise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.meth-anim { opacity: 0; animation: methRise 0.6s cubic-bezier(0.16,0.84,0.44,1) forwards; }
 
-.case-body { padding: var(--section-pad) 0; }
-.case-body a { border-bottom: 1px solid rgba(220, 184, 117, 0.3); }
+/* MAIN CONTENT: one column, so the demo and the results get the full width */
+.page-body { padding: 8px 0 var(--section-pad); }
+.methodology-content { min-width: 0; }
+.methodology-content h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
+  color: var(--text-primary);
+  margin-top: 56px; margin-bottom: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.methodology-content :is(p, ul, dl) { max-width: 740px; }
+.methodology-content p {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.85;
+  margin-bottom: 16px;
+}
+.methodology-content p.lead {
+  font-size: 16px; line-height: 1.8; color: var(--text-primary);
+  margin-bottom: 18px;
+}
+
+.methodology-content strong { color: var(--text-primary); font-weight: 600; }
+
+.methodology-content ul {
+  list-style: none; margin: 0 0 16px 0; padding: 0;
+}
+.methodology-content ul li {
+  font-size: 14px; color: var(--text-secondary); line-height: 1.85;
+  padding-left: 20px; position: relative; margin-bottom: 4px;
+}
+.methodology-content ul li::before {
+  content: ''; position: absolute; left: 0; top: 0.75em;
+  width: 5px; height: 5px; background: var(--accent);
+}
+
+/* DEMO NOTE: what the index holds and what one question shows, under the demo */
+.demo-note { border-left: 2px solid var(--accent); padding-left: 18px; margin-bottom: 28px; }
+.demo-note p:last-child { margin-bottom: 0; }
+
+/* ATTRIBUTION: the corpus licence notice, small print under the rung columns, where the passages appear */
+.methodology-content p.attribution { font-size: 12px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
+.attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
+/* DEMO: retrieval-demo.js, mounted at #demoMount. One column per rung: four
+   across, two below 860px, one below 640px. Ids, titles and passages wrap
+   inside their column, so nothing widens the page. The Compare button is
+   outlined, so the nav keeps the only gold button in view. */
+/* The demo opens the page. #demoMount's own box drops out of the flow, so the
+   attribution sits right under the rung columns, ahead of the service line and
+   the notes, and the status and the elapsed time share a row. */
+#demo:not([hidden]) { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; }
+#demoMount { display: contents; }
+#demo > *, #demoMount > * { flex: 0 0 100%; min-width: 0; }
+#demoMount .demo-status, #demoMount .demo-elapsed { flex: 0 1 auto; }
+#demo #demoAttribution { order: 1; margin: 12px 0; }
+.demo-service { order: 2; }
+#demo .demo-note { order: 3; margin-bottom: 0; }
+#demoMount p { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+#demoMount .demo-limits { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+.demo-ask label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+.demo-row { display: flex; gap: 8px; max-width: 740px; }
+.demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-accent); padding: 10px 14px; }
+.demo-row input:read-only { color: var(--text-secondary); }
+.demo-go { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 10px 20px; cursor: pointer; }
+.demo-go:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
+#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px; }
+#demoMount ul.demo-prepared li { padding: 0; margin: 0; }
+#demoMount ul.demo-prepared li::before { content: none; }
+.demo-prepared button { font: inherit; font-size: 12px; line-height: 1.5; text-align: left; color: var(--text-secondary); background: transparent; border: 1px solid var(--border-accent); padding: 6px 12px; cursor: pointer; }
+.demo-prepared button:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+#demoMount [aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.demo-service:not([hidden]) { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; margin-bottom: 16px; }
+.demo-service dt { color: var(--text-muted); }
+.demo-service dd { color: var(--text-secondary); overflow-wrap: anywhere; }
+#demoMount .demo-status { color: var(--text-primary); margin-bottom: 0; }
+#demoMount .demo-elapsed { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
+.demo-rung { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px; overflow-wrap: anywhere; }
+/* The rung headings are h2s under the page's h1, so the article's section h2 rules are set back here. */
+.methodology-content .demo-rung h2 { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; line-height: 1.75; color: var(--accent); margin: 0 0 8px; padding: 0; border: 0; }
+#demoMount .demo-rung-label { font-size: 12px; line-height: 1.5; color: var(--text-muted); }
+#demoMount .demo-answer { color: var(--text-primary); }
+#demoMount .demo-pending { color: var(--text-muted); }
+#demoMount .demo-error { color: var(--text-primary); border-left: 2px solid var(--text-secondary); padding-left: 10px; }
+.demo-marker { font: inherit; color: var(--accent); background: none; border: none; padding: 0 1px; cursor: pointer; }
+.demo-cites, .demo-passages ol { list-style: none; margin: 0 0 12px; padding: 0; font-size: 12px; line-height: 1.6; }
+.demo-cite summary { cursor: pointer; color: var(--text-secondary); }
+.demo-cite[open] summary { color: var(--text-primary); }
+.demo-cite summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+#demoMount .demo-snippet { white-space: pre-line; font-size: 12px; color: var(--text-secondary); border-left: 2px solid var(--border-accent); padding-left: 10px; margin: 8px 0; }
+.demo-cite a { font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); }
+.demo-passages h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 12px 0 6px; }
+.demo-passages li { color: var(--text-secondary); }
+#demoMount .demo-latency { font-size: 12px; color: var(--text-muted); margin: 12px 0 0; }
+@media (max-width: 860px) { .demo-rungs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) {
+  .page-hero .lead { font-size: 15px; }
+  .demo-rungs { grid-template-columns: minmax(0, 1fr); }
+  #demoMount ul.demo-prepared { gap: 6px; }
+  .demo-prepared button { padding: 4px 10px; line-height: 1.4; }
+}
+
+/* PIPELINE: one inline SVG. x is in percent and y in px, so the two columns
+   follow the width while the text keeps its size. Lines, arrowheads and the
+   span label draw in currentColor, which forced colours repaint; each box
+   keeps its own fill and text colour. */
+.pipeline { max-width: 560px; }
+.pipeline svg { display: block; width: 100%; height: 370px; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
+.pipeline text { text-anchor: middle; }
+.pipeline .nodes rect { fill: var(--bg-card); stroke: var(--border-accent); }
+.pipeline .nodes text { fill: var(--text-primary); }
+.pipeline .nodes .sub { fill: var(--text-secondary); font-size: 11px; }
+.pipeline .flow, #pipeline-arrow { color: var(--accent); }
+.pipeline line { stroke: currentColor; }
+.pipeline .flow line { stroke-width: 1.5; stroke-linecap: square; }
+.pipeline .spans line { stroke-dasharray: 3 3; }
+.pipeline .spans text, .pipeline marker path { fill: currentColor; }
+.pipeline .spans text { font-size: 11px; }
+
+/* STATE NOTES: results pending, snapshot unreadable */
+.methodology-content p.state-note { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px 20px; }
+
+/* PINNED REVISIONS, filled from the snapshot */
+.pins { display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; font-size: 13px; line-height: 1.6; }
+.pins dt { color: var(--text-muted); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding-top: 1px; }
+.pins dd { color: var(--text-primary); overflow-wrap: anywhere; }
+
+/* RESULTS: methodology.html's table, its row headers styled as that table's
+   first column. Gated and advisory differ in the caption and in the rule above
+   each table, solid or dashed, never in colour alone; the legend repeats it. */
+.methodology-content .table-wrap { overflow-x: auto; margin-bottom: 24px; }
+.methodology-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 500px;
+}
+.methodology-content caption { text-align: left; font-weight: 600; color: var(--text-primary); padding-bottom: 10px; }
+.methodology-content table.gated { border-top: 2px solid var(--text-secondary); }
+.methodology-content table.advisory { border-top: 2px dashed var(--text-secondary); }
+/* Headers keep their case, unlike methodology's: n is sample size, and N reads
+   as a population. */
+.methodology-content thead th {
+  font-weight: 600; font-size: 11px; letter-spacing: 0.05em;
+  color: var(--text-muted); padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  white-space: nowrap;
+}
+.methodology-content tbody :is(th, td) {
+  white-space: nowrap;
+  padding: 10px 14px; color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.15s;
+}
+.methodology-content tbody th { color: var(--text-primary); font-weight: 400; text-align: left; }
+.methodology-content tbody tr:last-child :is(th, td) { border-bottom: none; }
+.methodology-content tbody tr:nth-child(even) :is(th, td) { background: rgba(255,255,255,0.01); }
+.methodology-content tbody tr:hover :is(th, td) { background: rgba(255,255,255,0.04); }
+.table-legend { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; font-size: 13px; line-height: 1.6; margin-bottom: 28px; }
+.table-legend dt { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--text-primary); }
+.table-legend dt::before { content: ''; width: 24px; border-top: 2px solid var(--text-secondary); }
+.table-legend dt.advisory::before { border-top-style: dashed; }
+.table-legend dd { color: var(--text-secondary); }
+
+/* CTA BLOCK */
+.cta-block { position: relative; overflow: hidden; margin-top: 80px; padding: 64px; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border: 1px solid var(--border-accent); text-align: center; }
+.cta-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 92% at 50% 0%, rgba(220,184,117,0.11), transparent 58%); pointer-events: none; }
+.cta-block > * { position: relative; z-index: 1; }
+.cta-block h2 { font-family: var(--font-display); font-size: clamp(1.55rem, 3.2vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 28px; }
+.btn-primary { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 16px 36px; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s, transform 0.15s; display: inline-block; }
+.btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-2px); box-shadow: 0 8px 24px -10px var(--accent); }
 
 @media (max-width: 640px) {
-  .case-hero { padding-top: 120px; }
+  .cta-block { padding: 40px 24px; }
 }
 </style>
+<meta name="author" content="Baseweight">
+<link rel="author" href="/about">
+<link rel="stylesheet" href="/components.css">
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
-<!-- Vercel Speed Insights -->
-<script>
-  window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-</script>
+<script>window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };</script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 <body>
 <a href="#main-content" class="skip-nav">Skip to main content</a>
 
-<!-- ======== NAV ======== -->
 <nav id="nav"></nav>
 
 <main id="main-content">
 
-<section class="case-hero">
+<section class="page-hero">
   <div class="container">
-    <div class="section-label">Build</div>
-    <h1>Retrieval service</h1>
-    <p>Deployed, with tracing, a failure-mode eval suite, and cost per request.</p>
+    <h1 class="visually-hidden">Retrieval</h1>
+    <p class="lead meth-anim" style="animation-delay: 0s;">An eval harness runs a fixed test set on every change to the question-answering service we built.</p>
   </div>
 </section>
 
-<!-- Write-up goes here: the task, the system, the numbers, the handover. -->
-<section class="case-body">
+<section class="page-body">
   <div class="container">
-    <p><a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer">Book a call</a> to go through this one.</p>
+    <article class="methodology-content">
+
+      <!-- Held until the demo is public: removing hidden shows the demo, the attribution and the corpus note. -->
+      <section id="demo" hidden>
+        <!-- retrieval-demo.js mounts the demo here. -->
+        <div id="demoMount"></div>
+        <!-- The licence notice for the passages the demo shows, under the rung columns where they
+             appear: the deployed GET /v1/meta `attribution` field, verbatim as of 2026-11-01
+             (INTEGRATION-BRIEF.md §3). Once /v1/meta answers, the demo replaces this text with the
+             live field, before any rung output. -->
+        <p class="attribution" id="demoAttribution">Modified passages from Wikipedia articles, under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a></p>
+        <div class="demo-note">
+          <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
+          <p>One question is an anecdote. The results below measure the service over its test set.</p>
+        </div>
+      </section>
+
+      <section id="results">
+        <h2>Results</h2>
+        <dl class="table-legend">
+          <dt class="gated">Gated</dt>
+          <dd>A change that regresses the score cannot merge.</dd>
+          <dt class="advisory">Advisory</dt>
+          <dd>A change that regresses the score can still merge.</dd>
+        </dl>
+        <!-- retrieval-results.js renders the pending state or the tables here. -->
+        <div id="resultsMount"></div>
+        <p class="state-note" id="resultsFailed" hidden>The results could not be loaded.</p>
+      </section>
+
+      <section id="how-its-measured">
+        <h2>How it&rsquo;s measured</h2>
+        <p class="lead">Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
+        <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
+        <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
+      </section>
+
+      <section id="limitations" hidden>
+        <h2>Limitations</h2>
+        <ul id="limitationsList"></ul>
+        <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
+      </section>
+
+      <section id="reproduce" hidden>
+        <h2>Reproduce it</h2>
+        <dl class="pins" id="pinsList"></dl>
+      </section>
+
+      <section id="how-its-built">
+        <h2>How it&rsquo;s built</h2>
+        <figure class="pipeline">
+          <svg role="img" aria-labelledby="pipeline-title">
+            <title id="pipeline-title">Ingest, chunk, embed, Postgres with pgvector and BM25, hybrid retrieve, rerank, generate with citations, verify. Every stage sends OpenTelemetry spans to a tracing backend.</title>
+            <defs>
+              <marker id="pipeline-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L8,4 L0,8 z"/></marker>
+              <marker id="pipeline-arrow-span" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L8,4 L0,8 z"/></marker>
+            </defs>
+            <!-- A tick from every stage to a rail; the rails meet in the bus to the tracing backend. -->
+            <g class="spans">
+              <line x1="1%" y1="28" x2="4%" y2="28"/>
+              <line x1="1%" y1="100" x2="4%" y2="100"/>
+              <line x1="1%" y1="172" x2="4%" y2="172"/>
+              <line x1="1%" y1="244" x2="4%" y2="244"/>
+              <line x1="96%" y1="28" x2="99%" y2="28"/>
+              <line x1="96%" y1="100" x2="99%" y2="100"/>
+              <line x1="96%" y1="172" x2="99%" y2="172"/>
+              <line x1="96%" y1="244" x2="99%" y2="244"/>
+              <line x1="1%" y1="28" x2="1%" y2="296"/>
+              <line x1="99%" y1="28" x2="99%" y2="296"/>
+              <line x1="1%" y1="296" x2="99%" y2="296"/>
+              <line x1="50%" y1="296" x2="50%" y2="325" marker-end="url(#pipeline-arrow-span)"/>
+              <text x="50%" y="288">OpenTelemetry spans</text>
+            </g>
+            <!-- Down each column, with the elbow from Postgres to hybrid retrieval. -->
+            <g class="flow">
+              <line x1="25%" y1="52" x2="25%" y2="75" marker-end="url(#pipeline-arrow)"/>
+              <line x1="25%" y1="124" x2="25%" y2="147" marker-end="url(#pipeline-arrow)"/>
+              <line x1="25%" y1="196" x2="25%" y2="219" marker-end="url(#pipeline-arrow)"/>
+              <line x1="46%" y1="244" x2="50%" y2="244"/>
+              <line x1="50%" y1="244" x2="50%" y2="28"/>
+              <line x1="50%" y1="28" x2="54%" y2="28" marker-end="url(#pipeline-arrow)"/>
+              <line x1="75%" y1="52" x2="75%" y2="75" marker-end="url(#pipeline-arrow)"/>
+              <line x1="75%" y1="124" x2="75%" y2="147" marker-end="url(#pipeline-arrow)"/>
+              <line x1="75%" y1="196" x2="75%" y2="219" marker-end="url(#pipeline-arrow)"/>
+            </g>
+            <g class="nodes">
+              <rect x="4%" y="4" width="42%" height="48"/><text x="25%" y="32">Ingest</text>
+              <rect x="4%" y="76" width="42%" height="48"/><text x="25%" y="104">Chunk</text>
+              <rect x="4%" y="148" width="42%" height="48"/><text x="25%" y="176">Embed</text>
+              <rect x="4%" y="220" width="42%" height="48"/><text x="25%" y="240">Postgres</text><text class="sub" x="25%" y="256">pgvector &middot; BM25</text>
+              <rect x="54%" y="4" width="42%" height="48"/><text x="75%" y="24">Hybrid</text><text x="75%" y="40">retrieve</text>
+              <rect x="54%" y="76" width="42%" height="48"/><text x="75%" y="104">Rerank</text>
+              <rect x="54%" y="148" width="42%" height="48"/><text x="75%" y="168">Generate</text><text x="75%" y="184">with citations</text>
+              <rect x="54%" y="220" width="42%" height="48"/><text x="75%" y="248">Verify</text>
+              <rect x="25%" y="326" width="50%" height="40"/><text x="50%" y="350">Tracing backend</text>
+            </g>
+          </svg>
+        </figure>
+      </section>
+
+    </article>
+
+    <div class="cta-block">
+      <h2>Tell us what you&rsquo;re building.</h2>
+      <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call</a>
+    </div>
   </div>
 </section>
 
 </main>
 
-<!-- ======== FOOTER ======== -->
 <footer></footer>
 
 <script src="/components.js"></script>
+<script src="/retrieval-results.js"></script>
+<script src="/retrieval-demo.js"></script>
+<script>
+// ── RESULTS SNAPSHOT ───────────────────────────────────────────────────────
+// The service's results file, copied in by hand (INTEGRATION-BRIEF.md §4) and
+// read same-origin. A 404 means no measured run is committed: Limitations and
+// Reproduce stay hidden and Results shows its pending state. Any other failure
+// is stated on the page.
+const SNAPSHOT_URL = '/data/retrieval-service/results.json';
 
+// The revisions a rerun pins, as the snapshot names them.
+const PINS = [
+  ['Dataset', d => d.dataset?.repo],
+  ['Dataset revision', d => d.dataset?.revision],
+  ['Generator', d => d.system?.generator],
+  ['Embedder', d => d.system?.embedder],
+  ['Reranker', d => d.system?.reranker],
+  ['Judge', d => d.judge?.model],
+];
+
+const isText = v => typeof v === 'string' && v.trim() !== '';
+
+// Checks only what this page renders; the e2e suite holds the whole file to
+// its schema.
+function renderable(doc) {
+  return Array.isArray(doc?.limitations) && doc.limitations.length > 0 &&
+    doc.limitations.every(isText) && PINS.every(([, read]) => isText(read(doc)));
+}
+
+async function readSnapshot() {
+  try {
+    const res = await fetch(SNAPSHOT_URL);
+    if (res.status === 404) return { state: 'absent' };
+    const doc = res.ok ? await res.json() : null;
+    return renderable(doc) ? { state: 'ready', doc } : { state: 'failed' };
+  } catch (e) {
+    return { state: 'failed' };
+  }
+}
+
+// ── RESULTS ────────────────────────────────────────────────────────────────
+// retrieval-results.js renders the pending state or the tables. A snapshot
+// that cannot be read, or that the component refuses, shows the failure note
+// instead of a blank section.
+function renderResultsSection({ state, doc }) {
+  try {
+    if (state === 'failed') throw new Error('results snapshot could not be read');
+    renderResults(document.getElementById('resultsMount'), state === 'ready' ? doc : null);
+  } catch (e) {
+    document.getElementById('resultsFailed').hidden = false;
+  }
+}
+
+// ── LIMITATIONS ────────────────────────────────────────────────────────────
+// Every entry, verbatim, inserted as text.
+function renderLimitations({ state, doc }) {
+  if (state === 'absent') return;
+  document.getElementById('limitations').hidden = false;
+  if (state === 'failed') {
+    document.getElementById('limitationsFailed').hidden = false;
+    return;
+  }
+  const list = document.getElementById('limitationsList');
+  doc.limitations.forEach(entry => {
+    const li = document.createElement('li');
+    li.textContent = entry;
+    list.appendChild(li);
+  });
+}
+
+// ── REPRODUCE ──────────────────────────────────────────────────────────────
+function renderPins({ state, doc }) {
+  if (state !== 'ready') return;
+  const list = document.getElementById('pinsList');
+  PINS.forEach(([label, read]) => {
+    const dt = document.createElement('dt');
+    dt.textContent = label;
+    const dd = document.createElement('dd');
+    dd.textContent = read(doc);
+    list.append(dt, dd);
+  });
+  document.getElementById('reproduce').hidden = false;
+}
+
+readSnapshot().then(snapshot => {
+  renderResultsSection(snapshot);
+  renderLimitations(snapshot);
+  renderPins(snapshot);
+});
+
+// ── DEMO ───────────────────────────────────────────────────────────────────
+// retrieval-demo.js builds the question box and the rung columns. It sends
+// nothing until a visitor focuses the question box or a prepared question.
+mountDemo(document.getElementById('demoMount'), document.getElementById('demoAttribution'));
+</script>
 </body>
 </html>

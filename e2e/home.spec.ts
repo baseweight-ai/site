@@ -211,7 +211,7 @@ test("the published section carries both rows, each linking to its page", async 
 
   const second = rows.nth(1);
   await expect(second).toHaveAttribute("href", "/retrieval-service");
-  await expect(second.locator(".published-name")).toHaveText("Retrieval service");
+  await expect(second.locator(".published-name")).toHaveText("Retrieval");
   await expect(second.locator(".published-what")).toHaveText(
     "Deployed, with tracing, a failure-mode eval suite, and cost per request."
   );
