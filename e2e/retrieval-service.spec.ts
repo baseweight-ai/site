@@ -143,7 +143,7 @@ function serveSnapshot(page: Page, status: number, body = "") {
 
 // The one sentence above the demo.
 const LEAD = "An eval harness runs a fixed test set on every change to the question-answering service we built.";
-// Shown under the demo, so held with it until it ships.
+// The demo's notes in full, behind its About control, so held with it until it ships.
 const CORPUS_BOUNDARY =
   "The index holds a capped subset of English Wikipedia, frozen at one past dump. " +
   "Anything newer, this week’s news included, is outside it.";
@@ -249,7 +249,7 @@ test("the pipeline diagram carries its text alternative", async ({ page }) => {
   await expect(page.getByRole("img", { name: PIPELINE, exact: true })).toBeVisible();
 });
 
-test("the demo section is held hidden: the demo mounted, the attribution after it, then the corpus note", async ({ page }) => {
+test("the demo section is held hidden: the demo mounted, the attribution after it, then the notes in full", async ({ page }) => {
   await serveSnapshot(page, 404);
   await page.goto(PAGE);
   const note = page.locator("#demo .demo-note");
@@ -259,7 +259,7 @@ test("the demo section is held hidden: the demo mounted, the attribution after i
   // The only copy on the page, so it shows with the demo and not before.
   await expect(page.locator(".attribution")).toHaveCount(1);
   await expect(page.locator("#demoMount + #demoAttribution")).toHaveText(ATTRIBUTION);
-  await expect(page.locator("#demoAttribution + .demo-note")).toHaveCount(1);
+  await expect(page.locator("#demoAttribution ~ .demo-about .demo-note")).toHaveCount(1);
   await expect(note).toContainText(CORPUS_BOUNDARY);
   await expect(note).toContainText(ANECDOTE);
 });

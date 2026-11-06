@@ -124,10 +124,6 @@ a:hover { color: var(--accent-hover); }
   width: 5px; height: 5px; background: var(--accent);
 }
 
-/* DEMO NOTE: what the index holds and what one question shows, under the demo */
-.demo-note { border-left: 2px solid var(--accent); padding-left: 18px; margin-bottom: 28px; }
-.demo-note p:last-child { margin-bottom: 0; }
-
 /* ATTRIBUTION: the corpus licence notice, small print under the rung columns, where the passages appear */
 .methodology-content p.attribution { font-size: 12px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
 .attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
@@ -135,31 +131,37 @@ a:hover { color: var(--accent-hover); }
    across, two below 860px, one below 640px. Ids, titles and passages wrap
    inside their column, so nothing widens the page. The Compare button is
    outlined, so the nav keeps the only gold button in view. */
-/* The demo opens the page. #demoMount's own box drops out of the flow, so the
-   attribution sits right under the rung columns, ahead of the service line and
-   the notes, and the status and the elapsed time share a row. */
+/* The demo opens the page, and its answers are the argument: they carry the
+   largest, brightest text, and what can wait sits behind a summary. #demoMount's
+   own box drops out of the flow, so the status and the elapsed time share a row. */
 #demo:not([hidden]) { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; }
 #demoMount { display: contents; }
 #demo > *, #demoMount > * { flex: 0 0 100%; min-width: 0; }
 #demoMount .demo-status, #demoMount .demo-elapsed { flex: 0 1 auto; }
-#demo #demoAttribution { order: 1; margin: 12px 0; }
-.demo-service { order: 2; }
-#demo .demo-note { order: 3; margin-bottom: 0; }
+#demo #demoAttribution { margin: 12px 0; }
 #demoMount p { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
-#demoMount .demo-limits { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+#demoMount .demo-corpus { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+#demoMount .demo-row + p { font-size: 12px; color: var(--text-muted); margin: 6px 0 8px; }
+:is(.demo-questions, .demo-method, .demo-about) summary { cursor: pointer; font-size: 12px; line-height: 1.6; color: var(--text-muted); }
+:is(.demo-questions, .demo-method, .demo-about) summary:hover { color: var(--text-secondary); }
+.demo-questions { margin-bottom: 8px; }
 .demo-ask label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
 .demo-row { display: flex; gap: 8px; max-width: 740px; }
 .demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-accent); padding: 10px 14px; }
 .demo-row input:read-only { color: var(--text-secondary); }
 .demo-go { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 10px 20px; cursor: pointer; }
 .demo-go:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
-#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px; }
+#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; }
 #demoMount ul.demo-prepared li { padding: 0; margin: 0; }
 #demoMount ul.demo-prepared li::before { content: none; }
 .demo-prepared button { font: inherit; font-size: 12px; line-height: 1.5; text-align: left; color: var(--text-secondary); background: transparent; border: 1px solid var(--border-accent); padding: 6px 12px; cursor: pointer; }
 .demo-prepared button:hover { color: var(--text-primary); border-color: var(--text-secondary); }
 #demoMount [aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
-.demo-service:not([hidden]) { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; margin-bottom: 16px; }
+/* Under the columns: the notes that qualify the answers, short, then the control with each note in full and the service's ids. */
+.methodology-content p.demo-anecdote { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 2px; }
+.methodology-content p.demo-limits { font-size: 12px; line-height: 1.6; color: var(--text-muted); margin-bottom: 8px; }
+.demo-about p { font-size: 12px; line-height: 1.7; margin: 8px 0 0; }
+.demo-service:not([hidden]) { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; margin-top: 8px; }
 .demo-service dt { color: var(--text-muted); }
 .demo-service dd { color: var(--text-secondary); overflow-wrap: anywhere; }
 #demoMount .demo-status { color: var(--text-primary); margin-bottom: 0; }
@@ -167,21 +169,29 @@ a:hover { color: var(--accent-hover); }
 .demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
 .demo-rung { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px; overflow-wrap: anywhere; }
 /* The rung headings are h2s under the page's h1, so the article's section h2 rules are set back here. */
-.methodology-content .demo-rung h2 { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; line-height: 1.75; color: var(--accent); margin: 0 0 8px; padding: 0; border: 0; }
-#demoMount .demo-rung-label { font-size: 12px; line-height: 1.5; color: var(--text-muted); }
-#demoMount .demo-answer { color: var(--text-primary); }
+.methodology-content .demo-rung h2 { font-family: var(--font-mono); font-size: 13px; font-weight: 600; letter-spacing: 0; line-height: 1.4; color: var(--accent); margin: 0 0 10px; padding: 0; border: 0; }
+#demoMount .demo-answer { font-size: 16px; color: var(--text-primary); margin-bottom: 12px; }
 #demoMount .demo-pending { color: var(--text-muted); }
 #demoMount .demo-error { color: var(--text-primary); border-left: 2px solid var(--text-secondary); padding-left: 10px; }
 .demo-marker { font: inherit; color: var(--accent); background: none; border: none; padding: 0 1px; cursor: pointer; }
 .demo-cites, .demo-passages ol { list-style: none; margin: 0 0 12px; padding: 0; font-size: 12px; line-height: 1.6; }
 .demo-cite summary { cursor: pointer; color: var(--text-secondary); }
 .demo-cite[open] summary { color: var(--text-primary); }
-.demo-cite summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:is(.demo-cite, .demo-questions, .demo-method, .demo-about) summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #demoMount .demo-snippet { white-space: pre-line; font-size: 12px; color: var(--text-secondary); border-left: 2px solid var(--border-accent); padding-left: 10px; margin: 8px 0; }
+/* The cut: eight rendered lines. retrieval-demo.js shows .demo-more when a snippet overflows them. */
+.demo-clamped { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; overflow: hidden; }
+.demo-more:not([hidden]) { display: block; font: inherit; font-size: 12px; color: var(--accent); background: none; border: none; padding: 4px 0; margin-bottom: 4px; cursor: pointer; }
+.demo-more:hover { color: var(--accent-hover); }
 .demo-cite a { font-size: 12px; color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); }
-.demo-passages h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 12px 0 6px; }
+:is(.demo-passages, .demo-method) h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 12px 0 6px; }
 .demo-passages li { color: var(--text-secondary); }
+.demo-passages li + li { margin-top: 4px; }
+.demo-count { color: var(--text-muted); }
 #demoMount .demo-latency { font-size: 12px; color: var(--text-muted); margin: 12px 0 0; }
+.demo-method { margin-top: 8px; font-size: 12px; line-height: 1.6; color: var(--text-secondary); }
+#demoMount .demo-method p { font-size: 12px; margin: 6px 0 0; }
+.demo-method ol { padding-left: 3ch; }
 @media (max-width: 860px) { .demo-rungs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) {
   .page-hero .lead { font-size: 15px; }

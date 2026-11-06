@@ -17,9 +17,16 @@
     'Which branch of economics studies an economy as a whole?',
     'Who won the 2022 FIFA World Cup?',
   ];
-  const LABEL = 'Read-only. Comparisons are rate-limited, and the demo has a daily budget.';
-  // Under the box, what leaves the browser; privacy.html names the providers.
-  const PRIVACY = 'Your question and IP address go to our service, which passes the question to its providers.';
+  // What a visitor reads: the corpus before the box, where a question goes under
+  // it, and the rest under the answers.
+  const CORPUS = 'Searches a frozen subset of English Wikipedia: nothing recent.';
+  const PRIVACY = 'Your question goes to our service and its providers.';
+  const ANECDOTE = 'One question is an anecdote.';
+  const LIMITS = 'Comparisons are limited.';
+  // Two of those notes in full, behind "About this demo"; the page's .demo-note
+  // holds the other two. privacy.html names the providers.
+  const LIMITS_FULL = 'Read-only. Comparisons are rate-limited, and the demo has a daily budget.';
+  const PRIVACY_FULL = 'Your question and IP address go to our service, which passes the question to its providers.';
   const MARKER = /\[(c\d+)\]/g;
   // A cold start alone took 15 to 19 s (brief §3); this bounds a request the
   // service never answers.
@@ -103,13 +110,37 @@
     return link;
   }
 
+  // A snippet past the page's clamp shows that many lines, and a button opens
+  // the rest. The cut is styling alone: the node holds the whole snippet. Whether
+  // it overflows depends on the column's width, and a closed citation has no
+  // layout to measure, so the check runs whenever the snippet's box changes.
+  function passage(id, text) {
+    const snippet = el('p', text, 'demo-snippet demo-clamped');
+    snippet.id = id;
+    const more = el('button', 'Show the rest', 'demo-more');
+    more.type = 'button';
+    more.hidden = true;
+    more.setAttribute('aria-controls', id);
+    more.setAttribute('aria-expanded', 'false');
+    more.addEventListener('click', () => {
+      const clamped = snippet.classList.toggle('demo-clamped');
+      more.textContent = clamped ? 'Show the rest' : 'Show less';
+      more.setAttribute('aria-expanded', String(!clamped));
+    });
+    // Zoom can round scrollHeight a pixel past clientHeight; a hidden line is far more.
+    new ResizeObserver(() => {
+      if (snippet.classList.contains('demo-clamped')) more.hidden = snippet.scrollHeight <= snippet.clientHeight + 1;
+    }).observe(snippet);
+    return [snippet, more];
+  }
+
   // Closed until its marker or its summary opens it.
   function citation(rung, c) {
     const panel = el('details', null, 'demo-cite');
     panel.id = `demo-${rung}-${c.marker}`;
     const summary = el('summary', `[${c.marker}] ${c.page_title} · `);
     summary.append(el('span', c.supported ? 'supported' : 'unsupported', 'demo-support'));
-    panel.append(summary, el('p', c.snippet, 'demo-snippet'), article(c.url, c.page_title));
+    panel.append(summary, ...passage(`${panel.id}-snippet`, c.snippet), article(c.url, c.page_title));
     return panel;
   }
 
@@ -136,24 +167,43 @@
     return p;
   }
 
-  function column(name, ...content) {
+  function column(...content) {
     const col = el('section', null, 'demo-rung');
-    col.append(el('h2', name), ...content);
+    col.append(...content);
     return col;
   }
 
-  // Every title the rung retrieved, in its order, repeats included.
+  // Each title once, in the order it first ranked, with the number of passages
+  // retrieved from it.
   function passages(titles) {
     const wrap = el('div', null, 'demo-passages');
     wrap.append(el('h3', 'Passages retrieved'));
-    if (!titles.length) {
-      wrap.append(el('p', 'None'));
-      return wrap;
-    }
+    const counts = new Map();
+    titles.forEach(title => counts.set(title, (counts.get(title) || 0) + 1));
     const list = el('ol');
-    titles.forEach(title => list.append(el('li', title)));
+    counts.forEach((count, title) => {
+      const row = el('li', `${title} `);
+      row.append(el('span', `×${count}`, 'demo-count'));
+      list.append(row);
+    });
     wrap.append(list);
     return wrap;
+  }
+
+  // What a column keeps out of the reading path: the rung's technical name, its
+  // label's whole sentence, and the service's ranking, repeats included, which
+  // the counts leave out.
+  function method(rung) {
+    const panel = el('details', null, 'demo-method');
+    panel.append(el('summary', 'How this works'), el('p', `Technical name: ${rung.name}`, 'demo-name'), el('p', rung.label));
+    if (rung.passage_titles.length) {
+      const ranked = el('ol');
+      rung.passage_titles.forEach(title => ranked.append(el('li', title)));
+      panel.append(el('h3', 'Passages by rank'), ranked);
+    } else {
+      panel.append(el('p', 'No passages retrieved.'));
+    }
+    return panel;
   }
 
   // The answer and the citations it opens.
@@ -169,13 +219,16 @@
   }
 
   // A rung whose `error` is set failed alone: its message shows where its
-  // answer would, beside the rungs that answered.
+  // answer would, beside the rungs that answered. The service writes a label as
+  // "what it does: how", and the first part heads the column. Latency is a live
+  // reading that varies by seconds, so one decimal states all it can support.
   function answered(rung) {
-    return column(rung.name,
-      el('p', rung.label, 'demo-rung-label'),
+    return column(
+      el('h2', rung.label.split(':')[0]),
       ...(rung.error ? [el('p', `Failed: ${rung.error.message}`, 'demo-error')] : cited(rung)),
-      passages(rung.passage_titles),
-      el('p', `Latency ${rung.latency_ms} ms`, 'demo-latency'));
+      ...(rung.passage_titles.length ? [passages(rung.passage_titles)] : []),
+      el('p', `Latency ${(rung.latency_ms / 1000).toFixed(1)} s`, 'demo-latency'),
+      method(rung));
   }
 
   // `attribution` is the page's licence notice, replaced by the live one.
@@ -210,10 +263,13 @@
     const policy = el('a', 'Privacy policy');
     policy.href = '/privacy';
     privacy.append(policy);
+    // Open until answers arrive; then they are what to read.
+    const questions = el('details', null, 'demo-questions');
+    const questionsSummary = el('summary', 'Questions to try');
+    questions.append(questionsSummary, list);
+    questions.open = true;
     const controls = el('div', null, 'demo-ask');
-    controls.append(label, row, privacy, list);
-    const service = el('dl', null, 'demo-service');
-    service.hidden = true;
+    controls.append(label, row, privacy, questions);
     const status = el('p', null, 'demo-status');
     status.setAttribute('role', 'status');
     const timer = el('span');
@@ -222,7 +278,18 @@
     elapsed.append(timer);
     elapsed.hidden = true;
     const rungs = el('div', null, 'demo-rungs');
-    mount.replaceChildren(el('p', LABEL, 'demo-limits'), controls, service, status, elapsed, rungs);
+    mount.replaceChildren(el('p', CORPUS, 'demo-corpus'), controls, status, elapsed, rungs);
+
+    // After the attribution: the short notes, then the control holding each note
+    // in full and the service's ids. The page's .demo-note moves in whole.
+    const service = el('dl', null, 'demo-service');
+    service.hidden = true;
+    const about = el('details', null, 'demo-about');
+    about.append(el('summary', 'About this demo'), el('p', LIMITS_FULL), el('p', PRIVACY_FULL));
+    const fullNotes = mount.parentElement.querySelector('.demo-note');
+    if (fullNotes) about.append(fullNotes);
+    about.append(service);
+    attribution.after(el('p', ANECDOTE, 'demo-anecdote'), el('p', LIMITS, 'demo-limits'), about);
 
     // GET /v1/meta once; a failure lets the next attempt ask again.
     let ready = null;
@@ -261,7 +328,8 @@
       elapsed.hidden = false;
       const clock = setInterval(tick, 1000);
       status.textContent = 'Waiting for the service.';
-      rungs.replaceChildren(...RUNGS.map(name => column(name, el('p', 'Outstanding', 'demo-pending'))));
+      // The labels come with the answers, so nothing heads a column until then.
+      rungs.replaceChildren(...RUNGS.map(() => column(el('p', 'Outstanding', 'demo-pending'))));
       try {
         await prepare();
         const { res, body } = await call('/v1/compare', {
@@ -272,6 +340,10 @@
         const { result, note } = outcome(res, body);
         rungs.replaceChildren(...(result ? result.rungs.map(answered) : []));
         status.textContent = result ? 'Comparison returned.' : note;
+        if (result) {
+          if (questions.contains(document.activeElement)) questionsSummary.focus();
+          questions.open = false;
+        }
       } catch (e) {
         rungs.replaceChildren();
         status.textContent = UNAVAILABLE;
