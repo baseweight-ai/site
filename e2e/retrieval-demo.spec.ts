@@ -16,8 +16,15 @@ const SERVICE = "https://baseweight-service.fly.dev";
 const FIXTURE = fs.readFileSync(path.join(__dirname, "fixtures/retrieval-demo.json"), "utf-8");
 // Rung.name in the deployed openapi.json, in the order the service answers.
 const RUNGS = ["closed_book", "bm25", "hybrid", "full"];
-const LABEL = "Read-only. Comparisons are rate-limited, and the demo has a daily budget.";
-const PRIVACY = "Your question and IP address go to our service, which passes the question to its providers. Privacy policy";
+// What a visitor reads around the input and under the answers.
+const CORPUS = "Searches a frozen subset of English Wikipedia: nothing recent.";
+const PRIVACY = "Your question goes to our service and its providers. Privacy policy";
+const ANECDOTE = "One question is an anecdote.";
+const LIMITS = "Comparisons are limited.";
+// The same notes in full, behind "About this demo". The page's markup holds the
+// corpus and anecdote wording, which e2e/retrieval-service.spec.ts asserts.
+const LIMITS_FULL = "Read-only. Comparisons are rate-limited, and the demo has a daily budget.";
+const PRIVACY_FULL = "Your question and IP address go to our service, which passes the question to its providers.";
 
 type Payloads = { meta: any; health: any; compare: any };
 
@@ -80,20 +87,24 @@ const questions = (sent: { path: string; body: string | null }[]) =>
   sent.filter((s) => s.path === "/v1/compare").map((s) => JSON.parse(s.body!));
 
 async function load(page: Page): Promise<Locator> {
-  await page.setContent('<p id="attribution">The attribution as the page ships it.</p><div id="mount"></div>');
+  await page.setContent('<section id="demo"><div id="mount"></div><p id="attribution">The attribution as the page ships it.</p></section>');
   await page.addScriptTag({ path: COMPONENT });
   await page.evaluate(() =>
     (window as any).mountDemo(document.getElementById("mount"), document.getElementById("attribution"))
   );
-  return page.locator("#mount");
+  return page.locator("#demo");
 }
 
 const questionBox = (demo: Locator) => demo.getByRole("textbox", { name: "Question", exact: true });
 const prepared = (demo: Locator) =>
   demo.getByRole("list", { name: "Prepared questions" }).getByRole("button");
+// A column by its rung's technical name, which sits in its "How this works".
 const column = (demo: Locator, name: string) =>
-  demo.locator(".demo-rung").filter({ has: demo.page().getByRole("heading", { name, exact: true }) });
+  demo.locator(".demo-rung").filter({ has: demo.page().locator(".demo-name", { hasText: new RegExp(`^Technical name: ${name}$`) }) });
 const answers = (demo: Locator) => demo.locator(".demo-answer");
+// The controls that hold what the reading path leaves out.
+const aboutDemo = (demo: Locator) => demo.locator(".demo-about summary");
+const howItWorks = (col: Locator) => col.locator(".demo-method summary");
 
 // ── What goes to the service, and when ──────────────────────────────────────
 // No consent gate exists (DISCOVERY.md §12), so the demo sends nothing a
@@ -167,7 +178,8 @@ test("while a comparison is out, every rung is outstanding and the elapsed time 
   const demo = await load(page);
   await prepared(demo).first().click();
   const rungs = demo.locator(".demo-rung");
-  await expect(rungs.getByRole("heading")).toHaveText(RUNGS);
+  // The labels come with the answers, so nothing heads a column until then.
+  await expect(rungs.getByRole("heading")).toHaveCount(0);
   await expect(rungs.filter({ hasText: "Outstanding" })).toHaveCount(RUNGS.length);
   const timer = demo.getByRole("timer");
   await expect(timer).toHaveText("0 s");
@@ -182,20 +194,138 @@ test("while a comparison is out, every rung is outstanding and the elapsed time 
 
 // ── The result ──────────────────────────────────────────────────────────────
 
+// The fixture's passage_titles as rows: each title once, in the order it first
+// ranked, with its count.
+const ROWS: Record<string, string[]> = {
+  closed_book: [],
+  bm25: ["Synthetic Article A ×2", "Synthetic Article B ×1"],
+  hybrid: ["Synthetic Article B ×1", "Synthetic Article A ×1"],
+  full: ["Synthetic Article A ×2", "Synthetic Article C ×1"],
+};
+// The fixture's latency_ms in seconds, to one decimal.
+const SECONDS: Record<string, string> = {
+  closed_book: "0.1 s",
+  bm25: "0.2 s",
+  hybrid: "0.3 s",
+  full: "0.4 s",
+};
+
 test("each rung answers in its own column, with its label, answer, passages and latency", async ({ page }) => {
   const doc = payloads();
   await mockService(page, doc);
   const demo = await load(page);
   await prepared(demo).first().click();
-  await expect(demo.locator(".demo-rung h2")).toHaveText(doc.compare.rungs.map((r: any) => r.name));
+  await expect(demo.locator(".demo-rung h2")).toHaveText(doc.compare.rungs.map((r: any) => r.label));
   for (const rung of doc.compare.rungs) {
     const col = column(demo, rung.name);
-    await expect(col).toContainText(rung.label);
     await expect(col.locator(".demo-answer")).toHaveText(rung.answer);
-    // Every title the rung retrieved, in its order, repeats included.
-    await expect(col.locator(".demo-passages li")).toHaveText(rung.passage_titles);
-    await expect(col).toContainText(`${rung.latency_ms} ms`);
+    await expect(col.locator(".demo-passages li")).toHaveText(ROWS[rung.name]);
+    await expect(col.locator(".demo-latency")).toHaveText(`Latency ${SECONDS[rung.name]}`);
   }
+});
+
+// The service writes a label as "what it does: how". The first part heads the
+// column; the rest and the technical name stay in the service's words, a click away.
+test("a rung's heading is its label's first part, and its technical name and whole sentence are one control away", async ({ page }) => {
+  const sentence = "Synthetic short part: the rest of the sentence, at more length than a column should carry.";
+  const doc = payloads((d) => {
+    d.compare.rungs[1].label = sentence;
+  });
+  await mockService(page, doc);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  const col = column(demo, "bm25");
+  await expect(col.getByRole("heading", { level: 2 })).toHaveText("Synthetic short part");
+  const name = col.locator(".demo-name");
+  const whole = col.locator(".demo-method p", { hasText: sentence });
+  await expect(name).toHaveText("Technical name: bm25");
+  await expect(name).toBeHidden();
+  await expect(whole).toBeHidden();
+  await howItWorks(col).click();
+  await expect(name).toBeVisible();
+  await expect(whole).toBeVisible();
+});
+
+test("latency shows in seconds, to one decimal", async ({ page }) => {
+  const doc = payloads((d) => {
+    d.compare.rungs[0].latency_ms = 17303;
+    d.compare.rungs[1].latency_ms = 3000;
+    d.compare.rungs[2].latency_ms = 17360;
+  });
+  await mockService(page, doc);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  await expect(column(demo, "closed_book").locator(".demo-latency")).toHaveText("Latency 17.3 s");
+  await expect(column(demo, "bm25").locator(".demo-latency")).toHaveText("Latency 3.0 s");
+  await expect(column(demo, "hybrid").locator(".demo-latency")).toHaveText("Latency 17.4 s");
+});
+
+// With answers on screen they are what to read, so the prepared questions fold.
+// A keyboard visitor's focus moves to the summary instead of vanishing with them.
+test("once answers arrive the prepared questions fold, and their summary opens them again", async ({ page }) => {
+  await mockService(page);
+  const demo = await load(page);
+  await prepared(demo).first().focus();
+  await page.keyboard.press("Enter");
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expect(prepared(demo)).toHaveCount(0);
+  const summary = demo.locator(".demo-questions summary");
+  await expect(summary).toHaveText("Questions to try");
+  await expect(summary).toBeFocused();
+  await summary.click();
+  await expect(prepared(demo).first()).toBeVisible();
+});
+
+const [A, B, C, D] = ["Synthetic Article A", "Synthetic Article B", "Synthetic Article C", "Synthetic Article No. 7"];
+
+test("an article that supplies several passages is one row with its count, in the order it first ranked", async ({ page }) => {
+  const doc = payloads((d) => {
+    d.compare.rungs[3].passage_titles = [B, A, D, A, D, A, C];
+  });
+  await mockService(page, doc);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  await expect(column(demo, "full").locator(".demo-passages li")).toHaveText([
+    `${B} ×1`,
+    `${A} ×3`,
+    `${D} ×2`,
+    `${C} ×1`,
+  ]);
+});
+
+// These two rankings read the same as rows, so only the control tells them apart.
+test("the ranking behind the counts is one control away, where the repeats sit included", async ({ page }) => {
+  const doc = payloads((d) => {
+    d.compare.rungs[1].passage_titles = [A, B, A, C, D, A];
+    d.compare.rungs[2].passage_titles = [A, A, A, B, C, D];
+  });
+  await mockService(page, doc);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  for (const rung of doc.compare.rungs.slice(1, 3)) {
+    const col = column(demo, rung.name);
+    await expect(col.locator(".demo-passages li")).toHaveText([`${A} ×3`, `${B} ×1`, `${C} ×1`, `${D} ×1`]);
+    await expect(col.locator(".demo-passages")).not.toContainText("rank");
+    const ranked = col.locator(".demo-method ol li");
+    await expect(ranked.first()).toBeHidden();
+    await howItWorks(col).click();
+    await expect(ranked.first()).toBeVisible();
+    await expect(ranked).toHaveText(rung.passage_titles);
+  }
+});
+
+test("a rung with no passages leaves the list out, and says so behind its control", async ({ page }) => {
+  await mockService(page);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  const col = column(demo, "closed_book");
+  await expect(col.locator(".demo-answer")).toHaveCount(1);
+  await expect(col.locator(".demo-passages")).toHaveCount(0);
+  const none = col.locator(".demo-method p", { hasText: "No passages retrieved." });
+  await expect(none).toBeHidden();
+  await howItWorks(col).click();
+  await expect(none).toBeVisible();
 });
 
 test("a citation opens to its passage and its title, which links to the article", async ({ page }) => {
@@ -206,7 +336,7 @@ test("a citation opens to its passage and its title, which links to the article"
   const rung = doc.compare.rungs[2];
   const col = column(demo, rung.name);
   for (const cite of rung.citations) {
-    const panel = col.locator("details").filter({ has: page.locator("summary", { hasText: `[${cite.marker}]` }) });
+    const panel = col.locator(".demo-cite").filter({ has: page.locator("summary", { hasText: `[${cite.marker}]` }) });
     await expect(panel).not.toHaveAttribute("open", "");
     await col.getByRole("button", { name: `[${cite.marker}]`, exact: true }).click();
     await expect(panel).toHaveAttribute("open", "");
@@ -224,6 +354,7 @@ test("model output stays text, and only citation urls become links", async ({ pa
     full.answer = 'Markup <img src="/x.png"> and https://elsewhere.example/ stay text.[c1] So does [c9].';
     full.citations[0].snippet = "A snippet with <b>markup</b> stays text.";
     full.citations[0].page_title = "A title with <i>markup</i>";
+    full.passage_titles.push("A title with <i>markup</i>", "A title with <i>markup</i>");
     d.compare.rungs[1].citations[0].url = "javascript:alert(1)";
   });
   await mockService(page, doc);
@@ -236,7 +367,7 @@ test("model output stays text, and only citation urls become links", async ({ pa
   await expect(full.locator(".demo-snippet")).toHaveText(doc.compare.rungs[3].citations[0].snippet);
   await expect(demo.locator("img, b, i")).toHaveCount(0);
   // A url that is not an https link to English Wikipedia shows as its title alone.
-  await expect(column(demo, "bm25").locator("details")).toContainText(doc.compare.rungs[1].citations[0].page_title);
+  await expect(column(demo, "bm25").locator(".demo-cite")).toContainText(doc.compare.rungs[1].citations[0].page_title);
   const wikipedia = doc.compare.rungs
     .flatMap((r: any) => r.citations.map((c: any) => c.url))
     .filter((u: string) => u.startsWith("https://en.wikipedia.org/"));
@@ -247,15 +378,26 @@ test("model output stays text, and only citation urls become links", async ({ pa
 
 // ── The label and the service line ──────────────────────────────────────────
 
-test("the demo says it is read-only and limited before anything is sent", async ({ page }) => {
+test("each note is short, its full wording is one control away, and reading them sends nothing", async ({ page }) => {
   const { sent } = await mockService(page);
   const demo = await load(page);
-  await expect(demo).toContainText(LABEL);
+  await expect(demo.locator(".demo-corpus")).toHaveText(CORPUS);
+  await expect(demo.locator(".demo-anecdote")).toHaveText(ANECDOTE);
+  await expect(demo.locator(".demo-limits")).toHaveText(LIMITS);
+  for (const full of [LIMITS_FULL, PRIVACY_FULL]) {
+    const note = demo.locator(".demo-about p", { hasText: full });
+    await expect(note).toBeHidden();
+  }
+  await aboutDemo(demo).click();
+  for (const full of [LIMITS_FULL, PRIVACY_FULL]) {
+    await expect(demo.locator(".demo-about p", { hasText: full })).toBeVisible();
+  }
+  await page.waitForTimeout(300);
   expect(sent).toEqual([]);
 });
 
 // privacy.html names the providers and says what the service keeps.
-test("under the question box, the demo says what leaves the browser and links the privacy policy", async ({ page }) => {
+test("under the question box, the demo says where a question goes and links the privacy policy", async ({ page }) => {
   const { sent } = await mockService(page);
   const demo = await load(page);
   const line = demo.locator(".demo-row + p");
@@ -265,14 +407,19 @@ test("under the question box, the demo says what leaves the browser and links th
 });
 
 // Comparison answers carry no index version (deployed openapi.json), so the
-// deployed one shows, beside the commit, both from /v1/health.
-test("the deployed commit and index version are the ones /v1/health reports", async ({ page }) => {
+// deployed one shows, beside the commit, both from /v1/health. Two long hex
+// strings mean nothing to most visitors, so they wait behind the control.
+test("the deployed commit and index version stay behind a control, and are the ones /v1/health reports", async ({ page }) => {
   const doc = payloads();
   await mockService(page, doc);
   const demo = await load(page);
   await questionBox(demo).focus();
+  const values = demo.locator(".demo-service dd");
+  await expect(values).toHaveText([doc.health.git_sha, doc.health.index_version]);
+  await expect(values.first()).toBeHidden();
+  await aboutDemo(demo).click();
+  await expect(values.first()).toBeVisible();
   await expect(demo.locator(".demo-service dt")).toHaveText(["Deployed commit", "Index version"]);
-  await expect(demo.locator(".demo-service dd")).toHaveText([doc.health.git_sha, doc.health.index_version]);
 });
 
 // ── Failure states ──────────────────────────────────────────────────────────
@@ -353,6 +500,8 @@ for (const { name, reply, says } of FAILURES) {
     await prepared(demo).first().click();
     await expect(status(demo)).toHaveText(says);
     await expect(demo.locator(".demo-rung")).toHaveCount(0);
+    // With no answers to read, the prepared questions stay open for another try.
+    await expect(prepared(demo).first()).toBeVisible();
   });
 }
 
@@ -386,7 +535,7 @@ test("one rung failing shows its own error while the others return", async ({ pa
   const failed = column(demo, "hybrid");
   await expect(failed.locator(".demo-error")).toHaveText("Failed: the model provider failed");
   await expect(failed).toContainText(doc.compare.rungs[2].label);
-  await expect(failed).toContainText(`${doc.compare.rungs[2].latency_ms} ms`);
+  await expect(failed.locator(".demo-latency")).toHaveText(`Latency ${SECONDS.hybrid}`);
   await expect(failed.locator(".demo-answer")).toHaveCount(0);
   for (const name of ["closed_book", "bm25", "full"]) {
     await expect(column(demo, name).locator(".demo-answer")).toHaveCount(1);
@@ -417,6 +566,8 @@ test("when /v1/health fails, the comparison still goes and the service line stay
   const demo = await load(page);
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await aboutDemo(demo).click();
+  await expect(demo.locator(".demo-about p").first()).toBeVisible();
   await expect(demo.locator(".demo-service")).toBeHidden();
 });
 
@@ -432,7 +583,7 @@ async function openPage(page: Page, width = 1280, height = 900): Promise<Locator
   await page.route("**/data/retrieval-service/results.json", (route) => route.fulfill({ status: 404 }));
   await page.goto(PAGE);
   await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
-  return page.locator("#demoMount");
+  return page.locator("#demo");
 }
 
 test("the page mounts the demo and sends nothing to the service as it loads", async ({ page }) => {
@@ -451,7 +602,72 @@ test("on the page, a comparison runs end to end and the live attribution replace
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
   await expect(page.locator("#demoAttribution")).toHaveText(doc.meta.attribution);
+  await aboutDemo(demo).click();
   await expect(demo.locator(".demo-service")).toBeVisible();
+});
+
+// A visitor should know what the demo searches before asking it anything.
+test("the corpus statement precedes the input, on screen and in reading order", async ({ page }) => {
+  await mockService(page);
+  const demo = await openPage(page);
+  const corpus = demo.locator(".demo-corpus");
+  await expect(corpus).toHaveText(CORPUS);
+  await expect(corpus).toBeVisible();
+  await expectSectionOrder(page, [".demo-corpus", "#demoQuestion"]);
+  const first = await corpus.evaluate(
+    (c) => !!(c.compareDocumentPosition(document.getElementById("demoQuestion")!) & Node.DOCUMENT_POSITION_FOLLOWING)
+  );
+  expect(first).toBe(true);
+});
+
+// Nothing is deleted: with every control open, what the reading path leaves out
+// is on screen, the ranks as numbers included.
+test("with every control open, everything the demo leaves out of the reading path shows", async ({ page }) => {
+  const sentence = "Synthetic short part: the rest of the sentence.";
+  const doc = payloads((d) => {
+    d.compare.rungs[1].label = sentence;
+  });
+  await mockService(page, doc);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expect(demo.locator(".demo-service dd").first()).toHaveText(doc.health.git_sha);
+  await demo.locator("details:not([open]) > summary").evaluateAll((all) => all.forEach((s) => (s as HTMLElement).click()));
+
+  await expect(demo.locator(".demo-about p", { hasText: LIMITS_FULL })).toBeVisible();
+  await expect(demo.locator(".demo-about p", { hasText: PRIVACY_FULL })).toBeVisible();
+  await expect(demo.locator(".demo-about .demo-note")).toBeVisible();
+  await expect(demo.locator(".demo-service dd").nth(0)).toBeVisible();
+  await expect(demo.locator(".demo-service dd").nth(1)).toHaveText(doc.health.index_version);
+  await expect(prepared(demo).first()).toBeVisible();
+  const bm25 = column(demo, "bm25");
+  await expect(bm25.locator(".demo-name")).toBeVisible();
+  await expect(bm25.locator(".demo-method p", { hasText: sentence })).toBeVisible();
+  await expect(bm25.locator(".demo-snippet")).toBeVisible();
+  const ranked = bm25.locator(".demo-method ol");
+  await expect(ranked.locator("li")).toHaveText(doc.compare.rungs[1].passage_titles);
+  expect(await ranked.evaluate((ol) => getComputedStyle(ol).listStyleType)).toBe("decimal");
+  await expect(ranked.locator("li").first()).toBeVisible();
+});
+
+// Everything around an answer is smaller than the answer.
+test("an answer is the largest text in its column", async ({ page }) => {
+  await mockService(page);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  const { answer, others } = await column(demo, "full").evaluate((col) => {
+    const size = (e: Element) => parseFloat(getComputedStyle(e).fontSize);
+    const texted = [...col.querySelectorAll("*")].filter((e) =>
+      [...e.childNodes].some((n) => n.nodeType === Node.TEXT_NODE && n.textContent!.trim())
+    );
+    return {
+      answer: size(col.querySelector(".demo-answer")!),
+      others: texted.filter((e) => !e.closest(".demo-answer")).map(size),
+    };
+  });
+  expect(others.length).toBeGreaterThan(0);
+  expect(answer).toBeGreaterThan(Math.max(...others));
 });
 
 // ADR-0001: four across, two below 860px, one below 640px.
@@ -466,36 +682,166 @@ for (const [width, across] of [[1280, 4], [800, 2], [375, 1]] as const) {
   });
 }
 
+// Synthetic, with hard line breaks as live snippets have, and longer than any
+// column shows at the cut.
+const LONG_PASSAGE = Array.from({ length: 30 }, (_, i) => `Synthetic line ${i + 1} of a long passage.`).join("\n");
+
 // The page's body clips horizontal overflow, so the check is each element's
 // own right edge, never the page's scroll width.
-test("at phone width nothing in the demo reaches past the viewport, long ids and an open citation included", async ({ page }) => {
+test("at phone width nothing in the demo reaches past the viewport, long ids and a citation cut and opened included", async ({ page }) => {
   const long = "a".repeat(160);
   const doc = payloads((d) => {
     const full = d.compare.rungs[3];
     full.answer = `${long}.[c1]`;
-    full.passage_titles.push(long);
+    full.passage_titles.push(long, long);
     full.citations[0].page_title = long;
-    full.citations[0].snippet += `\n${long}`;
+    full.citations[0].snippet = `${LONG_PASSAGE}\n${long}`;
   });
   await mockService(page, doc);
   const demo = await openPage(page, 375);
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await column(demo, "full").getByRole("button", { name: "[c1]", exact: true }).click();
-  const [right, width] = await demo.evaluate((mount) => [
-    Math.max(...[...mount.querySelectorAll("*")].map((e) => e.getBoundingClientRect().right)),
-    window.innerWidth,
-  ]);
-  expect(right).toBeLessThanOrEqual(width);
+  const col = column(demo, "full");
+  await col.getByRole("button", { name: "[c1]", exact: true }).click();
+  const expectInside = async () => {
+    const [right, width] = await demo.evaluate((mount) => [
+      Math.max(...[...mount.querySelectorAll("*")].map((e) => e.getBoundingClientRect().right)),
+      window.innerWidth,
+    ]);
+    expect(right).toBeLessThanOrEqual(width);
+  };
+  await expectInside();
+  await col.getByRole("button", { name: "Show the rest" }).click();
+  await expect(col.getByRole("button", { name: "Show less" })).toBeVisible();
+  await expectInside();
+  await howItWorks(col).click();
+  await aboutDemo(demo).click();
+  await expect(demo.locator(".demo-service dd").first()).toBeVisible();
+  await expectInside();
 });
 
-// The demo is the page: before any scrolling a visitor sees the question box
-// and at least one whole answer, with labels and answers as long as live ones.
-for (const [width, height] of [[390, 844], [1280, 720]] as const) {
-  test(`at ${width}x${height} the question box and an answer show without scrolling`, async ({ page }) => {
+// A snippet past eight rendered lines shows eight, and a button opens the rest.
+// The cut is styling alone, so these run on the page, whose <style> holds it.
+const snippetLines = (snippet: Locator) =>
+  snippet.evaluate((p) => {
+    const line = parseFloat(getComputedStyle(p).lineHeight);
+    return {
+      shown: Math.round(p.clientHeight / line),
+      whole: Math.round(p.scrollHeight / line),
+      text: p.textContent,
+    };
+  });
+
+for (const [width, height] of [[390, 844], [1280, 900]] as const) {
+  test(`at ${width}px a long passage shows eight lines and opens in full, with nothing altered`, async ({ page }) => {
+    const doc = payloads((d) => {
+      d.compare.rungs[3].citations[0].snippet = LONG_PASSAGE;
+    });
+    const cite = doc.compare.rungs[3].citations[0];
+    await mockService(page, doc);
+    const demo = await openPage(page, width, height);
+    await prepared(demo).first().click();
+    await expect(answers(demo)).toHaveCount(RUNGS.length);
+    const col = column(demo, "full");
+    await col.getByRole("button", { name: "[c1]", exact: true }).click();
+    const panel = col.locator(".demo-cite");
+    const snippet = panel.locator(".demo-snippet");
+    const more = panel.getByRole("button", { name: "Show the rest" });
+
+    await expect(more).toBeVisible();
+    await expect(more).toHaveAttribute("aria-expanded", "false");
+    await expect(more).toHaveAttribute("aria-controls", (await snippet.getAttribute("id"))!);
+    const cut = await snippetLines(snippet);
+    expect(cut.shown).toBe(8);
+    expect(cut.whole).toBeGreaterThanOrEqual(30);
+    expect(cut.text).toBe(LONG_PASSAGE);
+    // Brief §3: wherever a passage shows, its title and link show.
+    await expect(panel.locator("summary")).toContainText(cite.page_title);
+    await expect(panel.locator(".demo-support")).toBeVisible();
+    await expect(panel.getByRole("link", { name: cite.page_title })).toBeVisible();
+
+    await more.click();
+    const less = panel.getByRole("button", { name: "Show less" });
+    await expect(less).toHaveAttribute("aria-expanded", "true");
+    const opened = await snippetLines(snippet);
+    expect(opened.shown).toBe(opened.whole);
+    expect(opened.shown).toBeGreaterThanOrEqual(30);
+    expect(opened.text).toBe(LONG_PASSAGE);
+
+    await less.click();
+    await expect(more).toHaveAttribute("aria-expanded", "false");
+    expect((await snippetLines(snippet)).shown).toBe(8);
+  });
+}
+
+// Lines short enough never to wrap, so the rendered count is the written count.
+for (const [written, shows] of [[8, 8], [9, 8]] as const) {
+  test(`a passage of ${written} lines shows ${shows}, ${written > shows ? "with" : "with no"} button`, async ({ page }) => {
+    const doc = payloads((d) => {
+      d.compare.rungs[3].citations[0].snippet = Array.from({ length: written }, (_, i) => `Line ${i + 1}.`).join("\n");
+    });
+    await mockService(page, doc);
+    const demo = await openPage(page);
+    await prepared(demo).first().click();
+    await expect(answers(demo)).toHaveCount(RUNGS.length);
+    const col = column(demo, "full");
+    await col.getByRole("button", { name: "[c1]", exact: true }).click();
+    const snippet = col.locator(".demo-snippet");
+    await expect(snippet).toBeVisible();
+    const more = col.locator(".demo-more");
+    if (written > shows) await expect(more).toBeVisible();
+    else await expect(more).toBeHidden();
+    expect(await snippetLines(snippet)).toMatchObject({ shown: shows, whole: written });
+  });
+}
+
+// Unbroken by hard line breaks, so it overflows eight lines of a quarter-width
+// column and fits eight of a full-width one.
+test("whether a passage is cut follows its column's width", async ({ page }) => {
+  const doc = payloads((d) => {
+    d.compare.rungs[3].citations[0].snippet = "Synthetic passage word ".repeat(18).trim();
+  });
+  await mockService(page, doc);
+  const demo = await openPage(page, 1280);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  const col = column(demo, "full");
+  await col.getByRole("button", { name: "[c1]", exact: true }).click();
+  const more = col.getByRole("button", { name: "Show the rest" });
+  await expect(more).toBeVisible();
+  await page.setViewportSize({ width: 600, height: 900 });
+  await expect(more).toBeHidden();
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await expect(more).toBeVisible();
+});
+
+test("the same long passage in three columns opens in one without opening the others", async ({ page }) => {
+  const doc = payloads((d) => {
+    for (const rung of d.compare.rungs.slice(1)) rung.citations[0].snippet = LONG_PASSAGE;
+  });
+  await mockService(page, doc);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  for (const name of ["bm25", "hybrid", "full"]) {
+    await column(demo, name).getByRole("button", { name: "[c1]", exact: true }).click();
+  }
+  await column(demo, "hybrid").getByRole("button", { name: "Show the rest" }).click();
+  await expect(column(demo, "hybrid").getByRole("button", { name: "Show less" })).toHaveAttribute("aria-expanded", "true");
+  for (const name of ["bm25", "full"]) {
+    await expect(column(demo, name).getByRole("button", { name: "Show the rest" })).toHaveAttribute("aria-expanded", "false");
+    expect((await snippetLines(column(demo, name).locator(".demo-snippet"))).shown).toBe(8);
+  }
+});
+
+// The answers are the argument: before any scrolling a visitor sees the question
+// box and whole answers, with labels and answers as long as live ones. All four
+// across a laptop's first screen; on a phone one whole, and the next begun.
+for (const [width, height, whole] of [[390, 844, 1], [1280, 720, 4]] as const) {
+  test(`at ${width}x${height} the question box and ${whole} whole answers show without scrolling`, async ({ page }) => {
     const doc = payloads((d) => {
       for (const rung of d.compare.rungs) {
-        rung.label = "A synthetic label as long as a live one, which says what the rung searches and how.";
+        rung.label = "Synthetic short part: the rest of a sentence as long as a live one, which says how the rung searches.";
         rung.answer =
           "A synthetic answer as long as a live one: it names a work, its catalogue number, " +
           "its nickname, the year it was published and its dedicatee.";
@@ -509,24 +855,24 @@ for (const [width, height] of [[390, 844], [1280, 720]] as const) {
       scrolled: window.scrollY,
       nav: document.querySelector("nav")!.getBoundingClientRect().bottom,
       box: document.getElementById("demoQuestion")!.getBoundingClientRect().top,
-      answer: document.querySelector(".demo-answer")!.getBoundingClientRect().bottom,
+      answers: [...document.querySelectorAll(".demo-answer")].map((a) => a.getBoundingClientRect()).map((r) => ({ top: r.top, bottom: r.bottom })),
       height: window.innerHeight,
     }));
     expect(seen.scrolled).toBe(0);
     expect(seen.box).toBeGreaterThanOrEqual(seen.nav);
-    expect(seen.answer).toBeLessThanOrEqual(seen.height);
+    for (const answer of seen.answers.slice(0, whole)) expect(answer.bottom).toBeLessThanOrEqual(seen.height);
+    if (whole < seen.answers.length) expect(seen.answers[whole].top).toBeLessThan(seen.height);
   });
 }
 
 // The attribution sits where the corpus text appears: under the rung columns,
-// before the service line and the notes.
+// before the notes and the control that holds the rest.
 test("on the page, the attribution sits directly under the rung columns", async ({ page }) => {
   await mockService(page);
   const demo = await openPage(page);
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await expect(demo.locator(".demo-service")).toBeVisible();
-  await expectSectionOrder(page, [".demo-rungs", "#demoAttribution", ".demo-service", "#demo .demo-note"]);
+  await expectSectionOrder(page, [".demo-rungs", "#demoAttribution", ".demo-anecdote", ".demo-limits", ".demo-about"]);
 });
 
 // Headings step down one level at a time: the page's h1, each rung's h2 and

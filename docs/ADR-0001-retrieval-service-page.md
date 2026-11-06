@@ -48,17 +48,20 @@ and 6.
 
 1. **Hero**: the claim in one sentence, and nothing else visible: the measurement that sets the
    service apart from a demo first, the service second. The h1 "Retrieval" is there for screen
-   readers and search, visually hidden. Mechanism sits with the diagram, and the corpus under
+   readers and search, visually hidden. Mechanism sits with the diagram. A corpus line, so a visitor
+   who asks about this week's news already knows why nothing comes back, opens
    the demo.
 2. **Demo**, directly under the sentence with no heading of its own, on `POST /v1/compare`. At
    390px and at 1280px wide, the question box and at least one answer show before any
    scrolling.
    - A labelled `<input>` and a `<button>`; a click handler submits, and script handles Enter.
-   - One column per rung, headed by its name as an `h2`, in the order the response lists them
+   - One column per rung, in the order the response lists them
      (`COMPARE_RUNGS`: `closed_book`, `bm25`, `hybrid`, `full`): four across, two below 860px,
-     one below 640px. Each column shows its rung's label, its answer, the citations its `[cN]`
+     one below 640px. Each column's `h2` is the first part of its rung's label, above its answer, the citations its `[cN]`
      markers open (each to its passage, the service's `supported` flag and its title linked to
-     its `url`), the passage titles it retrieved, in order with repeats, and its latency, or
+     its `url`, a passage past eight rendered lines cut, with a button that opens the rest), each
+     passage title once with its count, by first rank, its latency in seconds to one decimal, and a
+     "How this works" control (its `name`, whole `label` and titles by rank), or
      that rung's own error. Rungs carry no `citation_supported_ratio`, so each citation's
      `supported` flag shows instead. No charged amount shows until display precision has a
      rule (Risk 12).
@@ -73,12 +76,12 @@ and 6.
    - `GET /v1/meta` and `GET /v1/health` are first sent when the question box or a prepared
      question takes focus, and a question is sent only once `/v1/meta` has answered. From it the
      demo takes the attribution and checks that `public_mode` is `read_only`, which the demo's
-     label states beside the rate limit and the daily budget, with no figures: no endpoint
+     full note behind "About this demo" states beside the rate limit and the daily budget, with no figures: no endpoint
      reports the compare limit. Comparison answers carry no `index_version`, so the deployed
      commit and index version come from `/v1/health`; each rung's latency comes from the answer.
    - The attribution ships with the demo, since the page shows no corpus text until the demo
      renders a passage. `#demoAttribution` sits directly under the rung columns, where the
-     passages appear, ahead of the service line and the corpus note. It holds the deployed
+     passages appear, ahead of the short notes and of "About this demo" (each note in full, the deployed commit and index version). It holds the deployed
      `attribution` verbatim as of 2026-11-01 (brief §3) and shows when the section does. Once
      `GET /v1/meta` answers, the demo replaces its text with the response's `attribution`,
      before any rung output.
@@ -140,15 +143,18 @@ and 6.
   (`CLAUDE.md`, Commits).
 - A visitor who never touches the demo sends nothing to the service, and crawlers do not start
   the Fly Machine.
-- The demo is first exercised for real in production (Risk 1).
+- Real comparisons run from a local copy at `http://127.0.0.1:8080`. A deployed page first makes
+  one in production (Risk 1).
 - The page reads as a report while its demo is hidden: everything under the claim explains
   method or waits on results. The balance is not fixable with copy.
 
 ## Risks
 
-1. **No real demo call before production.** The service's CORS allows only
-   `https://www.baseweight.co` (brief §3). Previews run on `*.vercel.app` behind Vercel SSO and
-   local runs on `http://localhost:8080`, so every pre-production demo test mocks the service.
+1. **No real demo call from a deployed page before production.** The service's CORS allows only
+   `https://www.baseweight.co` and `http://127.0.0.1:8080` (brief §3). Real comparisons run from a
+   local copy at that second origin, where no headers apply (DISCOVERY §10). CORS refuses
+   `http://localhost:8080` and previews on `*.vercel.app`, which also sit behind Vercel SSO. So the
+   page's CSP first meets a real call in production, and the e2e specs mock the service.
 2. **CORS on error responses.** `Retry-After` is not a CORS-safelisted response header: the
    page can read it only if the service sends `Access-Control-Expose-Headers: Retry-After`.
    Error bodies are readable only if non-2xx responses carry `Access-Control-Allow-Origin`.
@@ -184,9 +190,9 @@ and 6.
    (`index.html:822`, `retrieval-service.html:93`); the page offers no trace links (brief §5).
    The row is homepage copy, asserted at `e2e/home.spec.ts:215-217`; changing it is the owner's
    call.
-10. **Public docs.** `docs/` is not in `.vercelignore`: once committed, the brief, DISCOVERY.md
-    and this ADR are served at `www.baseweight.co/docs/`, as is any e2e fixture
-    (DISCOVERY §9).
+10. **Public docs.** `.vercelignore` lists `docs/` and the e2e fixtures, so the brief,
+    DISCOVERY.md and this ADR stay off `www.baseweight.co`. What the build reads stays public,
+    and `e2e/site.spec.ts` asserts what the deploy carries.
 11. **Apex.** CORS excludes `https://baseweight.co`, which today answers 307 to www (live).
     Serving the page from the apex would break the demo.
 12. **Rounding.** "Do not round" (`CLAUDE.md`, Honesty) meets a precedent that rounds
