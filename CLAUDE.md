@@ -212,7 +212,7 @@ Host is Windows with WSL; repos are on the WSL side. Run the entire toolchain in
 Do not change the gated-versus-advisory metric distinction described in `docs/INTEGRATION-BRIEF.md`, or the results-snapshot schema. If you believe one is wrong, say so in one paragraph and stop.
 
 ## Honesty
-- Every figure, label, confidence interval, sample size, date and model name on the page comes from the committed results snapshot or from a live service response: `/v1/meta` for models, corpus, attribution and limits; each answer for its own index version and latency; `/v1/health` for the deployed commit. Never type a metric value into markup. Do not round, clean up, or select favourable numbers.
+- Every figure, label, confidence interval, sample size, date and model name on the page comes from the committed results snapshot or from a live service response: `/v1/meta` for models, corpus, attribution and limits; each answer for its own latency; `/v1/health` for the deployed commit and index version. Never type a metric value into markup. Do not round a figure the site reports from the results snapshot; a live reading the service returns on each call, such as an answer's latency, may be rounded. Do not clean up or select favourable numbers from either.
 - If the results snapshot is absent, the page ships with an explicit "measurement pending" state and no figures. Not example values, not placeholder charts, not illustrative figures.
 - Never claim a test passed, a build succeeded or the demo works without executing it. If you did not run it, write "not run".
 - No secret reaches the browser. Any upstream key is injected server-side. Never in client code, never in a publicly-prefixed environment variable, never in a committed file.
