@@ -6,7 +6,7 @@
 import { test, expect, type Locator, type Page } from "@playwright/test";
 import fs from "fs";
 import path from "path";
-import { SITE_ROOT } from "./copy-text";
+import { SITE_ROOT, expectSectionOrder } from "./copy-text";
 import { parseSnapshot, type ResultsSnapshot } from "./retrieval-service-schema";
 
 const COMPONENT = path.join(SITE_ROOT, "retrieval-results.js");
@@ -20,8 +20,16 @@ type Row = ResultsSnapshot["metrics"][number];
 
 const INTERVAL = /^-?\d+(\.\d+)? to -?\d+(\.\d+)?$/;
 const headers = (ci: string) => [
-  "Metric", "Config", "Tier", "Slice", "n", "Score", ci, "Delta vs baseline", `Delta ${ci}`,
+  "Metric", "Setup", "Question set", "Subset", "n", "Score", ci, "Change from baseline", `Change ${ci}`,
 ];
+// Each table's caption says what its kind of score means, so no legend is needed.
+const CAPTIONS = {
+  gated: "A change that makes these worse is blocked",
+  advisory: "A change that makes these worse can still go ahead",
+};
+// Under the tables: what a visitor needs to read the figures.
+const READING =
+  "Each score shows n, the number of questions behind it, and a CI, the range the true score likely sits in.";
 
 // The fixture with every figure distinct and unrounded, so a test can tell
 // which cell each one landed in, plus a gated row listed after the advisory
@@ -104,9 +112,9 @@ test("n and both CI bounds appear on every measured row", async ({ page }) => {
   expect(unmeasured.map(([, r]) => r)).toEqual(
     unmeasured.map(([m]) => ({
       Metric: m.name,
-      Config: m.config,
-      Tier: m.tier,
-      Slice: m.slice,
+      Setup: m.config,
+      "Question set": m.tier,
+      Subset: m.slice,
       n: "Not measured",
     }))
   );
@@ -120,7 +128,7 @@ test("a baseline delta renders with its own CI, only where present", async ({ pa
   const measured = inPageOrder(s)
     .map((m, i) => [m, rows[i]] as const)
     .filter(([m]) => m.value !== null);
-  expect(measured.map(([, r]) => [r["Delta vs baseline"], r["Delta CI"]])).toEqual(
+  expect(measured.map(([, r]) => [r["Change from baseline"], r["Change CI"]])).toEqual(
     measured.map(([m]) =>
       m.delta_vs_baseline == null
         ? ["", ""]
@@ -134,7 +142,7 @@ test("no bare point estimate renders anywhere", async ({ page }) => {
   await render(page, snapshot());
   for (const r of await readRows(mount)) {
     if (r.Score) expect([r.n, r.CI]).toEqual([expect.stringMatching(/^\d+$/), expect.stringMatching(INTERVAL)]);
-    if (r["Delta vs baseline"]) expect(r["Delta CI"]).toMatch(INTERVAL);
+    if (r["Change from baseline"]) expect(r["Change CI"]).toMatch(INTERVAL);
   }
   // No figure sits outside a row.
   const chrome = await mount.locator("caption, thead").allTextContents();
@@ -163,8 +171,8 @@ test("gated and advisory rows are distinguishable to a screen reader", async ({ 
   await render(page, s);
   // Each category is a table named by its visible caption: the distinction is
   // in the accessible name and on screen, never in colour alone.
-  const gated = page.getByRole("table", { name: "Gated", exact: true });
-  const advisory = page.getByRole("table", { name: "Advisory", exact: true });
+  const gated = page.getByRole("table", { name: CAPTIONS.gated, exact: true });
+  const advisory = page.getByRole("table", { name: CAPTIONS.advisory, exact: true });
   await expect(gated.getByRole("rowheader")).toHaveText(gatedRows(s).map((m) => m.name));
   await expect(advisory.getByRole("rowheader")).toHaveText(advisoryRows(s).map((m) => m.name));
   await expect(gated.locator("caption")).toBeVisible();
@@ -187,6 +195,18 @@ test("the CI headers show the file's confidence level, or plain CI without one",
     await render(page, s);
     await expect(mount.locator("thead th")).toHaveText([...headers(ci), ...headers(ci)]);
   }
+});
+
+// One sentence under the tables, and no control: the technical wording lives in
+// the page's notes.
+test("under the tables, one sentence says how to read the figures, and the pending state has none", async ({ page }) => {
+  const mount = await load(page);
+  await render(page, snapshot());
+  await expect(mount.locator(":scope > *").last()).toHaveText(READING);
+  await expect(mount.locator("p")).toHaveCount(1);
+  await expect(mount.locator("details")).toHaveCount(0);
+  await render(page, null);
+  await expect(mount.locator(".table-note")).toHaveCount(0);
 });
 
 test("a confidence level that is not a number between 0 and 1 refuses the file", async ({ page }) => {
@@ -217,11 +237,13 @@ test("the committed snapshot renders one row per metric", async ({ page }) => {
 // ── On the page ───────────────────────────────────────────────────────────────
 
 const PAGE = "/retrieval-service.html";
-const LEGEND = {
+const FAILED = "The results could not be loaded.";
+// The two kinds of score, defined in the page's closed notes, where the method
+// gives the reason judged scores are advisory (brief §2).
+const DEFINITIONS = {
   Gated: "A change that regresses the score cannot merge.",
   Advisory: "A change that regresses the score can still merge.",
 };
-const FAILED = "The results could not be loaded.";
 const REASON =
   "The judged scores are advisory: they cover a small hand-written set, " +
   "where the confidence interval is wide enough that a gate would fire on noise.";
@@ -235,35 +257,43 @@ async function openWith(page: Page, status: number, body = "") {
   await read;
 }
 
-// The legend is page markup, so it shows in every state.
-async function expectLegend(page: Page) {
-  const legend = page.locator("#results dl");
-  await expect(legend.locator("dt")).toHaveText(Object.keys(LEGEND));
-  await expect(legend.locator("dd")).toHaveText(Object.values(LEGEND));
+// In every state: the heading and nothing else above the tables, no legend or
+// control among them, and last in the section the one closed control holding
+// the notes.
+async function expectResultsFrame(page: Page) {
+  await expect(page.locator("#results > h2")).toHaveText("Results");
+  await expect(page.locator("#resultsMount :is(dl, details)")).toHaveCount(0);
+  await expect(page.locator("#results details")).toHaveCount(1);
+  const notes = page.locator("#results > :last-child");
+  await expect(notes).toHaveId("notes");
+  await expect(notes).not.toHaveAttribute("open");
+  await expect(notes.locator(":scope > summary")).toBeVisible();
+  await expectSectionOrder(page, ["#results > h2", "#resultsMount", "#notes > summary"]);
 }
 
-test("with no snapshot, results show the legend and the pending note", async ({ page }) => {
+test("with no snapshot, results show the pending note and the closed notes", async ({ page }) => {
   await openWith(page, 404);
-  await expectLegend(page);
+  await expectResultsFrame(page);
   await expect(page.locator("#resultsMount")).toHaveText("Measurement pending.");
   await expect(page.locator("#results table")).toHaveCount(0);
   await expect(page.locator("#resultsFailed")).toBeHidden();
 });
 
-test("each category is defined once on the page, in one sentence", async ({ page }) => {
+test("each kind of score is defined once on the page, in one sentence, in the notes", async ({ page }) => {
   await openWith(page, 404);
-  for (const definition of Object.values(LEGEND)) {
+  const notes = page.locator("#notes .table-legend");
+  await expect(notes.locator("dt")).toHaveText(Object.keys(DEFINITIONS));
+  await expect(notes.locator("dd")).toHaveText(Object.values(DEFINITIONS));
+  for (const definition of Object.values(DEFINITIONS)) {
     expect(definition).toMatch(/^[^.!?]+\.$/);
     await expect(page.getByText(definition, { exact: true })).toHaveCount(1);
   }
-  await expect(page.locator("#how-its-measured")).not.toContainText(/Gated|Advisory/);
+  await expect(page.locator("#resultsMount")).not.toContainText(/Gated|Advisory/);
 });
 
-// Brief §2: the method says why judged scores are advisory. The legend says
-// what the categories mean.
-test("the method gives the reason judged scores are advisory, once", async ({ page }) => {
+test("the notes give the reason judged scores are advisory, once", async ({ page }) => {
   await openWith(page, 404);
-  await expect(page.locator("#how-its-measured")).toContainText(REASON);
+  await expect(page.locator("#notes")).toContainText(REASON);
   await expect(page.getByText(REASON, { exact: true })).toHaveCount(1);
 });
 
@@ -274,21 +304,32 @@ test("the sample-size header reads n", async ({ page }) => {
   await expect(n.first()).toHaveText("n", { useInnerText: true });
 });
 
-test("with a snapshot, the tables render under the legend", async ({ page }) => {
+test("with a snapshot, each table's caption says what its kind of score means", async ({ page }) => {
   await openWith(page, 200, FIXTURE);
-  await expectLegend(page);
+  await expectResultsFrame(page);
   const doc = JSON.parse(FIXTURE);
-  for (const [term, gated] of [["Gated", true], ["Advisory", false]] as const) {
-    const rows = page.getByRole("table", { name: term, exact: true }).locator("tbody tr");
+  for (const [caption, gated] of [[CAPTIONS.gated, true], [CAPTIONS.advisory, false]] as const) {
+    const rows = page.getByRole("table", { name: caption, exact: true }).locator("tbody tr");
     await expect(rows).toHaveCount(doc.metrics.filter((m: Row) => m.gated === gated).length);
   }
+  await expect(page.locator("#resultsMount .table-note")).toHaveText(READING);
   await expect(page.locator("#resultsMount")).not.toContainText("Measurement pending.");
   await expect(page.locator("#resultsFailed")).toBeHidden();
 });
 
+// The caption carries the meaning, so a table wider than a phone scrolls under
+// it while the caption stays whole on screen.
+test("at phone width each caption stays inside the viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openWith(page, 200, FIXTURE);
+  const edges = await page.locator("#results caption").evaluateAll((cs) => cs.map((c) => c.getBoundingClientRect().right));
+  expect(edges).toHaveLength(2);
+  for (const right of edges) expect(right).toBeLessThanOrEqual(390);
+});
+
 test("a snapshot that cannot be read shows the failure note, never a blank section", async ({ page }) => {
   await openWith(page, 200, FIXTURE.slice(0, 200));
-  await expectLegend(page);
+  await expectResultsFrame(page);
   await expect(page.locator("#resultsFailed")).toBeVisible();
   await expect(page.locator("#resultsFailed")).toHaveText(FAILED);
   await expect(page.locator("#resultsMount")).toBeEmpty();
@@ -298,7 +339,7 @@ test("a snapshot that cannot be read shows the failure note, never a blank secti
 // and the component refuses the file.
 test("a snapshot the component refuses shows the failure note", async ({ page }) => {
   await openWith(page, 200, JSON.stringify({ ...JSON.parse(FIXTURE), confidence_level: 95 }));
-  await expectLegend(page);
+  await expectResultsFrame(page);
   await expect(page.locator("#resultsFailed")).toBeVisible();
   await expect(page.locator("#resultsFailed")).toHaveText(FAILED);
   await expect(page.locator("#resultsMount")).toBeEmpty();

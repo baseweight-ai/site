@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Retrieval | Baseweight</title>
-<meta name="description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
+<meta name="description" content="AI search over Wikipedia, and how we measure it.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -15,13 +15,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/retrieval-service">
 <meta property="og:title" content="Retrieval: Baseweight">
-<meta property="og:description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
+<meta property="og:description" content="AI search over Wikipedia, and how we measure it.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Retrieval: Baseweight">
-<meta name="twitter:description" content="An eval harness runs a fixed test set on every change to a retrieval-augmented question-answering service: how it is built and how it is measured.">
+<meta name="twitter:description" content="AI search over Wikipedia, and how we measure it.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -66,7 +66,9 @@ a:hover { color: var(--accent-hover); }
 
 
 /* PAGE HERO: one sentence, then the demo. The h1 is for screen readers and
-   search, so it is visually hidden. */
+   search, so it is visually hidden. Each state has its sentence: with the demo,
+   what it does; while the demo is held back, what the page is, which holds in
+   both states and is the meta and social description. */
 .page-hero {
   padding-top: calc(72px + 20px);
   padding-bottom: 12px;
@@ -81,6 +83,7 @@ a:hover { color: var(--accent-hover); }
 }
 .page-hero .container { position: relative; z-index: 1; }
 .page-hero .lead { max-width: 960px; font-size: 16px; line-height: 1.6; color: var(--text-primary); }
+main:has(#demo[hidden]) .lead-demo, main:has(#demo:not([hidden])) .lead-page { display: none; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ENTRY MOTION */
@@ -138,29 +141,27 @@ a:hover { color: var(--accent-hover); }
 #demoMount { display: contents; }
 #demo > *, #demoMount > * { flex: 0 0 100%; min-width: 0; }
 #demoMount .demo-status, #demoMount .demo-elapsed { flex: 0 1 auto; }
-#demo #demoAttribution { margin: 12px 0; }
+#demo #demoAttribution { margin: 12px 0 0; }
 #demoMount p { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
 #demoMount .demo-corpus { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
-#demoMount .demo-row + p { font-size: 12px; color: var(--text-muted); margin: 6px 0 8px; }
-:is(.demo-questions, .demo-method, .demo-about) summary { cursor: pointer; font-size: 12px; line-height: 1.6; color: var(--text-muted); }
-:is(.demo-questions, .demo-method, .demo-about) summary:hover { color: var(--text-secondary); }
-.demo-questions { margin-bottom: 8px; }
+.demo-method summary { cursor: pointer; font-size: 12px; line-height: 1.6; color: var(--text-muted); }
+.demo-method summary:hover { color: var(--text-secondary); }
 .demo-ask label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
 .demo-row { display: flex; gap: 8px; max-width: 740px; }
 .demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-accent); padding: 10px 14px; }
 .demo-row input:read-only { color: var(--text-secondary); }
 .demo-go { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 10px 20px; cursor: pointer; }
 .demo-go:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
-#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; }
+/* The prepared questions sit under the box with no label: a click asks one. */
+#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 12px; }
 #demoMount ul.demo-prepared li { padding: 0; margin: 0; }
 #demoMount ul.demo-prepared li::before { content: none; }
 .demo-prepared button { font: inherit; font-size: 12px; line-height: 1.5; text-align: left; color: var(--text-secondary); background: transparent; border: 1px solid var(--border-accent); padding: 6px 12px; cursor: pointer; }
 .demo-prepared button:hover { color: var(--text-primary); border-color: var(--text-secondary); }
 #demoMount [aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
-/* Under the columns: the notes that qualify the answers, short, then the control with each note in full and the service's ids. */
-.methodology-content p.demo-anecdote { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 2px; }
-.methodology-content p.demo-limits { font-size: 12px; line-height: 1.6; color: var(--text-muted); margin-bottom: 8px; }
-.demo-about p { font-size: 12px; line-height: 1.7; margin: 8px 0 0; }
+/* Under the columns: the attribution, shown only while a passage is on screen. */
+#demo:not(.demo-has-passages) #demoAttribution { display: none; }
+/* In the notes: the deployed commit and index version, from /v1/health. */
 .demo-service:not([hidden]) { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; margin-top: 8px; }
 .demo-service dt { color: var(--text-muted); }
 .demo-service dd { color: var(--text-secondary); overflow-wrap: anywhere; }
@@ -177,7 +178,7 @@ a:hover { color: var(--accent-hover); }
 .demo-cites, .demo-passages ol { list-style: none; margin: 0 0 12px; padding: 0; font-size: 12px; line-height: 1.6; }
 .demo-cite summary { cursor: pointer; color: var(--text-secondary); }
 .demo-cite[open] summary { color: var(--text-primary); }
-:is(.demo-cite, .demo-questions, .demo-method, .demo-about) summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:is(.demo-cite, .demo-method, .notes) summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 #demoMount .demo-snippet { white-space: pre-line; font-size: 12px; color: var(--text-secondary); border-left: 2px solid var(--border-accent); padding-left: 10px; margin: 8px 0; }
 /* The cut: eight rendered lines. retrieval-demo.js shows .demo-more when a snippet overflows them. */
 .demo-clamped { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 8; overflow: hidden; }
@@ -235,7 +236,9 @@ a:hover { color: var(--accent-hover); }
   font-size: 13px;
   min-width: 500px;
 }
-.methodology-content caption { text-align: left; font-weight: 600; color: var(--text-primary); padding-bottom: 10px; }
+/* The caption says what its table's scores mean, so it wraps inside the column
+   instead of scrolling out of view with a table wider than a phone. */
+.methodology-content caption { text-align: left; font-weight: 600; color: var(--text-primary); padding-bottom: 10px; max-width: calc(100vw - 2 * clamp(24px, 5vw, 48px)); }
 .methodology-content table.gated { border-top: 2px solid var(--text-secondary); }
 .methodology-content table.advisory { border-top: 2px dashed var(--text-secondary); }
 /* Headers keep their case, unlike methodology's: n is sample size, and N reads
@@ -264,6 +267,26 @@ a:hover { color: var(--accent-hover); }
 .table-legend dt::before { content: ''; width: 24px; border-top: 2px solid var(--text-secondary); }
 .table-legend dt.advisory::before { border-top-style: dashed; }
 .table-legend dd { color: var(--text-secondary); }
+/* Under the tables: how to read them. With a snapshot, its limitations and
+   pins follow, then the closed notes. */
+.methodology-content p.table-note { font-size: 13px; margin-bottom: 8px; }
+#results h3, .notes h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 28px 0 10px; }
+#limitations li { font-size: 13px; line-height: 1.7; }
+
+/* NOTES: one closed control under the results, holding everything the reading
+   path leaves out: the method, the two kinds of score, and the demo's notes in
+   full. The demo's notes are held back while the demo is. */
+main:has(#demo[hidden]) #demoNotes { display: none; }
+.notes { margin-top: 16px; }
+.notes summary { cursor: pointer; font-size: 13px; color: var(--accent); list-style: none; }
+.notes summary::-webkit-details-marker { display: none; }
+.notes summary::after { content: ' +'; }
+.notes[open] summary::after { content: ' \2212'; }
+.notes summary:hover { color: var(--accent-hover); }
+.notes[open] summary { margin-bottom: 16px; }
+.methodology-content .notes :is(p:not(.attribution), li) { font-size: 13px; line-height: 1.7; }
+.notes .table-legend { margin-bottom: 16px; }
+.notes p.attribution { margin-bottom: 0; }
 
 /* CTA BLOCK */
 .cta-block { position: relative; overflow: hidden; margin-top: 80px; padding: 64px; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border: 1px solid var(--border-accent); text-align: center; }
@@ -294,7 +317,8 @@ a:hover { color: var(--accent-hover); }
 <section class="page-hero">
   <div class="container">
     <h1 class="visually-hidden">Retrieval</h1>
-    <p class="lead meth-anim" style="animation-delay: 0s;">An eval harness runs a fixed test set on every change to the question-answering service we built.</p>
+    <p class="lead lead-demo meth-anim" style="animation-delay: 0s;">One question, answered several ways side by side.</p>
+    <p class="lead lead-page meth-anim" style="animation-delay: 0s;">AI search over Wikipedia, and how we measure it.</p>
   </div>
 </section>
 
@@ -302,7 +326,7 @@ a:hover { color: var(--accent-hover); }
   <div class="container">
     <article class="methodology-content">
 
-      <!-- Held until the demo is public: removing hidden shows the demo, the attribution and the corpus note. -->
+      <!-- Held until the demo is public: removing hidden shows the demo, and its notes at the foot of the page. -->
       <section id="demo" hidden>
         <!-- retrieval-demo.js mounts the demo here. -->
         <div id="demoMount"></div>
@@ -311,41 +335,47 @@ a:hover { color: var(--accent-hover); }
              (INTEGRATION-BRIEF.md §3). Once /v1/meta answers, the demo replaces this text with the
              live field, before any rung output. -->
         <p class="attribution" id="demoAttribution">Modified passages from Wikipedia articles, under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a></p>
-        <div class="demo-note">
-          <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
-          <p>One question is an anecdote. The results below measure the service over its test set.</p>
-        </div>
       </section>
 
       <section id="results">
         <h2>Results</h2>
-        <dl class="table-legend">
-          <dt class="gated">Gated</dt>
-          <dd>A change that regresses the score cannot merge.</dd>
-          <dt class="advisory">Advisory</dt>
-          <dd>A change that regresses the score can still merge.</dd>
-        </dl>
         <!-- retrieval-results.js renders the pending state or the tables here. -->
         <div id="resultsMount"></div>
         <p class="state-note" id="resultsFailed" hidden>The results could not be loaded.</p>
-      </section>
 
-      <section id="how-its-measured">
-        <h2>How it&rsquo;s measured</h2>
-        <p class="lead">Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
-        <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
-        <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
-      </section>
+        <!-- What the snapshot supplies beside the tables, shown whenever one is committed. -->
+        <div id="limitations" hidden>
+          <h3>Limitations</h3>
+          <ul id="limitationsList"></ul>
+          <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
+        </div>
 
-      <section id="limitations" hidden>
-        <h2>Limitations</h2>
-        <ul id="limitationsList"></ul>
-        <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
-      </section>
+        <div id="reproduce" hidden>
+          <h3>Reproduce it</h3>
+          <dl class="pins" id="pinsList"></dl>
+        </div>
 
-      <section id="reproduce" hidden>
-        <h2>Reproduce it</h2>
-        <dl class="pins" id="pinsList"></dl>
+        <!-- Everything the reading path leaves out, behind one closed control. -->
+        <details id="notes" class="notes">
+          <summary>How it&rsquo;s measured, and its limits</summary>
+          <p>Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
+          <dl class="table-legend">
+            <dt class="gated">Gated</dt>
+            <dd>A change that regresses the score cannot merge.</dd>
+            <dt class="advisory">Advisory</dt>
+            <dd>A change that regresses the score can still merge.</dd>
+          </dl>
+          <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
+          <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
+
+          <!-- Held back while the demo is. retrieval-demo.js adds the limits and privacy notes, a
+               copy of the attribution, and the deployed commit and index version. -->
+          <div id="demoNotes">
+            <h3>The demo</h3>
+            <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
+            <p>One question is an anecdote. The results above measure the service over its test set.</p>
+          </div>
+        </details>
       </section>
 
       <section id="how-its-built">
@@ -507,7 +537,7 @@ readSnapshot().then(snapshot => {
 // ── DEMO ───────────────────────────────────────────────────────────────────
 // retrieval-demo.js builds the question box and the rung columns. It sends
 // nothing until a visitor focuses the question box or a prepared question.
-mountDemo(document.getElementById('demoMount'), document.getElementById('demoAttribution'));
+mountDemo(document.getElementById('demoMount'), document.getElementById('demoAttribution'), document.getElementById('demoNotes'));
 </script>
 </body>
 </html>

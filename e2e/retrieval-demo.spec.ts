@@ -16,15 +16,20 @@ const SERVICE = "https://baseweight-service.fly.dev";
 const FIXTURE = fs.readFileSync(path.join(__dirname, "fixtures/retrieval-demo.json"), "utf-8");
 // Rung.name in the deployed openapi.json, in the order the service answers.
 const RUNGS = ["closed_book", "bm25", "hybrid", "full"];
-// What a visitor reads around the input and under the answers.
-const CORPUS = "Searches a frozen subset of English Wikipedia: nothing recent.";
-const PRIVACY = "Your question goes to our service and its providers. Privacy policy";
-const ANECDOTE = "One question is an anecdote.";
-const LIMITS = "Comparisons are limited.";
-// The same notes in full, behind "About this demo". The page's markup holds the
-// corpus and anecdote wording, which e2e/retrieval-service.spec.ts asserts.
+// What a visitor reads before the input. The privacy policy, which says where
+// a question goes, is the footer's link.
+const CORPUS = "Wikipedia, nothing recent.";
+// The demo's notes in full, in the page's notes. The script writes the first
+// two there; the page's markup holds the rest, the attribution as it ships
+// until /v1/meta answers.
 const LIMITS_FULL = "Read-only. Comparisons are rate-limited, and the demo has a daily budget.";
 const PRIVACY_FULL = "Your question and IP address go to our service, which passes the question to its providers.";
+const CORPUS_FULL =
+  "The index holds a capped subset of English Wikipedia, frozen at one past dump. " +
+  "Anything newer, this week’s news included, is outside it.";
+const ANECDOTE_FULL = "One question is an anecdote. The results above measure the service over its test set.";
+const SHIPPED_ATTRIBUTION =
+  "Modified passages from Wikipedia articles, under CC BY-SA 3.0: https://creativecommons.org/licenses/by-sa/3.0/";
 
 type Payloads = { meta: any; health: any; compare: any };
 
@@ -87,10 +92,17 @@ const questions = (sent: { path: string; body: string | null }[]) =>
   sent.filter((s) => s.path === "/v1/compare").map((s) => JSON.parse(s.body!));
 
 async function load(page: Page): Promise<Locator> {
-  await page.setContent('<section id="demo"><div id="mount"></div><p id="attribution">The attribution as the page ships it.</p></section>');
+  await page.setContent(
+    '<section id="demo"><div id="mount"></div><p id="attribution">The attribution as the page ships it.</p></section>' +
+      '<div id="demoNotes"></div>'
+  );
   await page.addScriptTag({ path: COMPONENT });
   await page.evaluate(() =>
-    (window as any).mountDemo(document.getElementById("mount"), document.getElementById("attribution"))
+    (window as any).mountDemo(
+      document.getElementById("mount"),
+      document.getElementById("attribution"),
+      document.getElementById("demoNotes")
+    )
   );
   return page.locator("#demo");
 }
@@ -102,8 +114,16 @@ const prepared = (demo: Locator) =>
 const column = (demo: Locator, name: string) =>
   demo.locator(".demo-rung").filter({ has: demo.page().locator(".demo-name", { hasText: new RegExp(`^Technical name: ${name}$`) }) });
 const answers = (demo: Locator) => demo.locator(".demo-answer");
-// The controls that hold what the reading path leaves out.
-const aboutDemo = (demo: Locator) => demo.locator(".demo-about summary");
+// Where the page keeps what the demo leaves out of its reading path.
+const notes = (demo: Locator) => demo.page().locator("#demoNotes");
+// On the page the notes are one closed control under the results; this opens
+// it. The blank document has none, and its notes always show.
+async function openNotes(page: Page) {
+  const control = page.locator("details#notes");
+  if ((await control.count()) && !(await control.evaluate((d) => (d as HTMLDetailsElement).open))) {
+    await control.locator(":scope > summary").click();
+  }
+}
 const howItWorks = (col: Locator) => col.locator(".demo-method summary");
 
 // ── What goes to the service, and when ──────────────────────────────────────
@@ -136,6 +156,7 @@ test("a question goes only once /v1/meta has answered, with the live attribution
   release("/v1/meta");
   await expect.poll(() => paths(sent)).toContain("/v1/compare");
   await expect(page.locator("#attribution")).toHaveText(doc.meta.attribution);
+  await expect(notes(demo).locator("p", { hasText: doc.meta.attribution })).toHaveCount(1);
   await expect(answers(demo)).toHaveCount(0);
   release("/v1/compare");
   await expect(answers(demo)).toHaveCount(RUNGS.length);
@@ -260,20 +281,23 @@ test("latency shows in seconds, to one decimal", async ({ page }) => {
   await expect(column(demo, "hybrid").locator(".demo-latency")).toHaveText("Latency 17.4 s");
 });
 
-// With answers on screen they are what to read, so the prepared questions fold.
-// A keyboard visitor's focus moves to the summary instead of vanishing with them.
-test("once answers arrive the prepared questions fold, and their summary opens them again", async ({ page }) => {
+// The prepared questions sit directly under the box, with no label and no
+// control, and stay there with answers on screen. Focus stays on the one asked.
+test("the prepared questions sit under the box with no label or control, and stay once answers arrive", async ({ page }) => {
   await mockService(page);
   const demo = await load(page);
+  const ask = demo.locator(".demo-ask");
+  await expect(ask.locator(":scope > *")).toHaveCount(3);
+  await expect(ask.locator(".demo-row + ul.demo-prepared")).toHaveCount(1);
+  await expect(ask.locator("details, summary, p, h3")).toHaveCount(0);
+  const count = await prepared(demo).count();
+  expect(count).toBeGreaterThan(0);
   await prepared(demo).first().focus();
   await page.keyboard.press("Enter");
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await expect(prepared(demo)).toHaveCount(0);
-  const summary = demo.locator(".demo-questions summary");
-  await expect(summary).toHaveText("Questions to try");
-  await expect(summary).toBeFocused();
-  await summary.click();
+  await expect(prepared(demo)).toHaveCount(count);
   await expect(prepared(demo).first()).toBeVisible();
+  await expect(prepared(demo).first()).toBeFocused();
 });
 
 const [A, B, C, D] = ["Synthetic Article A", "Synthetic Article B", "Synthetic Article C", "Synthetic Article No. 7"];
@@ -371,55 +395,38 @@ test("model output stays text, and only citation urls become links", async ({ pa
   const wikipedia = doc.compare.rungs
     .flatMap((r: any) => r.citations.map((c: any) => c.url))
     .filter((u: string) => u.startsWith("https://en.wikipedia.org/"));
-  // The one link the demo writes itself is the privacy policy's.
+  // The demo writes no link of its own.
   const hrefs = await demo.locator("a").evaluateAll((links) => links.map((a) => a.getAttribute("href")));
-  expect(hrefs.sort()).toEqual([...wikipedia, "/privacy"].sort());
+  expect(hrefs.sort()).toEqual([...wikipedia].sort());
 });
 
 // ── The label and the service line ──────────────────────────────────────────
 
-test("each note is short, its full wording is one control away, and reading them sends nothing", async ({ page }) => {
+test("the demo writes its notes in full to the page's notes, keeps none of them, and sends nothing", async ({ page }) => {
   const { sent } = await mockService(page);
   const demo = await load(page);
   await expect(demo.locator(".demo-corpus")).toHaveText(CORPUS);
-  await expect(demo.locator(".demo-anecdote")).toHaveText(ANECDOTE);
-  await expect(demo.locator(".demo-limits")).toHaveText(LIMITS);
-  for (const full of [LIMITS_FULL, PRIVACY_FULL]) {
-    const note = demo.locator(".demo-about p", { hasText: full });
-    await expect(note).toBeHidden();
-  }
-  await aboutDemo(demo).click();
-  for (const full of [LIMITS_FULL, PRIVACY_FULL]) {
-    await expect(demo.locator(".demo-about p", { hasText: full })).toBeVisible();
-  }
+  await expect(notes(demo).locator("p")).toHaveText([LIMITS_FULL, PRIVACY_FULL, "The attribution as the page ships it."]);
+  for (const full of [LIMITS_FULL, PRIVACY_FULL]) await expect(demo).not.toContainText(full);
+  await expect(demo.locator("details.demo-about, .demo-anecdote, .demo-limits")).toHaveCount(0);
   await page.waitForTimeout(300);
-  expect(sent).toEqual([]);
-});
-
-// privacy.html names the providers and says what the service keeps.
-test("under the question box, the demo says where a question goes and links the privacy policy", async ({ page }) => {
-  const { sent } = await mockService(page);
-  const demo = await load(page);
-  const line = demo.locator(".demo-row + p");
-  await expect(line).toHaveText(PRIVACY);
-  await expect(line.getByRole("link", { name: "Privacy policy" })).toHaveAttribute("href", "/privacy");
   expect(sent).toEqual([]);
 });
 
 // Comparison answers carry no index version (deployed openapi.json), so the
 // deployed one shows, beside the commit, both from /v1/health. Two long hex
-// strings mean nothing to most visitors, so they wait behind the control.
-test("the deployed commit and index version stay behind a control, and are the ones /v1/health reports", async ({ page }) => {
+// strings mean nothing to most visitors, so they go to the page's notes.
+test("the deployed commit and index version go to the notes, and are the ones /v1/health reports", async ({ page }) => {
   const doc = payloads();
   await mockService(page, doc);
   const demo = await load(page);
+  const service = notes(demo).locator(".demo-service");
+  await expect(service).toBeHidden();
   await questionBox(demo).focus();
-  const values = demo.locator(".demo-service dd");
-  await expect(values).toHaveText([doc.health.git_sha, doc.health.index_version]);
-  await expect(values.first()).toBeHidden();
-  await aboutDemo(demo).click();
-  await expect(values.first()).toBeVisible();
-  await expect(demo.locator(".demo-service dt")).toHaveText(["Deployed commit", "Index version"]);
+  await expect(service.locator("dd")).toHaveText([doc.health.git_sha, doc.health.index_version]);
+  await expect(service).toBeVisible();
+  await expect(service.locator("dt")).toHaveText(["Deployed commit", "Index version"]);
+  await expect(demo.locator(".demo-service")).toHaveCount(0);
 });
 
 // ── Failure states ──────────────────────────────────────────────────────────
@@ -496,12 +503,13 @@ const FAILURES: { name: string; reply: Reply; says: string }[] = [
 for (const { name, reply, says } of FAILURES) {
   test(name, async ({ page }) => {
     await mockService(page, payloads(), [], { "/v1/compare": reply });
-    const demo = await load(page);
+    const demo = await openPage(page);
     await prepared(demo).first().click();
     await expect(status(demo)).toHaveText(says);
     await expect(demo.locator(".demo-rung")).toHaveCount(0);
     // With no answers to read, the prepared questions stay open for another try.
     await expect(prepared(demo).first()).toBeVisible();
+    await expectAttributionBack(demo);
   });
 }
 
@@ -566,9 +574,8 @@ test("when /v1/health fails, the comparison still goes and the service line stay
   const demo = await load(page);
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await aboutDemo(demo).click();
-  await expect(demo.locator(".demo-about p").first()).toBeVisible();
-  await expect(demo.locator(".demo-service")).toBeHidden();
+  await expect(notes(demo).locator("p").first()).toBeVisible();
+  await expect(notes(demo).locator(".demo-service")).toBeHidden();
 });
 
 // ── On the page ─────────────────────────────────────────────────────────────
@@ -586,6 +593,204 @@ async function openPage(page: Page, width = 1280, height = 900): Promise<Locator
   return page.locator("#demo");
 }
 
+// The attribution speaks of the passages on screen, so the page's <style> holds
+// it back until one shows. The closed notes under the results hold a copy,
+// beside each of the demo's notes in full, throughout.
+
+// The demo's text as a visitor can read it now: hidden lines and closed controls left out.
+const readableText = (demo: Locator) =>
+  demo.evaluate((section) => {
+    const walker = document.createTreeWalker(section, NodeFilter.SHOW_TEXT);
+    let text = "";
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (node.parentElement!.checkVisibility()) text += node.textContent;
+    }
+    return text;
+  });
+
+async function expectAttributionBack(demo: Locator) {
+  await expect(demo.locator("#demoAttribution")).toBeHidden();
+  const text = await readableText(demo);
+  for (const words of [SHIPPED_ATTRIBUTION, payloads().meta.attribution]) expect(text).not.toContain(words);
+}
+
+// The attribution sits where the corpus text appears: directly under the rung
+// columns, the last thing in the section.
+async function expectAttribution(demo: Locator, attribution: string) {
+  await expect(demo.locator("#demoAttribution")).toHaveText(attribution);
+  expect(await readableText(demo)).toContain(attribution);
+  await expectSectionOrder(demo.page(), [".demo-rungs", "#demoAttribution"]);
+  await expect(demo.locator(":scope > *").last()).toHaveId("demoAttribution");
+}
+
+// The section keeps none of the notes: no short ones, no full ones, no control.
+async function expectNoNotesInDemo(demo: Locator) {
+  await expect(demo.locator(".demo-anecdote, .demo-limits, .demo-about, .demo-note, .demo-service")).toHaveCount(0);
+  const text = await readableText(demo);
+  for (const words of [LIMITS_FULL, PRIVACY_FULL, CORPUS_FULL, ANECDOTE_FULL]) expect(text).not.toContain(words);
+}
+
+// Each note in full, in the page's notes, on screen once they are opened and
+// inside the viewport.
+async function expectNotesHoldAll(demo: Locator, attribution: string) {
+  await openNotes(demo.page());
+  const held = notes(demo);
+  for (const full of [CORPUS_FULL, ANECDOTE_FULL, LIMITS_FULL, PRIVACY_FULL, attribution]) {
+    await expect(held.locator("p", { hasText: full })).toBeVisible();
+  }
+  const [right, width] = await held.evaluate((n) => [
+    Math.max(...[...n.querySelectorAll("*")].map((e) => e.getBoundingClientRect().right)),
+    window.innerWidth,
+  ]);
+  expect(right).toBeLessThanOrEqual(width);
+}
+
+// The corpus line stays above the box in either state, and nothing about
+// privacy sits in the demo: the footer links the policy.
+async function expectCorpus(demo: Locator) {
+  await expect(demo.locator(".demo-corpus")).toHaveText(CORPUS);
+  await expect(demo.locator(".demo-corpus")).toBeVisible();
+  await expectSectionOrder(demo.page(), [".demo-corpus", "#demoQuestion"]);
+  expect(await readableText(demo)).not.toMatch(/privacy/i);
+}
+
+for (const [width, height] of [[390, 844], [1280, 900]] as const) {
+  test(`at ${width}px the idle demo holds the attribution back, and the notes hold each note in full`, async ({ page }) => {
+    const { sent } = await mockService(page);
+    const demo = await openPage(page, width, height);
+    await expect(questionBox(demo)).toBeVisible();
+    await expectCorpus(demo);
+    await expectAttributionBack(demo);
+    await expectNoNotesInDemo(demo);
+    await expectNotesHoldAll(demo, SHIPPED_ATTRIBUTION);
+    expect(sent).toEqual([]);
+  });
+
+  test(`at ${width}px a returned comparison with passages shows the attribution under them, and the notes still hold all`, async ({ page }) => {
+    const doc = payloads();
+    await mockService(page, doc);
+    const demo = await openPage(page, width, height);
+    await prepared(demo).first().click();
+    await expect(answers(demo)).toHaveCount(RUNGS.length);
+    await expectCorpus(demo);
+    await expectAttribution(demo, doc.meta.attribution);
+    await expectNoNotesInDemo(demo);
+    await expectNotesHoldAll(demo, doc.meta.attribution);
+  });
+}
+
+test("the attribution stays back once /v1/meta has answered and while a comparison is out", async ({ page }) => {
+  const doc = payloads();
+  const { release } = await mockService(page, doc, ["/v1/compare"]);
+  const demo = await openPage(page);
+  await questionBox(demo).focus();
+  await expect(demo.locator("#demoAttribution")).toHaveText(doc.meta.attribution);
+  await expectAttributionBack(demo);
+  await prepared(demo).first().click();
+  await expect(demo.locator(".demo-rung").filter({ hasText: "Outstanding" })).toHaveCount(RUNGS.length);
+  await expectAttributionBack(demo);
+  release("/v1/compare");
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expectAttribution(demo, doc.meta.attribution);
+});
+
+// The next question clears the answers, so the attribution goes with them.
+test("the next question takes the attribution back until it returns, and a failure leaves it back", async ({ page }) => {
+  const doc = payloads();
+  const replies: Record<string, Reply> = {};
+  await mockService(page, doc, [], replies);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expectAttribution(demo, doc.meta.attribution);
+
+  let answer = () => {};
+  const held = new Promise<void>((resolve) => {
+    answer = resolve;
+  });
+  await page.route(`${SERVICE}/v1/compare`, async (route) => {
+    await held;
+    await route.fallback();
+  });
+  await questionBox(demo).press("Enter");
+  await expect(demo.locator(".demo-rung").filter({ hasText: "Outstanding" })).toHaveCount(RUNGS.length);
+  await expectAttributionBack(demo);
+  answer();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expectAttribution(demo, doc.meta.attribution);
+
+  replies["/v1/compare"] = { status: 500, json: envelope("internal", "the service failed") };
+  await questionBox(demo).press("Enter");
+  await expect(status(demo)).toHaveText("The service failed on that question. Try again.");
+  await expect(demo.locator(".demo-rung")).toHaveCount(0);
+  await expectAttributionBack(demo);
+  await expectNotesHoldAll(demo, doc.meta.attribution);
+});
+
+// A rung that failed alone, in the shape seen live on 2026-11-01.
+const failRung = (rung: any) =>
+  Object.assign(rung, {
+    answer: null,
+    citations: [],
+    passage_titles: [],
+    usage: { input_tokens: null, output_tokens: null, cost_usd: null },
+    error: { code: "upstream_error", message: "the model provider failed", request_id: "1".repeat(32) },
+  });
+
+// The attribution covers passages, so a returned comparison with none on screen
+// holds it back, and one passage anywhere brings it: a retrieved title, a failed
+// rung's included, or a citation.
+const PASSAGE_CASES: { name: string; change: (doc: Payloads) => void; passages: number }[] = [
+  { name: "every rung failed", change: (d) => d.compare.rungs.forEach(failRung), passages: 0 },
+  {
+    name: "every rung answered with no passage",
+    change: (d) => d.compare.rungs.forEach((r: any) => Object.assign(r, { citations: [], passage_titles: [] })),
+    passages: 0,
+  },
+  {
+    name: "only a failed rung lists a retrieved passage",
+    change: (d) => {
+      d.compare.rungs.forEach(failRung);
+      d.compare.rungs[1].passage_titles = ["Synthetic title"];
+    },
+    passages: 1,
+  },
+  {
+    name: "only a citation shows a passage",
+    change: (d) =>
+      d.compare.rungs.forEach((r: any, i: number) => Object.assign(r, { passage_titles: [] }, i === 1 ? {} : { citations: [] })),
+    passages: 1,
+  },
+];
+
+for (const { name, change, passages } of PASSAGE_CASES) {
+  test(`returned, ${name}: ${passages ? "the attribution shows" : "the attribution stays back"}`, async ({ page }) => {
+    const doc = payloads(change);
+    await mockService(page, doc);
+    const demo = await openPage(page);
+    await prepared(demo).first().click();
+    await expect(status(demo)).toHaveText("Comparison returned.");
+    await expect(demo.locator(".demo-passages, .demo-cite")).toHaveCount(passages);
+    if (passages) await expectAttribution(demo, doc.meta.attribution);
+    else await expectAttributionBack(demo);
+    await expectNoNotesInDemo(demo);
+    await expectNotesHoldAll(demo, doc.meta.attribution);
+  });
+}
+
+// No script, so no comparison can ever return. The same holds for the moment
+// before the script mounts the demo.
+test.describe("with script off", () => {
+  test.use({ javaScriptEnabled: false });
+  test("the attribution stays back, and the notes keep the page's own two", async ({ page }) => {
+    const demo = await openPage(page);
+    await expect(demo.locator("#demoAttribution")).toBeHidden();
+    await expect(notes(demo).locator("p")).toHaveText([CORPUS_FULL, ANECDOTE_FULL]);
+    await openNotes(page);
+    await expect(notes(demo).locator("p").first()).toBeVisible();
+  });
+});
+
 test("the page mounts the demo and sends nothing to the service as it loads", async ({ page }) => {
   const { sent } = await mockService(page);
   const demo = await openPage(page);
@@ -598,12 +803,12 @@ test("on the page, a comparison runs end to end and the live attribution replace
   const doc = payloads();
   await mockService(page, doc);
   const demo = await openPage(page);
-  await expect(demo.locator(".demo-service")).toBeHidden();
+  await expect(notes(demo).locator(".demo-service")).toBeHidden();
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
   await expect(page.locator("#demoAttribution")).toHaveText(doc.meta.attribution);
-  await aboutDemo(demo).click();
-  await expect(demo.locator(".demo-service")).toBeVisible();
+  await openNotes(page);
+  await expect(notes(demo).locator(".demo-service")).toBeVisible();
 });
 
 // A visitor should know what the demo searches before asking it anything.
@@ -620,8 +825,8 @@ test("the corpus statement precedes the input, on screen and in reading order", 
   expect(first).toBe(true);
 });
 
-// Nothing is deleted: with every control open, what the reading path leaves out
-// is on screen, the ranks as numbers included.
+// Nothing is lost: with every control in the demo open, and the page's notes,
+// what the reading path leaves out is on screen, the ranks as numbers included.
 test("with every control open, everything the demo leaves out of the reading path shows", async ({ page }) => {
   const sentence = "Synthetic short part: the rest of the sentence.";
   const doc = payloads((d) => {
@@ -631,14 +836,16 @@ test("with every control open, everything the demo leaves out of the reading pat
   const demo = await openPage(page);
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await expect(demo.locator(".demo-service dd").first()).toHaveText(doc.health.git_sha);
+  const service = notes(demo).locator(".demo-service dd");
+  await expect(service.first()).toHaveText(doc.health.git_sha);
   await demo.locator("details:not([open]) > summary").evaluateAll((all) => all.forEach((s) => (s as HTMLElement).click()));
+  await openNotes(page);
 
-  await expect(demo.locator(".demo-about p", { hasText: LIMITS_FULL })).toBeVisible();
-  await expect(demo.locator(".demo-about p", { hasText: PRIVACY_FULL })).toBeVisible();
-  await expect(demo.locator(".demo-about .demo-note")).toBeVisible();
-  await expect(demo.locator(".demo-service dd").nth(0)).toBeVisible();
-  await expect(demo.locator(".demo-service dd").nth(1)).toHaveText(doc.health.index_version);
+  for (const full of [LIMITS_FULL, PRIVACY_FULL, CORPUS_FULL, ANECDOTE_FULL, doc.meta.attribution]) {
+    await expect(notes(demo).locator("p", { hasText: full })).toBeVisible();
+  }
+  await expect(service.nth(0)).toBeVisible();
+  await expect(service.nth(1)).toHaveText(doc.health.index_version);
   await expect(prepared(demo).first()).toBeVisible();
   const bm25 = column(demo, "bm25");
   await expect(bm25.locator(".demo-name")).toBeVisible();
@@ -715,8 +922,8 @@ test("at phone width nothing in the demo reaches past the viewport, long ids and
   await expect(col.getByRole("button", { name: "Show less" })).toBeVisible();
   await expectInside();
   await howItWorks(col).click();
-  await aboutDemo(demo).click();
-  await expect(demo.locator(".demo-service dd").first()).toBeVisible();
+  await openNotes(page);
+  await expect(notes(demo).locator(".demo-service dd").first()).toBeVisible();
   await expectInside();
 });
 
@@ -864,16 +1071,6 @@ for (const [width, height, whole] of [[390, 844, 1], [1280, 720, 4]] as const) {
     if (whole < seen.answers.length) expect(seen.answers[whole].top).toBeLessThan(seen.height);
   });
 }
-
-// The attribution sits where the corpus text appears: under the rung columns,
-// before the notes and the control that holds the rest.
-test("on the page, the attribution sits directly under the rung columns", async ({ page }) => {
-  await mockService(page);
-  const demo = await openPage(page);
-  await prepared(demo).first().click();
-  await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await expectSectionOrder(page, [".demo-rungs", "#demoAttribution", ".demo-anecdote", ".demo-limits", ".demo-about"]);
-});
 
 // Headings step down one level at a time: the page's h1, each rung's h2 and
 // its passages' h3, then the sections below.
