@@ -2,14 +2,17 @@
 // (INTEGRATION-BRIEF.md), one table row each, split into a gated and an
 // advisory table by each row's own `gated` field. Every figure is the
 // snapshot's own, unrounded, inserted as text, and shown only beside its n and
-// interval. With no snapshot it renders the pending state. The legend that
-// defines the two categories is page markup, so it shows in every state.
+// interval. With no snapshot it renders the pending state. Each table's
+// caption says in plain words what its category means, so the tables need no
+// legend; the page's notes define the two categories.
 (function () {
   const CATEGORIES = [
-    { gated: true, term: 'Gated' },
-    { gated: false, term: 'Advisory' },
+    { gated: true, kind: 'gated', caption: 'A change that makes these worse is blocked' },
+    { gated: false, kind: 'advisory', caption: 'A change that makes these worse can still go ahead' },
   ];
-  const LABELS = ['Metric', 'Config', 'Tier', 'Slice'];
+  const LABELS = ['Metric', 'Setup', 'Question set', 'Subset'];
+  // What a visitor needs to read the figures.
+  const READING = 'Each score shows n, the number of questions behind it, and a CI, the range the true score likely sits in.';
 
   function el(tag, text, className) {
     const node = document.createElement(tag);
@@ -73,8 +76,8 @@
   }
 
   // The caption names the table, so the category is in its accessible name.
-  function table({ term }, rows, ci) {
-    const figures = ['n', 'Score', ci, 'Delta vs baseline', `Delta ${ci}`];
+  function table({ kind, caption }, rows, ci) {
+    const figures = ['n', 'Score', ci, 'Change from baseline', `Change ${ci}`];
     const head = el('tr');
     [...LABELS, ...figures].forEach(label => {
       const th = el('th', label);
@@ -85,8 +88,8 @@
     thead.append(head);
     const tbody = el('tbody');
     tbody.append(...rows.map(m => row(m, figures.length)));
-    const t = el('table', null, term.toLowerCase());
-    t.append(el('caption', term), thead, tbody);
+    const t = el('table', null, kind);
+    t.append(el('caption', caption), thead, tbody);
     const wrap = el('div', null, 'table-wrap');
     wrap.append(t);
     return wrap;
@@ -106,6 +109,6 @@
       .map(c => [c, snapshot.metrics.filter(m => (m.gated === true) === c.gated)])
       .filter(([, rows]) => rows.length)
       .map(([c, rows]) => table(c, rows, ci));
-    mount.replaceChildren(...tables);
+    mount.replaceChildren(...tables, el('p', READING, 'table-note'));
   };
 })();

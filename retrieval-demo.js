@@ -17,14 +17,11 @@
     'Which branch of economics studies an economy as a whole?',
     'Who won the 2022 FIFA World Cup?',
   ];
-  // What a visitor reads: the corpus before the box, where a question goes under
-  // it, and the rest under the answers.
-  const CORPUS = 'Searches a frozen subset of English Wikipedia: nothing recent.';
-  const PRIVACY = 'Your question goes to our service and its providers.';
-  const ANECDOTE = 'One question is an anecdote.';
-  const LIMITS = 'Comparisons are limited.';
-  // Two of those notes in full, behind "About this demo"; the page's .demo-note
-  // holds the other two. privacy.html names the providers.
+  // Before the box, so a question about this week's news is not mistaken for a
+  // fault. The page's notes state the corpus in full.
+  const CORPUS = 'Wikipedia, nothing recent.';
+  // For the page's notes, beside the two the page holds. privacy.html, linked
+  // from the footer, names the providers.
   const LIMITS_FULL = 'Read-only. Comparisons are rate-limited, and the demo has a daily budget.';
   const PRIVACY_FULL = 'Your question and IP address go to our service, which passes the question to its providers.';
   const MARKER = /\[(c\d+)\]/g;
@@ -232,7 +229,9 @@
   }
 
   // `attribution` is the page's licence notice, replaced by the live one.
-  window.mountDemo = function (mount, attribution) {
+  // `notes` is the page's place for what the demo leaves out of its reading
+  // path: each note in full, a copy of the attribution and the service's ids.
+  window.mountDemo = function (mount, attribution, notes) {
     const box = el('input');
     box.id = 'demoQuestion';
     box.type = 'text';
@@ -259,17 +258,8 @@
       list.append(item);
       return ask;
     });
-    const privacy = el('p', `${PRIVACY} `);
-    const policy = el('a', 'Privacy policy');
-    policy.href = '/privacy';
-    privacy.append(policy);
-    // Open until answers arrive; then they are what to read.
-    const questions = el('details', null, 'demo-questions');
-    const questionsSummary = el('summary', 'Questions to try');
-    questions.append(questionsSummary, list);
-    questions.open = true;
     const controls = el('div', null, 'demo-ask');
-    controls.append(label, row, privacy, questions);
+    controls.append(label, row, list);
     const status = el('p', null, 'demo-status');
     status.setAttribute('role', 'status');
     const timer = el('span');
@@ -280,16 +270,14 @@
     const rungs = el('div', null, 'demo-rungs');
     mount.replaceChildren(el('p', CORPUS, 'demo-corpus'), controls, status, elapsed, rungs);
 
-    // After the attribution: the short notes, then the control holding each note
-    // in full and the service's ids. The page's .demo-note moves in whole.
+    // The attribution speaks of the passages on screen, so the page's <style>
+    // shows it while the section is demo-has-passages. The notes keep a copy.
+    const section = mount.parentElement;
     const service = el('dl', null, 'demo-service');
     service.hidden = true;
-    const about = el('details', null, 'demo-about');
-    about.append(el('summary', 'About this demo'), el('p', LIMITS_FULL), el('p', PRIVACY_FULL));
-    const fullNotes = mount.parentElement.querySelector('.demo-note');
-    if (fullNotes) about.append(fullNotes);
-    about.append(service);
-    attribution.after(el('p', ANECDOTE, 'demo-anecdote'), el('p', LIMITS, 'demo-limits'), about);
+    const fullAttribution = attribution.cloneNode(true);
+    fullAttribution.removeAttribute('id');
+    notes.append(el('p', LIMITS_FULL), el('p', PRIVACY_FULL), fullAttribution, service);
 
     // GET /v1/meta once; a failure lets the next attempt ask again.
     let ready = null;
@@ -299,7 +287,10 @@
           // public_mode is the constant "read_only" in the contract, which LABEL states.
           if (!res.ok || body?.public_mode !== 'read_only' || !isText(body.attribution))
             throw new Error('GET /v1/meta answered outside its contract');
-          if (body.attribution !== attribution.textContent) attribution.textContent = body.attribution;
+          if (body.attribution !== attribution.textContent) {
+            attribution.textContent = body.attribution;
+            fullAttribution.textContent = body.attribution;
+          }
         });
         ready.catch(() => { ready = null; });
         // The service line is extra: without it the comparison still goes.
@@ -330,6 +321,7 @@
       status.textContent = 'Waiting for the service.';
       // The labels come with the answers, so nothing heads a column until then.
       rungs.replaceChildren(...RUNGS.map(() => column(el('p', 'Outstanding', 'demo-pending'))));
+      section.classList.remove('demo-has-passages');
       try {
         await prepare();
         const { res, body } = await call('/v1/compare', {
@@ -340,10 +332,8 @@
         const { result, note } = outcome(res, body);
         rungs.replaceChildren(...(result ? result.rungs.map(answered) : []));
         status.textContent = result ? 'Comparison returned.' : note;
-        if (result) {
-          if (questions.contains(document.activeElement)) questionsSummary.focus();
-          questions.open = false;
-        }
+        // A passage shows as a retrieved title, a failed rung's included, or as a citation.
+        if (result && rungs.querySelector('.demo-passages, .demo-cite')) section.classList.add('demo-has-passages');
       } catch (e) {
         rungs.replaceChildren();
         status.textContent = UNAVAILABLE;
