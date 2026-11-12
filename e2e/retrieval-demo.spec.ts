@@ -16,9 +16,6 @@ const SERVICE = "https://baseweight-service.fly.dev";
 const FIXTURE = fs.readFileSync(path.join(__dirname, "fixtures/retrieval-demo.json"), "utf-8");
 // Rung.name in the deployed openapi.json, in the order the service answers.
 const RUNGS = ["closed_book", "bm25", "hybrid", "full"];
-// What a visitor reads before the input. The privacy policy, which says where
-// a question goes, is the footer's link.
-const CORPUS = "Wikipedia, nothing recent.";
 // The demo's notes in full, in the page's notes. The script writes the first
 // two there; the page's markup holds the rest, the attribution as it ships
 // until /v1/meta answers.
@@ -405,7 +402,7 @@ test("model output stays text, and only citation urls become links", async ({ pa
 test("the demo writes its notes in full to the page's notes, keeps none of them, and sends nothing", async ({ page }) => {
   const { sent } = await mockService(page);
   const demo = await load(page);
-  await expect(demo.locator(".demo-corpus")).toHaveText(CORPUS);
+  await expect(demo.locator(".demo-corpus")).toHaveCount(0);
   await expect(notes(demo).locator("p")).toHaveText([LIMITS_FULL, PRIVACY_FULL, "The attribution as the page ships it."]);
   for (const full of [LIMITS_FULL, PRIVACY_FULL]) await expect(demo).not.toContainText(full);
   await expect(demo.locator("details.demo-about, .demo-anecdote, .demo-limits")).toHaveCount(0);
@@ -438,6 +435,13 @@ test("the deployed commit and index version go to the notes, and are the ones /v
 const envelope = (code: string, message: string) => ({ error: { code, message, request_id: "0".repeat(32) } });
 const UNAVAILABLE = "The service is unavailable. Try again later.";
 const status = (demo: Locator) => demo.locator(".demo-status");
+// Whether an element shows to a sighted visitor: a status announced only is
+// clipped to a pixel, which Playwright still counts as visible.
+const shown = (target: Locator) =>
+  target.evaluate((e) => {
+    const box = e.getBoundingClientRect();
+    return box.width > 1 && box.height > 1;
+  });
 
 const FAILURES: { name: string; reply: Reply; says: string }[] = [
   {
@@ -506,6 +510,7 @@ for (const { name, reply, says } of FAILURES) {
     const demo = await openPage(page);
     await prepared(demo).first().click();
     await expect(status(demo)).toHaveText(says);
+    expect(await shown(status(demo))).toBe(true);
     await expect(demo.locator(".demo-rung")).toHaveCount(0);
     // With no answers to read, the prepared questions stay open for another try.
     await expect(prepared(demo).first()).toBeVisible();
@@ -645,13 +650,13 @@ async function expectNotesHoldAll(demo: Locator, attribution: string) {
   expect(right).toBeLessThanOrEqual(width);
 }
 
-// The corpus line stays above the box in either state, and nothing about
-// privacy sits in the demo: the footer links the policy.
-async function expectCorpus(demo: Locator) {
-  await expect(demo.locator(".demo-corpus")).toHaveText(CORPUS);
-  await expect(demo.locator(".demo-corpus")).toBeVisible();
-  await expectSectionOrder(demo.page(), [".demo-corpus", "#demoQuestion"]);
+// In either state the demo opens on the box, with no corpus line, nothing about
+// privacy (the footer links the policy), and no status shown unless it failed.
+async function expectNoProse(demo: Locator) {
+  await expect(demo.locator(".demo-corpus")).toHaveCount(0);
+  await expect(demo.locator("#demoMount > :first-child")).toHaveClass("demo-ask");
   expect(await readableText(demo)).not.toMatch(/privacy/i);
+  expect(await shown(status(demo))).toBe(false);
 }
 
 for (const [width, height] of [[390, 844], [1280, 900]] as const) {
@@ -659,7 +664,7 @@ for (const [width, height] of [[390, 844], [1280, 900]] as const) {
     const { sent } = await mockService(page);
     const demo = await openPage(page, width, height);
     await expect(questionBox(demo)).toBeVisible();
-    await expectCorpus(demo);
+    await expectNoProse(demo);
     await expectAttributionBack(demo);
     await expectNoNotesInDemo(demo);
     await expectNotesHoldAll(demo, SHIPPED_ATTRIBUTION);
@@ -672,7 +677,7 @@ for (const [width, height] of [[390, 844], [1280, 900]] as const) {
     const demo = await openPage(page, width, height);
     await prepared(demo).first().click();
     await expect(answers(demo)).toHaveCount(RUNGS.length);
-    await expectCorpus(demo);
+    await expectNoProse(demo);
     await expectAttribution(demo, doc.meta.attribution);
     await expectNoNotesInDemo(demo);
     await expectNotesHoldAll(demo, doc.meta.attribution);
@@ -811,18 +816,23 @@ test("on the page, a comparison runs end to end and the live attribution replace
   await expect(notes(demo).locator(".demo-service")).toBeVisible();
 });
 
-// A visitor should know what the demo searches before asking it anything.
-test("the corpus statement precedes the input, on screen and in reading order", async ({ page }) => {
-  await mockService(page);
+// The timer and the columns show the wait and the answers, so those statuses
+// are announced to a screen reader and not shown; a failure is both.
+test("waiting and returned are announced without showing, and a failure shows", async ({ page }) => {
+  const replies: Record<string, Reply> = {};
+  const { release } = await mockService(page, payloads(), ["/v1/compare"], replies);
   const demo = await openPage(page);
-  const corpus = demo.locator(".demo-corpus");
-  await expect(corpus).toHaveText(CORPUS);
-  await expect(corpus).toBeVisible();
-  await expectSectionOrder(page, [".demo-corpus", "#demoQuestion"]);
-  const first = await corpus.evaluate(
-    (c) => !!(c.compareDocumentPosition(document.getElementById("demoQuestion")!) & Node.DOCUMENT_POSITION_FOLLOWING)
-  );
-  expect(first).toBe(true);
+  await prepared(demo).first().click();
+  await expect(status(demo)).toHaveText("Waiting for the service.");
+  expect(await shown(status(demo))).toBe(false);
+  await expect(demo.locator(".demo-elapsed")).toBeVisible();
+  release("/v1/compare");
+  await expect(status(demo)).toHaveText("Comparison returned.");
+  expect(await shown(status(demo))).toBe(false);
+  replies["/v1/compare"] = { status: 500, json: envelope("internal", "the service failed") };
+  await questionBox(demo).press("Enter");
+  await expect(status(demo)).toHaveText("The service failed on that question. Try again.");
+  expect(await shown(status(demo))).toBe(true);
 });
 
 // Nothing is lost: with every control in the demo open, and the page's notes,

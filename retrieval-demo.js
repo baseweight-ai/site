@@ -17,11 +17,9 @@
     'Which branch of economics studies an economy as a whole?',
     'Who won the 2022 FIFA World Cup?',
   ];
-  // Before the box, so a question about this week's news is not mistaken for a
-  // fault. The page's notes state the corpus in full.
-  const CORPUS = 'Wikipedia, nothing recent.';
-  // For the page's notes, beside the two the page holds. privacy.html, linked
-  // from the footer, names the providers.
+  // The demo shows no sentence of its own beyond a failure. Its notes go to the
+  // page's notes, beside the two the page holds, the corpus statement among
+  // them. privacy.html, linked from the footer, names the providers.
   const LIMITS_FULL = 'Read-only. Comparisons are rate-limited, and the demo has a daily budget.';
   const PRIVACY_FULL = 'Your question and IP address go to our service, which passes the question to its providers.';
   const MARKER = /\[(c\d+)\]/g;
@@ -268,7 +266,7 @@
     elapsed.append(timer);
     elapsed.hidden = true;
     const rungs = el('div', null, 'demo-rungs');
-    mount.replaceChildren(el('p', CORPUS, 'demo-corpus'), controls, status, elapsed, rungs);
+    mount.replaceChildren(controls, status, elapsed, rungs);
 
     // The attribution speaks of the passages on screen, so the page's <style>
     // shows it while the section is demo-has-passages. The notes keep a copy.
@@ -319,6 +317,8 @@
       elapsed.hidden = false;
       const clock = setInterval(tick, 1000);
       status.textContent = 'Waiting for the service.';
+      // Waiting and returned are announced only; a failure is also shown.
+      status.classList.remove('demo-failed');
       // The labels come with the answers, so nothing heads a column until then.
       rungs.replaceChildren(...RUNGS.map(() => column(el('p', 'Outstanding', 'demo-pending'))));
       section.classList.remove('demo-has-passages');
@@ -332,11 +332,13 @@
         const { result, note } = outcome(res, body);
         rungs.replaceChildren(...(result ? result.rungs.map(answered) : []));
         status.textContent = result ? 'Comparison returned.' : note;
+        status.classList.toggle('demo-failed', !result);
         // A passage shows as a retrieved title, a failed rung's included, or as a citation.
         if (result && rungs.querySelector('.demo-passages, .demo-cite')) section.classList.add('demo-has-passages');
       } catch (e) {
         rungs.replaceChildren();
         status.textContent = UNAVAILABLE;
+        status.classList.add('demo-failed');
       } finally {
         clearInterval(clock);
         tick();

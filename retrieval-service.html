@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Retrieval | Baseweight</title>
-<meta name="description" content="AI search over Wikipedia, and how we measure it.">
+<meta name="description" content="Different RAG setups, compared.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
@@ -15,13 +15,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://baseweight.co/retrieval-service">
 <meta property="og:title" content="Retrieval: Baseweight">
-<meta property="og:description" content="AI search over Wikipedia, and how we measure it.">
+<meta property="og:description" content="Different RAG setups, compared.">
 <meta property="og:image" content="https://baseweight.co/images/featured.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="627">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Retrieval: Baseweight">
-<meta name="twitter:description" content="AI search over Wikipedia, and how we measure it.">
+<meta name="twitter:description" content="Different RAG setups, compared.">
 <meta name="twitter:image" content="https://baseweight.co/images/featured.jpg">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -65,10 +65,9 @@ a:hover { color: var(--accent-hover); }
 .container { max-width: var(--max-width); margin: 0 auto; padding: 0 clamp(24px, 5vw, 48px); }
 
 
-/* PAGE HERO: one sentence, then the demo. The h1 is for screen readers and
-   search, so it is visually hidden. Each state has its sentence: with the demo,
-   what it does; while the demo is held back, what the page is, which holds in
-   both states and is the meta and social description. */
+/* PAGE HERO: the page's one sentence, true whether or not the demo shows, and
+   its meta and social description too. The h1 is for screen readers and
+   search, so it is visually hidden. */
 .page-hero {
   padding-top: calc(72px + 20px);
   padding-bottom: 12px;
@@ -83,7 +82,6 @@ a:hover { color: var(--accent-hover); }
 }
 .page-hero .container { position: relative; z-index: 1; }
 .page-hero .lead { max-width: 960px; font-size: 16px; line-height: 1.6; color: var(--text-primary); }
-main:has(#demo[hidden]) .lead-demo, main:has(#demo:not([hidden])) .lead-page { display: none; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ENTRY MOTION */
@@ -127,8 +125,8 @@ main:has(#demo[hidden]) .lead-demo, main:has(#demo:not([hidden])) .lead-page { d
   width: 5px; height: 5px; background: var(--accent);
 }
 
-/* ATTRIBUTION: the corpus licence notice, small print under the rung columns, where the passages appear */
-.methodology-content p.attribution { font-size: 12px; line-height: 1.7; color: var(--text-muted); margin-bottom: 28px; }
+/* ATTRIBUTION: the corpus licence notice, as small as it reads, under the rung columns, where the passages appear */
+.methodology-content p.attribution { font-size: 11px; line-height: 1.6; color: var(--text-muted); margin-bottom: 28px; }
 .attribution a { color: var(--text-secondary); border-bottom: 1px solid var(--border-accent); overflow-wrap: anywhere; }
 /* DEMO: retrieval-demo.js, mounted at #demoMount. One column per rung: four
    across, two below 860px, one below 640px. Ids, titles and passages wrap
@@ -143,7 +141,6 @@ main:has(#demo[hidden]) .lead-demo, main:has(#demo:not([hidden])) .lead-page { d
 #demoMount .demo-status, #demoMount .demo-elapsed { flex: 0 1 auto; }
 #demo #demoAttribution { margin: 12px 0 0; }
 #demoMount p { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
-#demoMount .demo-corpus { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
 .demo-method summary { cursor: pointer; font-size: 12px; line-height: 1.6; color: var(--text-muted); }
 .demo-method summary:hover { color: var(--text-secondary); }
 .demo-ask label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
@@ -166,6 +163,8 @@ main:has(#demo[hidden]) .lead-demo, main:has(#demo:not([hidden])) .lead-page { d
 .demo-service dt { color: var(--text-muted); }
 .demo-service dd { color: var(--text-secondary); overflow-wrap: anywhere; }
 #demoMount .demo-status { color: var(--text-primary); margin-bottom: 0; }
+/* Waiting and returned are announced, not shown: the timer and the columns show them. */
+#demoMount .demo-status:not(.demo-failed) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 #demoMount .demo-elapsed { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
 .demo-rung { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px; overflow-wrap: anywhere; }
@@ -201,22 +200,6 @@ main:has(#demo[hidden]) .lead-demo, main:has(#demo:not([hidden])) .lead-page { d
   .demo-prepared button { padding: 4px 10px; line-height: 1.4; }
 }
 
-/* PIPELINE: one inline SVG. x is in percent and y in px, so the two columns
-   follow the width while the text keeps its size. Lines, arrowheads and the
-   span label draw in currentColor, which forced colours repaint; each box
-   keeps its own fill and text colour. */
-.pipeline { max-width: 560px; }
-.pipeline svg { display: block; width: 100%; height: 370px; font-family: var(--font-mono); font-size: 12px; color: var(--text-muted); }
-.pipeline text { text-anchor: middle; }
-.pipeline .nodes rect { fill: var(--bg-card); stroke: var(--border-accent); }
-.pipeline .nodes text { fill: var(--text-primary); }
-.pipeline .nodes .sub { fill: var(--text-secondary); font-size: 11px; }
-.pipeline .flow, #pipeline-arrow { color: var(--accent); }
-.pipeline line { stroke: currentColor; }
-.pipeline .flow line { stroke-width: 1.5; stroke-linecap: square; }
-.pipeline .spans line { stroke-dasharray: 3 3; }
-.pipeline .spans text, .pipeline marker path { fill: currentColor; }
-.pipeline .spans text { font-size: 11px; }
 
 /* STATE NOTES: results pending, snapshot unreadable */
 .methodology-content p.state-note { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px 20px; }
@@ -267,15 +250,14 @@ main:has(#demo[hidden]) .lead-demo, main:has(#demo:not([hidden])) .lead-page { d
 .table-legend dt::before { content: ''; width: 24px; border-top: 2px solid var(--text-secondary); }
 .table-legend dt.advisory::before { border-top-style: dashed; }
 .table-legend dd { color: var(--text-secondary); }
-/* Under the tables: how to read them. With a snapshot, its limitations and
-   pins follow, then the closed notes. */
-.methodology-content p.table-note { font-size: 13px; margin-bottom: 8px; }
+/* Under the tables, with a snapshot, its limitations, then the closed notes. */
 #results h3, .notes h3 { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 28px 0 10px; }
 #limitations li { font-size: 13px; line-height: 1.7; }
 
-/* NOTES: one closed control under the results, holding everything the reading
-   path leaves out: the method, the two kinds of score, and the demo's notes in
-   full. The demo's notes are held back while the demo is. */
+/* NOTES: one closed control at the foot of the page, holding every sentence
+   besides the one at the top: the method, the two kinds of score, how to read
+   the figures, the pins, and the demo's notes in full. The demo's notes are
+   held back while the demo is. */
 main:has(#demo[hidden]) #demoNotes { display: none; }
 .notes { margin-top: 16px; }
 .notes summary { cursor: pointer; font-size: 13px; color: var(--accent); list-style: none; }
@@ -288,17 +270,6 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
 .notes .table-legend { margin-bottom: 16px; }
 .notes p.attribution { margin-bottom: 0; }
 
-/* CTA BLOCK */
-.cta-block { position: relative; overflow: hidden; margin-top: 80px; padding: 64px; background: linear-gradient(180deg, #0e0e0e, var(--bg-secondary)); border: 1px solid var(--border-accent); text-align: center; }
-.cta-block::before { content: ''; position: absolute; inset: 0; background: radial-gradient(120% 92% at 50% 0%, rgba(220,184,117,0.11), transparent 58%); pointer-events: none; }
-.cta-block > * { position: relative; z-index: 1; }
-.cta-block h2 { font-family: var(--font-display); font-size: clamp(1.55rem, 3.2vw, 2.25rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 28px; }
-.btn-primary { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--bg-primary); background: var(--accent); border: none; padding: 16px 36px; cursor: pointer; letter-spacing: 0.03em; transition: background 0.2s, transform 0.15s; display: inline-block; }
-.btn-primary:hover { background: var(--accent-hover); color: var(--bg-primary); transform: translateY(-2px); box-shadow: 0 8px 24px -10px var(--accent); }
-
-@media (max-width: 640px) {
-  .cta-block { padding: 40px 24px; }
-}
 </style>
 <meta name="author" content="Baseweight">
 <link rel="author" href="/about">
@@ -317,8 +288,7 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
 <section class="page-hero">
   <div class="container">
     <h1 class="visually-hidden">Retrieval</h1>
-    <p class="lead lead-demo meth-anim" style="animation-delay: 0s;">One question, answered several ways side by side.</p>
-    <p class="lead lead-page meth-anim" style="animation-delay: 0s;">AI search over Wikipedia, and how we measure it.</p>
+    <p class="lead meth-anim" style="animation-delay: 0s;">Different RAG setups, compared.</p>
   </div>
 </section>
 
@@ -343,19 +313,14 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
         <div id="resultsMount"></div>
         <p class="state-note" id="resultsFailed" hidden>The results could not be loaded.</p>
 
-        <!-- What the snapshot supplies beside the tables, shown whenever one is committed. -->
+        <!-- The snapshot's limitations, shown whenever one is committed. -->
         <div id="limitations" hidden>
           <h3>Limitations</h3>
           <ul id="limitationsList"></ul>
           <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
         </div>
 
-        <div id="reproduce" hidden>
-          <h3>Reproduce it</h3>
-          <dl class="pins" id="pinsList"></dl>
-        </div>
-
-        <!-- Everything the reading path leaves out, behind one closed control. -->
+        <!-- Every other sentence, behind one closed control at the foot of the page. -->
         <details id="notes" class="notes">
           <summary>How it&rsquo;s measured, and its limits</summary>
           <p>Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
@@ -367,6 +332,12 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
           </dl>
           <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
           <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
+          <p>Each score shows n, the number of questions behind it, and a CI, the range the true score likely sits in.</p>
+
+          <div id="reproduce" hidden>
+            <h3>Reproduce it</h3>
+            <dl class="pins" id="pinsList"></dl>
+          </div>
 
           <!-- Held back while the demo is. retrieval-demo.js adds the limits and privacy notes, a
                copy of the attribution, and the deployed commit and index version. -->
@@ -378,64 +349,8 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
         </details>
       </section>
 
-      <section id="how-its-built">
-        <h2>How it&rsquo;s built</h2>
-        <figure class="pipeline">
-          <svg role="img" aria-labelledby="pipeline-title">
-            <title id="pipeline-title">Ingest, chunk, embed, Postgres with pgvector and BM25, hybrid retrieve, rerank, generate with citations, verify. Every stage sends OpenTelemetry spans to a tracing backend.</title>
-            <defs>
-              <marker id="pipeline-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L8,4 L0,8 z"/></marker>
-              <marker id="pipeline-arrow-span" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0,0 L8,4 L0,8 z"/></marker>
-            </defs>
-            <!-- A tick from every stage to a rail; the rails meet in the bus to the tracing backend. -->
-            <g class="spans">
-              <line x1="1%" y1="28" x2="4%" y2="28"/>
-              <line x1="1%" y1="100" x2="4%" y2="100"/>
-              <line x1="1%" y1="172" x2="4%" y2="172"/>
-              <line x1="1%" y1="244" x2="4%" y2="244"/>
-              <line x1="96%" y1="28" x2="99%" y2="28"/>
-              <line x1="96%" y1="100" x2="99%" y2="100"/>
-              <line x1="96%" y1="172" x2="99%" y2="172"/>
-              <line x1="96%" y1="244" x2="99%" y2="244"/>
-              <line x1="1%" y1="28" x2="1%" y2="296"/>
-              <line x1="99%" y1="28" x2="99%" y2="296"/>
-              <line x1="1%" y1="296" x2="99%" y2="296"/>
-              <line x1="50%" y1="296" x2="50%" y2="325" marker-end="url(#pipeline-arrow-span)"/>
-              <text x="50%" y="288">OpenTelemetry spans</text>
-            </g>
-            <!-- Down each column, with the elbow from Postgres to hybrid retrieval. -->
-            <g class="flow">
-              <line x1="25%" y1="52" x2="25%" y2="75" marker-end="url(#pipeline-arrow)"/>
-              <line x1="25%" y1="124" x2="25%" y2="147" marker-end="url(#pipeline-arrow)"/>
-              <line x1="25%" y1="196" x2="25%" y2="219" marker-end="url(#pipeline-arrow)"/>
-              <line x1="46%" y1="244" x2="50%" y2="244"/>
-              <line x1="50%" y1="244" x2="50%" y2="28"/>
-              <line x1="50%" y1="28" x2="54%" y2="28" marker-end="url(#pipeline-arrow)"/>
-              <line x1="75%" y1="52" x2="75%" y2="75" marker-end="url(#pipeline-arrow)"/>
-              <line x1="75%" y1="124" x2="75%" y2="147" marker-end="url(#pipeline-arrow)"/>
-              <line x1="75%" y1="196" x2="75%" y2="219" marker-end="url(#pipeline-arrow)"/>
-            </g>
-            <g class="nodes">
-              <rect x="4%" y="4" width="42%" height="48"/><text x="25%" y="32">Ingest</text>
-              <rect x="4%" y="76" width="42%" height="48"/><text x="25%" y="104">Chunk</text>
-              <rect x="4%" y="148" width="42%" height="48"/><text x="25%" y="176">Embed</text>
-              <rect x="4%" y="220" width="42%" height="48"/><text x="25%" y="240">Postgres</text><text class="sub" x="25%" y="256">pgvector &middot; BM25</text>
-              <rect x="54%" y="4" width="42%" height="48"/><text x="75%" y="24">Hybrid</text><text x="75%" y="40">retrieve</text>
-              <rect x="54%" y="76" width="42%" height="48"/><text x="75%" y="104">Rerank</text>
-              <rect x="54%" y="148" width="42%" height="48"/><text x="75%" y="168">Generate</text><text x="75%" y="184">with citations</text>
-              <rect x="54%" y="220" width="42%" height="48"/><text x="75%" y="248">Verify</text>
-              <rect x="25%" y="326" width="50%" height="40"/><text x="50%" y="350">Tracing backend</text>
-            </g>
-          </svg>
-        </figure>
-      </section>
 
     </article>
-
-    <div class="cta-block">
-      <h2>Tell us what you&rsquo;re building.</h2>
-      <a href="https://cal.com/baseweight/intro" target="_blank" rel="noopener noreferrer" class="btn-primary">Book a call</a>
-    </div>
   </div>
 </section>
 
