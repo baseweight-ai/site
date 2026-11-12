@@ -172,8 +172,8 @@
   }
 
   // The rung's pipeline, from its `stages` alone: each stage it lists, in its
-  // order, under the name it gives. A stage the rung skips says so in text as
-  // well as in style.
+  // order, under the name it gives. A stage the rung skips says so in text. The
+  // page keeps this list for screen readers and draws the flow below instead.
   function pipeline(stages) {
     const list = el('ol', null, 'demo-stages');
     list.setAttribute('aria-label', 'Pipeline');
@@ -183,6 +183,41 @@
       list.append(stage);
     });
     return list;
+  }
+
+  // The pipeline's shape, which `stages` does not carry: the question goes to
+  // rewrite, then to two searches side by side, meaning (embed, dense) and
+  // keyword (bm25), which fuse joins, then to rerank, generate and verify. The
+  // page holds it for these eight names and draws no flow for a rung whose
+  // stages are named otherwise.
+  const SHAPE = ['rewrite', 'embed', 'dense', 'bm25', 'fuse', 'rerank', 'generate', 'verify'];
+  const shaped = stages => stages.length === SHAPE.length &&
+    SHAPE.every(name => stages.filter(s => s.name === name).length === 1);
+
+  // A rung's stages on that shape: a node per stage, run or skipped, and each
+  // joint gold where the stages at both its ends run. It repeats the column's
+  // list, so screen readers skip it.
+  function flow(stages) {
+    const runs = name => stages.find(s => s.name === name).runs;
+    const node = name => el('span', name, `demo-node ${runs(name) ? 'demo-run' : 'demo-skipped'}`);
+    const joint = (lit, bare) => el('span', null, ['demo-joint', lit && 'demo-lit', bare && 'demo-bare'].filter(Boolean).join(' '));
+    const link = (from, to, bare) => joint(runs(from) && runs(to), bare);
+    const lane = (...parts) => {
+      const row = el('div', null, 'demo-lane');
+      row.append(...parts);
+      return row;
+    };
+    const splits = runs('rewrite') && (runs('embed') || runs('bm25'));
+    const joins = runs('fuse') && (runs('dense') || runs('bm25'));
+    const fork = el('div', null, ['demo-fork', splits && 'demo-splits', joins && 'demo-joins'].filter(Boolean).join(' '));
+    fork.append(
+      lane(link('rewrite', 'embed'), node('embed'), link('embed', 'dense'), node('dense'), link('dense', 'fuse', true)),
+      lane(link('rewrite', 'bm25'), node('bm25'), link('bm25', 'fuse', true)));
+    const graph = el('div', null, 'demo-graph');
+    graph.append(node('rewrite'), joint(splits, true), fork, joint(joins), node('fuse'),
+      link('fuse', 'rerank'), node('rerank'), link('rerank', 'generate'), node('generate'),
+      link('generate', 'verify'), node('verify'));
+    return graph;
   }
 
   // Each title once, in the order it first ranked, with the number of passages
@@ -219,6 +254,12 @@
     return [answer(rung.answer, panels), ...(panels.size ? [cites] : [])];
   }
 
+  // Each answered column's stages, for the flow drawn under its row.
+  const PIPELINES = new WeakMap();
+  // The full rung's label opens "The served pipeline", which every rung is, so
+  // the page names that rung by what it does.
+  const HEADINGS = new Map([['full', 'Keyword and meaning search, split and reranked']]);
+
   // A rung whose `error` is set failed alone: its message shows where its
   // answer would, beside the rungs that answered. The service writes a label as
   // "what it does: how". The first part heads the column, and the pipeline
@@ -227,12 +268,14 @@
   // too. Latency is a live reading that varies by seconds, so one decimal
   // states all it can support.
   function answered(rung) {
-    return column(
-      el('h2', rung.label.split(':')[0]),
+    const col = column(
+      el('h2', HEADINGS.get(rung.name) ?? rung.label.split(':')[0]),
       ...(rung.error ? [el('p', `Failed: ${rung.error.message}`, 'demo-error')] : cited(rung)),
       ...(rung.stages?.length ? [pipeline(rung.stages)] : []),
       ...(rung.passage_titles.length ? [passages(rung.passage_titles)] : []),
       el('p', `Latency ${(rung.latency_ms / 1000).toFixed(1)} s`, 'demo-latency'));
+    if (rung.stages && shaped(rung.stages)) PIPELINES.set(col, rung.stages);
+    return col;
   }
 
   // `attribution` is the page's licence notice, replaced by the live one.
@@ -244,10 +287,12 @@
     box.type = 'text';
     box.maxLength = 2000;
     box.autocomplete = 'off';
-    const label = el('label', 'Question');
+    box.placeholder = 'Ask a question';
+    const label = el('label', 'Question', 'visually-hidden');
     label.htmlFor = box.id;
-    const go = el('button', 'Compare', 'demo-go');
+    const go = el('button', '↑', 'demo-go');
     go.type = 'button';
+    go.setAttribute('aria-label', 'Compare');
     const row = el('div', null, 'demo-row');
     row.append(box, go);
     const list = el('ul', null, 'demo-prepared');
@@ -313,6 +358,38 @@
     }
     controls.addEventListener('focusin', prepare);
 
+    // Under the row of the column that the pointer, focus or a tap is on, that
+    // column's pipeline as a flow, with a notch under the column. A column
+    // with no stages draws none.
+    const diagram = el('div', null, 'demo-flow');
+    diagram.setAttribute('aria-hidden', 'true');
+    let active = null;
+    function draw(col) {
+      if (col === active) return;
+      active?.classList.remove('demo-active');
+      active = PIPELINES.has(col) ? col : null;
+      diagram.remove();
+      if (!active) return;
+      active.classList.add('demo-active');
+      diagram.replaceChildren(flow(PIPELINES.get(active)));
+      active.after(diagram);
+      const c = active.getBoundingClientRect();
+      diagram.style.setProperty('--notch', `${c.left + c.width / 2 - diagram.getBoundingClientRect().left}px`);
+    }
+    const point = e => {
+      const col = e.target.closest('.demo-rung');
+      if (col) draw(col);
+    };
+    rungs.addEventListener('pointerover', point);
+    rungs.addEventListener('focusin', point);
+    // A tap leaves the flow up; a mouse leaving takes it down unless focus stays.
+    rungs.addEventListener('pointerleave', e => {
+      if (e.pointerType !== 'touch' && !rungs.contains(document.activeElement)) draw(null);
+    });
+    rungs.addEventListener('focusout', e => {
+      if (!rungs.contains(e.relatedTarget) && !rungs.matches(':hover')) draw(null);
+    });
+
     let busy = false;
     async function send(text) {
       const query = text.trim();
@@ -325,11 +402,14 @@
       tick();
       elapsed.hidden = false;
       const clock = setInterval(tick, 1000);
+      // The page's <style> makes the wait show while the section is demo-waiting.
+      section.classList.add('demo-waiting');
       status.textContent = 'Waiting for the service.';
       // Waiting and returned are announced only; a failure is also shown.
       status.classList.remove('demo-failed');
       // The labels come with the answers, so nothing heads a column until then.
-      rungs.replaceChildren(...RUNGS.map(() => column(el('p', 'Outstanding', 'demo-pending'))));
+      draw(null);
+      rungs.replaceChildren(...RUNGS.map(() => column(el('p', 'Waiting', 'demo-pending'))));
       section.classList.remove('demo-has-passages');
       try {
         await prepare();
@@ -351,6 +431,7 @@
       } finally {
         clearInterval(clock);
         tick();
+        section.classList.remove('demo-waiting');
         busy = false;
         [go, ...asks].forEach(b => b.removeAttribute('aria-disabled'));
         box.readOnly = false;

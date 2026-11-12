@@ -59,6 +59,13 @@ body {
 
 ::selection { background: var(--accent); color: var(--bg-primary); }
 
+/* The benchmark page's grain, over everything, catching no pointer. */
+body::after {
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
 a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
 a:hover { color: var(--accent-hover); }
 
@@ -67,21 +74,29 @@ a:hover { color: var(--accent-hover); }
 
 /* PAGE HERO: the page's one sentence, true whether or not the demo shows, and
    its meta and social description too. The h1 is for screen readers and
-   search, so it is visually hidden. */
+   search, so it is visually hidden. The glows fade out behind the demo rather
+   than end at an edge. */
 .page-hero {
-  padding-top: calc(72px + 20px);
-  padding-bottom: 12px;
+  padding-top: calc(72px + 32px);
+  padding-bottom: 24px;
   position: relative;
-  overflow: hidden;
+  overflow-x: clip;
+  text-align: center;
 }
 .page-hero::before {
   content: ''; position: absolute; top: -30%; left: -6%;
   width: 56%; height: 160%;
   background: radial-gradient(ellipse at center, rgba(220,184,117,0.10), transparent 70%);
-  pointer-events: none; z-index: 0;
+  pointer-events: none; z-index: -1;
+}
+.page-hero::after {
+  content: ''; position: absolute; top: -22%; right: -14%;
+  width: 54%; height: 155%;
+  background: radial-gradient(ellipse at center, rgba(106,166,234,0.10), transparent 70%);
+  pointer-events: none; z-index: -1;
 }
 .page-hero .container { position: relative; z-index: 1; }
-.page-hero .lead { max-width: 960px; font-size: 16px; line-height: 1.6; color: var(--text-primary); }
+.page-hero .lead { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; line-height: 1.15; color: var(--text-primary); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* ENTRY MOTION */
@@ -96,10 +111,11 @@ a:hover { color: var(--accent-hover); }
   font-size: clamp(1.3rem, 2.5vw, 1.7rem);
   font-weight: 700; letter-spacing: -0.02em; line-height: 1.2;
   color: var(--text-primary);
-  margin-top: 56px; margin-bottom: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
+  margin-top: 64px; margin-bottom: 26px;
 }
+/* The benchmark's section header: the heading, then a rule fading right. */
+#results > h2 { display: flex; align-items: center; gap: 16px; }
+#results > h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-accent), transparent); }
 
 .methodology-content :is(p, ul, dl) { max-width: 740px; }
 .methodology-content p {
@@ -135,25 +151,30 @@ a:hover { color: var(--accent-hover); }
 /* The demo opens the page, and its answers are the argument: they carry the
    largest, brightest text, and what can wait sits behind a summary. #demoMount's
    own box drops out of the flow, so the status and the elapsed time share a row. */
-#demo:not([hidden]) { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 12px; }
+#demo:not([hidden]) { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; column-gap: 12px; }
 #demoMount { display: contents; }
 #demo > *, #demoMount > * { flex: 0 0 100%; min-width: 0; }
-#demoMount .demo-status, #demoMount .demo-elapsed { flex: 0 1 auto; }
+#demoMount .demo-status, #demoMount .demo-elapsed { flex: 0 1 auto; margin: 14px 0 0; }
 #demo #demoAttribution { margin: 12px 0 0; }
 #demoMount p { font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
 .demo-ranks summary { cursor: pointer; font-size: 12px; line-height: 1.6; color: var(--text-muted); }
 .demo-ranks summary:hover { color: var(--text-secondary); }
-.demo-ask label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
-.demo-row { display: flex; gap: 8px; max-width: 740px; }
-.demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 14px; color: var(--text-primary); background: var(--bg-card); border: 1px solid var(--border-accent); padding: 10px 14px; }
+/* The question box, centred, as a chat box: a rounded field holding its send
+   button, the prepared questions under it. The send button is filled light,
+   so the nav keeps the only gold button in view. */
+.demo-row { max-width: 740px; margin: 0 auto; display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border-accent); border-radius: 24px; padding: 6px 6px 6px 20px; box-shadow: 0 12px 32px -16px #000; transition: border-color 0.2s, box-shadow 0.2s; }
+.demo-row:focus-within { border-color: rgba(220,184,117,0.55); box-shadow: 0 0 0 3px rgba(220,184,117,0.12); }
+.demo-row input { flex: 1; min-width: 0; font: inherit; font-size: 15px; color: var(--text-primary); background: transparent; border: 0; padding: 8px 0; }
+.demo-row input:focus-visible { outline: none; }
+.demo-row input::placeholder { color: var(--text-muted); opacity: 1; }
 .demo-row input:read-only { color: var(--text-secondary); }
-.demo-go { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent); background: transparent; border: 1px solid var(--accent); padding: 10px 20px; cursor: pointer; }
-.demo-go:hover { color: var(--accent-hover); border-color: var(--accent-hover); }
+.demo-go { flex: none; width: 36px; height: 36px; border: 0; border-radius: 50%; font: inherit; font-size: 17px; font-weight: 600; line-height: 1; color: var(--bg-primary); background: var(--text-primary); cursor: pointer; transition: background 0.2s; }
+.demo-go:hover { background: #fff; }
 /* The prepared questions sit under the box with no label: a click asks one. */
-#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 12px; }
+#demoMount ul.demo-prepared { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 12px auto 0; }
 #demoMount ul.demo-prepared li { padding: 0; margin: 0; }
 #demoMount ul.demo-prepared li::before { content: none; }
-.demo-prepared button { font: inherit; font-size: 12px; line-height: 1.5; text-align: left; color: var(--text-secondary); background: transparent; border: 1px solid var(--border-accent); padding: 6px 12px; cursor: pointer; }
+.demo-prepared button { font: inherit; font-size: 12px; line-height: 1.5; text-align: left; color: var(--text-secondary); background: transparent; border: 1px solid var(--border-accent); border-radius: 16px; padding: 6px 14px; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
 .demo-prepared button:hover { color: var(--text-primary); border-color: var(--text-secondary); }
 #demoMount [aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
 /* Under the columns: the attribution, shown only while a passage is on screen. */
@@ -166,12 +187,60 @@ a:hover { color: var(--accent-hover); }
 /* Waiting and returned are announced, not shown: the timer and the columns show them. */
 #demoMount .demo-status:not(.demo-failed) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 #demoMount .demo-elapsed { font-size: 12px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
-.demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
-.demo-rung { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px; overflow-wrap: anywhere; }
+/* While a comparison is out, the elapsed time is a gold-edged pill with a
+   pulsing dot and the seconds large as they count, and each column waits with
+   a shimmer. */
+.demo-waiting .demo-elapsed:not([hidden]) { display: flex; align-items: center; gap: 10px; padding: 4px 16px; border: 1px solid rgba(220,184,117,0.45); border-radius: 999px; background: rgba(220,184,117,0.07); font-size: 13px; color: var(--text-primary); }
+.demo-waiting .demo-elapsed::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: demoPulse 1s ease-in-out infinite; }
+.demo-waiting .demo-elapsed [role="timer"] { font-size: 20px; font-weight: 600; color: var(--accent); }
+@keyframes demoPulse { 50% { opacity: 0.2; transform: scale(0.6); } }
+#demoMount .demo-pending::after { content: ''; display: block; height: 50px; margin-top: 10px; background: linear-gradient(90deg, transparent, rgba(220,184,117,0.12), transparent) -100% 0 / 50% 100% no-repeat, repeating-linear-gradient(rgba(232,228,222,0.05) 0 10px, transparent 10px 20px); animation: demoShimmer 1.5s linear infinite; }
+@keyframes demoShimmer { to { background-position: 200% 0, 0 0; } }
+.demo-rungs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-flow: dense; gap: 16px; margin-top: 16px; }
+/* The benchmark's card: a dark gradient, a gold tab on the top edge. The column under the flow is edged gold. */
+.demo-rung { position: relative; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border: 1px solid var(--border-accent); padding: 16px; overflow-wrap: anywhere; transition: border-color 0.2s; }
+.demo-rung::before { content: ''; position: absolute; top: -1px; left: 16px; width: 42px; height: 2px; background: var(--accent); }
+.demo-rung.demo-active { border-color: rgba(220,184,117,0.55); }
 /* The rung headings are h2s under the page's h1, so the article's section h2 rules are set back here. */
-.methodology-content .demo-rung h2 { font-family: var(--font-mono); font-size: 13px; font-weight: 600; letter-spacing: 0; line-height: 1.4; color: var(--accent); margin: 0 0 10px; padding: 0; border: 0; }
+.methodology-content .demo-rung h2 { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.4; color: var(--accent); margin: 0 0 10px; padding: 0; border: 0; }
 #demoMount .demo-answer { font-size: 16px; color: var(--text-primary); margin-bottom: 12px; }
 #demoMount .demo-pending { color: var(--text-muted); }
+/* The flow: the pipeline of the column under the pointer, focus or a tap, a
+   row wide under that column's row, its notch under the column. The two
+   searches sit side by side between the fork after rewrite and the join into
+   fuse; across when the flow is wide enough, down when it is not. A stage that
+   runs is gold-edged; a skipped one is dashed, muted and struck through, so
+   the two differ in more than colour. A joint is gold where both its ends run. */
+.demo-flow { grid-column: 1 / -1; position: relative; container-type: inline-size; padding: 16px 20px; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border: 1px solid rgba(220,184,117,0.55); animation: demoFlowIn 0.2s ease-out; }
+.demo-flow::before { content: ''; position: absolute; top: -7px; left: var(--notch, 50%); width: 12px; height: 12px; background: var(--bg-card); border: solid rgba(220,184,117,0.55); border-width: 1px 0 0 1px; transform: translateX(-50%) rotate(45deg); }
+.demo-graph { --joint: 16px; display: flex; align-items: center; justify-content: center; font-size: 12px; line-height: 1.4; }
+.demo-node { display: flex; align-items: center; height: 30px; padding: 0 10px; white-space: nowrap; border: 1px solid var(--accent); background: rgba(220,184,117,0.08); color: var(--text-primary); }
+.demo-node.demo-skipped { border-style: dashed; border-color: var(--text-muted); background: none; color: var(--text-muted); text-decoration: line-through; }
+.demo-joint { position: relative; flex: none; width: var(--joint); height: 1px; color: var(--text-muted); background: currentColor; }
+.demo-joint::after { content: ''; position: absolute; right: 0; top: -3px; border: solid transparent; border-width: 3.5px 0 3.5px 5px; border-left-color: currentColor; }
+.demo-joint.demo-bare::after { content: none; }
+.demo-joint.demo-lit { color: var(--accent); }
+.demo-fork { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 0 var(--joint); }
+.demo-fork::before, .demo-fork::after { content: ''; position: absolute; top: 15px; bottom: 15px; border-left: 1px solid var(--text-muted); }
+.demo-fork::before { left: 0; }
+.demo-fork::after { right: 0; }
+.demo-fork.demo-splits::before, .demo-fork.demo-joins::after { border-color: var(--accent); }
+.demo-lane { display: flex; align-items: center; }
+.demo-lane > .demo-joint:first-child { margin-left: calc(-1 * var(--joint)); }
+.demo-lane > .demo-joint:last-child { flex: 1; min-width: var(--joint); margin-right: calc(-1 * var(--joint)); }
+@container (max-width: 640px) {
+  .demo-graph { flex-direction: column; }
+  .demo-joint { width: 1px; height: var(--joint); }
+  .demo-joint::after { top: auto; right: auto; bottom: 0; left: -3px; border-width: 5px 3.5px 0; border-color: currentColor transparent transparent; }
+  .demo-fork { flex-direction: row; gap: 0; padding: var(--joint) 0; width: min(100%, 300px); }
+  .demo-fork::before, .demo-fork::after { left: 25%; right: 25%; border-left: 0; border-top: 1px solid var(--text-muted); }
+  .demo-fork::before { top: 0; bottom: auto; }
+  .demo-fork::after { top: auto; bottom: 0; }
+  .demo-lane { flex: 1 1 0; flex-direction: column; }
+  .demo-lane > .demo-joint:first-child { margin: calc(-1 * var(--joint)) 0 0; }
+  .demo-lane > .demo-joint:last-child { min-width: 1px; min-height: var(--joint); margin: 0 0 calc(-1 * var(--joint)); }
+}
+@keyframes demoFlowIn { from { opacity: 0; transform: translateY(-4px); } }
 #demoMount .demo-error { color: var(--text-primary); border-left: 2px solid var(--text-secondary); padding-left: 10px; }
 .demo-marker { font: inherit; color: var(--accent); background: none; border: none; padding: 0 1px; cursor: pointer; }
 .demo-cites, .demo-passages ol { list-style: none; margin: 0 0 12px; padding: 0; font-size: 12px; line-height: 1.6; }
@@ -191,14 +260,12 @@ a:hover { color: var(--accent-hover); }
 #demoMount .demo-latency { font-size: 12px; color: var(--text-muted); margin: 12px 0 0; }
 .demo-ranks { margin: -4px 0 12px; font-size: 12px; line-height: 1.6; color: var(--text-secondary); }
 .demo-passages .demo-ranks ol { list-style: decimal; padding-left: 3ch; margin: 6px 0 0; }
-/* Each rung's pipeline, from its stages, under its answer. A skipped stage is
-   dashed, struck through and muted, so run and skipped differ in more than colour. */
-.demo-stages { display: flex; flex-wrap: wrap; gap: 3px; list-style: none; margin: 0 0 12px; padding: 0; font-size: 11px; line-height: 1.4; }
-.demo-stages li { padding: 0 4px; border: 1px solid var(--text-secondary); color: var(--text-primary); }
-.demo-stages li.demo-skipped { border-style: dashed; border-color: var(--border-accent); color: var(--text-muted); text-decoration: line-through; }
+/* Each column keeps its pipeline as a list for screen readers, clipped to a
+   pixel and wrapping, so a long stage name stays in the column; the flow under
+   its row draws it. */
+.demo-stages { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 @media (max-width: 860px) { .demo-rungs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) {
-  .page-hero .lead { font-size: 15px; }
   .demo-rungs { grid-template-columns: minmax(0, 1fr); }
   #demoMount ul.demo-prepared { gap: 6px; }
   .demo-prepared button { padding: 4px 10px; line-height: 1.4; }
@@ -206,7 +273,8 @@ a:hover { color: var(--accent-hover); }
 
 
 /* STATE NOTES: results pending, snapshot unreadable */
-.methodology-content p.state-note { background: var(--bg-card); border: 1px solid var(--border-accent); padding: 16px 20px; }
+.methodology-content p.state-note { position: relative; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border: 1px solid var(--border-accent); padding: 16px 20px; }
+.methodology-content p.state-note::before { content: ''; position: absolute; top: -1px; left: 22px; width: 42px; height: 2px; background: var(--accent); }
 
 /* PINNED REVISIONS, filled from the snapshot */
 .pins { display: grid; grid-template-columns: max-content 1fr; gap: 8px 24px; font-size: 13px; line-height: 1.6; }
@@ -222,6 +290,8 @@ a:hover { color: var(--accent-hover); }
   border-collapse: collapse;
   font-size: 13px;
   min-width: 500px;
+  border: 1px solid var(--border-accent);
+  background: linear-gradient(180deg, rgba(255,255,255,0.014), transparent 38%);
 }
 /* The caption says what its table's scores mean, so it wraps inside the column
    instead of scrolling out of view with a table wider than a phone. */
