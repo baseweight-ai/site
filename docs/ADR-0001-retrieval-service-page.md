@@ -57,13 +57,19 @@ shows them. Pass 3 fills section 3 and shows its limitations.
    - A labelled `<input>` and a `<button>`; a click handler submits, and script handles Enter.
    - One column per rung, in the order the response lists them
      (`COMPARE_RUNGS`: `closed_book`, `bm25`, `hybrid`, `full`): four across, two below 860px,
-     one below 640px. Each column's `h2` is the first part of its rung's label, above its answer, the citations its `[cN]`
-     markers open (each to its passage, the service's `supported` flag and its title linked to
-     its `url`, a passage past eight rendered lines cut, with a button that opens the rest), each
-     passage title once with its count, by first rank, its latency in seconds to one decimal, and a
-     "How this works" control (its `name`, whole `label` and titles by rank), or
-     that rung's own error. Each column is to show its own pipeline; until it does, no diagram
-     shows. Rungs carry no `citation_supported_ratio`, so each citation's
+     one below 640px. Each column's `h2` is the first part of its rung's label, above its answer
+     or that rung's own error, the citations its `[cN]` markers open (each to its passage, the
+     service's `supported` flag and its title linked to its `url`, a passage past eight rendered
+     lines cut, with a button that opens the rest), its pipeline, each passage title once with
+     its count, by first rank, with a "By rank" control holding the titles by rank, repeats
+     included, and its latency in seconds to one decimal.
+   - Each column's pipeline is drawn from its rung's `stages` alone (brief §3): each stage it
+     lists, in that order and under that name, a skipped stage dashed, struck through and named
+     skipped in its accessible text. A rung without the field shows no pipeline; a malformed one
+     makes the comparison unavailable. A failed rung shows its pipeline, since the field
+     describes the rung, not one run. The pipeline shows the label's "how", so neither the rest
+     of the label nor the rung's `name` shows. No global diagram.
+   - Rungs carry no `citation_supported_ratio`, so each citation's
      `supported` flag shows instead. No charged amount shows until display precision has a
      rule (Risk 12).
    - Answer, snippet and title strings enter the DOM as text (`textContent` and

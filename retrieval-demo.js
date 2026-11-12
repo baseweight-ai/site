@@ -59,11 +59,14 @@
     }
   }
 
-  // Checks only what this component renders.
+  // Checks only what this component renders. A rung may leave `stages` out,
+  // and then shows no pipeline.
   function readable(result) {
     return Array.isArray(result?.rungs) && result.rungs.every(r =>
       isText(r.name) && isText(r.label) && Number.isInteger(r.latency_ms) &&
       Array.isArray(r.passage_titles) && r.passage_titles.every(isText) &&
+      (r.stages === undefined || Array.isArray(r.stages) &&
+        r.stages.every(s => isText(s?.name) && typeof s.runs === 'boolean')) &&
       (r.error ? isText(r.error.message) : isText(r.answer) && Array.isArray(r.citations) &&
         r.citations.every(c => [c.marker, c.page_title, c.url, c.snippet].every(isText) &&
           typeof c.supported === 'boolean')));
@@ -168,8 +171,23 @@
     return col;
   }
 
+  // The rung's pipeline, from its `stages` alone: each stage it lists, in its
+  // order, under the name it gives. A stage the rung skips says so in text as
+  // well as in style.
+  function pipeline(stages) {
+    const list = el('ol', null, 'demo-stages');
+    list.setAttribute('aria-label', 'Pipeline');
+    stages.forEach(({ name, runs }) => {
+      const stage = el('li', name, runs ? null : 'demo-skipped');
+      if (!runs) stage.append(el('span', ', skipped', 'visually-hidden'));
+      list.append(stage);
+    });
+    return list;
+  }
+
   // Each title once, in the order it first ranked, with the number of passages
-  // retrieved from it.
+  // retrieved from it. The ranking itself, repeats included, which the counts
+  // leave out, is one control away.
   function passages(titles) {
     const wrap = el('div', null, 'demo-passages');
     wrap.append(el('h3', 'Passages retrieved'));
@@ -181,24 +199,12 @@
       row.append(el('span', `×${count}`, 'demo-count'));
       list.append(row);
     });
-    wrap.append(list);
+    const ranks = el('details', null, 'demo-ranks');
+    const ranked = el('ol');
+    titles.forEach(title => ranked.append(el('li', title)));
+    ranks.append(el('summary', 'By rank'), ranked);
+    wrap.append(list, ranks);
     return wrap;
-  }
-
-  // What a column keeps out of the reading path: the rung's technical name, its
-  // label's whole sentence, and the service's ranking, repeats included, which
-  // the counts leave out.
-  function method(rung) {
-    const panel = el('details', null, 'demo-method');
-    panel.append(el('summary', 'How this works'), el('p', `Technical name: ${rung.name}`, 'demo-name'), el('p', rung.label));
-    if (rung.passage_titles.length) {
-      const ranked = el('ol');
-      rung.passage_titles.forEach(title => ranked.append(el('li', title)));
-      panel.append(el('h3', 'Passages by rank'), ranked);
-    } else {
-      panel.append(el('p', 'No passages retrieved.'));
-    }
-    return panel;
   }
 
   // The answer and the citations it opens.
@@ -215,15 +221,18 @@
 
   // A rung whose `error` is set failed alone: its message shows where its
   // answer would, beside the rungs that answered. The service writes a label as
-  // "what it does: how", and the first part heads the column. Latency is a live
-  // reading that varies by seconds, so one decimal states all it can support.
+  // "what it does: how". The first part heads the column, and the pipeline
+  // under the answer shows the how, ahead of what the search found. `stages`
+  // describes the rung, not one run of it, so a failed rung shows its pipeline
+  // too. Latency is a live reading that varies by seconds, so one decimal
+  // states all it can support.
   function answered(rung) {
     return column(
       el('h2', rung.label.split(':')[0]),
       ...(rung.error ? [el('p', `Failed: ${rung.error.message}`, 'demo-error')] : cited(rung)),
+      ...(rung.stages?.length ? [pipeline(rung.stages)] : []),
       ...(rung.passage_titles.length ? [passages(rung.passage_titles)] : []),
-      el('p', `Latency ${(rung.latency_ms / 1000).toFixed(1)} s`, 'demo-latency'),
-      method(rung));
+      el('p', `Latency ${(rung.latency_ms / 1000).toFixed(1)} s`, 'demo-latency'));
   }
 
   // `attribution` is the page's licence notice, replaced by the live one.
