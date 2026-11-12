@@ -3,16 +3,14 @@
 // advisory table by each row's own `gated` field. Every figure is the
 // snapshot's own, unrounded, inserted as text, and shown only beside its n and
 // interval. With no snapshot it renders the pending state. Each table's
-// caption says in plain words what its category means, so the tables need no
-// legend; the page's notes define the two categories.
+// caption names its category; the page's notes define both, and say how to
+// read the figures.
 (function () {
   const CATEGORIES = [
-    { gated: true, kind: 'gated', caption: 'A change that makes these worse is blocked' },
-    { gated: false, kind: 'advisory', caption: 'A change that makes these worse can still go ahead' },
+    { gated: true, kind: 'gated', caption: 'Gated' },
+    { gated: false, kind: 'advisory', caption: 'Advisory' },
   ];
   const LABELS = ['Metric', 'Setup', 'Question set', 'Subset'];
-  // What a visitor needs to read the figures.
-  const READING = 'Each score shows n, the number of questions behind it, and a CI, the range the true score likely sits in.';
 
   function el(tag, text, className) {
     const node = document.createElement(tag);
@@ -100,7 +98,7 @@
   // so a render that stops leaves it as it was.
   window.renderResults = function (mount, snapshot) {
     if (!snapshot) {
-      mount.replaceChildren(el('p', 'Measurement pending.', 'state-note'));
+      mount.replaceChildren(el('p', 'Measurement pending', 'state-note'));
       return;
     }
     const ci = ciLabel(snapshot.confidence_level);
@@ -109,6 +107,6 @@
       .map(c => [c, snapshot.metrics.filter(m => (m.gated === true) === c.gated)])
       .filter(([, rows]) => rows.length)
       .map(([c, rows]) => table(c, rows, ci));
-    mount.replaceChildren(...tables, el('p', READING, 'table-note'));
+    mount.replaceChildren(...tables);
   };
 })();

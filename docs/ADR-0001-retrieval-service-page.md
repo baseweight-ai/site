@@ -39,21 +39,18 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 
 ### Sections, in this order
 
-The reader is a prospective client outside the field who reads almost nothing. One sentence and
-the demo lead, then the results with their heading alone above the tables, the build and the
-call. A sentence stays in that path only if a visitor needs it to use the demo or to read the
-table. Everything else sits in one place, the notes, one closed control at the end of the
-results; the call ends the page. Pass 1 ships sections 1, 3 (pending), 4 and 5, with 2, the
-sentence that describes it and the notes' demo part hidden. Pass 2 shows them. Pass 3 fills
-section 3 and shows its limitations and pins.
+The reader is a prospective client outside the field who reads almost nothing. The page is
+one sentence at the top, the question box with its examples, the comparison columns, and the
+results at the bottom, and nothing else: no global diagram, no closing CTA (the nav's stays),
+and no sentence beyond the top one. Two things show besides, both required: the attribution
+where passages appear, and the snapshot's limitations. Failure states show when something
+fails. Every other sentence and qualification sits in the notes, one closed control at the
+foot. Pass 1 ships sections 1 and 3 (pending), with 2 and the notes' demo part hidden. Pass 2
+shows them. Pass 3 fills section 3 and shows its limitations.
 
-1. **Hero**: one sentence saying what this is, and nothing else visible. With the demo, one
-   question answered several ways side by side. While the demo is hidden, that sentence is too,
-   and one that holds in both states, AI search over Wikipedia and how we measure it, takes its
-   place; the meta and social descriptions carry that one, since they cannot follow the flag.
-   The h1 "Retrieval" is there for screen readers and search, visually hidden. Mechanism sits
-   with the diagram. A corpus line of three words, so a visitor who asks about this week's news
-   already knows why nothing comes back, opens the demo.
+1. **Hero**: one sentence saying the page compares different RAG setups, and nothing else
+   visible. It holds whether or not the demo shows, so the meta and social descriptions carry
+   it too. The h1 "Retrieval" is there for screen readers and search, visually hidden.
 2. **Demo**, directly under the sentence with no heading of its own, on `POST /v1/compare`. At
    390px and at 1280px wide, the question box and at least one answer show before any
    scrolling.
@@ -65,7 +62,8 @@ section 3 and shows its limitations and pins.
      its `url`, a passage past eight rendered lines cut, with a button that opens the rest), each
      passage title once with its count, by first rank, its latency in seconds to one decimal, and a
      "How this works" control (its `name`, whole `label` and titles by rank), or
-     that rung's own error. Rungs carry no `citation_supported_ratio`, so each citation's
+     that rung's own error. Each column is to show its own pipeline; until it does, no diagram
+     shows. Rungs carry no `citation_supported_ratio`, so each citation's
      `supported` flag shows instead. No charged amount shows until display precision has a
      rule (Risk 12).
    - Answer, snippet and title strings enter the DOM as text (`textContent` and
@@ -83,48 +81,46 @@ section 3 and shows its limitations and pins.
      reports the compare limit. Comparison answers carry no `index_version`, so the deployed
      commit and index version come from `/v1/health`; each rung's latency comes from the answer.
    - The attribution ships with the demo, since the page shows no corpus text until the demo
-     renders a passage. `#demoAttribution` sits directly under the rung columns, where the
+     renders a passage. `#demoAttribution`, in the smallest type the page sets, sits directly
+     under the rung columns, where the
      passages appear, the last thing in the section. It holds the deployed `attribution`
      verbatim as of 2026-11-01 (brief §3) and shows only while a passage is on screen, as a
      retrieved title or a citation. The demo writes a copy into the notes. Once `GET /v1/meta`
      answers, the demo replaces both texts with the response's `attribution`, before any rung
      output.
    - Under the box, the prepared questions, with no label or control, staying while answers
-     show. Nothing about privacy sits in the demo: the footer links the policy, which says where
-     a question goes. The demo's notes are in the notes, in full: the corpus boundary, the anecdote, the
+     show. Nothing about the corpus or privacy sits in the demo: the footer links the policy,
+     which says where a question goes. The demo's notes are in the notes, in full: the corpus
+     boundary, the anecdote, the
      limits (read-only, rate-limited, a daily budget), what a question sends, and the deployed
      commit and index version from `/v1/health`.
-   - One polite live region announces state changes.
+   - One polite live region announces state changes. Waiting and returned are announced, not
+     shown, since the elapsed time and the columns show them; a failure is also shown.
 3. **Results**:
    - Source: `data/retrieval-service/results.json`, the service's `results/latest.json` copied
      verbatim by a human, read with a same-origin `fetch`.
    - States: "measurement pending" when the fetch returns 404; failure when the fetch, the
      parse or the schema check fails in any other way; figures when the snapshot is valid.
      Figures enter the page only through this script.
+   - The pending state is the label "Measurement pending" in the tables' place.
    - Figures: a stamp from `generated_at` and `git_sha` at the section top; metric rows split
-     on `gated` into two tables, each with a `<caption>` saying in plain words what its
-     category means ("A change that makes these worse is blocked", "A change that makes these
-     worse can still go ahead"), ruled solid for gated and dashed for advisory, so the tables
-     need no legend; per row `name`, `config`, `tier`, `slice`, `n`, `value`, `ci_low` to
-     `ci_high`, and the delta with its bounds where set, under the headers Metric, Setup,
-     Question set, Subset, n, Score, CI, Change from baseline and Change CI; one sentence under
-     the tables saying what `n` and a CI are; an operational line (`p50_latency_ms`,
+     on `gated` into two tables, each with a `<caption>` naming its category, "Gated" or
+     "Advisory", the notes' terms, ruled solid for gated and dashed for advisory; per row
+     `name`, `config`, `tier`, `slice`, `n`, `value`, `ci_low` to `ci_high`, and the delta with
+     its bounds where set, under the headers Metric, Setup, Question set, Subset, n, Score, CI,
+     Change from baseline and Change CI; an operational line (`p50_latency_ms`,
      `p95_latency_ms`, `cost_usd_total`).
-   - With a snapshot, under the tables: `limitations` as a list, every entry verbatim, then a
-     provenance line from `dataset`, `system` and `judge`, both shown without opening anything.
-   - Last in the section, in every state, the notes: one `<details>`, closed, its summary "How
-     it's measured, and its limits". Inside: gold ids taken from the corpus's provenance data;
-     the gated and the advisory category, each defined in one sentence, and which one gates CI;
-     the clustered, paired bootstrap, clustered by source page; the demo's notes, held back while
-     the demo is. Mechanism only: every figure, `n`, metric name, model name and corpus name on
+   - With a snapshot, under the tables: `limitations` as a list, every entry verbatim, shown
+     without opening anything.
+   - Last in the section and on the page, in every state, the notes: one `<details>`, closed,
+     its summary "How it's measured, and its limits". Inside: gold ids taken from the corpus's
+     provenance data; the gated and the advisory category, each defined in one sentence, and
+     which one gates CI; the clustered, paired bootstrap, clustered by source page; what `n` and
+     a CI are; a provenance line from `dataset`, `system` and `judge`; the demo's notes, held
+     back while the demo is. Mechanism only: every figure, `n`, metric name, model name and corpus name on
      the page renders from the snapshot or a live response.
    - The page relates the demo's index to the measured index only after the handoff confirms
      they match (brief §5).
-4. **How it's built**: the pipeline diagram, one inline SVG whose title carries the whole
-   pipeline as its text alternative.
-5. **Closing CTA**: `.cta-block` with a `.btn-primary` "Book a call" to
-   `https://cal.com/baseweight/intro`, as at `benchmark.html:398-401`. It is the body's only
-   CTA, and the page ends on it.
 
 ### Copy
 
@@ -160,8 +156,8 @@ section 3 and shows its limitations and pins.
   the Fly Machine.
 - Real comparisons run from a local copy at `http://127.0.0.1:8080`. A deployed page first makes
   one in production (Risk 1).
-- While the demo is hidden the page opens on a sentence about the service and then the results,
-  which explain method or wait on figures. The balance is not fixable with copy.
+- While the demo is hidden the page is its sentence and the results, pending until a snapshot
+  lands. The body carries no CTA of its own; the nav's "Book a call" is always on screen.
 
 ## Risks
 

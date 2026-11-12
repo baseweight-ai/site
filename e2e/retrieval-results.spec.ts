@@ -22,12 +22,12 @@ const INTERVAL = /^-?\d+(\.\d+)? to -?\d+(\.\d+)?$/;
 const headers = (ci: string) => [
   "Metric", "Setup", "Question set", "Subset", "n", "Score", ci, "Change from baseline", `Change ${ci}`,
 ];
-// Each table's caption says what its kind of score means, so no legend is needed.
+// Each table's caption names its kind of score; the page's notes define both.
 const CAPTIONS = {
-  gated: "A change that makes these worse is blocked",
-  advisory: "A change that makes these worse can still go ahead",
+  gated: "Gated",
+  advisory: "Advisory",
 };
-// Under the tables: what a visitor needs to read the figures.
+// How to read the figures, in the page's notes.
 const READING =
   "Each score shows n, the number of questions behind it, and a CI, the range the true score likely sits in.";
 
@@ -161,7 +161,7 @@ test("no bare point estimate renders anywhere", async ({ page }) => {
     const s = snapshot();
     change(s.metrics[0]);
     await expect(render(page, s)).rejects.toThrow();
-    await expect(mount).toHaveText("Measurement pending.");
+    await expect(mount).toHaveText("Measurement pending");
   }
 });
 
@@ -197,16 +197,17 @@ test("the CI headers show the file's confidence level, or plain CI without one",
   }
 });
 
-// One sentence under the tables, and no control: the technical wording lives in
-// the page's notes.
-test("under the tables, one sentence says how to read the figures, and the pending state has none", async ({ page }) => {
+// The tables and nothing else: no sentence and no control. How to read the
+// figures is in the page's notes. The pending state is a label, not a sentence.
+test("the mount holds the tables alone, and the pending state is a label", async ({ page }) => {
   const mount = await load(page);
   await render(page, snapshot());
-  await expect(mount.locator(":scope > *").last()).toHaveText(READING);
-  await expect(mount.locator("p")).toHaveCount(1);
-  await expect(mount.locator("details")).toHaveCount(0);
+  await expect(mount.locator(":scope > *")).toHaveCount(2);
+  await expect(mount.locator(":scope > .table-wrap")).toHaveCount(2);
+  await expect(mount.locator("p, details")).toHaveCount(0);
   await render(page, null);
-  await expect(mount.locator(".table-note")).toHaveCount(0);
+  await expect(mount).toHaveText("Measurement pending");
+  expect(await mount.innerText()).not.toMatch(/[.!?]/);
 });
 
 test("a confidence level that is not a number between 0 and 1 refuses the file", async ({ page }) => {
@@ -214,14 +215,14 @@ test("a confidence level that is not a number between 0 and 1 refuses the file",
   for (const level of [0, 1, 95, -0.95, "0.95", null]) {
     await render(page, null);
     await expect(render(page, Object.assign(snapshot(), { confidence_level: level }))).rejects.toThrow();
-    await expect(mount).toHaveText("Measurement pending.");
+    await expect(mount).toHaveText("Measurement pending");
   }
 });
 
 test("with no snapshot it renders the pending state and no numeric content", async ({ page }) => {
   const mount = await load(page);
   await render(page, null);
-  await expect(mount).toHaveText("Measurement pending.");
+  await expect(mount).toHaveText("Measurement pending");
   expect(await mount.innerText()).not.toMatch(/\d/);
   await expect(mount.locator("table")).toHaveCount(0);
 });
@@ -274,7 +275,7 @@ async function expectResultsFrame(page: Page) {
 test("with no snapshot, results show the pending note and the closed notes", async ({ page }) => {
   await openWith(page, 404);
   await expectResultsFrame(page);
-  await expect(page.locator("#resultsMount")).toHaveText("Measurement pending.");
+  await expect(page.locator("#resultsMount")).toHaveText("Measurement pending");
   await expect(page.locator("#results table")).toHaveCount(0);
   await expect(page.locator("#resultsFailed")).toBeHidden();
 });
@@ -288,7 +289,9 @@ test("each kind of score is defined once on the page, in one sentence, in the no
     expect(definition).toMatch(/^[^.!?]+\.$/);
     await expect(page.getByText(definition, { exact: true })).toHaveCount(1);
   }
-  await expect(page.locator("#resultsMount")).not.toContainText(/Gated|Advisory/);
+  // The captions name the two kinds with the legend's own terms.
+  await openWith(page, 200, FIXTURE);
+  await expect(page.locator("#results caption")).toHaveText(Object.keys(DEFINITIONS));
 });
 
 test("the notes give the reason judged scores are advisory, once", async ({ page }) => {
@@ -304,7 +307,7 @@ test("the sample-size header reads n", async ({ page }) => {
   await expect(n.first()).toHaveText("n", { useInnerText: true });
 });
 
-test("with a snapshot, each table's caption says what its kind of score means", async ({ page }) => {
+test("with a snapshot, each table's caption names its kind of score, and the notes say how to read the figures", async ({ page }) => {
   await openWith(page, 200, FIXTURE);
   await expectResultsFrame(page);
   const doc = JSON.parse(FIXTURE);
@@ -312,13 +315,13 @@ test("with a snapshot, each table's caption says what its kind of score means", 
     const rows = page.getByRole("table", { name: caption, exact: true }).locator("tbody tr");
     await expect(rows).toHaveCount(doc.metrics.filter((m: Row) => m.gated === gated).length);
   }
-  await expect(page.locator("#resultsMount .table-note")).toHaveText(READING);
-  await expect(page.locator("#resultsMount")).not.toContainText("Measurement pending.");
+  await expect(page.locator("#notes > p", { hasText: READING })).toHaveCount(1);
+  await expect(page.locator("#resultsMount")).not.toContainText("Measurement pending");
   await expect(page.locator("#resultsFailed")).toBeHidden();
 });
 
-// The caption carries the meaning, so a table wider than a phone scrolls under
-// it while the caption stays whole on screen.
+// The caption names the table, so a table wider than a phone scrolls under it
+// while the caption stays whole on screen.
 test("at phone width each caption stays inside the viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openWith(page, 200, FIXTURE);
