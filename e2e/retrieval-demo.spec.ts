@@ -202,10 +202,10 @@ for (const [how, submit] of [
 }
 
 // ── The wait ────────────────────────────────────────────────────────────────
-// A comparison comes back whole, so every rung stays outstanding until it
-// does, and the only progress shown is the time elapsed.
+// A comparison comes back whole, so every rung waits until it does, and the
+// only progress shown is the time elapsed.
 
-test("while a comparison is out, every rung is outstanding and the elapsed time counts", async ({ page }) => {
+test("while a comparison is out, every rung waits and the elapsed time counts", async ({ page }) => {
   await page.clock.install({ time: 0 });
   await page.clock.pauseAt(1000);
   const { release } = await mockService(page, payloads(), ["/v1/compare"]);
@@ -214,7 +214,7 @@ test("while a comparison is out, every rung is outstanding and the elapsed time 
   const rungs = demo.locator(".demo-rung");
   // The labels come with the answers, so nothing heads a column until then.
   await expect(rungs.getByRole("heading")).toHaveCount(0);
-  await expect(rungs.filter({ hasText: "Outstanding" })).toHaveCount(RUNGS.length);
+  await expect(rungs.filter({ hasText: "Waiting" })).toHaveCount(RUNGS.length);
   const timer = demo.getByRole("timer");
   await expect(timer).toHaveText("0 s");
   await page.clock.runFor(3000);
@@ -222,7 +222,7 @@ test("while a comparison is out, every rung is outstanding and the elapsed time 
   await expect(demo.locator("progress, [role=progressbar]")).toHaveCount(0);
   release("/v1/compare");
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await expect(demo.getByText("Outstanding")).toHaveCount(0);
+  await expect(rungs.filter({ hasText: "Waiting" })).toHaveCount(0);
   await expect(timer).toHaveText("3 s");
 });
 
@@ -249,7 +249,7 @@ test("each rung answers in its own column, with its label, answer, passages and 
   await mockService(page, doc);
   const demo = await load(page);
   await prepared(demo).first().click();
-  await expect(demo.locator(".demo-rung h2")).toHaveText(doc.compare.rungs.map((r: any) => r.label));
+  await expect(demo.locator(".demo-rung h2")).toHaveText(doc.compare.rungs.map((r: any) => (r.name === "full" ? FULL : r.label)));
   for (const rung of doc.compare.rungs) {
     const col = column(demo, rung.name);
     await expect(col.locator(".demo-answer")).toHaveText(rung.answer);
@@ -276,13 +276,51 @@ test("a rung's heading is its label's first part, and the column holds neither t
   await expect(demo).not.toContainText("How this works");
 });
 
-// ── The pipelines ───────────────────────────────────────────────────────────
-// Each column draws its own pipeline from its rung's `stages` and from nothing
-// else: every stage listed, in order, under the name the service gives it.
+// Every rung is a served pipeline, so the full rung's label, which opens "The
+// served pipeline", does not head its column: the page names it by what it does.
+const FULL = "Keyword and meaning search, split and reranked";
+test("the full rung is headed by what it does, whatever its label opens with", async ({ page }) => {
+  const doc = payloads((d) => {
+    d.compare.rungs[3].label = "The served pipeline: the question split into searches, keyword and meaning search fused, then reranked.";
+  });
+  await mockService(page, doc);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  await expect(column(demo, "full").getByRole("heading", { level: 2 })).toHaveText(FULL);
+  await expect(demo).not.toContainText("served pipeline");
+});
 
-// The answers lead, so a pipeline sits under its answer and that answer's
+// ── The pipelines ───────────────────────────────────────────────────────────
+// Each column's pipeline comes from its rung's `stages`: every stage listed, in
+// order, under the name the service gives it. The column keeps it as a list for
+// screen readers. `stages` carries no branches, so hovering the column, focusing
+// into it or tapping it draws its stages on the shape the page holds: rewrite,
+// then the meaning search (embed, dense) beside the keyword search (bm25), fuse
+// joining them, then rerank, generate and verify. Screen readers skip the flow.
+
+const flow = (demo: Locator) => demo.locator(".demo-flow");
+// The flow as drawn: each node's name, and whether it is struck through and
+// dashed, so a skipped stage differs in more than colour.
+const drawnFlow = (demo: Locator) =>
+  flow(demo)
+    .locator(".demo-node")
+    .evaluateAll((nodes) =>
+      nodes.map((n) => {
+        const style = getComputedStyle(n);
+        return { name: n.textContent, line: style.textDecorationLine, border: style.borderTopStyle };
+      })
+    );
+const asDrawn = (stages: { name: string; runs: boolean }[]) =>
+  stages.map((s) => ({ name: s.name, line: s.runs ? "none" : "line-through", border: s.runs ? "solid" : "dashed" }));
+const box = (target: Locator) =>
+  target.evaluate((e) => {
+    const r = e.getBoundingClientRect();
+    return { left: r.left, right: r.right, top: r.top, bottom: r.bottom };
+  });
+
+// The answers lead, so the list sits under its answer and that answer's
 // citations, ahead of the passages its search found.
-test("each column shows its own pipeline under its answer, a skipped stage marked in text and not by colour alone", async ({ page }) => {
+test("each column keeps its pipeline as a list under its answer for screen readers, a skipped stage named in text", async ({ page }) => {
   const doc = payloads();
   await mockService(page, doc);
   const demo = await openPage(page);
@@ -292,6 +330,7 @@ test("each column shows its own pipeline under its answer, a skipped stage marke
     const col = column(demo, rung.name);
     const pipeline = col.getByRole("list", { name: "Pipeline", exact: true });
     await expect(pipeline.getByRole("listitem")).toHaveText(stageText(rung.stages));
+    expect(await shown(pipeline)).toBe(false);
     const order = await col.evaluate((c) => [...c.children].map((e) => (e.tagName === "H2" ? "h2" : e.className)));
     expect(order).toEqual([
       "h2",
@@ -301,28 +340,119 @@ test("each column shows its own pipeline under its answer, a skipped stage marke
       ...(rung.passage_titles.length ? ["demo-passages"] : []),
       "demo-latency",
     ]);
-    const drawn = await pipeline.locator("li").evaluateAll((items) =>
-      items.map((li) => {
-        const style = getComputedStyle(li);
-        const hidden = li.querySelector("span");
-        return {
-          line: style.textDecorationLine,
-          border: style.borderTopStyle,
-          hiddenShown: hidden ? hidden.getBoundingClientRect().width > 1 : null,
-        };
-      })
-    );
-    expect(drawn).toEqual(
-      rung.stages.map((s: any) =>
-        s.runs ? { line: "none", border: "solid", hiddenShown: null } : { line: "line-through", border: "dashed", hiddenShown: false }
-      )
-    );
   }
   const pipelines = await demo.locator(".demo-stages").evaluateAll((lists) => lists.map((l) => l.textContent));
   expect(new Set(pipelines).size).toBe(RUNGS.length);
 });
 
-test("a pipeline shows the stages its rung lists and nothing else, whatever they are named", async ({ page }) => {
+test("hovering a column draws its own pipeline as a flow under the row, and moving off takes it down", async ({ page }) => {
+  const doc = payloads();
+  await mockService(page, doc);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expect(flow(demo)).toHaveCount(0);
+  const flows = new Set<string>();
+  for (const rung of doc.compare.rungs) {
+    const col = column(demo, rung.name);
+    await col.hover();
+    await expect(flow(demo)).toBeVisible();
+    await expect(flow(demo)).toHaveAttribute("aria-hidden", "true");
+    const drawn = await drawnFlow(demo);
+    expect(drawn).toEqual(asDrawn(rung.stages));
+    flows.add(JSON.stringify(drawn));
+    await expect(demo.locator(".demo-active")).toHaveCount(1);
+    await expect(col).toHaveClass(/\bdemo-active\b/);
+    const row = await demo.locator(".demo-rung").evaluateAll((cols) => Math.max(...cols.map((c) => c.getBoundingClientRect().bottom)));
+    expect((await box(flow(demo))).top).toBeGreaterThan(row);
+  }
+  expect(flows.size).toBe(RUNGS.length);
+  await page.mouse.move(0, 0);
+  await expect(flow(demo)).toHaveCount(0);
+  await expect(demo.locator(".demo-active")).toHaveCount(0);
+});
+
+// Across at a laptop's width, down at a phone's.
+for (const [width, across] of [[1280, true], [390, false]] as const) {
+  test(`at ${width}px the flow draws the two searches side by side, between rewrite and fuse`, async ({ page }) => {
+    await mockService(page);
+    const demo = await openPage(page, width);
+    await prepared(demo).first().click();
+    await expect(answers(demo)).toHaveCount(RUNGS.length);
+    await column(demo, "full").locator(".demo-latency").hover();
+    const at = await flow(demo).evaluate((f) =>
+      Object.fromEntries(
+        [...f.querySelectorAll(".demo-node")].map((n) => {
+          const r = n.getBoundingClientRect();
+          return [n.textContent!, { left: r.left, right: r.right, top: r.top, bottom: r.bottom }];
+        })
+      )
+    );
+    const [start, end, side, next] = across ? (["left", "right", "top", "bottom"] as const) : (["top", "bottom", "left", "right"] as const);
+    expect(Math.abs(at.embed[start] - at.bm25[start])).toBeLessThanOrEqual(1);
+    expect(at.bm25[side]).toBeGreaterThan(at.embed[next]);
+    expect(Math.min(at.embed[start], at.bm25[start])).toBeGreaterThan(at.rewrite[end]);
+    expect(at.fuse[start]).toBeGreaterThan(Math.max(at.dense[end], at.bm25[end]));
+    for (const [a, b] of [["fuse", "rerank"], ["rerank", "generate"], ["generate", "verify"]]) expect(at[b][start]).toBeGreaterThan(at[a][end]);
+  });
+}
+
+// What lights each joint, in the order the flow holds them: the fork after
+// rewrite, each lane's links, the join into fuse, then the trunk. Either side
+// of a fork or join counts when one of its searches runs.
+const JOINTS = [
+  ["rewrite", "embed|bm25"], ["rewrite", "embed"], ["embed", "dense"], ["dense", "fuse"], ["rewrite", "bm25"],
+  ["bm25", "fuse"], ["dense|bm25", "fuse"], ["fuse", "rerank"], ["rerank", "generate"], ["generate", "verify"],
+];
+test("a joint in the flow is gold where the stages at both its ends run", async ({ page }) => {
+  const doc = payloads();
+  await mockService(page, doc);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  for (const rung of doc.compare.rungs) {
+    const runs = (ends: string) => ends.split("|").some((name) => RUNS[rung.name].includes(name));
+    await column(demo, rung.name).hover();
+    const lit = await flow(demo).locator(".demo-joint").evaluateAll((joints) => joints.map((j) => j.classList.contains("demo-lit")));
+    expect(lit).toEqual(JOINTS.map(([from, to]) => runs(from) && runs(to)));
+  }
+});
+
+test("focus inside a column draws its flow, and focus leaving the columns takes it down", async ({ page }) => {
+  const doc = payloads();
+  await mockService(page, doc);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await column(demo, "hybrid").getByRole("button", { name: "[c1]", exact: true }).focus();
+  await expect(flow(demo)).toBeVisible();
+  expect(await drawnFlow(demo)).toEqual(asDrawn(doc.compare.rungs[2].stages));
+  await questionBox(demo).focus();
+  await expect(flow(demo)).toHaveCount(0);
+});
+
+test.describe("on a touch screen", () => {
+  test.use({ hasTouch: true });
+  test("at phone width a tapped column's flow sits directly under it, ahead of the next column, and stays", async ({ page }) => {
+    const doc = payloads();
+    await mockService(page, doc);
+    const demo = await openPage(page, 390, 844);
+    await prepared(demo).first().tap();
+    await expect(answers(demo)).toHaveCount(RUNGS.length);
+    await column(demo, "bm25").locator(".demo-latency").tap();
+    await expect(flow(demo)).toBeVisible();
+    expect(await drawnFlow(demo)).toEqual(asDrawn(doc.compare.rungs[1].stages));
+    const [tapped, drawn, next] = await Promise.all([box(column(demo, "bm25")), box(flow(demo)), box(column(demo, "hybrid"))]);
+    expect(drawn.top).toBeGreaterThan(tapped.bottom);
+    expect(drawn.bottom).toBeLessThan(next.top);
+    await page.waitForTimeout(500);
+    await expect(flow(demo)).toBeVisible();
+  });
+});
+
+// The page's shape names eight stages, so a rung whose stages are named
+// otherwise keeps its list and draws no flow.
+test("a pipeline lists the stages its rung lists, whatever they are named, and draws a flow only for the eight the shape names", async ({ page }) => {
   const doc = payloads((d) => {
     d.compare.rungs[1].stages = [
       { name: "synthetic stage one", runs: true },
@@ -342,9 +472,15 @@ test("a pipeline shows the stages its rung lists and nothing else, whatever they
   ]);
   await expect(column(demo, "hybrid").locator(".demo-stages li")).toHaveText(["a lone synthetic stage, skipped"]);
   await expect(column(demo, "full").locator(".demo-stages li")).toHaveText(stageText(doc.compare.rungs[3].stages));
+  for (const name of ["bm25", "hybrid"]) {
+    await column(demo, name).hover();
+    await expect(flow(demo)).toHaveCount(0);
+  }
+  await column(demo, "full").hover();
+  await expect(flow(demo).locator(".demo-node")).toHaveText(STAGES);
 });
 
-test("a rung that lists no stages shows no pipeline, and its answer and the other pipelines still show", async ({ page }) => {
+test("a rung that lists no stages shows no pipeline or flow, and its answer and the other pipelines still show", async ({ page }) => {
   const doc = payloads((d) => {
     delete d.compare.rungs[0].stages;
     d.compare.rungs[3].stages = [];
@@ -353,19 +489,26 @@ test("a rung that lists no stages shows no pipeline, and its answer and the othe
   const demo = await load(page);
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  for (const name of ["closed_book", "full"]) await expect(column(demo, name).locator(".demo-stages")).toHaveCount(0);
+  for (const name of ["closed_book", "full"]) {
+    await expect(column(demo, name).locator(".demo-stages")).toHaveCount(0);
+    await column(demo, name).hover();
+    await expect(flow(demo)).toHaveCount(0);
+  }
   for (const rung of doc.compare.rungs.slice(1, 3)) {
     await expect(column(demo, rung.name).locator(".demo-stages li")).toHaveText(stageText(rung.stages));
+    await column(demo, rung.name).hover();
+    await expect(flow(demo).locator(".demo-node")).toHaveText(rung.stages.map((s: any) => s.name));
   }
 });
 
-test("with no rung listing stages, no pipeline shows anywhere and the answers do", async ({ page }) => {
+test("with no rung listing stages, no pipeline or flow shows anywhere and the answers do", async ({ page }) => {
   const doc = payloads((d) => d.compare.rungs.forEach((r: any) => delete r.stages));
   await mockService(page, doc);
   const demo = await openPage(page);
   await prepared(demo).first().click();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
-  await expect(demo.locator(".demo-stages, [aria-label=Pipeline]")).toHaveCount(0);
+  for (const name of RUNGS) await column(demo, name).hover();
+  await expect(demo.locator(".demo-stages, [aria-label=Pipeline], .demo-flow")).toHaveCount(0);
 });
 
 test("latency shows in seconds, to one decimal", async ({ page }) => {
@@ -630,7 +773,7 @@ test("a comparison still out when the page stops waiting is unavailable", async 
   await mockService(page, payloads(), ["/v1/compare"]);
   const demo = await load(page);
   await prepared(demo).first().click();
-  await expect(demo.locator(".demo-rung").filter({ hasText: "Outstanding" })).toHaveCount(RUNGS.length);
+  await expect(demo.locator(".demo-rung").filter({ hasText: "Waiting" })).toHaveCount(RUNGS.length);
   await page.clock.runFor(10 * 60 * 1000);
   await expect(status(demo)).toHaveText(UNAVAILABLE);
   await expect(demo.locator(".demo-rung")).toHaveCount(0);
@@ -800,7 +943,7 @@ test("the attribution stays back once /v1/meta has answered and while a comparis
   await expect(demo.locator("#demoAttribution")).toHaveText(doc.meta.attribution);
   await expectAttributionBack(demo);
   await prepared(demo).first().click();
-  await expect(demo.locator(".demo-rung").filter({ hasText: "Outstanding" })).toHaveCount(RUNGS.length);
+  await expect(demo.locator(".demo-rung").filter({ hasText: "Waiting" })).toHaveCount(RUNGS.length);
   await expectAttributionBack(demo);
   release("/v1/compare");
   await expect(answers(demo)).toHaveCount(RUNGS.length);
@@ -826,7 +969,7 @@ test("the next question takes the attribution back until it returns, and a failu
     await route.fallback();
   });
   await questionBox(demo).press("Enter");
-  await expect(demo.locator(".demo-rung").filter({ hasText: "Outstanding" })).toHaveCount(RUNGS.length);
+  await expect(demo.locator(".demo-rung").filter({ hasText: "Waiting" })).toHaveCount(RUNGS.length);
   await expectAttributionBack(demo);
   answer();
   await expect(answers(demo)).toHaveCount(RUNGS.length);
@@ -912,6 +1055,29 @@ test("the page mounts the demo and sends nothing to the service as it loads", as
   expect(sent).toEqual([]);
 });
 
+// A chat box, centred under the sentence: a rounded field holding its send
+// button, an arrow named Compare, with a placeholder showing and the label
+// kept for screen readers.
+for (const width of [390, 1280]) {
+  test(`at ${width}px the question box is a rounded chat box, centred, its send button an arrow named Compare`, async ({ page }) => {
+    await mockService(page);
+    const demo = await openPage(page, width);
+    await expect(questionBox(demo)).toHaveAttribute("placeholder", "Ask a question");
+    expect(await shown(demo.locator('label[for="demoQuestion"]'))).toBe(false);
+    const send = demo.getByRole("button", { name: "Compare", exact: true });
+    await expect(send).toHaveText("↑");
+    const row = demo.locator(".demo-row");
+    const [field, button] = await Promise.all([box(row), box(send)]);
+    const middle = await page.evaluate(() => document.documentElement.clientWidth / 2);
+    expect(Math.abs((field.left + field.right) / 2 - middle)).toBeLessThanOrEqual(1);
+    expect(await row.evaluate((r) => parseFloat(getComputedStyle(r).borderTopLeftRadius))).toBeGreaterThanOrEqual(16);
+    expect(button.left).toBeGreaterThan(field.left);
+    expect(button.right).toBeLessThanOrEqual(field.right);
+    expect(button.top).toBeGreaterThanOrEqual(field.top);
+    expect(button.bottom).toBeLessThanOrEqual(field.bottom);
+  });
+}
+
 test("on the page, a comparison runs end to end and the live attribution replaces the page's", async ({ page }) => {
   const doc = payloads();
   await mockService(page, doc);
@@ -925,7 +1091,8 @@ test("on the page, a comparison runs end to end and the live attribution replace
 });
 
 // The timer and the columns show the wait and the answers, so those statuses
-// are announced to a screen reader and not shown; a failure is both.
+// are announced to a screen reader and not shown; a failure is both. While a
+// comparison is out, the seconds are the largest text in the demo.
 test("waiting and returned are announced without showing, and a failure shows", async ({ page }) => {
   const replies: Record<string, Reply> = {};
   const { release } = await mockService(page, payloads(), ["/v1/compare"], replies);
@@ -934,9 +1101,19 @@ test("waiting and returned are announced without showing, and a failure shows", 
   await expect(status(demo)).toHaveText("Waiting for the service.");
   expect(await shown(status(demo))).toBe(false);
   await expect(demo.locator(".demo-elapsed")).toBeVisible();
+  await expect(demo).toHaveClass(/\bdemo-waiting\b/);
+  const sizes = await demo.evaluate((section) => {
+    const size = (e: Element) => parseFloat(getComputedStyle(e).fontSize);
+    const texted = [...section.querySelectorAll("*")].filter(
+      (e) => e.checkVisibility() && [...e.childNodes].some((n) => n.nodeType === Node.TEXT_NODE && n.textContent!.trim())
+    );
+    return { timer: size(section.querySelector("[role=timer]")!), others: texted.filter((e) => e.getAttribute("role") !== "timer").map(size) };
+  });
+  expect(sizes.timer).toBeGreaterThan(Math.max(...sizes.others));
   release("/v1/compare");
   await expect(status(demo)).toHaveText("Comparison returned.");
   expect(await shown(status(demo))).toBe(false);
+  await expect(demo).not.toHaveClass(/\bdemo-waiting\b/);
   replies["/v1/compare"] = { status: 500, json: envelope("internal", "the service failed") };
   await questionBox(demo).press("Enter");
   await expect(status(demo)).toHaveText("The service failed on that question. Try again.");
@@ -1024,6 +1201,11 @@ test("at phone width nothing in the demo reaches past the viewport, long ids and
   await expect(answers(demo)).toHaveCount(RUNGS.length);
   const col = column(demo, "full");
   await col.getByRole("button", { name: "[c1]", exact: true }).click();
+  // The long stage is outside the page's shape, so this column draws no flow;
+  // the next one's is drawn instead, at this width down the column.
+  await expect(flow(demo)).toHaveCount(0);
+  await column(demo, "hybrid").hover();
+  await expect(flow(demo)).toBeVisible();
   const expectInside = async () => {
     const [right, width] = await demo.evaluate((mount) => [
       Math.max(...[...mount.querySelectorAll("*")].map((e) => e.getBoundingClientRect().right)),

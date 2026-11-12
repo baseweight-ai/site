@@ -49,23 +49,36 @@ foot. Pass 1 ships sections 1 and 3 (pending), with 2 and the notes' demo part h
 shows them. Pass 3 fills section 3 and shows its limitations.
 
 1. **Hero**: one sentence saying the page compares different RAG setups, and nothing else
-   visible. It holds whether or not the demo shows, so the meta and social descriptions carry
-   it too. The h1 "Retrieval" is there for screen readers and search, visually hidden.
+   visible, centred in the benchmark's headline face, the largest text on the page. It holds
+   whether or not the demo shows, so the meta and social descriptions carry it too. The h1
+   "Retrieval" is there for screen readers and search, visually hidden. The page takes
+   `/benchmark`'s look: its hero glows and grain, its card frame with a gold tab, its section
+   rule.
 2. **Demo**, directly under the sentence with no heading of its own, on `POST /v1/compare`. At
    390px and at 1280px wide, the question box and at least one answer show before any
    scrolling.
-   - A labelled `<input>` and a `<button>`; a click handler submits, and script handles Enter.
+   - A labelled `<input>` and a `<button>`, centred as a chat box: a rounded field holding a
+     round send button, an arrow named Compare, the placeholder "Ask a question" showing and
+     the label kept for screen readers. A click handler submits, and script handles Enter.
    - One column per rung, in the order the response lists them
      (`COMPARE_RUNGS`: `closed_book`, `bm25`, `hybrid`, `full`): four across, two below 860px,
-     one below 640px. Each column's `h2` is the first part of its rung's label, above its answer
+     one below 640px. Each column's `h2` is the first part of its rung's label, except the full
+     rung's: its label opens "The served pipeline", which every rung is, so the page names it
+     "Keyword and meaning search, split and reranked". Under the `h2`, its answer
      or that rung's own error, the citations its `[cN]` markers open (each to its passage, the
      service's `supported` flag and its title linked to its `url`, a passage past eight rendered
      lines cut, with a button that opens the rest), its pipeline, each passage title once with
      its count, by first rank, with a "By rank" control holding the titles by rank, repeats
      included, and its latency in seconds to one decimal.
-   - Each column's pipeline is drawn from its rung's `stages` alone (brief §3): each stage it
-     lists, in that order and under that name, a skipped stage dashed, struck through and named
-     skipped in its accessible text. A rung without the field shows no pipeline; a malformed one
+   - Each column's pipeline comes from its rung's `stages` (brief §3): each stage it lists, in
+     that order and under that name. The column holds it as a list for screen readers, a
+     skipped stage named skipped. `stages` carries no branches, so the page holds the
+     pipeline's shape for its eight names: rewrite, then the meaning search (embed, dense)
+     beside the keyword search (bm25), fuse joining them, then rerank, generate and verify.
+     Hovering the column, focusing into it or tapping it draws its stages on that shape under
+     the column's row, across when wide enough and down when not: a skipped stage dashed,
+     struck through and muted, a joint gold where both its ends run. A rung whose stages are
+     named otherwise draws no flow. A rung without the field shows no pipeline; a malformed one
      makes the comparison unavailable. A failed rung shows its pipeline, since the field
      describes the rung, not one run. The pipeline shows the label's "how", so neither the rest
      of the label nor the rung's `name` shows. No global diagram.
@@ -75,7 +88,9 @@ shows them. Pass 3 fills section 3 and shows its limitations.
    - Answer, snippet and title strings enter the DOM as text (`textContent` and
      `createElement`, as at `methodology.html:401-417`). A citation's link is built from its
      `url` alone; `[cN]` markers attach citations and do nothing else.
-   - States: idle; waiting, held through a cold start; result; `429` showing the
+   - States: idle; waiting, held through a cold start, each column saying Waiting over a
+     shimmer and the elapsed time a pulsing pill, its seconds the largest text in the demo,
+     counting up since no endpoint gives an end to count down to; result; `429` showing the
      `Retry-After` window when the header is readable, and a plain rate-limit state when it is
      not; `503 budget_exhausted` as a spent budget, the service's daily cap and the provider's
      spend limit told apart by `message`; unavailable, covering network errors, CORS refusals,

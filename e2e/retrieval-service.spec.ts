@@ -245,8 +245,8 @@ test("the notes start closed, the snapshot's limitations show without them, and 
   }
 });
 
-// The demo is the page: above it, only the sentence. The h1 stays for screen
-// readers and search, visually hidden.
+// The demo is the page: above it, only the sentence, centred and the largest
+// text on the page. The h1 stays for screen readers and search, visually hidden.
 test("only one sentence, and no visible heading, sits above the demo", async ({ page }) => {
   await serveSnapshot(page, 404);
   await page.goto(PAGE);
@@ -266,6 +266,16 @@ test("only one sentence, and no visible heading, sits above the demo", async ({ 
   });
   expect(above).toEqual({ headings: [], text: [LEAD] });
   expect(LEAD.match(/[.!?]/g)).toHaveLength(1);
+  const sizes = await page.evaluate(() => {
+    const size = (e: Element) => parseFloat(getComputedStyle(e).fontSize);
+    const lead = document.querySelector(".page-hero .lead")!;
+    const texted = [...document.querySelectorAll("main *")].filter(
+      (e) => e !== lead && e.checkVisibility() && [...e.childNodes].some((n) => n.nodeType === Node.TEXT_NODE && n.textContent!.trim())
+    );
+    return { lead: size(lead), align: getComputedStyle(lead).textAlign, others: texted.map(size) };
+  });
+  expect(sizes.align).toBe("center");
+  expect(sizes.lead).toBeGreaterThan(Math.max(...sizes.others));
   await expect(page.getByRole("heading", { level: 1, name: "Retrieval" })).toHaveCount(1);
   await expect(page.locator("#demo h2")).toHaveCount(0);
 });
