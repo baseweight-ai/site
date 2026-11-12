@@ -30,12 +30,27 @@ const SHIPPED_ATTRIBUTION =
 
 type Payloads = { meta: any; health: any; compare: any };
 
+// The deployed Rung carries `stages`; the fixture file does not, so each rung
+// gets the stages the real comparison in HANDOFF.md listed on 2026-11-12: the
+// served pipeline's eight in order, run or not.
+const STAGES = ["rewrite", "embed", "dense", "bm25", "fuse", "rerank", "generate", "verify"];
+const RUNS: Record<string, string[]> = {
+  closed_book: ["generate"],
+  bm25: ["bm25", "generate", "verify"],
+  hybrid: ["embed", "dense", "bm25", "fuse", "generate", "verify"],
+  full: STAGES,
+};
+
 // The fixture with one change applied.
 function payloads(change?: (doc: Payloads) => void): Payloads {
   const doc = JSON.parse(FIXTURE);
+  for (const rung of doc.compare.rungs) rung.stages = STAGES.map((name) => ({ name, runs: RUNS[rung.name].includes(name) }));
   change?.(doc);
   return doc;
 }
+
+// A pipeline's stages as text: a skipped one says so.
+const stageText = (stages: { name: string; runs: boolean }[]) => stages.map((s) => (s.runs ? s.name : `${s.name}, skipped`));
 
 const CORS = { "access-control-allow-origin": "*" };
 
@@ -107,9 +122,8 @@ async function load(page: Page): Promise<Locator> {
 const questionBox = (demo: Locator) => demo.getByRole("textbox", { name: "Question", exact: true });
 const prepared = (demo: Locator) =>
   demo.getByRole("list", { name: "Prepared questions" }).getByRole("button");
-// A column by its rung's technical name, which sits in its "How this works".
-const column = (demo: Locator, name: string) =>
-  demo.locator(".demo-rung").filter({ has: demo.page().locator(".demo-name", { hasText: new RegExp(`^Technical name: ${name}$`) }) });
+// A column by its rung's name: the columns keep the order the service answers in.
+const column = (demo: Locator, name: string) => demo.locator(".demo-rung").nth(RUNGS.indexOf(name));
 const answers = (demo: Locator) => demo.locator(".demo-answer");
 // Where the page keeps what the demo leaves out of its reading path.
 const notes = (demo: Locator) => demo.page().locator("#demoNotes");
@@ -121,7 +135,9 @@ async function openNotes(page: Page) {
     await control.locator(":scope > summary").click();
   }
 }
-const howItWorks = (col: Locator) => col.locator(".demo-method summary");
+const byRank = (col: Locator) => col.locator(".demo-ranks summary");
+// Each title once with its count, outside the ranking control.
+const rows = (col: Locator) => col.locator(".demo-passages > ol > li");
 
 // ── What goes to the service, and when ──────────────────────────────────────
 // No consent gate exists (DISCOVERY.md §12), so the demo sends nothing a
@@ -237,14 +253,15 @@ test("each rung answers in its own column, with its label, answer, passages and 
   for (const rung of doc.compare.rungs) {
     const col = column(demo, rung.name);
     await expect(col.locator(".demo-answer")).toHaveText(rung.answer);
-    await expect(col.locator(".demo-passages li")).toHaveText(ROWS[rung.name]);
+    await expect(rows(col)).toHaveText(ROWS[rung.name]);
     await expect(col.locator(".demo-latency")).toHaveText(`Latency ${SECONDS[rung.name]}`);
   }
 });
 
 // The service writes a label as "what it does: how". The first part heads the
-// column; the rest and the technical name stay in the service's words, a click away.
-test("a rung's heading is its label's first part, and its technical name and whole sentence are one control away", async ({ page }) => {
+// column and the pipeline under it shows the how, so neither the rest of the
+// sentence nor the technical name is on the page, open or closed.
+test("a rung's heading is its label's first part, and the column holds neither the rest nor its technical name", async ({ page }) => {
   const sentence = "Synthetic short part: the rest of the sentence, at more length than a column should carry.";
   const doc = payloads((d) => {
     d.compare.rungs[1].label = sentence;
@@ -254,14 +271,101 @@ test("a rung's heading is its label's first part, and its technical name and who
   await prepared(demo).first().click();
   const col = column(demo, "bm25");
   await expect(col.getByRole("heading", { level: 2 })).toHaveText("Synthetic short part");
-  const name = col.locator(".demo-name");
-  const whole = col.locator(".demo-method p", { hasText: sentence });
-  await expect(name).toHaveText("Technical name: bm25");
-  await expect(name).toBeHidden();
-  await expect(whole).toBeHidden();
-  await howItWorks(col).click();
-  await expect(name).toBeVisible();
-  await expect(whole).toBeVisible();
+  await expect(col).not.toContainText("the rest of the sentence");
+  await expect(demo).not.toContainText("Technical name");
+  await expect(demo).not.toContainText("How this works");
+});
+
+// ── The pipelines ───────────────────────────────────────────────────────────
+// Each column draws its own pipeline from its rung's `stages` and from nothing
+// else: every stage listed, in order, under the name the service gives it.
+
+// The answers lead, so a pipeline sits under its answer and that answer's
+// citations, ahead of the passages its search found.
+test("each column shows its own pipeline under its answer, a skipped stage marked in text and not by colour alone", async ({ page }) => {
+  const doc = payloads();
+  await mockService(page, doc);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  for (const rung of doc.compare.rungs) {
+    const col = column(demo, rung.name);
+    const pipeline = col.getByRole("list", { name: "Pipeline", exact: true });
+    await expect(pipeline.getByRole("listitem")).toHaveText(stageText(rung.stages));
+    const order = await col.evaluate((c) => [...c.children].map((e) => (e.tagName === "H2" ? "h2" : e.className)));
+    expect(order).toEqual([
+      "h2",
+      "demo-answer",
+      ...(rung.citations.length ? ["demo-cites"] : []),
+      "demo-stages",
+      ...(rung.passage_titles.length ? ["demo-passages"] : []),
+      "demo-latency",
+    ]);
+    const drawn = await pipeline.locator("li").evaluateAll((items) =>
+      items.map((li) => {
+        const style = getComputedStyle(li);
+        const hidden = li.querySelector("span");
+        return {
+          line: style.textDecorationLine,
+          border: style.borderTopStyle,
+          hiddenShown: hidden ? hidden.getBoundingClientRect().width > 1 : null,
+        };
+      })
+    );
+    expect(drawn).toEqual(
+      rung.stages.map((s: any) =>
+        s.runs ? { line: "none", border: "solid", hiddenShown: null } : { line: "line-through", border: "dashed", hiddenShown: false }
+      )
+    );
+  }
+  const pipelines = await demo.locator(".demo-stages").evaluateAll((lists) => lists.map((l) => l.textContent));
+  expect(new Set(pipelines).size).toBe(RUNGS.length);
+});
+
+test("a pipeline shows the stages its rung lists and nothing else, whatever they are named", async ({ page }) => {
+  const doc = payloads((d) => {
+    d.compare.rungs[1].stages = [
+      { name: "synthetic stage one", runs: true },
+      { name: "synthetic stage two", runs: false },
+      { name: "synthetic stage three", runs: true },
+    ];
+    d.compare.rungs[2].stages = [{ name: "a lone synthetic stage", runs: false }];
+  });
+  await mockService(page, doc);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expect(column(demo, "bm25").locator(".demo-stages li")).toHaveText([
+    "synthetic stage one",
+    "synthetic stage two, skipped",
+    "synthetic stage three",
+  ]);
+  await expect(column(demo, "hybrid").locator(".demo-stages li")).toHaveText(["a lone synthetic stage, skipped"]);
+  await expect(column(demo, "full").locator(".demo-stages li")).toHaveText(stageText(doc.compare.rungs[3].stages));
+});
+
+test("a rung that lists no stages shows no pipeline, and its answer and the other pipelines still show", async ({ page }) => {
+  const doc = payloads((d) => {
+    delete d.compare.rungs[0].stages;
+    d.compare.rungs[3].stages = [];
+  });
+  await mockService(page, doc);
+  const demo = await load(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  for (const name of ["closed_book", "full"]) await expect(column(demo, name).locator(".demo-stages")).toHaveCount(0);
+  for (const rung of doc.compare.rungs.slice(1, 3)) {
+    await expect(column(demo, rung.name).locator(".demo-stages li")).toHaveText(stageText(rung.stages));
+  }
+});
+
+test("with no rung listing stages, no pipeline shows anywhere and the answers do", async ({ page }) => {
+  const doc = payloads((d) => d.compare.rungs.forEach((r: any) => delete r.stages));
+  await mockService(page, doc);
+  const demo = await openPage(page);
+  await prepared(demo).first().click();
+  await expect(answers(demo)).toHaveCount(RUNGS.length);
+  await expect(demo.locator(".demo-stages, [aria-label=Pipeline]")).toHaveCount(0);
 });
 
 test("latency shows in seconds, to one decimal", async ({ page }) => {
@@ -306,7 +410,7 @@ test("an article that supplies several passages is one row with its count, in th
   await mockService(page, doc);
   const demo = await load(page);
   await prepared(demo).first().click();
-  await expect(column(demo, "full").locator(".demo-passages li")).toHaveText([
+  await expect(rows(column(demo, "full"))).toHaveText([
     `${B} ×1`,
     `${A} ×3`,
     `${D} ×2`,
@@ -326,27 +430,24 @@ test("the ranking behind the counts is one control away, where the repeats sit i
   await expect(answers(demo)).toHaveCount(RUNGS.length);
   for (const rung of doc.compare.rungs.slice(1, 3)) {
     const col = column(demo, rung.name);
-    await expect(col.locator(".demo-passages li")).toHaveText([`${A} ×3`, `${B} ×1`, `${C} ×1`, `${D} ×1`]);
-    await expect(col.locator(".demo-passages")).not.toContainText("rank");
-    const ranked = col.locator(".demo-method ol li");
+    await expect(rows(col)).toHaveText([`${A} ×3`, `${B} ×1`, `${C} ×1`, `${D} ×1`]);
+    await expect(rows(col)).not.toContainText(["rank"]);
+    await expect(byRank(col)).toHaveText("By rank");
+    const ranked = col.locator(".demo-ranks ol li");
     await expect(ranked.first()).toBeHidden();
-    await howItWorks(col).click();
+    await byRank(col).click();
     await expect(ranked.first()).toBeVisible();
     await expect(ranked).toHaveText(rung.passage_titles);
   }
 });
 
-test("a rung with no passages leaves the list out, and says so behind its control", async ({ page }) => {
+test("a rung with no passages leaves the list and its ranking out", async ({ page }) => {
   await mockService(page);
   const demo = await load(page);
   await prepared(demo).first().click();
   const col = column(demo, "closed_book");
   await expect(col.locator(".demo-answer")).toHaveCount(1);
-  await expect(col.locator(".demo-passages")).toHaveCount(0);
-  const none = col.locator(".demo-method p", { hasText: "No passages retrieved." });
-  await expect(none).toBeHidden();
-  await howItWorks(col).click();
-  await expect(none).toBeVisible();
+  await expect(col.locator(".demo-passages, .demo-ranks, details")).toHaveCount(0);
 });
 
 test("a citation opens to its passage and its title, which links to the article", async ({ page }) => {
@@ -498,6 +599,11 @@ const FAILURES: { name: string; reply: Reply; says: string }[] = [
     reply: { json: { rungs: [{ name: "full" }] } },
     says: UNAVAILABLE,
   },
+  {
+    name: "a 200 whose stages are outside their shape is unavailable",
+    reply: { json: payloads((d) => (d.compare.rungs[3].stages = [{ name: "rewrite", runs: "yes" }])).compare },
+    says: UNAVAILABLE,
+  },
   // A CORS refusal reaches script as this same network error (Fetch standard).
   // A fulfilled route cannot stage one: Playwright's fulfilled responses skip
   // the browser's CORS check.
@@ -547,6 +653,8 @@ test("one rung failing shows its own error while the others return", async ({ pa
   await prepared(demo).first().click();
   const failed = column(demo, "hybrid");
   await expect(failed.locator(".demo-error")).toHaveText("Failed: the model provider failed");
+  // HANDOFF.md: `stages` describes the rung, so a failed one lists the same.
+  await expect(failed.locator(".demo-stages li")).toHaveText(stageText(doc.compare.rungs[2].stages));
   await expect(failed).toContainText(doc.compare.rungs[2].label);
   await expect(failed.locator(".demo-latency")).toHaveText(`Latency ${SECONDS.hybrid}`);
   await expect(failed.locator(".demo-answer")).toHaveCount(0);
@@ -838,10 +946,7 @@ test("waiting and returned are announced without showing, and a failure shows", 
 // Nothing is lost: with every control in the demo open, and the page's notes,
 // what the reading path leaves out is on screen, the ranks as numbers included.
 test("with every control open, everything the demo leaves out of the reading path shows", async ({ page }) => {
-  const sentence = "Synthetic short part: the rest of the sentence.";
-  const doc = payloads((d) => {
-    d.compare.rungs[1].label = sentence;
-  });
+  const doc = payloads();
   await mockService(page, doc);
   const demo = await openPage(page);
   await prepared(demo).first().click();
@@ -858,10 +963,8 @@ test("with every control open, everything the demo leaves out of the reading pat
   await expect(service.nth(1)).toHaveText(doc.health.index_version);
   await expect(prepared(demo).first()).toBeVisible();
   const bm25 = column(demo, "bm25");
-  await expect(bm25.locator(".demo-name")).toBeVisible();
-  await expect(bm25.locator(".demo-method p", { hasText: sentence })).toBeVisible();
   await expect(bm25.locator(".demo-snippet")).toBeVisible();
-  const ranked = bm25.locator(".demo-method ol");
+  const ranked = bm25.locator(".demo-ranks ol");
   await expect(ranked.locator("li")).toHaveText(doc.compare.rungs[1].passage_titles);
   expect(await ranked.evaluate((ol) => getComputedStyle(ol).listStyleType)).toBe("decimal");
   await expect(ranked.locator("li").first()).toBeVisible();
@@ -913,6 +1016,7 @@ test("at phone width nothing in the demo reaches past the viewport, long ids and
     full.passage_titles.push(long, long);
     full.citations[0].page_title = long;
     full.citations[0].snippet = `${LONG_PASSAGE}\n${long}`;
+    full.stages.push({ name: long, runs: false });
   });
   await mockService(page, doc);
   const demo = await openPage(page, 375);
@@ -931,7 +1035,7 @@ test("at phone width nothing in the demo reaches past the viewport, long ids and
   await col.getByRole("button", { name: "Show the rest" }).click();
   await expect(col.getByRole("button", { name: "Show less" })).toBeVisible();
   await expectInside();
-  await howItWorks(col).click();
+  await byRank(col).click();
   await openNotes(page);
   await expect(notes(demo).locator(".demo-service dd").first()).toBeVisible();
   await expectInside();
