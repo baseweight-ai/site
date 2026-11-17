@@ -272,7 +272,7 @@ a:hover { color: var(--accent-hover); }
 }
 
 
-/* STATE NOTES: results pending, snapshot unreadable */
+/* STATE NOTES: snapshot unreadable */
 .methodology-content p.state-note { position: relative; background: linear-gradient(180deg, var(--bg-card), #0e0e0e); border: 1px solid var(--border-accent); padding: 16px 20px; }
 .methodology-content p.state-note::before { content: ''; position: absolute; top: -1px; left: 22px; width: 42px; height: 2px; background: var(--accent); }
 
@@ -331,8 +331,12 @@ a:hover { color: var(--accent-hover); }
 /* NOTES: one closed control at the foot of the page, holding every sentence
    besides the one at the top: the method, the two kinds of score, how to read
    the figures, the pins, and the demo's notes in full. The demo's notes are
-   held back while the demo is. */
-main:has(#demo[hidden]) #demoNotes { display: none; }
+   held back while the demo is, and what speaks of the results while Results
+   is; with both held, the control goes too. */
+main:has(#demo[hidden]) #demoNotes,
+main:has(#results[hidden]) #notes .with-results,
+main:not(:has(#results[hidden])) #notes .without-results,
+main:has(#demo[hidden]):has(#results[hidden]) #notes { display: none; }
 .notes { margin-top: 16px; }
 .notes summary { cursor: pointer; font-size: 13px; color: var(--accent); list-style: none; }
 .notes summary::-webkit-details-marker { display: none; }
@@ -381,9 +385,10 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
         <p class="attribution" id="demoAttribution">Modified passages from Wikipedia articles, under CC BY-SA 3.0: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">https://creativecommons.org/licenses/by-sa/3.0/</a></p>
       </section>
 
-      <section id="results">
+      <!-- Held until a results snapshot is committed: the script shows it once one is read. -->
+      <section id="results" hidden>
         <h2>Results</h2>
-        <!-- retrieval-results.js renders the pending state or the tables here. -->
+        <!-- retrieval-results.js renders the tables here. -->
         <div id="resultsMount"></div>
         <p class="state-note" id="resultsFailed" hidden>The results could not be loaded.</p>
 
@@ -393,10 +398,12 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
           <ul id="limitationsList"></ul>
           <p class="state-note" id="limitationsFailed" hidden>The limitations could not be loaded.</p>
         </div>
+      </section>
 
-        <!-- Every other sentence, behind one closed control at the foot of the page. -->
-        <details id="notes" class="notes">
-          <summary>How it&rsquo;s measured, and its limits</summary>
+      <!-- Every other sentence, behind one closed control at the foot of the page. -->
+      <details id="notes" class="notes">
+        <summary><span class="with-results">How it&rsquo;s measured, and its limits</span><span class="without-results">Its limits</span></summary>
+        <div id="method" class="with-results">
           <p>Retrieval is scored against the source pages the dataset records for each question, so its ground truth comes from the data. Answers are scored by a language model acting as judge.</p>
           <dl class="table-legend">
             <dt class="gated">Gated</dt>
@@ -407,21 +414,21 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
           <p>The judged scores are advisory: they cover a small hand-written set, where the confidence interval is wide enough that a gate would fire on noise.</p>
           <p>Confidence intervals come from a paired bootstrap clustered by source page, because several questions can share one source page.</p>
           <p>Each score shows n, the number of questions behind it, and a CI, the range the true score likely sits in.</p>
+        </div>
 
-          <div id="reproduce" hidden>
-            <h3>Reproduce it</h3>
-            <dl class="pins" id="pinsList"></dl>
-          </div>
+        <div id="reproduce" hidden>
+          <h3>Reproduce it</h3>
+          <dl class="pins" id="pinsList"></dl>
+        </div>
 
-          <!-- Held back while the demo is. retrieval-demo.js adds the limits and privacy notes, a
-               copy of the attribution, and the deployed commit and index version. -->
-          <div id="demoNotes">
-            <h3>The demo</h3>
-            <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
-            <p>One question is an anecdote. The results above measure the service over its test set.</p>
-          </div>
-        </details>
-      </section>
+        <!-- Held back while the demo is. retrieval-demo.js adds the limits and privacy notes, a
+             copy of the attribution, and the deployed commit and index version. -->
+        <div id="demoNotes">
+          <h3>The demo</h3>
+          <p>The index holds a capped subset of English Wikipedia, frozen at one past dump. Anything newer, this week&rsquo;s news included, is outside it.</p>
+          <p class="with-results">One question is an anecdote. The results above measure the service over its test set.</p>
+        </div>
+      </details>
 
 
     </article>
@@ -438,9 +445,9 @@ main:has(#demo[hidden]) #demoNotes { display: none; }
 <script>
 // ── RESULTS SNAPSHOT ───────────────────────────────────────────────────────
 // The service's results file, copied in by hand (INTEGRATION-BRIEF.md §4) and
-// read same-origin. A 404 means no measured run is committed: Limitations and
-// Reproduce stay hidden and Results shows its pending state. Any other failure
-// is stated on the page.
+// read same-origin. A 404 means no measured run is committed, and Results stays
+// hidden with Limitations and Reproduce. Any other failure is stated on the
+// page.
 const SNAPSHOT_URL = '/data/retrieval-service/results.json';
 
 // The revisions a rerun pins, as the snapshot names them.
@@ -474,13 +481,15 @@ async function readSnapshot() {
 }
 
 // ── RESULTS ────────────────────────────────────────────────────────────────
-// retrieval-results.js renders the pending state or the tables. A snapshot
-// that cannot be read, or that the component refuses, shows the failure note
-// instead of a blank section.
+// retrieval-results.js renders the tables. A snapshot that cannot be read, or
+// that the component refuses, shows the failure note instead of a blank
+// section.
 function renderResultsSection({ state, doc }) {
+  if (state === 'absent') return;
+  document.getElementById('results').hidden = false;
   try {
     if (state === 'failed') throw new Error('results snapshot could not be read');
-    renderResults(document.getElementById('resultsMount'), state === 'ready' ? doc : null);
+    renderResults(document.getElementById('resultsMount'), doc);
   } catch (e) {
     document.getElementById('resultsFailed').hidden = false;
   }

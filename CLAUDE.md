@@ -11,7 +11,7 @@ runtime by `components.js`; their styling lives in `components.css`.
 - **Positioning: the homepage wins.** Baseweight is an AI engineering consultancy: build,
   measure, harden and optimize LLM systems in production. "Forward-deployed" was dropped
   from every surface on 2026-09-20 and does not come back. `index.html` is the
-  authoritative statement of what is offered, to whom, and at what price; its sections read
+  authoritative statement of what is offered and to whom; its sections read
   hero, what we do, who we work with, offers, published, CTA.
 - **Copy: `COPY-STYLE.md`**, enforced by `e2e/copy-lint.spec.ts` (patterns) and
   `e2e/copy-budget.spec.ts` (per-page word budgets).
@@ -21,8 +21,8 @@ runtime by `components.js`; their styling lives in `components.css`.
   `/head-to-head` 301s to `/benchmark`.
 - Memory files are advisory.
 - **Numbers.** Head-to-head figures (28–138×, the $0.46 GPU rate) come from
-  `data/benchmark/results.json`. Offer prices live in the homepage carousel; anything
-  beyond list price (discounts, payment terms, SOW scope) belongs on the call.
+  `data/benchmark/results.json`. Prices, discounts, payment terms and SOW scope belong on
+  the call.
 
 ## Offers
 
@@ -34,20 +34,17 @@ engagement, with no trailing qualifier:
 3. **Eval Retainer**.
 4. **Post-Training** (feasibility, then a build).
 
-- **Prices are published** (set 2026-09-22): Production Diagnostic $7,500 / 2 weeks, Eval
-  Harness Sprint from $24,000 / 3 weeks, Eval Retainer from $5,000/month, Post-Training
-  from $45,000 / 6 weeks. Each card's spec line keeps price and duration co-equal on one
-  line separated by a middle dot, because a price without a duration is not decidable; the
-  retainer carries no duration. `e2e/home.spec.ts` asserts each spec line, so a change is a
-  reviewed pricing decision rather than a copy edit.
+- **Prices are not published** (decided 2026-11-17). Each card's spec line is the
+  engagement's duration (2, 3 and 6 weeks; the retainer's reads "Monthly").
+  `e2e/home.spec.ts` asserts each spec line and that the homepage shows no price.
 - Every card renders exactly four elements and nothing else: `.offer-index`, `h3`, `p`,
   `.offer-spec`, in that order, asserted in `e2e/home.spec.ts`. Outcome, fee-credit and
   findings lines were tried on the diagnostic cards and cut on 2026-09-20; a seven-field
   card made the row unreadable. The spec is anchored to the card's bottom edge, since cards
   stretch to the row's tallest.
-- Three audiences, named on the page: startups, agencies (white-label), operators. The
-  agencies card carries the site's one in-card contact link, a text link to
-  `hello@baseweight.co`.
+- Three audiences, named on the page in this order: agencies (white-label), startups,
+  operators. The agencies card carries the site's one in-card contact link, a text link
+  to `hello@baseweight.co`.
 - Every CTA on every page is "Book a call" to `https://cal.com/baseweight/intro`. There is
   no form, no lead magnet, and no qualification asset on the site. The homepage closing CTA
   carries one secondary route beside it, an outlined "Email us" to `hello@baseweight.co`,
@@ -118,7 +115,8 @@ engagement, with no trailing qualifier:
 - `/about` is one screen: the lead, the founder, the CTA. Anything about how the work is
   done or what is offered is homepage territory and belongs there instead.
 - `/retrieval-service` is published: indexed, in the sitemap and in the nav. With no snapshot
-  the page shows its pending state.
+  the page has no Results section, and its notes keep only the demo's own; committing a
+  snapshot brings both back.
 - The `vercel.json` build command runs `build.mjs`; Vercel refuses a build command over 256
   characters, so build logic goes in that file, never inline. It runs `parseSnapshot` from
   `e2e/retrieval-service-schema.ts` on `data/retrieval-service/results.json`, so a malformed
@@ -213,7 +211,7 @@ Do not change the gated-versus-advisory metric distinction described in `docs/IN
 
 ## Honesty
 - Every figure, label, confidence interval, sample size, date and model name on the page comes from the committed results snapshot or from a live service response: `/v1/meta` for models, corpus, attribution and limits; each answer for its own latency; `/v1/health` for the deployed commit and index version. Never type a metric value into markup. Do not round a figure the site reports from the results snapshot; a live reading the service returns on each call, such as an answer's latency, may be rounded. Do not clean up or select favourable numbers from either.
-- If the results snapshot is absent, the page ships with an explicit "measurement pending" state and no figures. Not example values, not placeholder charts, not illustrative figures.
+- If the results snapshot is absent, the page shows no Results section and no figures. Not example values, not placeholder charts, not illustrative figures.
 - Never claim a test passed, a build succeeded or the demo works without executing it. If you did not run it, write "not run".
 - No secret reaches the browser. Any upstream key is injected server-side. Never in client code, never in a publicly-prefixed environment variable, never in a committed file.
 

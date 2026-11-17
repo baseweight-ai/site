@@ -143,11 +143,6 @@ footer a {
   color: var(--text-muted);
 }
 
-footer p:last-child {
-  font-size: 12px;
-  margin-top: 6px;
-}
-
 .footer-social {
   display: flex;
   justify-content: center;

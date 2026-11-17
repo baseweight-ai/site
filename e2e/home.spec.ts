@@ -3,20 +3,19 @@
  *
  * The copy asserted here is the site's current decision, not law (CLAUDE.md):
  * change a label on the page and change it here in the same commit. Prices are
- * asserted because they are published terms, so a silent edit is a pricing
+ * not on the page; that is asserted too, so a price that appears is a pricing
  * change nobody reviewed.
  */
 import { test, expect } from "@playwright/test";
 import { CAL_URL, expectSectionOrder } from "./copy-text";
 
-// Four cards, in this order. Prices are published terms, so they are asserted:
-// a silent edit is a pricing change nobody reviewed. Price and duration stay
-// co-equal on one line, since a price without a duration is not decidable.
+// Four cards, in this order, each with its duration; the retainer's line is its
+// cadence.
 const OFFERS = [
-  { name: "Production Diagnostic", spec: "$7,500 · 2 weeks" },
-  { name: "Eval Harness Sprint", spec: "From $24,000 · 3 weeks" },
-  { name: "Eval Retainer", spec: "From $5,000/month" },
-  { name: "Post-Training", spec: "From $45,000 · 6 weeks" },
+  { name: "Production Diagnostic", spec: "2 weeks" },
+  { name: "Eval Harness Sprint", spec: "3 weeks" },
+  { name: "Eval Retainer", spec: "Monthly" },
+  { name: "Post-Training", spec: "6 weeks" },
 ];
 
 test.beforeEach(async ({ page }) => {
@@ -35,7 +34,7 @@ test("the page is titled for the consultancy", async ({ page }) => {
   await expect(page).toHaveTitle("Baseweight: AI engineering consultancy");
 });
 
-// Read order: what we do, then who it is for, then what it costs, then the
+// Read order: what we do, then who it is for, then what we sell, then the
 // artifacts behind it. Pinned because a section move is a positioning decision.
 test("sections run in the intended order", async ({ page }) => {
   await expectSectionOrder(page, ["#hero", "#what-we-do", "#who", "#offers", "#published", ".final-cta"]);
@@ -77,6 +76,7 @@ test("the offer carousel carries every offer and its spec line", async ({ page }
     await expect(card.locator(".offer-spec")).toHaveText(offer.spec);
     await expect(card.getByRole("link")).toHaveCount(0);
   }
+  await expect(page.locator("main")).not.toContainText("$");
 });
 
 // Four elements per card, in one order, and nothing else. The outcome, fee
@@ -237,16 +237,16 @@ test("the rows are blocks, not bare list lines", async ({ page }) => {
   expect(style.height).toBeGreaterThan(70);
 });
 
-test("who-we-work-with names the three audiences", async ({ page }) => {
-  await expect(page.locator(".who-card h3")).toHaveText(["Startups", "Agencies", "Operators"]);
+test("who-we-work-with names the three audiences, agencies first", async ({ page }) => {
+  await expect(page.locator(".who-card h3")).toHaveText(["Agencies", "Startups", "Operators"]);
 });
 
 // Agencies only. A text link, not a button, so it stays under the section.
 test("the agencies card carries the one contact link", async ({ page }) => {
   const cards = page.locator(".who-card");
-  await expect(cards.nth(0).locator("a")).toHaveCount(0);
+  await expect(cards.nth(1).locator("a")).toHaveCount(0);
   await expect(cards.nth(2).locator("a")).toHaveCount(0);
-  const link = cards.nth(1).locator("a.who-link");
+  const link = cards.nth(0).locator("a.who-link");
   await expect(link).toHaveText("Email us");
   await expect(link).toHaveAttribute("href", "mailto:hello@baseweight.co");
   const style = await link.evaluate((el) => getComputedStyle(el).backgroundColor);

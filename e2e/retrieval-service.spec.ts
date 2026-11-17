@@ -176,7 +176,7 @@ const DEMO_NOTES = [
 // fails here.
 const SECTIONS = ["demo", "results"];
 
-test("one sentence, the demo, then the results ending in the closed notes, and nothing else", async ({ page }) => {
+test("one sentence, the demo, then the results, then the closed notes, and nothing else", async ({ page }) => {
   // A valid snapshot shows every part, so each slot is measured, not assumed.
   await serveSnapshot(page, 200, FIXTURE);
   await page.goto(PAGE);
@@ -188,11 +188,11 @@ test("one sentence, the demo, then the results ending in the closed notes, and n
   await expect(page.locator("#limitations")).toBeVisible();
   await expectSectionOrder(page, [".page-hero .lead", ...SECTIONS.map((id) => `#${id}`)]);
   await expectSectionOrder(page, ["#resultsMount", "#limitations", "#notes"]);
-  await expect(page.locator("#results > :last-child")).toHaveId("notes");
+  await expect(page.locator("article.methodology-content > :last-child")).toHaveId("notes");
   await expect(page.locator("main > section:last-child .container > *")).toHaveCount(1);
   await expect(page.locator("main :is(svg, figure, .cta-block, .btn-primary)")).toHaveCount(0);
   await page.locator("#notes > summary").click();
-  await expectSectionOrder(page, ["#notes > summary", "#notes > p", "#reproduce", "#demoNotes"]);
+  await expectSectionOrder(page, ["#notes > summary", "#method", "#reproduce", "#demoNotes"]);
 });
 
 // Between the demo and the tables, the results heading and nothing else.
@@ -235,10 +235,10 @@ test("the notes start closed, the snapshot's limitations show without them, and 
   }
 
   const summary = notes.locator(":scope > summary");
-  await expect(summary).toHaveText("How it’s measured, and its limits");
+  await expect(summary).toHaveText("How it’s measured, and its limits", { useInnerText: true });
   await summary.click();
-  await expect(notes.locator(":scope > p")).toHaveText(METHOD);
-  await expect(notes.locator(":scope > p").first()).toBeVisible();
+  await expect(notes.locator("#method > p")).toHaveText(METHOD);
+  await expect(notes.locator("#method > p").first()).toBeVisible();
   await expect(page.locator("#reproduce dd").first()).toBeVisible();
   for (const line of [...DEMO_NOTES, ATTRIBUTION]) {
     await expect(notes.locator("#demoNotes p", { hasText: line })).toBeVisible();
@@ -281,20 +281,22 @@ test("only one sentence, and no visible heading, sits above the demo", async ({ 
 });
 
 // Held back or shown, the demo leaves the page the same sentence above it, and
-// the descriptions carry it.
+// the descriptions carry it. With the demo held and no snapshot, that sentence
+// is the whole page.
 test("in either state one sentence says what the page is, and the descriptions carry it", async ({ page }) => {
   await serveSnapshot(page, 404);
+  const read = page.waitForResponse("**/data/retrieval-service/results.json");
   await page.goto(PAGE);
+  await read;
   const shown = () =>
-    page.evaluate(() => {
-      const top = document.getElementById("results")!.getBoundingClientRect().top;
-      return [...document.querySelectorAll("main :is(p, div, span, h1, h2, h3)")]
+    page.evaluate(() =>
+      [...document.querySelectorAll("main :is(p, div, span, h1, h2, h3, summary)")]
         .filter((e) => {
           const r = e.getBoundingClientRect();
-          return r.width > 1 && r.height > 1 && r.bottom <= top && !e.children.length;
+          return r.width > 1 && r.height > 1 && !e.children.length;
         })
-        .map((e) => e.textContent);
-    });
+        .map((e) => e.textContent)
+    );
   expect(await shown()).toEqual([LEAD]);
   await expect(page.locator(".page-hero .lead")).toBeInViewport({ ratio: 1 });
   await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
@@ -329,8 +331,10 @@ async function visibleSentences(page: Page): Promise<string[]> {
 for (const snapshot of [true, false]) {
   test(`${snapshot ? "with" : "without"} a snapshot, no sentence shows beyond the one at the top`, async ({ page }) => {
     await (snapshot ? serveSnapshot(page, 200, FIXTURE) : serveSnapshot(page, 404));
+    const read = page.waitForResponse("**/data/retrieval-service/results.json");
     await page.goto(PAGE);
-    await expect(page.locator(snapshot ? "#results table" : "#resultsMount .state-note").first()).toBeVisible();
+    await read;
+    if (snapshot) await expect(page.locator("#results table").first()).toBeVisible();
     expect(await visibleSentences(page)).toEqual([]);
     await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
     await expect(page.locator("#demoQuestion")).toBeVisible();
@@ -362,24 +366,39 @@ test("every limitations entry renders verbatim and in full", async ({ page }) =>
   await expect(page.locator("#limitations li")).toHaveText(JSON.parse(json).limitations);
 });
 
-test("with no snapshot, results show the pending state and no figures", async ({ page }) => {
+// Until a snapshot is committed the page has no Results section: no heading, no
+// figures, and none of the notes that speak of the results. The notes keep the
+// demo's own, and go with the demo when it is held.
+test("with no snapshot, the page has no Results section and no figures", async ({ page }) => {
   await serveSnapshot(page, 404);
   const read = page.waitForResponse("**/data/retrieval-service/results.json");
   await page.goto(PAGE);
   await read;
-  await expect(page.locator("#resultsMount")).toHaveText("Measurement pending");
-  await expect(page.locator("#limitations")).toBeHidden();
-  await expect(page.locator("#reproduce")).toBeHidden();
+  await expect(page.locator("#results")).toBeHidden();
+  await expect(page.getByRole("heading", { name: "Results" })).toHaveCount(0);
+  await expect(page.locator("#notes")).toBeHidden();
   expect(await page.locator("main").innerText()).not.toMatch(/\d/);
+
+  await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
+  const summary = page.locator("#notes > summary");
+  await expect(summary).toHaveText("Its limits", { useInnerText: true });
+  await summary.click();
+  await expect(page.locator("#method")).toBeHidden();
+  await expect(page.locator("#reproduce")).toBeHidden();
+  const [corpus, anecdote, ...demo] = DEMO_NOTES;
+  for (const line of [corpus, ...demo]) {
+    await expect(page.locator("#demoNotes p", { hasText: line })).toBeVisible();
+  }
+  await expect(page.locator("#demoNotes p", { hasText: anecdote })).toBeHidden();
 });
 
 test("the demo section is held hidden, and its notes with it", async ({ page }) => {
-  await serveSnapshot(page, 404);
+  await serveSnapshot(page, 200, FIXTURE);
   await page.goto(PAGE);
   await expect(page.locator("#demo")).toBeHidden();
   await expect(page.locator(".page-hero .lead")).toBeVisible();
   await page.locator("#notes > summary").click();
-  await expect(page.locator("#notes > p").first()).toBeVisible();
+  await expect(page.locator("#method > p").first()).toBeVisible();
   await expect(page.locator("#demoNotes")).toBeHidden();
   // retrieval-demo.js, mounted by the page, holds the question box.
   await expect(page.locator("#demoMount input#demoQuestion")).toHaveCount(1);

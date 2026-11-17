@@ -2,9 +2,8 @@
 // (INTEGRATION-BRIEF.md), one table row each, split into a gated and an
 // advisory table by each row's own `gated` field. Every figure is the
 // snapshot's own, unrounded, inserted as text, and shown only beside its n and
-// interval. With no snapshot it renders the pending state. Each table's
-// caption names its category; the page's notes define both, and say how to
-// read the figures.
+// interval. Each table's caption names its category; the page's notes define
+// both, and say how to read the figures.
 (function () {
   const CATEGORIES = [
     { gated: true, kind: 'gated', caption: 'Gated' },
@@ -93,14 +92,10 @@
     return wrap;
   }
 
-  // `snapshot` is the results document already held to the schema, or null
-  // when none is committed. The mount changes only once everything is built,
-  // so a render that stops leaves it as it was.
+  // `snapshot` is the results document already held to the schema. The mount
+  // changes only once everything is built, so a render that stops leaves it as
+  // it was.
   window.renderResults = function (mount, snapshot) {
-    if (!snapshot) {
-      mount.replaceChildren(el('p', 'Measurement pending', 'state-note'));
-      return;
-    }
     const ci = ciLabel(snapshot.confidence_level);
     // Only `true` gates, so every row lands in exactly one table.
     const tables = CATEGORIES
