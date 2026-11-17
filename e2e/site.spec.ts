@@ -296,67 +296,34 @@ test("the Retrieval page's policy is the site policy with img-src narrowed to th
   expect(sitePolicy(), "every other page keeps its images").toContain("img-src 'self' data: https:");
 });
 
-// ── The demo flag ───────────────────────────────────────────────────────────
-// retrieval-service.html ships the demo section hidden, and the build opens it
-// only when RETRIEVAL_DEMO is `on`, so the demo is switched in Vercel's
-// environment and a redeploy, with no code change (build.mjs). The build
-// command runs as vercel.json gives it, in a copy of what it reads, so the tree
-// is not written.
+// ── The build ───────────────────────────────────────────────────────────────
+// build.mjs fails the deploy on a malformed results snapshot. The build command
+// runs as vercel.json gives it, in a copy of what it reads, so the tree is not
+// written.
 
-const DEMO_HELD = '<section id="demo" hidden>';
-const DEMO_OPEN = '<section id="demo">';
-const PAGE_SOURCE = fs.readFileSync(path.join(SITE_ROOT, "retrieval-service.html"), "utf-8");
-
-function runBuild(flag: string | undefined, source = PAGE_SOURCE, snapshot?: string) {
+function runBuild(snapshot?: string) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "site-build-"));
   try {
     fs.mkdirSync(path.join(dir, "e2e"));
     for (const file of ["build.mjs", "e2e/retrieval-service-schema.ts"]) {
       fs.copyFileSync(path.join(SITE_ROOT, file), path.join(dir, file));
     }
-    fs.writeFileSync(path.join(dir, "retrieval-service.html"), source);
     if (snapshot !== undefined) {
       fs.mkdirSync(path.join(dir, "data/retrieval-service"), { recursive: true });
       fs.writeFileSync(path.join(dir, "data/retrieval-service/results.json"), snapshot);
     }
-    const env = { ...process.env };
-    delete env.RETRIEVAL_DEMO;
-    if (flag !== undefined) env.RETRIEVAL_DEMO = flag;
     const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
-    const run = spawnSync(vercel.buildCommand, { cwd: dir, env, shell: true, encoding: "utf-8" });
-    const page = fs.readFileSync(path.join(dir, "retrieval-service.html"), "utf-8");
-    return { status: run.status, stderr: run.stderr, page };
+    const run = spawnSync(vercel.buildCommand, { cwd: dir, shell: true, encoding: "utf-8" });
+    return { status: run.status, stderr: run.stderr };
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 }
 
-test("the build leaves the demo hidden unless RETRIEVAL_DEMO is on", () => {
-  for (const flag of [undefined, "", "off", "true"]) {
-    const built = runBuild(flag);
-    expect(built.status, built.stderr).toBe(0);
-    expect(built.page, `RETRIEVAL_DEMO=${flag}`).toBe(PAGE_SOURCE);
-  }
-});
-
-test("RETRIEVAL_DEMO=on makes the build open the demo and change nothing else", () => {
-  for (const flag of ["on", " ON\n"]) {
-    const built = runBuild(flag);
-    expect(built.status, built.stderr).toBe(0);
-    expect(built.page).toBe(PAGE_SOURCE.replace(DEMO_HELD, DEMO_OPEN));
-  }
-});
-
-test("the build fails once the page no longer holds the demo hidden exactly once", () => {
-  for (const source of [PAGE_SOURCE.replace(DEMO_HELD, DEMO_OPEN), PAGE_SOURCE.replace(DEMO_HELD, DEMO_HELD + DEMO_HELD)]) {
-    for (const flag of [undefined, "on"]) {
-      expect(runBuild(flag, source).status, `RETRIEVAL_DEMO=${flag}`).not.toBe(0);
-    }
-  }
-});
-
-test("the build still fails on a malformed results snapshot", () => {
-  const built = runBuild(undefined, PAGE_SOURCE, "{}");
+test("the build passes without a snapshot and fails on a malformed one", () => {
+  const clean = runBuild();
+  expect(clean.status, clean.stderr).toBe(0);
+  const built = runBuild("{}");
   expect(built.status).not.toBe(0);
   expect(built.stderr).toContain("results snapshot fails its schema");
 });
