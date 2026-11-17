@@ -93,6 +93,8 @@ for (const { path } of PAGES) {
       "href",
       "mailto:hello@baseweight.co"
     );
+    // The footer carries no last-updated date.
+    await expect(footer).not.toContainText("Updated");
   });
 }
 

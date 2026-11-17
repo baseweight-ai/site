@@ -4,7 +4,7 @@
 
 A page on https://www.baseweight.co carrying a read-only live demo of a RAG service built in `~/projects/baseweight/service`, and the measured evaluation results of that service.
 
-The page ships in three passes: the page itself first, with its results section in an explicit "measurement pending" state and no figures; the live demo second; the measured results third, when the service repo has produced them. On the page the demo leads the layout, whichever pass it arrives in.
+The page ships in three passes: the page itself first, with no results section and no figures; the live demo second; the measured results third, when the service repo has produced them, and with them the results section. On the page the demo leads the layout, whichever pass it arrives in.
 
 ## 2. The methodology the page must convey
 

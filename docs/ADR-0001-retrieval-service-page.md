@@ -6,7 +6,7 @@ Inputs: `docs/INTEGRATION-BRIEF.md`, `docs/DISCOVERY.md`, `CLAUDE.md`.
 ## Context
 
 The feature is one page carrying a live demo of the RAG service and its measured results,
-shipped in three passes: the page with results pending, then the demo, then the figures. The
+shipped in three passes: the page, then the demo, then the figures with their section. The
 demo leads the layout (brief §1), directly under the page's claim. The site is static HTML on Vercel with no server runtime, and
 the service takes no credential, so the browser calls it directly (DISCOVERY §9, brief §5a).
 `/retrieval-service` already exists as a noindexed stub that the homepage links to; the served
@@ -41,12 +41,12 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 
 The reader is a prospective client outside the field who reads almost nothing. The page is
 one sentence at the top, the question box with its examples, the comparison columns, and the
-results at the bottom, and nothing else: no global diagram, no closing CTA (the nav's stays),
-and no sentence beyond the top one. Two things show besides, both required: the attribution
-where passages appear, and the snapshot's limitations. Failure states show when something
-fails. Every other sentence and qualification sits in the notes, one closed control at the
-foot. Pass 1 ships sections 1 and 3 (pending), with 2 and the notes' demo part hidden. Pass 2
-shows them. Pass 3 fills section 3 and shows its limitations.
+results at the bottom once a snapshot is committed, and nothing else: no global diagram, no
+closing CTA (the nav's stays), and no sentence beyond the top one. Two things show besides,
+both required: the attribution where passages appear, and the snapshot's limitations. Failure
+states show when something fails. Every other sentence and qualification sits in the notes,
+one closed control at the foot. Section 2 and the notes' demo part show once the build opens
+the demo (pass 2). Section 3 and its limitations show once a snapshot is committed (pass 3).
 
 1. **Hero**: one sentence saying the page compares different RAG setups, and nothing else
    visible, centred in the benchmark's headline face, the largest text on the page. It holds
@@ -112,7 +112,7 @@ shows them. Pass 3 fills section 3 and shows its limitations.
    - Under the box, the prepared questions, with no label or control, staying while answers
      show. Nothing about the corpus or privacy sits in the demo: the footer links the policy,
      which says where a question goes. The demo's notes are in the notes, in full: the corpus
-     boundary, the anecdote, the
+     boundary, the anecdote (only with the results it points to), the
      limits (read-only, rate-limited, a daily budget), what a question sends, and the deployed
      commit and index version from `/v1/health`.
    - One polite live region announces state changes. Waiting and returned are announced, not
@@ -120,10 +120,9 @@ shows them. Pass 3 fills section 3 and shows its limitations.
 3. **Results**:
    - Source: `data/retrieval-service/results.json`, the service's `results/latest.json` copied
      verbatim by a human, read with a same-origin `fetch`.
-   - States: "measurement pending" when the fetch returns 404; failure when the fetch, the
-     parse or the schema check fails in any other way; figures when the snapshot is valid.
-     Figures enter the page only through this script.
-   - The pending state is the label "Measurement pending" in the tables' place.
+   - States: none when the fetch returns 404, the section staying hidden; failure when the
+     fetch, the parse or the schema check fails in any other way; figures when the snapshot is
+     valid. Figures enter the page only through this script.
    - Figures: a stamp from `generated_at` and `git_sha` at the section top; metric rows split
      on `gated` into two tables, each with a `<caption>` naming its category, "Gated" or
      "Advisory", the notes' terms, ruled solid for gated and dashed for advisory; per row
@@ -133,13 +132,15 @@ shows them. Pass 3 fills section 3 and shows its limitations.
      `p95_latency_ms`, `cost_usd_total`).
    - With a snapshot, under the tables: `limitations` as a list, every entry verbatim, shown
      without opening anything.
-   - Last in the section and on the page, in every state, the notes: one `<details>`, closed,
-     its summary "How it's measured, and its limits". Inside: gold ids taken from the corpus's
-     provenance data; the gated and the advisory category, each defined in one sentence, and
-     which one gates CI; the clustered, paired bootstrap, clustered by source page; what `n` and
-     a CI are; a provenance line from `dataset`, `system` and `judge`; the demo's notes, held
-     back while the demo is. Mechanism only: every figure, `n`, metric name, model name and corpus name on
-     the page renders from the snapshot or a live response.
+   - Right after the section, last on the page, the notes: one `<details>`, closed, its summary
+     "How it's measured, and its limits". Inside: gold ids taken from the corpus's provenance
+     data; the gated and the advisory category, each defined in one sentence, and which one
+     gates CI; the clustered, paired bootstrap, clustered by source page; what `n` and a CI are;
+     a provenance line from `dataset`, `system` and `judge`; the demo's notes, held back while
+     the demo is. Everything here but the demo's notes shows only with the section; without it
+     the summary reads "Its limits", and with the demo held too the control is hidden.
+     Mechanism only: every figure, `n`, metric name, model name and corpus name on the page
+     renders from the snapshot or a live response.
    - The page relates the demo's index to the measured index only after the handoff confirms
      they match (brief §5).
 
@@ -170,15 +171,15 @@ shows them. Pass 3 fills section 3 and shows its limitations.
 ## Consequences
 
 - Reusing the stub keeps the homepage link, the asserted title and the redirect set unchanged.
-- A snapshot missing from a deploy reads as pending; the snapshot spec ties the committed file
-  to the page state. Pass 3 is a data commit plus rendering code, committed separately
+- A snapshot missing from a deploy leaves the page without section 3; the snapshot spec ties
+  the committed file to the page state. Pass 3 is a data commit plus rendering code, committed separately
   (`CLAUDE.md`, Commits).
 - A visitor who never touches the demo sends nothing to the service, and crawlers do not start
   the Fly Machine.
 - Real comparisons run from a local copy at `http://127.0.0.1:8080`. A deployed page first makes
   one in production (Risk 1).
-- While the demo is hidden the page is its sentence and the results, pending until a snapshot
-  lands. The body carries no CTA of its own; the nav's "Book a call" is always on screen.
+- While the demo is hidden and no snapshot is committed, the page is its sentence alone. The
+  body carries no CTA of its own; the nav's "Book a call" is always on screen.
 
 ## Risks
 

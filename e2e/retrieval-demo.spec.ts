@@ -127,8 +127,8 @@ const column = (demo: Locator, name: string) => demo.locator(".demo-rung").nth(R
 const answers = (demo: Locator) => demo.locator(".demo-answer");
 // Where the page keeps what the demo leaves out of its reading path.
 const notes = (demo: Locator) => demo.page().locator("#demoNotes");
-// On the page the notes are one closed control under the results; this opens
-// it. The blank document has none, and its notes always show.
+// On the page the notes are one closed control at the foot; this opens it. The
+// blank document has none, and its notes always show.
 async function openNotes(page: Page) {
   const control = page.locator("details#notes");
   if ((await control.count()) && !(await control.evaluate((d) => (d as HTMLDetailsElement).open))) {
@@ -850,8 +850,8 @@ async function openPage(page: Page, width = 1280, height = 900): Promise<Locator
 }
 
 // The attribution speaks of the passages on screen, so the page's <style> holds
-// it back until one shows. The closed notes under the results hold a copy,
-// beside each of the demo's notes in full, throughout.
+// it back until one shows. The closed notes at the foot hold a copy, beside the
+// demo's notes in full, throughout.
 
 // The demo's text as a visitor can read it now: hidden lines and closed controls left out.
 const readableText = (demo: Locator) =>
@@ -887,13 +887,15 @@ async function expectNoNotesInDemo(demo: Locator) {
 }
 
 // Each note in full, in the page's notes, on screen once they are opened and
-// inside the viewport.
+// inside the viewport. These pages carry no snapshot, so the note that points
+// to the results stays back with them.
 async function expectNotesHoldAll(demo: Locator, attribution: string) {
   await openNotes(demo.page());
   const held = notes(demo);
-  for (const full of [CORPUS_FULL, ANECDOTE_FULL, LIMITS_FULL, PRIVACY_FULL, attribution]) {
+  for (const full of [CORPUS_FULL, LIMITS_FULL, PRIVACY_FULL, attribution]) {
     await expect(held.locator("p", { hasText: full })).toBeVisible();
   }
+  await expect(held.locator("p", { hasText: ANECDOTE_FULL })).toBeHidden();
   const [right, width] = await held.evaluate((n) => [
     Math.max(...[...n.querySelectorAll("*")].map((e) => e.getBoundingClientRect().right)),
     window.innerWidth,
@@ -1133,9 +1135,11 @@ test("with every control open, everything the demo leaves out of the reading pat
   await demo.locator("details:not([open]) > summary").evaluateAll((all) => all.forEach((s) => (s as HTMLElement).click()));
   await openNotes(page);
 
-  for (const full of [LIMITS_FULL, PRIVACY_FULL, CORPUS_FULL, ANECDOTE_FULL, doc.meta.attribution]) {
+  for (const full of [LIMITS_FULL, PRIVACY_FULL, CORPUS_FULL, doc.meta.attribution]) {
     await expect(notes(demo).locator("p", { hasText: full })).toBeVisible();
   }
+  // It points to the results, which the page holds back without a snapshot.
+  await expect(notes(demo).locator("p", { hasText: ANECDOTE_FULL })).toBeHidden();
   await expect(service.nth(0)).toBeVisible();
   await expect(service.nth(1)).toHaveText(doc.health.index_version);
   await expect(prepared(demo).first()).toBeVisible();
