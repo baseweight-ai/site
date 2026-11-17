@@ -18,10 +18,10 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 ### Route
 
 - Path `/retrieval-service`, file `retrieval-service.html`. The page is named Retrieval in the
-  nav, the title, the h1 and the homepage published row; the path keeps the longer name,
-  since renaming it would cost a redirect and buy nothing. The entry points are the homepage
-  published row (`index.html:820`) and the nav, which carries Home, Benchmark, Retrieval and
-  About, and collapses to the menu button at ≤730px (`components.css`).
+  title, the h1 and the homepage published row; the path keeps the longer name, since
+  renaming it would cost a redirect and buy nothing. The entry point is that row, which the
+  nav's Demos link (`/#published`) scrolls to; the nav carries Home, Demos and About, and
+  collapses to the menu button at ≤730px (`components.css`).
 - Pass 1 removes the `noindex` meta tag and adds `https://baseweight.co/retrieval-service` to
   `sitemap.xml`, with the expected list at `e2e/site.spec.ts:153-161` updated in the same
   change.

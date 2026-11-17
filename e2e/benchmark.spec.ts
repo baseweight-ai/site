@@ -31,7 +31,7 @@ test.beforeEach(async ({ page }) => {
 
 test("benchmark page loads with correct title", async ({ page }) => {
   await page.goto("/benchmark.html");
-  await expect(page).toHaveTitle("Benchmark: how we measure | Baseweight");
+  await expect(page).toHaveTitle("Fine-tuning: how we measure | Baseweight");
 });
 
 // The page sells the method, not a result: the headline says so, and the body
@@ -42,7 +42,7 @@ test("the hero names what was compared", async ({ page }) => {
   await expect(page.locator(".page-hero .subtitle")).toHaveText(
     "Narrow, high-volume tasks, across zero-shot, few-shot and fine-tuned conditions."
   );
-  await expect(page.locator(".page-hero .section-label")).toHaveText("Benchmark");
+  await expect(page.locator(".page-hero .section-label")).toHaveText("Fine-tuning");
 });
 
 test("navigation links are visible", async ({ page }) => {

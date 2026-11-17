@@ -16,9 +16,9 @@ runtime by `components.js`; their styling lives in `components.css`.
 - **Copy: `COPY-STYLE.md`**, enforced by `e2e/copy-lint.spec.ts` (patterns) and
   `e2e/copy-budget.spec.ts` (per-page word budgets).
 - **Head-to-head asset: `data/benchmark/DOCTRINE.md`** (doctrine and build plan for the
-  public head-to-head). The asset is named three ways on purpose: it lives at `/benchmark`,
-  the nav says "Benchmark", and the page's own title, heading, and copy say "head-to-head".
-  `/head-to-head` 301s to `/benchmark`.
+  public head-to-head). Its page is named "Fine-tuning" and lives at `/benchmark`;
+  `/head-to-head` 301s there. The nav reaches it and `/retrieval-service` through one
+  "Demos" link to the homepage's Demos section (`/#published`).
 - Memory files are advisory.
 - **Numbers.** Head-to-head figures (28–138×, the $0.46 GPU rate) come from
   `data/benchmark/results.json`. Prices, discounts, payment terms and SOW scope belong on
@@ -34,14 +34,12 @@ engagement, with no trailing qualifier:
 3. **Eval Retainer**.
 4. **Post-Training** (feasibility, then a build).
 
-- **Prices are not published** (decided 2026-11-17). Each card's spec line is the
-  engagement's duration (2, 3 and 6 weeks; the retainer's reads "Monthly").
-  `e2e/home.spec.ts` asserts each spec line and that the homepage shows no price.
-- Every card renders exactly four elements and nothing else: `.offer-index`, `h3`, `p`,
-  `.offer-spec`, in that order, asserted in `e2e/home.spec.ts`. Outcome, fee-credit and
-  findings lines were tried on the diagnostic cards and cut on 2026-09-20; a seven-field
-  card made the row unreadable. The spec is anchored to the card's bottom edge, since cards
-  stretch to the row's tallest.
+- **Prices and durations are not published** (decided 2026-11-17); `e2e/home.spec.ts`
+  asserts the homepage shows no price.
+- Every card renders exactly three elements and nothing else: `.offer-index`, `h3`, `p`,
+  in that order, asserted in `e2e/home.spec.ts`. Outcome, fee-credit and findings lines
+  were tried on the diagnostic cards and cut on 2026-09-20; a seven-field card made the
+  row unreadable.
 - Three audiences, named on the page in this order: agencies (white-label), startups,
   operators. The agencies card carries the site's one in-card contact link, a text link
   to `hello@baseweight.co`.
@@ -114,9 +112,9 @@ engagement, with no trailing qualifier:
   restraint. Page order is hero, tasks, results table, error analysis, artifacts, CTA.
 - `/about` is one screen: the lead, the founder, the CTA. Anything about how the work is
   done or what is offered is homepage territory and belongs there instead.
-- `/retrieval-service` is published: indexed, in the sitemap and in the nav. With no snapshot
-  the page has no Results section, and its notes keep only the demo's own; committing a
-  snapshot brings both back.
+- `/retrieval-service` is published: indexed, in the sitemap and in the homepage's Demos
+  section. With no snapshot the page has no Results section, and its notes keep only the
+  demo's own; committing a snapshot brings both back.
 - The `vercel.json` build command runs `build.mjs`; Vercel refuses a build command over 256
   characters, so build logic goes in that file, never inline. It runs `parseSnapshot` from
   `e2e/retrieval-service-schema.ts` on `data/retrieval-service/results.json`, so a malformed
@@ -150,7 +148,7 @@ engagement, with no trailing qualifier:
   Any figure quoted outside `/benchmark` needs a provenance comment naming its
   `data/benchmark/results.json` rows and a re-sync when the head-to-head reruns.
 - The homepage published section carries no figures, but its one row counts the run's tasks
-  ("two vertical tasks"). That is a census, so it goes stale the moment a third task
+  ("two narrow tasks"). That is a census, so it goes stale the moment a third task
   publishes; it is allowlisted in `e2e/copy-lint.spec.ts` rather than exempt, and re-syncing
   it is part of a head-to-head rerun.
 - In `results.json`, `pricing_provenance.gpu_hourly_rate_used` (0.46, mirrored on every

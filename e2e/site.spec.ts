@@ -18,7 +18,7 @@ import { CAL_URL, SITE_ROOT, sitePages } from "./copy-text";
 const TITLES: Record<string, RegExp> = {
   "index.html": /Baseweight/,
   "about.html": /About/,
-  "benchmark.html": /Benchmark/i,
+  "benchmark.html": /^Fine-tuning:/,
   "methodology.html": /How it.s tested/i,
   "retrieval-service.html": /^Retrieval \|/,
   "privacy.html": /Privacy/,
@@ -56,26 +56,19 @@ for (const { path } of PAGES) {
   });
 }
 
-// Home, Benchmark, Retrieval, About, then the Book a call button.
+// Home, Demos, About, then the Book a call button. Demos goes to the homepage
+// section that links each demo's page.
 // Contact was removed with its page on 2026-09-20.
-test("nav carries exactly Home, Benchmark, Retrieval, About and the call button", async ({ page }) => {
+test("nav carries exactly Home, Demos, About and the call button", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator("nav#nav a").first()).toBeVisible();
   const nav = page.locator("nav#nav");
-  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText([
-    "Home",
-    "Benchmark",
-    "Retrieval",
-    "About",
-  ]);
-  await expect(nav.getByRole("link", { name: "Benchmark", exact: true })).toHaveAttribute(
+  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText(["Home", "Demos", "About"]);
+  await expect(nav.getByRole("link", { name: "Demos", exact: true })).toHaveAttribute(
     "href",
-    "/benchmark"
+    "/#published"
   );
-  await expect(nav.getByRole("link", { name: "Retrieval", exact: true })).toHaveAttribute(
-    "href",
-    "/retrieval-service"
-  );
+  await expect(page.locator("#published")).toHaveCount(1);
   await expect(nav.getByRole("link", { name: /Contact/i })).toHaveCount(0);
   await expect(nav.locator("a.nav-cta")).toHaveAttribute("href", CAL_URL);
 });
@@ -117,12 +110,20 @@ for (const { path } of CTA_PAGES) {
 
 // ── No broken nav active state ────────────────────────────────────────────────
 
-test("benchmark page has its nav link marked active", async ({ page }) => {
-  await page.goto("/benchmark.html");
-  const activeLink = page.locator("nav a.active, nav a[aria-current]");
-  if (await activeLink.count() > 0) {
-    const href = await activeLink.first().getAttribute("href");
-    expect(href).toMatch(/benchmark/i);
+// Demos is current on the demos' pages, Fine-tuning's method page included. Its link
+// goes to the homepage section, not to the page itself, so it is current "true"
+// rather than "page".
+test("Demos is the highlighted nav link on each demo page", async ({ page }) => {
+  const nav = page.locator("nav#nav");
+  const color = (name: string) =>
+    nav.getByRole("link", { name, exact: true }).evaluate((el) => getComputedStyle(el).color);
+  for (const path of ["/benchmark.html", "/methodology.html", "/retrieval-service.html"]) {
+    await page.goto(path);
+    const current = nav.locator("a[aria-current]");
+    await expect(current, path).toHaveCount(1);
+    await expect(current, path).toHaveText("Demos");
+    await expect(current, path).toHaveAttribute("aria-current", "true");
+    expect(await color("Demos"), path).not.toBe(await color("About"));
   }
 });
 
