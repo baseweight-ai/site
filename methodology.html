@@ -260,7 +260,7 @@ body::after {
 
 <section class="page-hero">
   <div class="container">
-    <div class="section-label meth-anim" style="animation-delay: 0s;"><a href="/benchmark" style="color: var(--accent); text-decoration: none;">Fine-tuning</a> <span style="color: var(--text-muted);">/ How it&rsquo;s tested</span></div>
+    <div class="section-label meth-anim" style="animation-delay: 0s;"><a href="/fine-tuning" style="color: var(--accent); text-decoration: none;">Fine-tuning</a> <span style="color: var(--text-muted);">/ How it&rsquo;s tested</span></div>
     <h1 class="meth-anim" style="animation-delay: 0.07s;">How it&rsquo;s tested</h1>
     <p class="subtitle meth-anim" style="animation-delay: 0.14s;">How the benchmark was designed, run, and measured.</p>
   </div>
@@ -297,8 +297,8 @@ body::after {
 
         <h2 id="models">Models</h2>
         <p><strong>Open-weight (QLoRA fine-tuned):</strong> Qwen3-8B (8B parameters, Apache 2.0 licence; open-weight rather than OSI-open-source, since the training data is closed). Model files are revision-pinned SafeTensors with published hashes. Served with vLLM on a single NVIDIA RTX 3090.</p>
-        <p><strong>Hosted API (prompted):</strong> GPT-5.4 Mini (the cost-efficient API tier a team would deploy for a task at this volume) tested zero-shot and 5-shot at standard API pricing. Other vendors&rsquo; models, and flagship or reasoning tiers where a task&rsquo;s latency and cost budget justify them, are being added. The per-query cost reflects measured token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
-        <p><strong>Why a decoder for a classification task?</strong> For a single closed-set task like Banking77 in isolation, a small encoder classifier (a fine-tuned DeBERTa, or SetFit on a few hundred labels) is often the more accurate and cheaper-to-serve tool. Encoder and other non-decoder baselines are being added per task. We report a decoder here because most deployments run a <em>portfolio</em> of tasks: one open base model with per-task LoRA adapters, hot-swapped or served concurrently, covers classification, extraction, and generation on a single inference stack, frequently the better fleet-level trade even when an encoder wins a task on its own.</p>
+        <p><strong>Hosted API (prompted):</strong> GPT-5.4 Mini (the cost-efficient API tier a team would deploy for a task at this volume) tested zero-shot and 5-shot at standard API pricing. The per-query cost reflects measured token usage at the time of the run; it updates automatically when the benchmark reruns.</p>
+        <p><strong>Why a decoder for a classification task?</strong> For a single closed-set task like Banking77 in isolation, a small encoder classifier (a fine-tuned DeBERTa, or SetFit on a few hundred labels) is often the more accurate and cheaper-to-serve tool. We report a decoder here because most deployments run a <em>portfolio</em> of tasks: one open base model with per-task LoRA adapters, hot-swapped or served concurrently, covers classification, extraction, and generation on a single inference stack, frequently the better fleet-level trade even when an encoder wins a task on its own.</p>
 
         <h2 id="conditions">Conditions</h2>
         <div class="table-wrap">

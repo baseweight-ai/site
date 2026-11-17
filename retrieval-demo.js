@@ -1,4 +1,4 @@
-// The demo for /retrieval-service: one question to POST /v1/compare, answered
+// The demo for /retrieval: one question to POST /v1/compare, answered
 // by every rung side by side (INTEGRATION-BRIEF.md §5, ADR-0001). Nothing
 // reaches the service until the question box or a prepared question takes
 // focus, and a question goes only once GET /v1/meta has answered, so the live

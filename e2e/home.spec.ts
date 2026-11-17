@@ -192,21 +192,21 @@ test.describe("with JS off", () => {
 test("the published section carries both rows, each linking to its page", async ({ page }) => {
   const rows = page.locator(".published-row");
   await expect(rows).toHaveCount(2);
-  await expect(page.locator("#published .section-label")).toHaveText("Examples");
-  await expect(page.locator("#published h2")).toHaveText("Demos");
+  await expect(page.locator("#published .section-label")).toHaveText("Published");
+  await expect(page.locator("#published h2")).toHaveText("Examples");
 
   const shipped = rows.nth(0);
-  await expect(shipped).toHaveAttribute("href", "/benchmark");
+  await expect(shipped).toHaveAttribute("href", "/fine-tuning");
   await expect(shipped.locator(".published-name")).toHaveText("Fine-tuning");
   await expect(shipped.locator(".published-what")).toHaveText(
-    "Open models tuned to two narrow tasks, against a frontier API."
+    "Open models tuned to narrow tasks, against a frontier API."
   );
 
   const second = rows.nth(1);
-  await expect(second).toHaveAttribute("href", "/retrieval-service");
+  await expect(second).toHaveAttribute("href", "/retrieval");
   await expect(second.locator(".published-name")).toHaveText("Retrieval");
   await expect(second.locator(".published-what")).toHaveText(
-    "Ask a question and compare RAG setups side by side."
+    "Ask a question and compare RAG setups on a Wikipedia sample."
   );
   await expect(second.locator(".published-go")).toHaveCount(1);
   // The "In build" label came off on 2026-09-20 when the row got a page.

@@ -26,7 +26,17 @@
     },
     {
       "source": "/head-to-head",
-      "destination": "/benchmark",
+      "destination": "/fine-tuning",
+      "permanent": true
+    },
+    {
+      "source": "/benchmark",
+      "destination": "/fine-tuning",
+      "permanent": true
+    },
+    {
+      "source": "/retrieval-service",
+      "destination": "/retrieval",
       "permanent": true
     },
     {
@@ -62,7 +72,7 @@
       ]
     },
     {
-      "source": "/retrieval-service",
+      "source": "/retrieval",
       "headers": [
         {
           "key": "Content-Security-Policy",

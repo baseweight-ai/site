@@ -199,7 +199,7 @@ data stays in their environment.
 ## Placement: measurement is sold as an offer, described once
 
 Measurement is a priced offer (the Eval Harness Sprint and the Eval Retainer), so it is
-named in the offer carousel and in the "what we do" list, and nowhere else. `/benchmark` is
+named in the offer carousel and in the "what we do" list, and nowhere else. `/fine-tuning` is
 the numbers' home; other surfaces point to it. `/about` is the one page that argues the
 thesis ("Why we measure first"), because a reason given once in its own place is not the
 re-promise this rule is about. Heroes,

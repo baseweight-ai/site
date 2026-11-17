@@ -1,5 +1,5 @@
 /**
- * The demo component for /retrieval-service (retrieval-demo.js), alone in a
+ * The demo component for /retrieval (retrieval-demo.js), alone in a
  * blank document, against a mocked service whose payloads follow the deployed
  * openapi.json: what goes to the service and when, the wait, the rung columns
  * with their citations, and every state a failure leaves.
@@ -835,9 +835,9 @@ test("when /v1/health fails, the comparison still goes and the service line stay
 });
 
 // ── On the page ─────────────────────────────────────────────────────────────
-// retrieval-service.html mounts the demo at #demoMount.
+// retrieval.html mounts the demo at #demoMount.
 
-const PAGE = "/retrieval-service.html";
+const PAGE = "/retrieval.html";
 
 async function openPage(page: Page, width = 1280, height = 900): Promise<Locator> {
   await page.setViewportSize({ width, height });

@@ -1,4 +1,4 @@
-// Results for /retrieval-service: the snapshot's metric rows
+// Results for /retrieval: the snapshot's metric rows
 // (INTEGRATION-BRIEF.md), one table row each, split into a gated and an
 // advisory table by each row's own `gated` field. Every figure is the
 // snapshot's own, unrounded, inserted as text, and shown only beside its n and

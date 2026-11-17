@@ -12,7 +12,7 @@ const FIXTURE_JSON = fs.readFileSync(
 
 // Parsed once from the page's TASKS declaration, so adding a task changes no
 // magic numbers here.
-const PAGE_HTML = fs.readFileSync(path.join(SITE_ROOT, "benchmark.html"), "utf-8");
+const PAGE_HTML = fs.readFileSync(path.join(SITE_ROOT, "fine-tuning.html"), "utf-8");
 const TASK_SHAPES = [...PAGE_HTML.matchAll(/shape: '([^']+)'/g)].map((m) => m[1]);
 const TASK_VERTICALS = [...PAGE_HTML.matchAll(/vertical: '([^']+)'/g)].map((m) => m[1]);
 
@@ -29,24 +29,24 @@ test.beforeEach(async ({ page }) => {
 
 // ── Page load ─────────────────────────────────────────────────────────────────
 
-test("benchmark page loads with correct title", async ({ page }) => {
-  await page.goto("/benchmark.html");
-  await expect(page).toHaveTitle("Fine-tuning: how we measure | Baseweight");
+test("the Fine-tuning page loads with its title", async ({ page }) => {
+  await page.goto("/fine-tuning.html");
+  await expect(page).toHaveTitle("Fine-tuning: open models against a frontier API | Baseweight");
 });
 
 // The page sells the method, not a result: the headline says so, and the body
 // names what was published rather than who won.
 test("the hero names what was compared", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.locator("h1")).toHaveText("Open models, fine-tuned, against a frontier API.");
   await expect(page.locator(".page-hero .subtitle")).toHaveText(
-    "Narrow, high-volume tasks, across zero-shot, few-shot and fine-tuned conditions."
+    "Narrow, high-volume tasks, each run on an open model before and after fine-tuning, and on the API."
   );
   await expect(page.locator(".page-hero .section-label")).toHaveText("Fine-tuning");
 });
 
 test("navigation links are visible", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.getByRole("link", { name: /Baseweight/i }).first()).toBeVisible();
 });
 
@@ -55,7 +55,7 @@ test("navigation links are visible", async ({ page }) => {
 // Every tab opens onto published numbers. Work in progress gets no tab, so a
 // status chip anywhere here means a placeholder crept back.
 test("every tab is a published task, with no status chips", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.locator('[role="tab"]')).toHaveCount(TASK_SHAPES.length);
   await expect(page.locator(".task-tab-soon")).toHaveCount(0);
   await expect(page.getByText(/in build|planned|coming soon/i)).toHaveCount(0);
@@ -72,14 +72,14 @@ test("task portfolio has no duplicate shapes or verticals", () => {
 });
 
 test("clause extraction tab is active on load", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   const active = page.locator('[role="tab"][aria-selected="true"]');
   await expect(active).toHaveCount(1);
   await expect(active).toHaveText(/Contract review/i);
 });
 
 test("clicking a task tab switches the active tab", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await page.getByRole("tab", { name: /Support triage/i }).click();
   await expect(page.locator('[role="tab"][aria-selected="true"]')).toHaveText(/Support triage/i);
 });
@@ -87,7 +87,7 @@ test("clicking a task tab switches the active tab", async ({ page }) => {
 // ── Per-task explanation + consolidated layout ──────────────────────────────────
 
 test("per-task explanation renders and updates on tab switch", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.locator("#taskBlurb")).not.toBeEmpty();
   await expect(page.locator("#taskBlurb")).toContainText(/contract/i);
   await page.getByRole("tab", { name: /Support triage/i }).click();
@@ -98,14 +98,14 @@ test("per-task explanation renders and updates on tab switch", async ({ page }) 
 // and the cost calculator was a second argument on a page whose credibility is
 // restraint. Neither comes back without a decision.
 test("no stat callouts and no cost calculator", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.locator("#benchHeadline, .bh-cards, .bench-keyresult")).toHaveCount(0);
   await expect(page.locator("#costSection, .tco-calculator, #tcoBody, #gpuRate")).toHaveCount(0);
   await expect(page.getByText(/what it costs to run/i)).toHaveCount(0);
 });
 
 test("the page runs hero, tasks, results, artifacts, CTA in that order", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expectSectionOrder(page, ["h1", "#taskTabs", "#leaderboardTable", "#reproArtifacts", ".cta-block"]);
 });
 
@@ -114,7 +114,7 @@ test("the page runs hero, tasks, results, artifacts, CTA in that order", async (
 // measured belongs above the numbers, not only in the artifacts at the bottom.
 
 test("the run date is stated near the top, with the model it ran against", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   const stamp = page.locator("#benchStamp");
   await expect(stamp).toBeVisible();
   await expect(stamp).toContainText(/Run \d{1,2} \w+ \d{4}/);
@@ -127,14 +127,14 @@ test("the run date is stated near the top, with the model it ran against", async
 
 // The run date lives in the hero stamp only; the legend names the tier.
 test("the leaderboard legend names the hosted-API tier", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.locator(".table-legend")).toContainText("Hosted API, cost tier");
   await expect(page.locator("#apiAsOf")).toHaveCount(0);
 });
 
 // The closing CTA is the booking link; every CTA on the site routes to cal.com.
 test("closing CTA books a call", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   const cta = page.locator(".cta-block");
   await expect(cta.getByRole("link", { name: /Book a call/i })).toHaveAttribute("href", CAL_URL);
 });
@@ -143,7 +143,7 @@ test("closing CTA books a call", async ({ page }) => {
 
 test.describe("Support triage leaderboard (banking77 — has all conditions)", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/benchmark.html");
+    await page.goto("/fine-tuning.html");
     await page.getByRole("tab", { name: /Support triage/i }).click();
   });
 
@@ -182,7 +182,7 @@ test.describe("Support triage leaderboard (banking77 — has all conditions)", (
 // The legend names the categories; the chart is the explanation. Definitions
 // were cut on 2026-09-20, and the reproduce section opens on the artifacts.
 test("the error legend is labels only, and reproduce opens on the artifacts", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   const items = page.locator(".error-legend-item");
   await expect(items.first()).toBeVisible();
   for (const text of await items.allInnerTexts()) {
@@ -194,7 +194,7 @@ test("the error legend is labels only, and reproduce opens on the artifacts", as
 
 // One sentence each: what the task is, not why it is hard.
 test("task blurbs are a single sentence", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   for (const name of [/Contract review/i, /Support triage/i]) {
     await page.getByRole("tab", { name }).click();
     const text = (await page.locator("#taskBlurb").innerText()).trim();
@@ -203,7 +203,7 @@ test("task blurbs are a single sentence", async ({ page }) => {
 });
 
 test("contract review leads with AUPR and lists every condition", async ({ page }) => {
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.locator("#metricColLabel")).toContainText("AUPR");
   await expect(page.locator("#leaderboardBody tr.lb-row")).toHaveCount(3);
 });
@@ -219,7 +219,7 @@ test("page renders without crashing when data fetch fails", async ({ page }) => 
   const errors: string[] = [];
   page.on("pageerror", (err) => errors.push(err.message));
 
-  await page.goto("/benchmark.html");
+  await page.goto("/fine-tuning.html");
   await expect(page.locator("nav")).toBeVisible();
   expect(errors.filter((e) => !e.includes("Failed to load benchmark data"))).toHaveLength(0);
 });

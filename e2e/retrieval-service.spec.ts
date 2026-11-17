@@ -133,7 +133,7 @@ test("no other metric may be null", () => {
 // Each test serves the snapshot itself, so none depends on whether one is
 // committed.
 
-const PAGE = "/retrieval-service.html";
+const PAGE = "/retrieval.html";
 
 function serveSnapshot(page: Page, status: number, body = "") {
   return page.route("**/data/retrieval-service/results.json", (route) =>
@@ -141,9 +141,8 @@ function serveSnapshot(page: Page, status: number, body = "") {
   );
 }
 
-// The page's one sentence, true whether or not the demo shows, so the meta and
-// social descriptions carry it too.
-const LEAD = "Different RAG setups, compared.";
+// The page's one sentence, which the meta and social descriptions carry too.
+const LEAD = "Different RAG setups, compared on a Wikipedia sample.";
 // The deployed GET /v1/meta attribution, verbatim (brief §3). The page shows no
 // corpus text until the demo renders a passage, so it ships with the demo.
 const ATTRIBUTION =

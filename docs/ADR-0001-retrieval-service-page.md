@@ -17,10 +17,10 @@ precedent and `benchmark.html` the data-read precedent (DISCOVERY §7).
 
 ### Route
 
-- Path `/retrieval-service`, file `retrieval-service.html`. The page is named Retrieval in the
-  title, the h1 and the homepage published row; the path keeps the longer name, since
-  renaming it would cost a redirect and buy nothing. The entry point is that row, which the
-  nav's Demos link (`/#published`) scrolls to; the nav carries Home, Demos and About, and
+- Path `/retrieval`, file `retrieval.html`; `/retrieval-service`, the path it launched on,
+  redirects there permanently. The page is named Retrieval in the title, the h1 and the
+  homepage published row. The entry point is that row, which the nav's Examples link
+  (`/#published`) scrolls to; the nav carries Home, Examples and About, and
   collapses to the menu button at ≤730px (`components.css`).
 - Pass 1 removes the `noindex` meta tag and adds `https://baseweight.co/retrieval-service` to
   `sitemap.xml`, with the expected list at `e2e/site.spec.ts:153-161` updated in the same
@@ -155,7 +155,7 @@ Section 3 and its limitations show once a snapshot is committed (pass 3).
 ### Headers
 
 - `vercel.json` site rule: `connect-src` gains `https://baseweight-service.fly.dev`.
-- New `vercel.json` `headers` entry, `source: "/retrieval-service"`: the site policy in full,
+- New `vercel.json` `headers` entry, `source: "/retrieval"`: the site policy in full,
   with `img-src 'self' https://baseweight-service.fly.dev`.
 - A static spec asserts both rules against `vercel.json`, as `e2e/site.spec.ts:186-204` does
   for redirects.

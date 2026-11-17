@@ -16,9 +16,9 @@ runtime by `components.js`; their styling lives in `components.css`.
 - **Copy: `COPY-STYLE.md`**, enforced by `e2e/copy-lint.spec.ts` (patterns) and
   `e2e/copy-budget.spec.ts` (per-page word budgets).
 - **Head-to-head asset: `data/benchmark/DOCTRINE.md`** (doctrine and build plan for the
-  public head-to-head). Its page is named "Fine-tuning" and lives at `/benchmark`;
-  `/head-to-head` 301s there. The nav reaches it and `/retrieval-service` through one
-  "Demos" link to the homepage's Demos section (`/#published`).
+  public head-to-head). Its page is named "Fine-tuning" and lives at `/fine-tuning`;
+  `/benchmark` and `/head-to-head` redirect there permanently. The nav reaches it and
+  `/retrieval` through one "Examples" link to the homepage's Examples section (`/#published`).
 - Memory files are advisory.
 - **Numbers.** Head-to-head figures (28–138×, the $0.46 GPU rate) come from
   `data/benchmark/results.json`. Prices, discounts, payment terms and SOW scope belong on
@@ -61,7 +61,7 @@ engagement, with no trailing qualifier:
 ## Run / test
 
 - Serve from the repo root: `npx serve` or `python3 -m http.server 8080`.
-  `serve` and Vercel resolve clean URLs (`/benchmark`, `/about`, …); `python -m
+  `serve` and Vercel resolve clean URLs (`/fine-tuning`, `/about`, …); `python -m
   http.server` does **not** rewrite, so open `*.html` directly. Internal links use the
   clean, no-`.html` form.
 - E2E: `npm run test:e2e` (Playwright, Firefox; the config auto-starts the static server on
@@ -90,9 +90,10 @@ engagement, with no trailing qualifier:
 - Text tokens must hold WCAG AA contrast (>=4.5:1 on background and cards); `--text-muted`
   is #807d76 after a failed #555 regression.
 - "frontier" was internals-only until 2026-09-20, when the owner put "a frontier API" into
-  the `/benchmark` hero and the homepage published row. It now names the hosted API tier in
-  those two places and nowhere else; everywhere else the buyer-facing phrase stays
-  "big-platform" or "hosted API". The `model_family` enum and the CSS tokens are unchanged.
+  the `/fine-tuning` hero and the homepage published row; that page's title repeats its
+  hero. It now names the hosted API tier in those places and nowhere else; everywhere else
+  the buyer-facing phrase stays "big-platform" or "hosted API". The `model_family` enum and
+  the CSS tokens are unchanged.
 - The homepage offer carousel is a scroll-snap track: the arrows and rail are progressive
   enhancement over a plain scroller, so touch swipe and keyboard scrolling work with JS off.
   Card width is derived from the track (`--per-view`: 3 / 2 / 1 by width) so only whole cards
@@ -100,21 +101,21 @@ engagement, with no trailing qualifier:
   signal is a fade on the edge that has more cards behind it (`.offer-viewport.has-prev` /
   `.has-next`, kept in step by the scroll handler, right side on by default for JS off),
   backed by the arrows. Cards stretch to the row's tallest.
-- `/benchmark` is a method page, and every tab on it opens onto published numbers: a task
+- `/fine-tuning` is a method page, and every tab on it opens onto published numbers: a task
   enters `TASKS` when its run is in `results.json`, never before. The placeholder-tab
   machinery (`upcoming`, `.task-tab-soon`, the status panel) was removed with the in-build
   tab on 2026-09-20; bringing back an in-build tab means bringing back that code and its
   tests. The run date is rendered from `generated_at` into the hero stamp, so the reader
   meets it before the numbers; never type it by hand.
-- `/benchmark` carries no stat callouts and no cost calculator (both cut 2026-09-20): a
+- `/fine-tuning` carries no stat callouts and no cost calculator (both cut 2026-09-20): a
   number that is already a row in the results table does not get repeated as a headline,
   and a savings calculator reads as a marketing device on a page whose credibility is
   restraint. Page order is hero, tasks, results table, error analysis, artifacts, CTA.
 - `/about` is one screen: the lead, the founder, the CTA. Anything about how the work is
   done or what is offered is homepage territory and belongs there instead.
-- `/retrieval-service` is published: indexed, in the sitemap and in the homepage's Demos
-  section. With no snapshot the page has no Results section, and its notes keep only the
-  demo's own; committing a snapshot brings both back.
+- `/retrieval` is published: indexed, in the sitemap and in the homepage's Examples section;
+  `/retrieval-service` redirects there permanently. With no snapshot the page has no Results
+  section, and its notes keep only the demo's own; committing a snapshot brings both back.
 - The `vercel.json` build command runs `build.mjs`; Vercel refuses a build command over 256
   characters, so build logic goes in that file, never inline. It runs `parseSnapshot` from
   `e2e/retrieval-service-schema.ts` on `data/retrieval-service/results.json`, so a malformed
@@ -139,14 +140,10 @@ engagement, with no trailing qualifier:
 
 ## Head-to-head data provenance
 
-- `/benchmark` is the only page carrying head-to-head figures: the homepage proof strip
+- `/fine-tuning` is the only page carrying head-to-head figures: the homepage proof strip
   was removed on 2026-09-20, and with it the last hardcoded snapshot on a marketing page.
-  Any figure quoted outside `/benchmark` needs a provenance comment naming its
+  Any figure quoted outside `/fine-tuning` needs a provenance comment naming its
   `data/benchmark/results.json` rows and a re-sync when the head-to-head reruns.
-- The homepage published section carries no figures, but its one row counts the run's tasks
-  ("two narrow tasks"). That is a census, so it goes stale the moment a third task
-  publishes; it is allowlisted in `e2e/copy-lint.spec.ts` rather than exempt, and re-syncing
-  it is part of a head-to-head rerun.
 - In `results.json`, `pricing_provenance.gpu_hourly_rate_used` (0.46, mirrored on every
   open-source row) is load-bearing: `cost_per_query = rate / (qps × 3600)`, and it
   propagates into the published "28–138× cheaper" claims. Change it only via a full

@@ -133,14 +133,6 @@ const ALLOWLIST: { page: string; pattern: string; snippet: string; reason: strin
   // (add entries only for genuine terms-of-art or an owner decision, with the
   //  justification here; protocol strings belong out of copy vocabulary, not
   //  on this list)
-  {
-    page: "index.html",
-    pattern: "volatile count anchor",
-    snippet: "two narrow tasks",
-    reason:
-      "Owner-written published-row copy (2026-11-17). It is a census of the current run, " +
-      "so it goes stale the moment a third task publishes: re-check it with the benchmark rerun.",
-  },
 ];
 
 // Precompiled once: findViolations runs every pattern over every scanned text.

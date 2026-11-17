@@ -18,9 +18,9 @@ import { CAL_URL, SITE_ROOT, sitePages } from "./copy-text";
 const TITLES: Record<string, RegExp> = {
   "index.html": /Baseweight/,
   "about.html": /About/,
-  "benchmark.html": /^Fine-tuning:/,
+  "fine-tuning.html": /^Fine-tuning:/,
   "methodology.html": /How it.s tested/i,
-  "retrieval-service.html": /^Retrieval \|/,
+  "retrieval.html": /^Retrieval \|/,
   "privacy.html": /Privacy/,
 };
 
@@ -56,15 +56,15 @@ for (const { path } of PAGES) {
   });
 }
 
-// Home, Demos, About, then the Book a call button. Demos goes to the homepage
-// section that links each demo's page.
+// Home, Examples, About, then the Book a call button. Examples goes to the
+// homepage section that links each example's page.
 // Contact was removed with its page on 2026-09-20.
-test("nav carries exactly Home, Demos, About and the call button", async ({ page }) => {
+test("nav carries exactly Home, Examples, About and the call button", async ({ page }) => {
   await page.goto("/index.html");
   await expect(page.locator("nav#nav a").first()).toBeVisible();
   const nav = page.locator("nav#nav");
-  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText(["Home", "Demos", "About"]);
-  await expect(nav.getByRole("link", { name: "Demos", exact: true })).toHaveAttribute(
+  await expect(nav.locator("li a:not(.nav-cta)")).toHaveText(["Home", "Examples", "About"]);
+  await expect(nav.getByRole("link", { name: "Examples", exact: true })).toHaveAttribute(
     "href",
     "/#published"
   );
@@ -110,20 +110,20 @@ for (const { path } of CTA_PAGES) {
 
 // ── No broken nav active state ────────────────────────────────────────────────
 
-// Demos is current on the demos' pages, Fine-tuning's method page included. Its link
-// goes to the homepage section, not to the page itself, so it is current "true"
+// Examples is current on the example pages, Fine-tuning's method page included. Its
+// link goes to the homepage section, not to the page itself, so it is current "true"
 // rather than "page".
-test("Demos is the highlighted nav link on each demo page", async ({ page }) => {
+test("Examples is the highlighted nav link on each example page", async ({ page }) => {
   const nav = page.locator("nav#nav");
   const color = (name: string) =>
     nav.getByRole("link", { name, exact: true }).evaluate((el) => getComputedStyle(el).color);
-  for (const path of ["/benchmark.html", "/methodology.html", "/retrieval-service.html"]) {
+  for (const path of ["/fine-tuning.html", "/methodology.html", "/retrieval.html"]) {
     await page.goto(path);
     const current = nav.locator("a[aria-current]");
     await expect(current, path).toHaveCount(1);
-    await expect(current, path).toHaveText("Demos");
+    await expect(current, path).toHaveText("Examples");
     await expect(current, path).toHaveAttribute("aria-current", "true");
-    expect(await color("Demos"), path).not.toBe(await color("About"));
+    expect(await color("Examples"), path).not.toBe(await color("About"));
   }
 });
 
@@ -168,10 +168,10 @@ test("the sitemap lists the live pages", () => {
     [
       "https://baseweight.co/",
       "https://baseweight.co/about",
-      "https://baseweight.co/benchmark",
+      "https://baseweight.co/fine-tuning",
       "https://baseweight.co/methodology",
       "https://baseweight.co/privacy",
-      "https://baseweight.co/retrieval-service",
+      "https://baseweight.co/retrieval",
     ].sort()
   );
   // A redirected or noindexed path in the sitemap is a crawl error. Derived, so
@@ -211,10 +211,12 @@ test("serve.json mirrors vercel.json, and every redirect is a 301", () => {
 test("retired paths still redirect", () => {
   const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
   const map = redirectMap(vercel.redirects);
-  for (const source of ["/head-to-head", "/contact", "/pilot", "/scope", "/fit-score", "/diagnostic"]) {
+  for (const source of ["/benchmark", "/retrieval-service", "/head-to-head", "/contact", "/pilot", "/scope", "/fit-score", "/diagnostic"]) {
     expect(map[source], `${source} must redirect`).toBeTruthy();
   }
-  expect(map["/head-to-head"]).toBe("/benchmark");
+  expect(map["/benchmark"]).toBe("/fine-tuning");
+  expect(map["/head-to-head"]).toBe("/fine-tuning");
+  expect(map["/retrieval-service"]).toBe("/retrieval");
   expect(map["/contact"]).toBe("/#cta");
 });
 
@@ -250,7 +252,7 @@ test("the site policy opens connect-src to the service's origin and nothing else
 // are stubbed: a call the policy lets out is answered here, and the suite
 // spends none of the service's hourly allowance.
 test("the site policy lets page script call the service and refuses other origins", async ({ page }) => {
-  await page.route("**/retrieval-service.html", async (route) => {
+  await page.route("**/retrieval.html", async (route) => {
     const response = await route.fetch();
     await route.fulfill({
       response,
@@ -263,7 +265,7 @@ test("the site policy lets page script call the service and refuses other origin
       route.fulfill({ headers: { "access-control-allow-origin": "*" }, json: {} })
     );
   }
-  await page.goto("/retrieval-service.html");
+  await page.goto("/retrieval.html");
   const outcome = await page.evaluate(async ([allowed, refused]) => {
     const violation = new Promise((resolve) =>
       document.addEventListener("securitypolicyviolation", (e) => resolve(e.effectiveDirective))
@@ -284,7 +286,7 @@ test("the site policy lets page script call the service and refuses other origin
 test("the Retrieval page's policy is the site policy with img-src narrowed to the site and the service", () => {
   const vercel = JSON.parse(fs.readFileSync(path.join(SITE_ROOT, "vercel.json"), "utf-8"));
   const rules = vercel.headers as HeaderRule[];
-  const pages = rules.filter((r) => r.source === "/retrieval-service");
+  const pages = rules.filter((r) => r.source === "/retrieval");
   expect(pages).toHaveLength(1);
   expect(rules.indexOf(pages[0])).toBeGreaterThan(rules.findIndex((r) => r.source === "/(.*)"));
   expect(pages[0].headers).toEqual([

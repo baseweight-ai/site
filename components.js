@@ -2,8 +2,8 @@
   const CAL = 'https://cal.com/baseweight/intro';
   const LINKS = [
     { href: '/', label: 'Home' },
-    // Also current on the demos' pages, since the link goes to the section that lists them.
-    { href: '/#published', label: 'Demos', pages: ['/benchmark', '/methodology', '/retrieval-service'] },
+    // Also current on the example pages, since the link goes to the section that lists them.
+    { href: '/#published', label: 'Examples', pages: ['/fine-tuning', '/methodology', '/retrieval'] },
     { href: '/about', label: 'About' },
   ];
 

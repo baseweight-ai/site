@@ -5,7 +5,9 @@
     { "source": "/pilot", "destination": "/" },
     { "source": "/scope", "destination": "/" },
     { "source": "/fit-score", "destination": "/" },
-    { "source": "/head-to-head", "destination": "/benchmark" },
+    { "source": "/head-to-head", "destination": "/fine-tuning" },
+    { "source": "/benchmark", "destination": "/fine-tuning" },
+    { "source": "/retrieval-service", "destination": "/retrieval" },
     { "source": "/contact", "destination": "/#cta" }
   ]
 }

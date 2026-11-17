@@ -1,5 +1,5 @@
 /**
- * The results component for /retrieval-service (retrieval-results.js): first
+ * The results component for /retrieval (retrieval-results.js): first
  * alone in a blank document, given a snapshot already held to the schema, then
  * mounted on the page.
  */
@@ -227,7 +227,7 @@ test("the committed snapshot renders one row per metric", async ({ page }) => {
 
 // ── On the page ───────────────────────────────────────────────────────────────
 
-const PAGE = "/retrieval-service.html";
+const PAGE = "/retrieval.html";
 const FAILED = "The results could not be loaded.";
 // The two kinds of score, defined in the page's closed notes, where the method
 // gives the reason judged scores are advisory (brief §2).

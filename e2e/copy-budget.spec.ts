@@ -24,9 +24,9 @@ import { SITE_ROOT, sitePages, visibleWords } from "./copy-text";
 const BUDGETS: { page: string; words: number; note: string }[] = [
   { page: "index.html",          words: 355,  note: "2026-09-22 baseline 322: hero, what we do, who we work with, offers carousel (four fields per card), proof, final CTA" },
   { page: "about.html",          words: 205,  note: "2026-09-22 baseline 180: the argument for measuring first in four paragraphs, founder, CTA" },
-  { page: "benchmark.html",    words: 90,   note: "2026-09-20 baseline 75 (static shell; results, blurbs and the run stamp render from data): hero, results table, artifacts, CTA" },
+  { page: "fine-tuning.html",    words: 90,   note: "2026-09-20 baseline 75 (static shell; results, blurbs and the run stamp render from data): hero, results table, artifacts, CTA" },
   { page: "methodology.html",  words: 1060, note: "2026-09-18 baseline 946 (technical spec; precision over brevity, but still bounded)" },
-  { page: "retrieval-service.html", words: 220, note: "2026-11-12 baseline 199 (static shell; the demo, limitations and pinned revisions render from script): visible 41 (the one sentence at the top, verbatim CC BY-SA attribution (10), results and limitations headings, failure notes, the notes' summary, skip link and hidden h1); closed notes 158 (method, the two kinds of score, how to read the figures, the pins' heading, the demo's notes)" },
+  { page: "retrieval.html", words: 220, note: "2026-11-12 baseline 199 (static shell; the demo, limitations and pinned revisions render from script): visible 41 (the one sentence at the top, verbatim CC BY-SA attribution (10), results and limitations headings, failure notes, the notes' summary, skip link and hidden h1); closed notes 158 (method, the two kinds of score, how to read the figures, the pins' heading, the demo's notes)" },
   { page: "privacy.html",        words: 430,  note: "2026-11-01 baseline 389 (legal text; exempt from lint, still bounded): what Cal.com and email hand over, where the retrieval demo sends a question and an IP address and what is kept, and the rights over it" },
 ];
 
