@@ -329,10 +329,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
 .offer-track::-webkit-scrollbar { display: none; }
 
 .offer-card {
-  /* Column so the terms sit on the card's bottom edge: cards stretch to the
-     tallest, and a spec line left floating mid-card reads as a gap. */
-  display: flex;
-  flex-direction: column;
   scroll-snap-align: start;
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -364,17 +360,6 @@ h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
   font-size: 13.5px;
   color: var(--text-secondary);
   line-height: 1.75;
-}
-
-/* The duration, after the work. */
-.offer-spec {
-  margin-top: auto;
-  padding-top: 18px;
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  color: var(--accent);
 }
 
 .carousel-controls {
@@ -766,28 +751,24 @@ a.published-row:hover .published-go { transform: translateX(4px); }
             <div class="offer-index">01</div>
             <h3>Production Diagnostic</h3>
             <p>Where your LLM feature fails in production, what it costs per request, and what to fix first.</p>
-            <div class="offer-spec">2 weeks</div>
           </article>
 
           <article class="offer-card">
             <div class="offer-index">02</div>
             <h3>Eval Harness Sprint</h3>
             <p>A scored baseline for your AI feature, broken down by failure mode, running in CI.</p>
-            <div class="offer-spec">3 weeks</div>
           </article>
 
           <article class="offer-card">
             <div class="offer-index">03</div>
             <h3>Eval Retainer</h3>
             <p>Your product changes, so the suite goes stale. We keep it current and tell you what regressed.</p>
-            <div class="offer-spec">Monthly</div>
           </article>
 
           <article class="offer-card">
             <div class="offer-index">04</div>
             <h3>Post-Training</h3>
             <p>One narrow high-volume task tuned on an open-weight model. The weights are yours.</p>
-            <div class="offer-spec">6 weeks</div>
           </article>
 
         </div>
@@ -807,18 +788,18 @@ a.published-row:hover .published-go { transform: translateX(4px); }
 <section id="published">
   <div class="container">
     <div class="published-header reveal">
-      <div class="section-label">Proof</div>
-      <h2>What we&rsquo;ve built.</h2>
+      <div class="section-label">Examples</div>
+      <h2>Demos</h2>
     </div>
     <div class="published-list">
       <a class="published-row reveal" href="/benchmark">
-        <span class="published-name">Benchmark</span>
-        <span class="published-what">Fine-tuned open models against a frontier API on two vertical tasks, with hash-verified results.</span>
+        <span class="published-name">Fine-tuning</span>
+        <span class="published-what">Open models tuned to two narrow tasks, against a frontier API.</span>
         <span class="published-go" aria-hidden="true">&rarr;</span>
       </a>
       <a class="published-row reveal reveal-delay-1" href="/retrieval-service">
         <span class="published-name">Retrieval</span>
-        <span class="published-what">Deployed, with tracing, a failure-mode eval suite, and cost per request.</span>
+        <span class="published-what">Ask a question and compare RAG setups side by side.</span>
         <span class="published-go" aria-hidden="true">&rarr;</span>
       </a>
     </div>

@@ -9,14 +9,8 @@
 import { test, expect } from "@playwright/test";
 import { CAL_URL, expectSectionOrder } from "./copy-text";
 
-// Four cards, in this order, each with its duration; the retainer's line is its
-// cadence.
-const OFFERS = [
-  { name: "Production Diagnostic", spec: "2 weeks" },
-  { name: "Eval Harness Sprint", spec: "3 weeks" },
-  { name: "Eval Retainer", spec: "Monthly" },
-  { name: "Post-Training", spec: "6 weeks" },
-];
+// Four cards, in this order.
+const OFFERS = ["Production Diagnostic", "Eval Harness Sprint", "Eval Retainer", "Post-Training"];
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/index.html");
@@ -66,32 +60,31 @@ test("what-we-do lists the six lines of work", async ({ page }) => {
   ]);
 });
 
-test("the offer carousel carries every offer and its spec line", async ({ page }) => {
+test("the offer carousel carries every offer", async ({ page }) => {
   const cards = page.locator(".offer-card");
   await expect(cards).toHaveCount(OFFERS.length);
-  for (const [i, offer] of OFFERS.entries()) {
+  for (const [i, name] of OFFERS.entries()) {
     const card = cards.nth(i);
     await expect(card.locator(".offer-index")).toHaveText(String(i + 1).padStart(2, "0"));
-    await expect(card.locator("h3")).toHaveText(offer.name);
-    await expect(card.locator(".offer-spec")).toHaveText(offer.spec);
+    await expect(card.locator("h3")).toHaveText(name);
     await expect(card.getByRole("link")).toHaveCount(0);
   }
   await expect(page.locator("main")).not.toContainText("$");
 });
 
-// Four elements per card, in one order, and nothing else. The outcome, fee
+// Three elements per card, in one order, and nothing else. The outcome, fee
 // credit, and findings lines were cut on 2026-09-20; a card grew to seven
 // fields once and the row got unreadable.
-test("every card renders exactly four fields, in order", async ({ page }) => {
+test("every card renders exactly three fields, in order", async ({ page }) => {
   const cards = page.locator(".offer-card");
   for (let i = 0; i < OFFERS.length; i++) {
     const shape = await cards.nth(i).evaluate((card) => ({
       children: [...card.children].map((el) => el.className || el.tagName.toLowerCase()),
-      tops: [".offer-index", "h3", "p", ".offer-spec"].map(
+      tops: [".offer-index", "h3", "p"].map(
         (sel) => (card.querySelector(sel) as HTMLElement).getBoundingClientRect().top
       ),
     }));
-    expect(shape.children, OFFERS[i].name).toEqual(["offer-index", "h3", "p", "offer-spec"]);
+    expect(shape.children, OFFERS[i]).toEqual(["offer-index", "h3", "p"]);
     for (let n = 1; n < shape.tops.length; n++) {
       expect(shape.tops[n]).toBeGreaterThan(shape.tops[n - 1]);
     }
@@ -199,21 +192,21 @@ test.describe("with JS off", () => {
 test("the published section carries both rows, each linking to its page", async ({ page }) => {
   const rows = page.locator(".published-row");
   await expect(rows).toHaveCount(2);
-  await expect(page.locator("#published .section-label")).toHaveText("Proof");
-  await expect(page.locator("#published h2")).toHaveText("What we’ve built.");
+  await expect(page.locator("#published .section-label")).toHaveText("Examples");
+  await expect(page.locator("#published h2")).toHaveText("Demos");
 
   const shipped = rows.nth(0);
   await expect(shipped).toHaveAttribute("href", "/benchmark");
-  await expect(shipped.locator(".published-name")).toHaveText("Benchmark");
+  await expect(shipped.locator(".published-name")).toHaveText("Fine-tuning");
   await expect(shipped.locator(".published-what")).toHaveText(
-    "Fine-tuned open models against a frontier API on two vertical tasks, with hash-verified results."
+    "Open models tuned to two narrow tasks, against a frontier API."
   );
 
   const second = rows.nth(1);
   await expect(second).toHaveAttribute("href", "/retrieval-service");
   await expect(second.locator(".published-name")).toHaveText("Retrieval");
   await expect(second.locator(".published-what")).toHaveText(
-    "Deployed, with tracing, a failure-mode eval suite, and cost per request."
+    "Ask a question and compare RAG setups side by side."
   );
   await expect(second.locator(".published-go")).toHaveCount(1);
   // The "In build" label came off on 2026-09-20 when the row got a page.

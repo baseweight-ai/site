@@ -74,7 +74,7 @@ nav.scrolled {
 }
 
 .nav-links a:hover { color: var(--text-primary); }
-.nav-links a[aria-current="page"] { color: var(--text-primary); }
+.nav-links a[aria-current] { color: var(--text-primary); }
 
 .nav-cta {
   font-family: var(--font-mono) !important;

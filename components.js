@@ -1,11 +1,9 @@
 (function () {
   const CAL = 'https://cal.com/baseweight/intro';
-  // "Benchmark" is the nav label for /benchmark; the page keeps its own title and
-  // heading.
   const LINKS = [
     { href: '/', label: 'Home' },
-    { href: '/benchmark', label: 'Benchmark' },
-    { href: '/retrieval-service', label: 'Retrieval' },
+    // Also current on the demos' pages, since the link goes to the section that lists them.
+    { href: '/#published', label: 'Demos', pages: ['/benchmark', '/methodology', '/retrieval-service'] },
     { href: '/about', label: 'About' },
   ];
 
@@ -14,9 +12,12 @@
     if (!nav) return;
 
     const path = window.location.pathname;
-    const items = LINKS.map(({ href, label }) => {
+    const items = LINKS.map(({ href, label, pages = [] }) => {
       const active = path === href || (href !== '/' && path.startsWith(href + '/'));
-      return `<li><a href="${href}"${active ? ' aria-current="page"' : ''}>${label}</a></li>`;
+      // A plain static server keeps the .html that production's clean URLs drop.
+      const within = pages.includes(path.replace(/\.html$/, ''));
+      const current = active ? ' aria-current="page"' : within ? ' aria-current="true"' : '';
+      return `<li><a href="${href}"${current}>${label}</a></li>`;
     }).join('\n      ');
 
     nav.innerHTML = `

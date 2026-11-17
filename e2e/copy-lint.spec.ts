@@ -88,7 +88,7 @@ const BANNED: { name: string; re: RegExp }[] = [
   // category, never the census. "one" is exempt (the one-task positioning).
   // Digits before "models/examples/questions" are technical parameters (training
   // and eval set sizes in method text), so the digit branch covers fewer nouns.
-  { name: "volatile count anchor", re: /\b(?:(?:two|three|four|five|six|seven|eight|nine|ten|both|couple of)\s+(?:public\s+|live\s+|more\s+|new\s+|open\s+|benchmark(?:ed)?\s+)*(?:tasks?|benchmarks?|questions?|models?|examples?|verticals?)|\d+\s+(?:public\s+|live\s+|more\s+|new\s+|open\s+)*(?:tasks?|benchmarks?|verticals?))\b/i },
+  { name: "volatile count anchor", re: /\b(?:(?:two|three|four|five|six|seven|eight|nine|ten|both|couple of)\s+(?:public\s+|live\s+|more\s+|new\s+|open\s+|narrow\s+|benchmark(?:ed)?\s+)*(?:tasks?|benchmarks?|questions?|models?|examples?|verticals?)|\d+\s+(?:public\s+|live\s+|more\s+|new\s+|open\s+|narrow\s+)*(?:tasks?|benchmarks?|verticals?))\b/i },
   { name: "volatile time anchor", re: /\b(so far|for now|at the moment|right now|currently|as of (?:today|writing|now))\b/i },
 ];
 
@@ -135,19 +135,10 @@ const ALLOWLIST: { page: string; pattern: string; snippet: string; reason: strin
   //  on this list)
   {
     page: "index.html",
-    pattern: "trust word: proof lexeme",
-    snippet: "Proof",
-    reason:
-      "Owner-chosen eyebrow for the published section (2026-09-20), matched on the word " +
-      "alone so a heading edit does not silently re-break the lint. The trust-word ban " +
-      "stands everywhere else: this labels a link to the artifact, never a claim in a sentence.",
-  },
-  {
-    page: "index.html",
     pattern: "volatile count anchor",
-    snippet: "two vertical tasks",
+    snippet: "two narrow tasks",
     reason:
-      "Owner-written published-row copy (2026-09-20). It is a census of the current run, " +
+      "Owner-written published-row copy (2026-11-17). It is a census of the current run, " +
       "so it goes stale the moment a third task publishes: re-check it with the benchmark rerun.",
   },
 ];
