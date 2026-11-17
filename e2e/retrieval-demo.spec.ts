@@ -835,9 +835,7 @@ test("when /v1/health fails, the comparison still goes and the service line stay
 });
 
 // ── On the page ─────────────────────────────────────────────────────────────
-// retrieval-service.html mounts the demo at #demoMount. The section ships
-// hidden and the build opens it when RETRIEVAL_DEMO is on (vercel.json), so
-// these unhide it as the build does.
+// retrieval-service.html mounts the demo at #demoMount.
 
 const PAGE = "/retrieval-service.html";
 
@@ -845,7 +843,6 @@ async function openPage(page: Page, width = 1280, height = 900): Promise<Locator
   await page.setViewportSize({ width, height });
   await page.route("**/data/retrieval-service/results.json", (route) => route.fulfill({ status: 404 }));
   await page.goto(PAGE);
-  await page.locator("#demo").evaluate((el) => el.removeAttribute("hidden"));
   return page.locator("#demo");
 }
 

@@ -330,13 +330,10 @@ a:hover { color: var(--accent-hover); }
 
 /* NOTES: one closed control at the foot of the page, holding every sentence
    besides the one at the top: the method, the two kinds of score, how to read
-   the figures, the pins, and the demo's notes in full. The demo's notes are
-   held back while the demo is, and what speaks of the results while Results
-   is; with both held, the control goes too. */
-main:has(#demo[hidden]) #demoNotes,
+   the figures, the pins, and the demo's notes in full. What speaks of the
+   results is held back while Results is. */
 main:has(#results[hidden]) #notes .with-results,
-main:not(:has(#results[hidden])) #notes .without-results,
-main:has(#demo[hidden]):has(#results[hidden]) #notes { display: none; }
+main:not(:has(#results[hidden])) #notes .without-results { display: none; }
 .notes { margin-top: 16px; }
 .notes summary { cursor: pointer; font-size: 13px; color: var(--accent); list-style: none; }
 .notes summary::-webkit-details-marker { display: none; }
@@ -374,8 +371,7 @@ main:has(#demo[hidden]):has(#results[hidden]) #notes { display: none; }
   <div class="container">
     <article class="methodology-content">
 
-      <!-- Held until the demo is public: removing hidden shows the demo, and its notes at the foot of the page. -->
-      <section id="demo" hidden>
+      <section id="demo">
         <!-- retrieval-demo.js mounts the demo here. -->
         <div id="demoMount"></div>
         <!-- The licence notice for the passages the demo shows, under the rung columns where they

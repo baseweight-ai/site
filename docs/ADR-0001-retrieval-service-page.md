@@ -45,8 +45,8 @@ results at the bottom once a snapshot is committed, and nothing else: no global 
 closing CTA (the nav's stays), and no sentence beyond the top one. Two things show besides,
 both required: the attribution where passages appear, and the snapshot's limitations. Failure
 states show when something fails. Every other sentence and qualification sits in the notes,
-one closed control at the foot. Section 2 and the notes' demo part show once the build opens
-the demo (pass 2). Section 3 and its limitations show once a snapshot is committed (pass 3).
+one closed control at the foot. Section 2 and the notes' demo part show from pass 2.
+Section 3 and its limitations show once a snapshot is committed (pass 3).
 
 1. **Hero**: one sentence saying the page compares different RAG setups, and nothing else
    visible, centred in the benchmark's headline face, the largest text on the page. It holds
@@ -136,9 +136,8 @@ the demo (pass 2). Section 3 and its limitations show once a snapshot is committ
      "How it's measured, and its limits". Inside: gold ids taken from the corpus's provenance
      data; the gated and the advisory category, each defined in one sentence, and which one
      gates CI; the clustered, paired bootstrap, clustered by source page; what `n` and a CI are;
-     a provenance line from `dataset`, `system` and `judge`; the demo's notes, held back while
-     the demo is. Everything here but the demo's notes shows only with the section; without it
-     the summary reads "Its limits", and with the demo held too the control is hidden.
+     a provenance line from `dataset`, `system` and `judge`; the demo's notes. Everything here
+     but the demo's notes shows only with the section; without it the summary reads "Its limits".
      Mechanism only: every figure, `n`, metric name, model name and corpus name on the page
      renders from the snapshot or a live response.
    - The page relates the demo's index to the measured index only after the handoff confirms
@@ -178,8 +177,8 @@ the demo (pass 2). Section 3 and its limitations show once a snapshot is committ
   the Fly Machine.
 - Real comparisons run from a local copy at `http://127.0.0.1:8080`. A deployed page first makes
   one in production (Risk 1).
-- While the demo is hidden and no snapshot is committed, the page is its sentence alone. The
-  body carries no CTA of its own; the nav's "Book a call" is always on screen.
+- With no snapshot committed, the page is its sentence and the demo. The body carries no CTA of
+  its own; the nav's "Book a call" is always on screen.
 
 ## Risks
 
