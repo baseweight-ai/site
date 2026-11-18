@@ -298,6 +298,60 @@ test("the Retrieval page's policy is the site policy with img-src narrowed to th
   expect(sitePolicy(), "every other page keeps its images").toContain("img-src 'self' data: https:");
 });
 
+// ── Waking the service ──────────────────────────────────────────────────────
+// components.js wakes the retrieval service so the demo answers sooner: one
+// GET /v1/health per visit, after load, never read and never shown. Automated
+// browsers skip it, so these tests present the page as a visitor's to watch it.
+
+const AS_VISITOR = () => Object.defineProperty(Navigator.prototype, "webdriver", { get: () => false });
+
+test("a visit wakes the service once, and a wake held open never holds up the page", async ({ page }) => {
+  await page.addInitScript(AS_VISITOR);
+  const wakes: string[] = [];
+  // Never answered, as during a cold start.
+  await page.route(`${SERVICE_ORIGIN}/**`, (route) => {
+    wakes.push(`${route.request().method()} ${new URL(route.request().url()).pathname}`);
+  });
+  await page.goto("/index.html");
+  await expect(page.locator("nav#nav a").first()).toBeVisible();
+  await expect.poll(() => wakes).toEqual(["GET /v1/health"]);
+  for (const next of ["/about.html", "/fine-tuning.html", "/retrieval.html"]) {
+    await page.goto(next);
+    await expect(page.locator("nav#nav a").first()).toBeVisible();
+  }
+  await page.waitForTimeout(500);
+  expect(wakes, "one wake per visit, however many pages").toEqual(["GET /v1/health"]);
+});
+
+test("with the service down, the wake shows nothing and throws nothing", async ({ page }) => {
+  await page.addInitScript(AS_VISITOR);
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+  let woke = false;
+  await page.route(`${SERVICE_ORIGIN}/**`, (route) => {
+    woke = true;
+    return route.abort("connectionrefused");
+  });
+  await page.goto("/index.html");
+  const before = await page.locator("body").innerHTML();
+  await expect.poll(() => woke).toBe(true);
+  await page.waitForTimeout(300);
+  expect(errors).toEqual([]);
+  expect(await page.locator("body").innerHTML()).toBe(before);
+});
+
+test("automated browsers leave the service asleep", async ({ page }) => {
+  let woke = false;
+  await page.route(`${SERVICE_ORIGIN}/**`, (route) => {
+    woke = true;
+    return route.abort();
+  });
+  await page.goto("/index.html");
+  await page.waitForTimeout(500);
+  expect(woke).toBe(false);
+});
+
 // ── The build ───────────────────────────────────────────────────────────────
 // build.mjs fails the deploy on a malformed results snapshot. The build command
 // runs as vercel.json gives it, in a copy of what it reads, so the tree is not

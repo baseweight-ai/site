@@ -1,5 +1,6 @@
 (function () {
   const CAL = 'https://cal.com/baseweight/intro';
+  const SERVICE = 'https://baseweight-service.fly.dev';
   const LINKS = [
     { href: '/', label: 'Home' },
     // Also current on the example pages, since the link goes to the section that lists them.
@@ -88,7 +89,25 @@
     setTimeout(() => els.forEach(show), 1500);
   }
 
+  // Wakes the retrieval service so the Retrieval demo answers sooner: one
+  // GET /v1/health per visit, sent after load and never read. no-cors keeps
+  // CORS errors out of the console, and any failure is dropped. Automated
+  // browsers skip it, so the e2e suite and headless crawlers leave the service
+  // asleep; so does a browser that blocks storage, which could not keep it to
+  // once per visit.
+  function wakeService() {
+    try {
+      if (navigator.webdriver || sessionStorage.getItem('bw-service-woken')) return;
+      sessionStorage.setItem('bw-service-woken', '1');
+      fetch(SERVICE + '/v1/health', {
+        mode: 'no-cors', cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer',
+      }).catch(() => {});
+    } catch (e) { /* no storage or no fetch: no wake */ }
+  }
+
   renderNav();
   renderFooter();
   startReveal();
+  if (document.readyState === 'complete') wakeService();
+  else window.addEventListener('load', wakeService, { once: true });
 })();

@@ -141,7 +141,8 @@ const rows = (col: Locator) => col.locator(".demo-passages > ol > li");
 
 // ── What goes to the service, and when ──────────────────────────────────────
 // No consent gate exists (DISCOVERY.md §12), so the demo sends nothing a
-// visitor did not start: one who never touches it reaches no new host.
+// visitor did not start. The one request a page makes on its own is the wake
+// in components.js, once per visit, which automated browsers skip (site.spec.ts).
 
 for (const [what, target] of [
   ["the question box", (demo: Locator) => questionBox(demo)],
@@ -1046,7 +1047,7 @@ test.describe("with script off", () => {
   });
 });
 
-test("the page mounts the demo and sends nothing to the service as it loads", async ({ page }) => {
+test("the page mounts the demo, and the demo sends nothing to the service as it loads", async ({ page }) => {
   const { sent } = await mockService(page);
   const demo = await openPage(page);
   await expect(questionBox(demo)).toBeVisible();

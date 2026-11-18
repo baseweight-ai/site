@@ -173,7 +173,9 @@ Section 3 and its limitations show once a snapshot is committed (pass 3).
 - A snapshot missing from a deploy leaves the page without section 3; the snapshot spec ties
   the committed file to the page state. Pass 3 is a data commit plus rendering code, committed separately
   (`CLAUDE.md`, Commits).
-- A visitor who never touches the demo sends nothing to the service, and crawlers do not start
+- Each visit sends the service one `GET /v1/health` after the first page loads, to wake it
+  (`components.js`); a visitor who never touches the demo sends it nothing else. Automated
+  browsers skip the wake; a crawler that runs scripts without declaring itself can still start
   the Fly Machine.
 - Real comparisons run from a local copy at `http://127.0.0.1:8080`. A deployed page first makes
   one in production (Risk 1).

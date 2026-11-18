@@ -75,7 +75,9 @@ engagement, with no trailing qualifier:
 
 - Nav and footer are injected by `components.js` into `<nav id="nav">` and `<footer>` on
   every page, and the footer is identical everywhere. Don't hand-roll per-page nav/footer.
-  `components.js` also runs the one scroll-reveal observer for `.reveal`, and
+  `components.js` also runs the one scroll-reveal observer for `.reveal` and the
+  retrieval-service wake (one unread `GET /v1/health` per visit, after load, skipped by
+  automated browsers), and
   `components.css` holds the shared component CSS (skip link, footer, button press, the
   closing-CTA `.cta-routes`/`.btn-ghost` pair, and the single reduced-motion guard, whose
   `!important` rules make any page-level copy dead). Per-page `<style>` blocks carry the
