@@ -105,8 +105,9 @@ engagement, with no trailing qualifier:
   enters `TASKS` when its run is in `results.json`, never before. The placeholder-tab
   machinery (`upcoming`, `.task-tab-soon`, the status panel) was removed with the in-build
   tab on 2026-09-20; bringing back an in-build tab means bringing back that code and its
-  tests. The run date is rendered from `generated_at` into the hero stamp, so the reader
-  meets it before the numbers; never type it by hand.
+  tests. The run's date and time are rendered from `generated_at` into one provenance line
+  under the artifacts, with the hosted baseline and the open models' hardware and GPU rate;
+  the hero carries no date. Never type any of it by hand.
 - `/fine-tuning` carries no stat callouts and no cost calculator (both cut 2026-09-20): a
   number that is already a row in the results table does not get repeated as a headline,
   and a savings calculator reads as a marketing device on a page whose credibility is

@@ -110,22 +110,21 @@ test("the page runs hero, tasks, results, artifacts, CTA in that order", async (
 });
 
 // ── Run date ────────────────────────────────────────────────────────────────
-// The hosted API's cost tier moves between runs, so the date the comparison was
-// measured belongs above the numbers, not only in the artifacts at the bottom.
+// The hosted API's cost tier moves between runs, so the one line that dates the
+// run also names the hosted baseline and what the open models ran on, under the
+// artifacts that reproduce it. The hero carries no date.
 
-test("the run date is stated near the top, with the model it ran against", async ({ page }) => {
+test("one line under the artifacts dates the run and names what it ran on", async ({ page }) => {
   await page.goto("/fine-tuning.html");
-  const stamp = page.locator("#benchStamp");
-  await expect(stamp).toBeVisible();
-  await expect(stamp).toContainText(/Run \d{1,2} \w+ \d{4}/);
-  await expect(stamp).toContainText("GPT-5.4 Mini");
-  // Above the results, not buried with them.
-  const stampBox = (await stamp.boundingBox())!;
-  const tabsBox = (await page.locator("#taskTabs").boundingBox())!;
-  expect(stampBox.y).toBeLessThan(tabsBox.y);
+  await expect(page.locator("#benchStamp")).toHaveCount(0);
+  await expect(page.locator(".page-hero")).not.toContainText(/\d{4}/);
+  await expect(page.locator("#reproProvenance")).toHaveText(
+    "Run 23 May 2026, 03:23:52 UTC · GPT-5.4 Mini at that day’s pricing · " +
+      "Open models on NVIDIA GeForce RTX 3090 at $0.46/GPU-hr (pricing.yaml)"
+  );
 });
 
-// The run date lives in the hero stamp only; the legend names the tier.
+// The run date lives in the provenance line only; the legend names the tier.
 test("the leaderboard legend names the hosted-API tier", async ({ page }) => {
   await page.goto("/fine-tuning.html");
   await expect(page.locator(".table-legend")).toContainText("Hosted API, cost tier");

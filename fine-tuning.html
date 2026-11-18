@@ -104,10 +104,6 @@ body::after {
 .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
 .page-hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.8rem); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 12px; }
 .page-hero .subtitle { font-size: 15px; color: var(--text-secondary); max-width: 58ch; line-height: 1.8; }
-/* When the run happened and what it ran against, at the top: a reader meets the
-   date before the numbers. Filled from results.json, never typed by hand. */
-.bench-stamp { margin-top: 18px; font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--text-muted); }
-.bench-stamp:empty { display: none; }
 
 /* ERROR LEGEND */
 .error-legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 9px 24px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
@@ -339,7 +335,6 @@ body::after {
     <div class="section-label bench-anim" style="animation-delay: 0s;">Fine-tuning</div>
     <h1 class="bench-anim" style="animation-delay: 0.07s;">Open models, fine-tuned, against a frontier API.</h1>
     <p class="subtitle bench-anim" style="animation-delay: 0.14s;">Narrow, high-volume tasks, each run on an open model before and after fine-tuning, and on the API.</p>
-    <p class="bench-stamp bench-anim" id="benchStamp" style="animation-delay: 0.18s;"></p>
     <div class="hero-proof bench-anim" style="animation-delay: 0.21s;">
       <a href="/methodology">How it&rsquo;s tested &rarr;</a>
       <a href="https://github.com/baseweight-ai/benchmark" target="_blank" rel="noopener noreferrer">View the code &rarr;</a>
@@ -524,11 +519,11 @@ async function loadData() {
         condition_label: COND_LABELS[r.condition] || r.condition,
       });
     });
-    benchData = { tasks, meta: { generated_at: raw.generated_at, hardware: raw.hardware, pricing: raw.pricing_provenance }, baselines: raw.task_baselines || {}, manifest: raw.manifest || {} };
+    const hosted = [...new Set(raw.results.filter(r => r.family === 'frontier').map(r => r.display_name))];
+    benchData = { tasks, meta: { generated_at: raw.generated_at, hardware: raw.hardware, pricing: raw.pricing_provenance, hosted }, baselines: raw.task_baselines || {}, manifest: raw.manifest || {} };
     buildTabs();
     selectTask(currentTask);
     renderProvenance();
-    renderRunDate(raw);
   } catch(e) {
     console.error('Failed to load benchmark data', e);
   }
@@ -536,25 +531,13 @@ async function loadData() {
 
 // ── RUN DATE ───────────────────────────────────────────────────────────────
 // A hosted API's cost tier moves; the model measured here is the one that was
-// current on the run date. The hero stamp carries that date, read from the data
-// so a rerun moves it on its own.
-function runDate(raw) {
-  if (!raw || !raw.generated_at) return null;
-  const d = new Date(raw.generated_at);
-  if (isNaN(d)) return null;
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-}
-
-function renderRunDate(raw) {
-  const when = runDate(raw);
-  if (!when) return;
-  const hosted = [...new Set((raw.results || [])
-    .filter(r => r.family === 'frontier')
-    .map(r => r.display_name))];
-  const stamp = document.getElementById('benchStamp');
-  if (stamp) {
-    stamp.textContent = 'Run ' + when + (hosted.length ? '. Hosted baseline ' + hosted.join(' and ') + ', on its pricing that day.' : '.');
-  }
+// current on the run date. The provenance line under the artifacts carries that
+// date and time in UTC, read from the data so a rerun moves it on its own.
+function runStamp(iso) {
+  const d = new Date(iso);
+  if (!iso || isNaN(d)) return null;
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+    + ', ' + d.toISOString().slice(11, 19) + ' UTC';
 }
 
 // ── TASK TABS ──────────────────────────────────────────────────────────────
@@ -726,11 +709,20 @@ function renderProvenance() {
   }
   const prov = document.getElementById('reproProvenance');
   if (prov) {
+    // One line: when the run happened, the hosted baseline at that day's pricing,
+    // and what the open models ran on at what GPU rate.
     const bits = [];
-    if (m.generated_at) bits.push('Snapshot ' + m.generated_at.replace('T', ' ').replace(/\..*/, ' UTC'));
+    const when = runStamp(m.generated_at);
+    if (when) {
+      bits.push('Run ' + when);
+      if (m.hosted && m.hosted.length) bits.push(m.hosted.join(' and ') + ' at that day’s pricing');
+    }
     const gpus = m.hardware && m.hardware.local_gpus_observed;
-    if (gpus && gpus.length) bits.push('Hardware ' + gpus.join(', '));
-    if (m.pricing && m.pricing.gpu_hourly_rate_used != null) bits.push('Pricing $' + m.pricing.gpu_hourly_rate_used + '/GPU-hr (' + m.pricing.gpu_hourly_rate_source + ')');
+    const rate = m.pricing && m.pricing.gpu_hourly_rate_used != null
+      ? '$' + m.pricing.gpu_hourly_rate_used + '/GPU-hr (' + m.pricing.gpu_hourly_rate_source + ')' : '';
+    if ((gpus && gpus.length) || rate) {
+      bits.push('Open models' + (gpus && gpus.length ? ' on ' + gpus.join(', ') : '') + (rate ? ' at ' + rate : ''));
+    }
     prov.textContent = bits.join('   ·   ');
   }
 }
